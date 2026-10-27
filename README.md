@@ -9,7 +9,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 1. [Arquitectura del Sistema](#1-arquitectura-del-sistema)
 2. [Estructura de Archivos](#2-estructura-de-archivos)
 3. [Cómo crear una nueva badge (`BadgeClass`)](#3-cómo-crear-una-nueva-badge-badgeclass)
-4. [Cómo EMITIR CERTIFICADOS a los Alumnos (`Assertion`)](#4-cómo-emitir-certificados-a-los-alumnos-assertion)
+4. [Cómo crear certificados para los miembros (`Assertion`)](#4-cómo-crear-certificados-para-los-miembros-assertion)
    - [Método A: Asistente Interactivo en Terminal (Recomendado)](#método-a-asistente-interactivo-en-terminal-recomendado)
    - [Método B: Creación Manual con archivo JSON](#método-b-creación-manual-con-archivo-json)
 5. [Cómo PUBLICAR los Certificados en Internet (`git push`)](#5-cómo-publicar-los-certificados-en-internet-git-push)
@@ -49,16 +49,16 @@ Open Badges/
 
 ## 3. Cómo crear una nueva badge (`BadgeClass`)
 
-      ### 1: Crear el logo
+### --- 1: Crear el logo
 Formato `.svg` o `.png` con fondo transparente
 
-###    2: Guardar el logo
+### --- 2: Guardar el logo
 Almacenar en `public/images/badges/`
 
-###    3: Definir la badge
+### --- 3: Definir la badge
 Crear y guardar el archivo `.json` en `src/content/badges/`
 
-**Plantilla usada:**
+**Plantilla a usar:**
 ```json
 {
   "name": "Capture The Flag - Reversing de Binarios",
@@ -79,11 +79,11 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 
 ---
 
-## 4. Cómo EMITIR CERTIFICADOS a los Alumnos (`Assertion`)
+## 4. Cómo crear certificados para los miembros (`Assertion`)
 
-### Método A: Asistente Interactivo en Terminal (Recomendado)
+### --- Método A: Asistente automático
 
-Es la forma más rápida y sin errores. Abre tu terminal en la carpeta `Open Badges` y ejecuta:
+Abre tu terminal en la carpeta `Open Badges` y ejecuta:
 
 ```bash
 npm run issue
@@ -100,7 +100,7 @@ El script generará automáticamente un archivo con un ID único de 24 caractere
 
 ---
 
-### Método B: Creación Manual con archivo JSON
+### --- Método B: Creación manual
 
 Si prefieres crearlo a mano o mediante un script de hojas de cálculo (Google Sheets / Excel), crea un archivo con un ID aleatorio de 24 caracteres hexadecimales (ej. `69679d9fa12d24f4a673b54b.json`) dentro de `src/content/assertions/`:
 
