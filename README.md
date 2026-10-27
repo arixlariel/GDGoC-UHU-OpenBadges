@@ -49,7 +49,7 @@ Open Badges/
 
 ## 3. Cómo crear una nueva badge (`BadgeClass`)
 
-###    1: Crear el logo
+      ### 1: Crear el logo
 Formato `.svg` o `.png` con fondo transparente
 
 ###    2: Guardar el logo
@@ -62,12 +62,12 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 ```json
 {
   "name": "Capture The Flag - Reversing de Binarios",
-  "description": "Certificado oficial de asistencia y aprovechamiento del evento organizado por GDGoC Universidad de Huelva",
+  "description": "Certificado oficial de asistencia al taller organizado por GDGoC Universidad de Huelva",
   "image": "/images/badges/capture-the-flag-reversing-de-binarios.svg",
   "criteria": {
-    "narrative": "Asistencia presencial al 100% del taller y participación en las cuestiones"
+    "narrative": "Otorgado por asistir presencialmente al 100% del taller y participar en las actividades"
   },
-  "tags": ["Flutter", "Dart", "Mobile", "Cross-Platform", "Google Tech"],
+  "tags": ["CTF", "Reversing", "Binarios", "Ghidra"],
   "style": "classic",
   "issuerId": "gdgoc-uhu"
 }
