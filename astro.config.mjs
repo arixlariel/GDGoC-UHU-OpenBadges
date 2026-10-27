@@ -1,11 +1,10 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 
-// Configuración para GitHub Pages o Dominio personalizado
-// Si se usa GitHub Pages sin dominio: base = '/<nombre-repositorio>/'
-// Si se usa dominio personalizado (ej. badges.gdgocuhu.es): base = '/'
+// Configuración para GitHub Pages
+// Repositorio: https://github.com/arixlariel/GDGoC-UHU-OpenBadges
 const SITE_URL = process.env.SITE_URL || 'https://arixlariel.github.io';
-const BASE_PATH = process.env.BASE_PATH || '/';
+const BASE_PATH = process.env.BASE_PATH || '/GDGoC-UHU-OpenBadges/';
 
 export default defineConfig({
   site: SITE_URL,
@@ -16,4 +15,3 @@ export default defineConfig({
     format: 'file' // Genera archivos limpios como /api/badges/issuer.json directamente
   }
 });
-

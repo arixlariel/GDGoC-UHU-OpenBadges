@@ -8,7 +8,7 @@ export interface IssuerConfig {
 }
 
 const siteUrl = process.env.SITE_URL || 'https://arixlariel.github.io';
-const basePath = process.env.BASE_PATH || '';
+const basePath = process.env.BASE_PATH || '/GDGoC-UHU-OpenBadges';
 
 export const siteConfig = {
   url: siteUrl.replace(/\/$/, ''),
