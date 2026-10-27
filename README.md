@@ -1,16 +1,14 @@
-# 🎓 Manual de Operaciones GDGoC UHU — Sistema de Certificados Open Badges
+# GDGoC Universidad de Huelva - Open Badges
 
-Bienvenido al manual oficial de gestión y emisión de certificados digitales para el equipo organizador de **Google Developer Groups on Campus (GDGoC) en la Universidad de Huelva**.
-
-Este sistema permite emitir credenciales digitales verificables basadas en el estándar internacional **Open Badges v2.0** (IMS Global / 1EdTech), alojadas en **`https://gdguhu.es`**.
+Bienvenido al manual oficial de gestión y emisión de certificados digitales para enuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en el estándar internacional **Open Badges 2.0** de 1EdTech. Solo los organizadores (con acceso al correo del GDGoC, quien administra el repositorio) pueden administrar las acreditaciones.
 
 ---
 
-## 📑 Índice de Contenidos
+## Índice
 
-1. [Arquitectura del Sistema en 1 Minuto](#1-arquitectura-del-sistema-en-1-minuto)
-2. [Estructura de Archivos del Proyecto](#2-estructura-de-archivos-del-proyecto)
-3. [Cómo Registrar un NUEVO EVENTO o Insignia (`BadgeClass`)](#3-cómo-registrar-un-nuevo-evento-o-insignia-badgeclass)
+1. [Arquitectura del Sistema](#1-arquitectura-del-sistema)
+2. [Estructura de Archivos](#2-estructura-de-archivos)
+3. [Cómo crear una nueva badge (`BadgeClass`)](#3-cómo-crear-una-nueva-badge-badgeclass)
 4. [Cómo EMITIR CERTIFICADOS a los Alumnos (`Assertion`)](#4-cómo-emitir-certificados-a-los-alumnos-assertion)
    - [Método A: Asistente Interactivo en Terminal (Recomendado)](#método-a-asistente-interactivo-en-terminal-recomendado)
    - [Método B: Creación Manual con archivo JSON](#método-b-creación-manual-con-archivo-json)
@@ -21,60 +19,53 @@ Este sistema permite emitir credenciales digitales verificables basadas en el es
 
 ---
 
-## 1. Arquitectura del Sistema en 1 Minuto
+## 1. Arquitectura del Sistema
 
-- **Web Oficial**: `https://gdguhu.es`
-- **Hosting**: GitHub Pages (100% gratuito de por vida, sin mantenimiento de servidores).
-- **Dominio**: `gdguhu.es` gestionado en DonDominio.
-- **Formato Criptográfico**: Open Badges v2.0. Cada certificado está firmado digitalmente por GDGoC UHU con hash SHA-256.
-- **Inmutabilidad**: Solo los organizadores con acceso al repositorio de GitHub pueden emitir credenciales oficiales.
+- **Registrador del dominio**: Ariel via DonDominio `https://www.dondominio.com/es/`
+- **Web de verificación**: `https://gdguhu.es`
+- **Hosting**: GitHub Pages
+- **Estándar**: Open Badges 2.0 firmado por GDGoC UHU con hash SHA-256
 
 ---
 
-## 2. Estructura de Archivos del Proyecto
+## 2. Estructura de Archivos
 
 ```text
 Open Badges/
 ├── public/
 │   └── images/
-│       └── badges/                  <-- Aquí se guardan los logotipos/imágenes de los eventos
-│           ├── hackathon-2026.svg
-│           └── workshop-ai-cloud.svg
+│       └── badges/                  <-- Aquí se guardan los logo.svg de las badges
 ├── src/
 │   ├── content/
-│   │   ├── badges/                  <-- Aquí se define cada EVENTO / INSIGNIA
-│   │   │   ├── hackathon-2026.json
-│   │   │   └── workshop-ai-cloud.json
-│   │   └── assertions/              <-- Aquí se guardan los CERTIFICADOS individuales de los alumnos
-│   │       ├── 69679d9fa12d24f4a673b54b.json
-│   │       └── 6ae00a61a65e3dd2d40bcb0f.json
+│   │   ├── badges/                  <-- Aquí se definen los badge.json
+│   │   └── assertions/              <-- Aquí se guardan los certificado.json de los alumnos
 │   └── config/
-│       └── site.ts                  <-- Datos institucionales del emisor (GDGoC UHU)
+│       └── site.ts                  <-- Datos del emisor o issuer (GDGoC UHU)
 └── scripts/
     └── issue-badge.mjs              <-- Asistente automático para emitir certificados
 ```
 
 ---
 
-## 3. Cómo Registrar un NUEVO EVENTO o Insignia (`BadgeClass`)
+## 3. Cómo crear una nueva badge (`BadgeClass`)
 
-Cada vez que el GDGoC organice un nuevo taller, charla o hackathon, debéis dar de alta la insignia en **2 sencillos pasos**:
+   ### 1: Crear el logo
+Formato `.svg` o `.png` con fondo transparente
 
-### Paso 1: Guarda la imagen de la insignia
-Coloca el diseño gráfico (preferiblemente en formato `.svg` o `.png` con fondo transparente) en:
-👉 `public/images/badges/<nombre-evento>.svg`
+   ### 2: Guardar el logo
+Almacenar en `public/images/badges/`
 
-### Paso 2: Crea la ficha del evento
-Crea un archivo JSON dentro de `src/content/badges/<nombre-evento>.json`.
+   ### 3: Definir la badge
+Crear y guardar el archivo `.json` en `src/content/badges/`
 
-**Ejemplo de plantilla:**
+**Plantilla usada:**
 ```json
 {
-  "name": "Taller: Desarrollo Multiplataforma con Flutter",
-  "description": "Certificado oficial de aprovechamiento por completar el taller intensivo de desarrollo móvil y web con Flutter y Dart impartido por GDG on Campus UHU.",
-  "image": "/images/badges/flutter-masterclass.svg",
+  "name": "Capture The Flag - Reversing de Binarios",
+  "description": "Certificado oficial de asistencia y aprovechamiento del evento organizado por GDGoC Universidad de Huelva",
+  "image": "/images/badges/capture-the-flag-reversing-de-binarios.svg",
   "criteria": {
-    "narrative": "Asistencia presencial al 100% de la sesión práctica y entrega del proyecto funcional de la app móvil desarrollada durante el taller."
+    "narrative": "Asistencia presencial al 100% del taller y participación en las cuestiones"
   },
   "tags": ["Flutter", "Dart", "Mobile", "Cross-Platform", "Google Tech"],
   "style": "classic",
@@ -82,9 +73,9 @@ Crea un archivo JSON dentro de `src/content/badges/<nombre-evento>.json`.
 }
 ```
 
-#### Opciones de estilo visual (`"style"`):
-- `"classic"`: Diseño institucional limpio, sobre fondo blanco, con la barra de los 4 colores de Google y marco formal. Ideal para cursos, workshops y charlas académicas.
-- `"hackathon"`: Diseño modo oscuro (dark mode / cyberpunk), con bordes de neón degradados y tipografía mono. Ideal para hackathons, game jams y competiciones técnicas.
+#### Opciones de estilo (`style`):
+- `classic`: Institucional, blanco
+- `cyber`: Modo oscuro, neón
 
 ---
 
