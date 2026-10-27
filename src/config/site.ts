@@ -29,3 +29,4 @@ export function getFullUrl(path: string): string {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${siteConfig.url}${cleanPath}`;
 }
+

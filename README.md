@@ -117,3 +117,4 @@ Para activarlo en tu GitHub:
 Si quieres usar un dominio propio como `badges.gdgocuhu.es`:
 1. En `src/config/site.ts`, actualiza `siteConfig.url`.
 2. En GitHub Pages, añade tu dominio personalizado en la sección **Custom domain**.
+

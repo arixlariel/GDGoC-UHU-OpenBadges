@@ -16,3 +16,4 @@ export default defineConfig({
     format: 'file' // Genera archivos limpios como /api/badges/issuer.json directamente
   }
 });
+

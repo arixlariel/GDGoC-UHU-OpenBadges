@@ -39,3 +39,4 @@ export const collections = {
   badges: badgesCollection,
   assertions: assertionsCollection,
 };
+
