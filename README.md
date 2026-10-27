@@ -12,10 +12,14 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 4. [Cómo crear certificados para los miembros (`Assertion`)](#4-cómo-crear-certificados-para-los-miembros-assertion)
    - [Método A: Asistente Interactivo en Terminal (Recomendado)](#método-a-asistente-interactivo-en-terminal-recomendado)
    - [Método B: Creación Manual con archivo JSON](#método-b-creación-manual-con-archivo-json)
+   - [Método C: Emisión masiva desde el navegador web (Para todo el equipo, sin instalar nada)](#método-c-emisión-masiva-desde-el-navegador-web)
+   - [Método D: Emisión masiva desde terminal con CSV de Bevy](#método-d-emisión-masiva-desde-terminal-con-csv-de-bevy)
 5. [Cómo PUBLICAR los Certificados en Internet (`git push`)](#5-cómo-publicar-los-certificados-en-internet-git-push)
 6. [Cómo Compartir el Certificado con el Alumno](#6-cómo-compartir-el-certificado-con-el-alumno)
 7. [Privacidad y Protección de Datos (RGPD)](#7-privacidad-y-protección-de-datos-rgpd)
 8. [Resolución de Dudas y Problemas Frecuentes](#8-resolución-de-dudas-y-problemas-frecuentes)
+9. [Envío Automático de Correos por Gmail](#9-envío-automático-de-correos-por-gmail)
+10. [Dar acceso a otros organizadores del GDG](#10-dar-acceso-a-otros-organizadores-del-gdg)
 
 ---
 
@@ -122,6 +126,54 @@ Si prefieres crearlo a mano o mediante un script de hojas de cálculo (Google Sh
 
 ---
 
+### --- Método C: Emisión masiva desde el navegador web
+
+> 💡 **Para cualquier compañero del equipo organizador que NO tenga el proyecto instalado en su ordenador.** Funciona 100% online desde GitHub sin necesidad de terminal ni Node.js.
+
+1. Entra a la pestaña **Actions** de tu repositorio:  
+   👉 `https://github.com/arixlariel/GDGoC-UHU-OpenBadges/actions`
+2. En la lista de flujos de trabajo de la izquierda, selecciona:  
+   **"🎓 Emitir Certificados y Enviar Emails (Web / Bevy CSV)"**
+3. Haz clic en el botón **"Run workflow"** (a la derecha).
+4. Rellena los campos:
+   - **ID de la insignia**: el identificador del evento (ej: `workshop-ai-cloud`, `hackathon-2026` o `capture-the-flag-reversing-de-binarios`).
+   - **Rol o Reconocimiento**: por defecto `Asistente Certificado`.
+   - **Solo emitir a quienes hicieron Check-in**: marca la casilla si solo quieres emitir a quienes acudieron presencialmente al evento en Bevy.
+   - **¿Enviar email automático por Gmail?**: déjalo marcado para que les llegue el correo con su enlace.
+   - **Pega el contenido del CSV**: Abre el CSV descargado de la plataforma Bevy (`gdg.community.dev`) con cualquier bloc de notas, copia todo su texto y pégalo directamente en este cuadro.
+5. Pulsa el botón verde **"Run workflow"**.
+
+**¿Qué hace automáticamente GitHub Actions?**
+- Lee el CSV en la memoria efímera de la nube.
+- Genera todos los archivos de certificados con hash SHA-256 (sin exponer emails).
+- Hace el commit y push automático a la rama `main`.
+- Despliega la web en `https://gdguhu.es`.
+- Envía a cada alumno un email desde la cuenta oficial de Gmail del GDGoC con su botón y enlace único.
+
+---
+
+### --- Método D: Emisión masiva desde terminal con CSV de Bevy
+
+Si prefieres hacerlo desde tu terminal con el archivo CSV descargado de Bevy / GDG Community:
+
+```bash
+npm run bulk -- asistentes.csv --badge workshop-ai-cloud --role "Asistente Certificado"
+```
+
+El script detecta de forma nativa las columnas del export de **Bevy** (`First Name`, `Last Name`, `Email`, `Checkin Date (UTC)`):
+- Pone los nombres en formato elegante automáticamente (convierte `MARINA ÁLVAREZ` a `Marina Álvarez` o `yobana chanini` a `Yobana Chanini`).
+- Evita apellidos duplicados (limpia casos como `Álvaro Ortiz` + `Ortiz`).
+- Si añades `--only-checked-in`, solo emitirá certificado a quienes tengan confirmada la asistencia presencial.
+
+Luego simplemente publicas los certificados:
+```bash
+git add .
+git commit -m "feat(cert): emitir certificados para el evento"
+git push origin main
+```
+
+---
+
 ## 5. Cómo PUBLICAR los Certificados en Internet (`git push`)
 
 Una vez que hayas creado una nueva insignia o emitido certificados, solo tienes que subir los cambios a GitHub.
@@ -181,3 +233,42 @@ Y abriendo en tu navegador: `http://localhost:4321`.
 ---
 
 *Manual elaborado para el equipo organizador de Google Developer Groups on Campus — Universidad de Huelva (UHU).*
+
+---
+
+## 9. Envío Automático de Correos por Gmail
+
+El sistema puede enviar **automáticamente un email oficial y personalizado** a cada alumno cuando se emite su certificado, usando la cuenta de Gmail del GDGoC (`gdgoc.uhu@gmail.com`).
+
+### Configuración inicial (Solo una vez en GitHub)
+
+#### Paso 1: Generar una Contraseña de Aplicación en Google
+1. Inicia sesión con la cuenta de Gmail del GDG en:  
+   👉 `https://myaccount.google.com/apppasswords`
+   *(Si no te sale la opción, asegúrate de tener la verificación en dos pasos activada en la cuenta).*
+2. En el nombre de la app, pon: `Certificados GDGoC`
+3. Pulsa **Crear**. Google te mostrará una contraseña de **16 letras** (ej: `abcd efgh ijkl mnop`).
+4. Cópiala **sin espacios** (`abcdefghijklmnop`).
+
+#### Paso 2: Guardarla como Secreto en GitHub
+1. En tu repositorio, ve a:  
+   👉 `Settings > Secrets and variables > Actions`
+2. Pulsa en **New repository secret** y añade estos dos:
+   - Nombre: `GMAIL_USER`  
+     Valor: `gdgoc.uhu@gmail.com` (o la cuenta de Gmail del GDG)
+   - Nombre: `GMAIL_APP_PASSWORD`  
+     Valor: El código de 16 caracteres que copiaste de Google.
+
+A partir de ese momento, cada vez que emitas certificados desde la web de GitHub Actions marcando la opción de enviar correos, el sistema enviará los emails automáticamente.
+
+---
+
+## 10. Dar acceso a otros organizadores del GDG
+
+Para que cualquier compañero de la directiva o del equipo del GDGoC UHU pueda emitir certificados:
+
+1. Ve a los ajustes de colaboradores de tu repositorio:  
+   👉 `Settings > Collaborators` (o `Settings > Collaborators and teams`)
+2. Pulsa en **"Add people"**.
+3. Busca el usuario de GitHub de tu compañero y envíale la invitación con permisos de **Write** (Escritura).
+4. En cuanto acepte la invitación, ya podrá entrar a la pestaña **Actions** y usar el **Método C** desde el navegador para emitir certificados masivos con Bevy CSV sin tener que clonar nada en su ordenador.

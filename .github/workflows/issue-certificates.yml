@@ -1,0 +1,97 @@
+name: 🎓 Emitir Certificados y Enviar Emails (Web / Bevy CSV)
+
+on:
+  workflow_dispatch:
+    inputs:
+      badge_id:
+        description: 'ID de la insignia (ej: workshop-ai-cloud, hackathon-2026)'
+        required: true
+        type: string
+      role:
+        description: 'Rol o Reconocimiento (ej: Asistente Certificado, Participante)'
+        required: true
+        default: 'Asistente Certificado'
+        type: string
+      only_checked_in:
+        description: 'Solo emitir a quienes hicieron Check-in en el evento de Bevy'
+        required: false
+        type: boolean
+        default: false
+      send_emails:
+        description: '¿Enviar email automático por Gmail a cada alumno con su enlace personal?'
+        required: false
+        type: boolean
+        default: true
+      csv_content:
+        description: 'Pega aquí el contenido completo del CSV descargado de Bevy / GDG Community'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  issue-and-notify:
+    name: Procesar CSV, Generar Certificados y Enviar Emails
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias
+        run: npm install nodemailer
+
+      - name: Guardar CSV temporal en memoria efímera y generar aserciones
+        env:
+          CSV_INPUT: ${{ inputs.csv_content }}
+          BADGE_ID: ${{ inputs.badge_id }}
+          ROLE: ${{ inputs.role }}
+          ONLY_CHECKED_IN: ${{ inputs.only_checked_in }}
+        run: |
+          cat << 'EOF' > /tmp/asistentes.csv
+          ${{ inputs.csv_content }}
+          EOF
+
+          CHECK_FLAG=""
+          if [ "$ONLY_CHECKED_IN" = "true" ]; then
+            CHECK_FLAG="--only-checked-in"
+          fi
+
+          node scripts/bulk-issue.mjs /tmp/asistentes.csv --badge "$BADGE_ID" --role "$ROLE" $CHECK_FLAG --output-list /tmp/issued-list.json
+          rm -f /tmp/asistentes.csv
+
+      - name: Guardar en Git y publicar en la web
+        run: |
+          git config --global user.name "GDGoC UHU Bot"
+          git config --global user.email "gdgoc.uhu@gmail.com"
+          git add src/content/assertions/
+          if git diff --staged --quiet; then
+            echo "No hay nuevos certificados para añadir (quizás ya estaban generados)."
+          else
+            git commit -m "feat(cert): emitir certificados para ${{ inputs.badge_id }} via GitHub Actions"
+            git push origin main
+          fi
+
+      - name: Esperar 45s a que el despliegue de Astro en GitHub Pages termine
+        run: sleep 45
+
+      - name: Enviar emails a los alumnos desde la cuenta oficial de Gmail
+        if: ${{ inputs.send_emails }}
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          SITE_URL: "https://gdguhu.es"
+        run: |
+          if [ -f /tmp/issued-list.json ]; then
+            node scripts/send-emails.mjs /tmp/issued-list.json
+            rm -f /tmp/issued-list.json
+          else
+            echo "No se generó lista de certificados para enviar correos."
+          fi
