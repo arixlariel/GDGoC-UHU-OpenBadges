@@ -49,13 +49,13 @@ Open Badges/
 
 ## 3. Cómo crear una nueva badge (`BadgeClass`)
 
-   ### 1: Crear el logo
+###    1: Crear el logo
 Formato `.svg` o `.png` con fondo transparente
 
-   ### 2: Guardar el logo
+###    2: Guardar el logo
 Almacenar en `public/images/badges/`
 
-   ### 3: Definir la badge
+###    3: Definir la badge
 Crear y guardar el archivo `.json` en `src/content/badges/`
 
 **Plantilla usada:**
