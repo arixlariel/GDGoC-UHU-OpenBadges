@@ -1,120 +1,192 @@
-# 🎓 GDG on Campus Universidad de Huelva — Open Badges System
+# 🎓 Manual de Operaciones GDGoC UHU — Sistema de Certificados Open Badges
 
-Sistema de credenciales y certificación digital oficial para **GDG on Campus en la Universidad de Huelva (UHU)**, basado en la especificación internacional **Open Badges v2.0** (estandarizado por 1EdTech / IMS Global).
+Bienvenido al manual oficial de gestión y emisión de certificados digitales para el equipo organizador de **Google Developer Groups on Campus (GDGoC) en la Universidad de Huelva**.
 
-Inspirado en la plataforma de [GDG on Campus UAM](https://gdguam.es).
-
----
-
-## ⚡ Análisis Técnico y Arquitectura ("¿Qué sobra o qué está mal?")
-
-Al plantear la arquitectura inicial con *Astro + Web Components FAST de Microsoft + React Native + PocketBase/Supabase*, identificamos los siguientes puntos críticos:
-
-1. ❌ **React Native sobra por completo**:
-   - React Native está diseñado exclusivamente para apps móviles nativas (iOS y Android) compilando a vistas del sistema operativo.
-   - Forzarlo en la web mediante `react-native-web` produce HTML no semántico, rompe el Open Graph para compartir en LinkedIn / redes, y destruye la ligereza y velocidad que necesitas para servir certificados accesibles públicamente.
-   - **Solución adoptada**: Astro puro con Tailwind CSS. Carga instantánea, puntuación de 100 en Google Lighthouse, SEO impecable y cero overhead.
-
-2. ⚠️ **Microsoft FAST vs Web Components Nativos**:
-   - FAST es una librería de Microsoft para Custom Elements. Sin embargo, su desarrollo ha sido ralentizado por Microsoft en favor de Fluent UI, y añade dependencias pesadas innecesarias.
-   - **Solución adoptada**: Web Component nativo W3C (`<badge-modal>`). Cumple el estándar oficial de Custom Elements del navegador con **0 dependencias adicionales**, 0 KB de bundle y 100% de compatibilidad.
-
-3. 🗄️ **Base de Datos: Git / Astro Collections vs PocketBase vs Supabase**:
-   - **PocketBase** requiere un servidor VPS corriendo 24/7 (Fly.io, Railway, DigitalOcean, etc.), lo cual genera costes o problemas de mantenimiento.
-   - **Supabase** es excelente, pero en su capa gratuita *pausa los proyectos* si pasan 7 días sin actividad (un desastre si un estudiante intenta validar su certificado meses después).
-   - **Nuestra solución (Git-driven / Static)**:
-     - Los certificados e insignias se almacenan como archivos JSON en `src/content/badges/` y `src/content/assertions/`.
-     - **Ventajas**:
-       - **100% Gratuito de por vida**: Desplegado en **GitHub Pages** con certificado SSL automático.
-       - **Inmutabilidad y Confianza**: Cada certificado emitido es un commit en tu repositorio de GitHub, garantizando que nadie pueda falsificarlo ("*Como hosteas tú los datos, se asume que los datos son reales si solo tu asociación tiene control sobre lo que se publica en la web*").
-       - **Disponibilidad 24/7/365 sin caídas ni pausas**.
-       - Si en el futuro quieres añadir Supabase para un panel web con login, la estructura de datos ya está desacoplada y lista.
+Este sistema permite emitir credenciales digitales verificables basadas en el estándar internacional **Open Badges v2.0** (IMS Global / 1EdTech), alojadas en **`https://gdguhu.es`**.
 
 ---
 
-## 📐 Estructura Open Badges v2.0
+## 📑 Índice de Contenidos
 
-El sistema implementa los 3 componentes esenciales del estándar JSON-LD:
-
-1. **Issuer (Emisor)**:
-   - Endpoint: `/api/badges/issuer.json`
-   - Define la identidad oficial de GDG on Campus UHU (nombre, URL de la comunidad, email institucional y logotipo).
-2. **BadgeClass (Insignia / Evento)**:
-   - Endpoint: `/api/badges/class/[id].json`
-   - Define el evento o competencia (nombre, descripción, imagen SVG oficial, criterios narrativos de consecución y tags).
-3. **Assertion (Acreditación Individual)**:
-   - Endpoint: `/api/badges/assertion/[id].json`
-   - Vincula al estudiante con la insignia. El email se almacena cifrado con **hash SHA-256 con salt** (`sha256$...`) para respetar la privacidad según el estándar.
-4. **Visualizador Web de Certificado**:
-   - URL: `/cert/[id]`
-   - Disponible en dos estilos:
-     - **Estilo Clásico**: Institucional, limpio, con paleta oficial de colores Google.
-     - **Estilo Hackathon**: Modo oscuro cyberpunk, bordes degradados y tipografía mono.
+1. [Arquitectura del Sistema en 1 Minuto](#1-arquitectura-del-sistema-en-1-minuto)
+2. [Estructura de Archivos del Proyecto](#2-estructura-de-archivos-del-proyecto)
+3. [Cómo Registrar un NUEVO EVENTO o Insignia (`BadgeClass`)](#3-cómo-registrar-un-nuevo-evento-o-insignia-badgeclass)
+4. [Cómo EMITIR CERTIFICADOS a los Alumnos (`Assertion`)](#4-cómo-emitir-certificados-a-los-alumnos-assertion)
+   - [Método A: Asistente Interactivo en Terminal (Recomendado)](#método-a-asistente-interactivo-en-terminal-recomendado)
+   - [Método B: Creación Manual con archivo JSON](#método-b-creación-manual-con-archivo-json)
+5. [Cómo PUBLICAR los Certificados en Internet (`git push`)](#5-cómo-publicar-los-certificados-en-internet-git-push)
+6. [Cómo Compartir el Certificado con el Alumno](#6-cómo-compartir-el-certificado-con-el-alumno)
+7. [Privacidad y Protección de Datos (RGPD)](#7-privacidad-y-protección-de-datos-rgpd)
+8. [Resolución de Dudas y Problemas Frecuentes](#8-resolución-de-dudas-y-problemas-frecuentes)
 
 ---
 
-## 🚀 Instalación y Desarrollo Local
+## 1. Arquitectura del Sistema en 1 Minuto
 
-### Requisitos
-- Node.js 18+ o 20+
+- **Web Oficial**: `https://gdguhu.es`
+- **Hosting**: GitHub Pages (100% gratuito de por vida, sin mantenimiento de servidores).
+- **Dominio**: `gdguhu.es` gestionado en DonDominio.
+- **Formato Criptográfico**: Open Badges v2.0. Cada certificado está firmado digitalmente por GDGoC UHU con hash SHA-256.
+- **Inmutabilidad**: Solo los organizadores con acceso al repositorio de GitHub pueden emitir credenciales oficiales.
 
-### Pasos
-```bash
-# 1. Instalar dependencias
-npm install
+---
 
-# 2. Iniciar servidor de desarrollo local
-npm run dev
+## 2. Estructura de Archivos del Proyecto
 
-# Abrir en el navegador: http://localhost:4321
+```text
+Open Badges/
+├── public/
+│   └── images/
+│       └── badges/                  <-- Aquí se guardan los logotipos/imágenes de los eventos
+│           ├── hackathon-2026.svg
+│           └── workshop-ai-cloud.svg
+├── src/
+│   ├── content/
+│   │   ├── badges/                  <-- Aquí se define cada EVENTO / INSIGNIA
+│   │   │   ├── hackathon-2026.json
+│   │   │   └── workshop-ai-cloud.json
+│   │   └── assertions/              <-- Aquí se guardan los CERTIFICADOS individuales de los alumnos
+│   │       ├── 69679d9fa12d24f4a673b54b.json
+│   │       └── 6ae00a61a65e3dd2d40bcb0f.json
+│   └── config/
+│       └── site.ts                  <-- Datos institucionales del emisor (GDGoC UHU)
+└── scripts/
+    └── issue-badge.mjs              <-- Asistente automático para emitir certificados
 ```
 
 ---
 
-## 🎓 Cómo emitir nuevos certificados
+## 3. Cómo Registrar un NUEVO EVENTO o Insignia (`BadgeClass`)
 
-Hemos incluido un script interactivo en la terminal:
+Cada vez que el GDGoC organice un nuevo taller, charla o hackathon, debéis dar de alta la insignia en **2 sencillos pasos**:
+
+### Paso 1: Guarda la imagen de la insignia
+Coloca el diseño gráfico (preferiblemente en formato `.svg` o `.png` con fondo transparente) en:
+👉 `public/images/badges/<nombre-evento>.svg`
+
+### Paso 2: Crea la ficha del evento
+Crea un archivo JSON dentro de `src/content/badges/<nombre-evento>.json`.
+
+**Ejemplo de plantilla:**
+```json
+{
+  "name": "Taller: Desarrollo Multiplataforma con Flutter",
+  "description": "Certificado oficial de aprovechamiento por completar el taller intensivo de desarrollo móvil y web con Flutter y Dart impartido por GDG on Campus UHU.",
+  "image": "/images/badges/flutter-masterclass.svg",
+  "criteria": {
+    "narrative": "Asistencia presencial al 100% de la sesión práctica y entrega del proyecto funcional de la app móvil desarrollada durante el taller."
+  },
+  "tags": ["Flutter", "Dart", "Mobile", "Cross-Platform", "Google Tech"],
+  "style": "classic",
+  "issuerId": "gdgoc-uhu"
+}
+```
+
+#### Opciones de estilo visual (`"style"`):
+- `"classic"`: Diseño institucional limpio, sobre fondo blanco, con la barra de los 4 colores de Google y marco formal. Ideal para cursos, workshops y charlas académicas.
+- `"hackathon"`: Diseño modo oscuro (dark mode / cyberpunk), con bordes de neón degradados y tipografía mono. Ideal para hackathons, game jams y competiciones técnicas.
+
+---
+
+## 4. Cómo EMITIR CERTIFICADOS a los Alumnos (`Assertion`)
+
+### Método A: Asistente Interactivo en Terminal (Recomendado)
+
+Es la forma más rápida y sin errores. Abre tu terminal en la carpeta `Open Badges` y ejecuta:
 
 ```bash
 npm run issue
 ```
 
-El script te preguntará:
-1. Nombre completo del alumno (ej. *María López Serrano*)
-2. Email del alumno (calculará automáticamente el hash criptográfico SHA-256)
-3. Insignia a otorgar (`hackathon-2026`, `workshop-ai-cloud`, etc.)
-4. Rol o reconocimiento (ej. *1er Premio*, *Participante*)
-5. Enlace a evidencia / repositorio (opcional)
+El asistente te irá guiando paso a paso:
+1. **Nombre completo del alumno**: (ej: `Laura Benítez Romero`)
+2. **Email del alumno**: (ej: `laura@alu.uhu.es`). *El email solo se usa para calcular el hash criptográfico SHA-256; nunca se guarda en el repositorio*.
+3. **ID de la insignia**: Introduce el identificador del evento (ej: `hackathon-2026`).
+4. **Rol o Reconocimiento**: (ej: `Participante`, `1er Premio - Mejor Proyecto`, `Ponente`).
+5. **Enlace a proyecto / evidencia (opcional)**: Si es un hackathon o workshop, puedes poner el link a su GitHub.
 
-Generará automáticamente el archivo `src/content/assertions/<id>.json`.
-Solo tienes que hacer commit y push a GitHub:
+El script generará automáticamente un archivo con un ID único de 24 caracteres en `src/content/assertions/<id>.json`.
 
-```bash
-git add .
-git commit -m "feat(cert): emitir certificado para María López"
-git push origin main
+---
+
+### Método B: Creación Manual con archivo JSON
+
+Si prefieres crearlo a mano o mediante un script de hojas de cálculo (Google Sheets / Excel), crea un archivo con un ID aleatorio de 24 caracteres hexadecimales (ej. `69679d9fa12d24f4a673b54b.json`) dentro de `src/content/assertions/`:
+
+```json
+{
+  "recipient": {
+    "name": "Laura Benítez Romero",
+    "identity": "sha256$a8b2c4...",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "workshop-ai-cloud",
+  "role": "Asistente Certificado",
+  "issuedOn": "2026-10-27T18:00:00Z",
+  "evidence": "https://github.com/laura/proyecto-final"
+}
 ```
 
 ---
 
-## 🌐 Despliegue en tu GitHub Personal (GitHub Pages)
+## 5. Cómo PUBLICAR los Certificados en Internet (`git push`)
 
-El repositorio incluye un flujo de trabajo de GitHub Actions en `.github/workflows/deploy.yml`.
+Una vez que hayas creado una nueva insignia o emitido certificados, solo tienes que subir los cambios a GitHub.
 
-Para activarlo en tu GitHub:
-1. Crea un repositorio en tu cuenta de GitHub (ej. `gdgoc-uhu-openbadges`).
-2. Sube este código:
-   ```bash
-   git remote add origin https://github.com/TU_USUARIO/gdgoc-uhu-openbadges.git
-   git branch -M main
-   git push -u origin main
-   ```
-3. En GitHub, ve a **Settings** -> **Pages**:
-   - En **Build and deployment > Source**, selecciona **GitHub Actions**.
-4. ¡Listo! En 1 minuto tu web estará disponible en `https://TU_USUARIO.github.io/gdgoc-uhu-openbadges/`.
+En tu terminal ejecuta:
 
-### Dominio personalizado (Opcional)
-Si quieres usar un dominio propio como `badges.gdgocuhu.es`:
-1. En `src/config/site.ts`, actualiza `siteConfig.url`.
-2. En GitHub Pages, añade tu dominio personalizado en la sección **Custom domain**.
+```bash
+git add .
+git commit -m "feat(cert): emitir certificados para Taller Flutter"
+git push origin main
+```
 
+¡Listo! No tienes que hacer nada más.
+El sistema de **GitHub Actions** detectará el push, compilará la web y en **~1 minuto** el certificado estará visible en `https://gdguhu.es`.
+
+---
+
+## 6. Cómo Compartir el Certificado con el Alumno
+
+Una vez publicado, el certificado del alumno tiene su propia URL única e intransferible:
+
+👉 **`https://gdguhu.es/cert/<ID-DEL-CERTIFICADO>`**  
+*(Ejemplo real: `https://gdguhu.es/cert/69679d9fa12d24f4a673b54b`)*
+
+### ¿Qué puede hacer el alumno con su enlace?
+1. **Añadir a LinkedIn con 1 clic**: El certificado incluye un botón directo que abre LinkedIn con los campos oficiales pre-rellenados (Nombre del certificado, Organización emisora: GDG on Campus UHU, fecha de emisión y URL de verificación).
+2. **Importar a carteras digitales (Backpacks)**: Al pulsar en *"Añadir a tu perfil"*, el alumno puede copiar el enlace de la aserción Open Badges para importarlo a plataformas como **OpenBadge Passport**, **Badgr**, **Credly** o **Parchment**.
+3. **Validación oficial**: Incluye un botón para validar la autenticidad técnica de la credencial en [BadgeCheck.io](https://badgecheck.io) (validador oficial de IMS Global).
+
+---
+
+## 7. Privacidad y Protección de Datos (RGPD / LOPD)
+
+El sistema está diseñado respetando escrupulosamente la normativa europea de protección de datos:
+
+- 🛡️ **Correos electrónicos jamás expuestos**: Los emails nunca se guardan en el repositorio de GitHub ni se muestran en la web. Se anonimizan mediante un hash criptográfico **SHA-256 con salt** unidireccional e irreversible.
+- 🔒 **Falsificación imposible**: Solo los miembros del equipo organizador que tengan permisos en el repositorio pueden publicar o modificar certificados.
+- 🌐 **Soberanía del emisor**: La autenticidad se basa en el estándar *hosted verification*: mientras el certificado provenga del dominio oficial `gdguhu.es`, cualquier entidad reconoce su legitimidad.
+
+---
+
+## 8. Resolución de Dudas y Problemas Frecuentes
+
+### ¿Dónde consulto los endpoints JSON oficiales de Open Badges?
+- **Perfil del Emisor (Issuer)**: `https://gdguhu.es/api/badges/issuer.json`
+- **Insignia / Clase (BadgeClass)**: `https://gdguhu.es/api/badges/class/<badgeId>.json`
+- **Acreditación del Alumno (Assertion)**: `https://gdguhu.es/api/badges/assertion/<id>.json`
+
+### ¿Cómo pruebo la web en mi ordenador antes de subirla?
+Si tienes Node.js instalado en tu equipo, puedes probar la web localmente ejecutando:
+```bash
+npm install
+npm run dev
+```
+Y abriendo en tu navegador: `http://localhost:4321`.
+
+---
+
+*Manual elaborado para el equipo organizador de Google Developer Groups on Campus — Universidad de Huelva (UHU).*
