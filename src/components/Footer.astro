@@ -1,0 +1,48 @@
+---
+import { getFullUrl } from '@/config/site';
+---
+
+<footer class="mt-20 border-t border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-slate-900/50 py-10 text-xs text-gray-500 dark:text-gray-400">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="flex flex-col items-center md:items-start gap-1">
+      <div class="font-medium text-gray-700 dark:text-gray-300">
+        GDG on Campus · Universidad de Huelva
+      </div>
+      <div>
+        Sistema de credenciales y certificación digital bajo el estándar internacional <span class="font-semibold text-gray-700 dark:text-gray-300">Open Badges v2.0</span>.
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-4 text-xs font-medium">
+      <a
+        href={getFullUrl('/api/badges/issuer.json')}
+        target="_blank"
+        class="hover:text-gdg-blue dark:hover:text-sky-400 transition-colors"
+      >
+        Issuer JSON
+      </a>
+      <span>·</span>
+      <a
+        href="https://badgecheck.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-gdg-blue dark:hover:text-sky-400 transition-colors"
+      >
+        BadgeCheck Validator
+      </a>
+      <span>·</span>
+      <a
+        href="https://openbadges.org"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-gdg-blue dark:hover:text-sky-400 transition-colors"
+      >
+        OpenBadges.org
+      </a>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-6 pt-6 border-t border-gray-100 dark:border-gray-800/60 text-center text-[11px] text-gray-400">
+    Inspirado en la plataforma de GDG on Campus UAM · Desarrollado para la comunidad de GDGoC UHU
+  </div>
+</footer>

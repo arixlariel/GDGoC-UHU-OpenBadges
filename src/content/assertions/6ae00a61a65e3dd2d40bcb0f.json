@@ -1,0 +1,12 @@
+{
+  "recipient": {
+    "name": "Lucía Morales Beltrán",
+    "identity": "sha256$e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "workshop-ai-cloud",
+  "role": "Asistente Certificado",
+  "issuedOn": "2026-10-15T12:00:00Z"
+}

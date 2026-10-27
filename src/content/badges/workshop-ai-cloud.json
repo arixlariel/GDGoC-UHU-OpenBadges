@@ -1,0 +1,11 @@
+{
+  "name": "Masterclass: Cloud & Generative AI",
+  "description": "Certificado de aprovechamiento del workshop técnico intensivo sobre Google Cloud Platform, Gemini API y despliegue de soluciones con inteligencia artificial generativa.",
+  "image": "/images/badges/workshop-ai-cloud.svg",
+  "criteria": {
+    "narrative": "Asistencia presencial completa al taller y realización satisfactoria de los laboratorios prácticos en Google Cloud Console e integración con Gemini API."
+  },
+  "tags": ["Workshop", "Gemini API", "GCP", "Machine Learning"],
+  "style": "classic",
+  "issuerId": "gdgoc-uhu"
+}

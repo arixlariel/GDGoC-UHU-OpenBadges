@@ -1,0 +1,11 @@
+{
+  "name": "Hackathon GDGoC UHU 2026",
+  "description": "Otorgado por la participación activa en el Hackathon Tecnológico 2026 organizado por GDG on Campus en la Universidad de Huelva, habiendo ideado, programado y defendido una solución técnica innovadora.",
+  "image": "/images/badges/hackathon-2026.svg",
+  "criteria": {
+    "narrative": "El portador de esta insignia completó 24 horas ininterrumpidas de desarrollo de software colaborativo, implementando tecnologías cloud/IA y presentando el prototipo funcional ante el panel de evaluación."
+  },
+  "tags": ["Hackathon", "Google Cloud", "AI", "Open Source", "Teamwork"],
+  "style": "hackathon",
+  "issuerId": "gdgoc-uhu"
+}

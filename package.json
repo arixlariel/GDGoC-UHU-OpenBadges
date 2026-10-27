@@ -1,0 +1,19 @@
+{
+  "name": "gdgoc-uhu-openbadges",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sistema de Certificados Open Badges para GDG on Campus Universidad de Huelva",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "issue": "node scripts/issue-badge.mjs"
+  },
+  "dependencies": {
+    "@astrojs/tailwind": "^5.1.5",
+    "astro": "^4.16.18",
+    "tailwindcss": "^3.4.17"
+  }
+}

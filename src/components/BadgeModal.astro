@@ -1,0 +1,216 @@
+---
+interface Props {
+  assertionUrl: string;
+  badgeName: string;
+}
+
+const { assertionUrl, badgeName } = Astro.props;
+
+// Encode URL for direct validator verification
+const validatorUrl = `https://badgecheck.io/?url=${encodeURIComponent(assertionUrl)}`;
+---
+
+<!-- Web Component Custom Element -->
+<badge-modal data-assertion-url={assertionUrl}>
+  <dialog id="cert-modal" class="backdrop:bg-black/60 backdrop:backdrop-blur-sm p-0 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 max-w-md w-[92vw] m-auto fixed inset-0 overflow-hidden z-50">
+    <div class="p-6">
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-800">
+        <h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+          Añadir a tu perfil
+        </h3>
+        <button
+          type="button"
+          data-close-modal
+          aria-label="Cerrar modal"
+          class="w-8 h-8 flex items-center justify-center rounded-full bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/60 transition-colors font-bold text-lg"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Importación manual -->
+      <div class="mt-5">
+        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+          Importación manual
+        </h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
+          Para añadir este certificado a tu cartera digital, copia el siguiente enlace y usa la opción <span class="font-medium text-gray-700 dark:text-gray-300">'Importar desde URL'</span> en tu servicio preferido.
+        </p>
+
+        <div class="mt-3 flex items-center gap-2 bg-gray-50 dark:bg-slate-800/80 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5">
+          <input
+            type="text"
+            readonly
+            value={assertionUrl}
+            class="flex-1 bg-transparent text-xs text-gray-600 dark:text-gray-300 font-mono outline-none truncate select-all"
+            id="modal-url-input"
+          />
+          <button
+            type="button"
+            data-copy-btn
+            title="Copiar enlace"
+            class="p-2 rounded-lg bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 transition-all flex items-center justify-center shrink-0"
+          >
+            <!-- Copy icon -->
+            <svg id="copy-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span id="copied-tooltip" class="hidden text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 px-1">¡Copiado!</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Servicios de Insignias -->
+      <div class="mt-6">
+        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">
+          Servicios de Insignias
+        </h4>
+        <div class="flex flex-col gap-2.5">
+          <!-- OpenBadge Passport -->
+          <a
+            href="https://openbadgepassport.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
+          >
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>OpenBadge Passport</span>
+          </a>
+
+          <!-- Badgr -->
+          <a
+            href="https://badgr.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
+          >
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>Badgr</span>
+          </a>
+
+          <!-- Credly -->
+          <a
+            href="https://www.credly.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
+          >
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>Credly</span>
+          </a>
+
+          <!-- Parchment -->
+          <a
+            href="https://www.parchment.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
+          >
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>Parchment</span>
+          </a>
+
+          <!-- Validar Insignia (BadgeCheck official Open Badges validator) -->
+          <a
+            href={validatorUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 font-semibold text-sm transition-colors border border-purple-200 dark:border-purple-800 mt-1"
+          >
+            <svg class="w-4 h-4 shrink-0 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Validar Insignia Oficial</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="mt-6 pt-3 border-t border-gray-100 dark:border-gray-800 text-center">
+        <p class="text-[11px] text-gray-400 dark:text-gray-500">
+          Insignia emitida bajo el estándar Open Badges v2.0 · GDG on Campus UHU
+        </p>
+      </div>
+    </div>
+  </dialog>
+</badge-modal>
+
+<script>
+  // Standard W3C Custom Element (Web Component)
+  class BadgeModalElement extends HTMLElement {
+    dialog: HTMLDialogElement | null = null;
+    copyBtn: HTMLButtonElement | null = null;
+    closeBtn: HTMLButtonElement | null = null;
+    urlInput: HTMLInputElement | null = null;
+
+    connectedCallback() {
+      this.dialog = this.querySelector('dialog');
+      this.copyBtn = this.querySelector('[data-copy-btn]');
+      this.closeBtn = this.querySelector('[data-close-modal]');
+      this.urlInput = this.querySelector('#modal-url-input');
+
+      // Escuchar aperturas globales
+      window.addEventListener('open-badge-modal', () => {
+        this.open();
+      });
+
+      this.closeBtn?.addEventListener('click', () => this.close());
+
+      // Cerrar al pulsar el backdrop
+      this.dialog?.addEventListener('click', (e) => {
+        const rect = this.dialog?.getBoundingClientRect();
+        if (rect) {
+          const isInDialog = (
+            rect.top <= e.clientY &&
+            e.clientY <= rect.top + rect.height &&
+            rect.left <= e.clientX &&
+            e.clientX <= rect.left + rect.width
+          );
+          if (!isInDialog) {
+            this.close();
+          }
+        }
+      });
+
+      // Botón copiar
+      this.copyBtn?.addEventListener('click', async () => {
+        const url = this.getAttribute('data-assertion-url') || this.urlInput?.value || '';
+        try {
+          await navigator.clipboard.writeText(url);
+          const icon = this.querySelector('#copy-icon');
+          const tooltip = this.querySelector('#copied-tooltip');
+          icon?.classList.add('hidden');
+          tooltip?.classList.remove('hidden');
+          setTimeout(() => {
+            icon?.classList.remove('hidden');
+            tooltip?.classList.add('hidden');
+          }, 2000);
+        } catch (err) {
+          console.error('Error al copiar:', err);
+        }
+      });
+    }
+
+    open() {
+      this.dialog?.showModal();
+    }
+
+    close() {
+      this.dialog?.close();
+    }
+  }
+
+  // Registrar el Custom Element
+  if (!customElements.get('badge-modal')) {
+    customElements.define('badge-modal', BadgeModalElement);
+  }
+</script>

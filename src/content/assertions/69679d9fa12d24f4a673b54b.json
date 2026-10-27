@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Carlos Rodríguez Martín",
+    "identity": "sha256$8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "hackathon-2026",
+  "role": "1er Premio - Mejor Solución IA",
+  "issuedOn": "2026-10-24T18:00:00Z",
+  "evidence": "https://github.com/gdgoc-uhu/hackathon-2026-winning-project"
+}

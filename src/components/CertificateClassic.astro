@@ -1,0 +1,179 @@
+---
+import { getFullUrl } from '@/config/site';
+
+interface Props {
+  assertion: any;
+  badge: any;
+  assertionId: string;
+}
+
+const { assertion, badge, assertionId } = Astro.props;
+
+const issueDate = new Date(assertion.data.issuedOn).toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const certUrl = getFullUrl(`/cert/${assertionId}`);
+const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
+
+// LinkedIn Add to Profile URL
+// https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME...
+const linkedinUrl = new URL('https://www.linkedin.com/profile/add');
+linkedinUrl.searchParams.set('startTask', 'CERTIFICATION_NAME');
+linkedinUrl.searchParams.set('name', badge.data.name);
+linkedinUrl.searchParams.set('organizationName', 'GDG on Campus Universidad de Huelva');
+linkedinUrl.searchParams.set('issueYear', new Date(assertion.data.issuedOn).getFullYear().toString());
+linkedinUrl.searchParams.set('issueMonth', (new Date(assertion.data.issuedOn).getMonth() + 1).toString());
+linkedinUrl.searchParams.set('certUrl', certUrl);
+linkedinUrl.searchParams.set('certId', assertionId);
+---
+
+<div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+  <!-- Card principal estilo clásico institucional -->
+  <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-800 rounded-3xl shadow-xl overflow-hidden relative">
+    
+    <!-- Barra decorativa superior Google Colors -->
+    <div class="h-2 w-full flex">
+      <div class="h-full flex-1 bg-gdg-blue"></div>
+      <div class="h-full flex-1 bg-gdg-red"></div>
+      <div class="h-full flex-1 bg-gdg-yellow"></div>
+      <div class="h-full flex-1 bg-gdg-green"></div>
+    </div>
+
+    <!-- Banner de Verificación Oficial -->
+    <div class="bg-emerald-50 dark:bg-emerald-950/40 border-b border-emerald-100 dark:border-emerald-900/40 px-6 py-2.5 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300">
+      <div class="flex items-center gap-2 font-medium">
+        <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        <span>Credencial Verificada · Open Badges v2.0 estándar</span>
+      </div>
+      <span class="font-mono text-[11px] text-emerald-700 dark:text-emerald-400 hidden sm:inline">
+        ID: {assertionId.substring(0, 12)}...
+      </span>
+    </div>
+
+    <div class="p-6 sm:p-10">
+      <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+        <!-- Badge Image Graphic -->
+        <div class="flex flex-col items-center shrink-0">
+          <div class="w-48 h-48 sm:w-56 sm:h-56 p-2 rounded-2xl bg-gradient-to-b from-gray-50 to-white dark:from-slate-800 dark:to-slate-900 border border-gray-100 dark:border-gray-800 shadow-inner flex items-center justify-center">
+            <img
+              src={badge.data.image}
+              alt={badge.data.name}
+              class="w-full h-full object-contain filter drop-shadow-md transition-transform hover:scale-105 duration-300"
+            />
+          </div>
+          <span class="mt-3 text-[11px] text-gray-400 dark:text-gray-500 font-mono">
+            Insignia Digital Criptográfica
+          </span>
+        </div>
+
+        <!-- Certificate Details -->
+        <div class="flex-1 text-center md:text-left">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-semibold uppercase tracking-wider mb-3">
+            <span>{assertion.data.role}</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            {badge.data.name}
+          </h1>
+
+          <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+            <div class="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 font-medium">
+              Otorgado a
+            </div>
+            <div class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mt-0.5">
+              {assertion.data.recipient.name}
+            </div>
+          </div>
+
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            {badge.data.description}
+          </p>
+
+          <!-- Metadata Grid -->
+          <div class="mt-6 grid grid-cols-2 gap-4 text-xs pt-4 border-t border-gray-100 dark:border-gray-800">
+            <div>
+              <span class="text-gray-400 block font-medium">Fecha de emisión</span>
+              <span class="font-semibold text-gray-800 dark:text-gray-200">{issueDate}</span>
+            </div>
+            <div>
+              <span class="text-gray-400 block font-medium">Emisor</span>
+              <span class="font-semibold text-gray-800 dark:text-gray-200">GDG on Campus UHU</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Narrative / Criteria -->
+      <div class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gdg-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          Criterios y Requisitos Superados
+        </h3>
+        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-800/60 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
+          {badge.data.criteria.narrative}
+        </p>
+
+        <!-- Tags -->
+        {badge.data.tags.length > 0 && (
+          <div class="mt-4 flex flex-wrap items-center gap-1.5">
+            <span class="text-xs text-gray-400 font-medium mr-1">Competencias:</span>
+            {badge.data.tags.map((tag: string) => (
+              <span class="text-[11px] px-2.5 py-1 rounded-md bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-medium">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 flex flex-wrap items-center justify-between gap-3">
+        <!-- Main Button: Open Modal (as requested by user) -->
+        <button
+          type="button"
+          onclick="window.dispatchEvent(new CustomEvent('open-badge-modal'))"
+          class="px-5 py-3 rounded-xl bg-gdg-blue hover:bg-blue-600 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2 group"
+        >
+          <svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          <span>Añadir a tu perfil</span>
+        </button>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- LinkedIn Add to Profile -->
+          <a
+            href={linkedinUrl.toString()}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2.5 rounded-xl bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-semibold transition-colors flex items-center gap-2"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45c-.9 0-1.63.73-1.63 1.63 0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63 0-.9-.73-1.63-1.63-1.63Z" />
+            </svg>
+            <span>Añadir a LinkedIn</span>
+          </a>
+
+          <!-- JSON Endpoint link -->
+          <a
+            href={assertionJsonUrl}
+            target="_blank"
+            class="px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300 text-xs font-medium transition-colors flex items-center gap-1.5"
+          >
+            <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            <span>Assertion JSON</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
