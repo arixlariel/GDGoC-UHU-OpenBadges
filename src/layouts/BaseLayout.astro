@@ -716,16 +716,24 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         margin: 6mm;
       }
       @media print {
-        * {
+        *, *::before, *::after {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
           color-adjust: exact !important;
+          box-shadow: none !important;
+          text-shadow: none !important;
+          filter: none !important;
+          backdrop-filter: none !important;
+          animation: none !important;
+          transition: none !important;
+          font-variant-ligatures: none !important;
         }
-        header, footer, .no-print, #theme-fx-container {
+        header, footer, .no-print, #theme-fx-container, .diploma-watermark {
           display: none !important;
         }
         html, body {
           background: #ffffff !important;
+          font-family: 'Google Sans', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
           width: 100% !important;
           height: 196mm !important;
           max-height: 196mm !important;
@@ -748,7 +756,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           max-width: 280mm !important;
         }
         .print-diploma-wrapper {
-          box-shadow: none !important;
           transform: none !important;
           width: 100% !important;
           max-width: none !important;
@@ -762,30 +769,84 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           min-height: 0 !important;
           height: 184mm !important;
           max-height: 184mm !important;
-          padding: 20px 36px !important;
+          padding: 36px 48px !important;
           justify-content: space-between !important;
         }
+        /* Solid backgrounds in print to prevent PDF transparency-flattening pink squares */
+        html[data-theme="google"] .diploma-inner { background: #FFFFFF !important; }
+        html[data-theme="cyber"] .diploma-inner { background: #070B19 !important; }
+        html[data-theme="piscina"] .diploma-inner { background: #F2FCFF !important; }
+        html[data-theme="nieve"] .diploma-inner { background: #0A1D37 !important; }
+        html[data-theme="caramelos"] .diploma-inner { background: #FFF7FB !important; }
+
+        html[data-theme="google"] .diploma-meta-box { background: #F8F9FA !important; }
+        html[data-theme="cyber"] .diploma-meta-box { background: #0C142C !important; }
+        html[data-theme="piscina"] .diploma-meta-box { background: #FFFFFF !important; }
+        html[data-theme="nieve"] .diploma-meta-box { background: #0E2442 !important; }
+        html[data-theme="caramelos"] .diploma-meta-box { background: #FFE8F3 !important; }
+
+        /* Keep inner frames comfortably near the edges so top/bottom blocks never collide with them */
+        .diploma-frame-1 {
+          inset: 12px !important;
+        }
+        .diploma-frame-2 {
+          inset: 16px !important;
+        }
+        /* Remove opacity < 1 on text/ornaments in print so PDF engine doesn't draw bounding boxes */
+        .print-desc,
+        .fx-layer,
+        .fx-layer span,
+        .fx-layer svg {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        .fx-layer span.top-6 {
+          top: 26px !important;
+        }
+        .fx-layer span.bottom-6 {
+          bottom: 26px !important;
+        }
+        .print-header-block > div:first-child {
+          margin-bottom: 10px !important;
+        }
         .print-body-block {
-          margin-top: 8px !important;
-          margin-bottom: 8px !important;
+          margin-top: 4px !important;
+          margin-bottom: 4px !important;
         }
         .print-recipient-box {
           padding-bottom: 8px !important;
-          margin-bottom: 10px !important;
+          margin-bottom: 8px !important;
         }
         .diploma-recipient-name {
-          font-size: 32px !important;
+          font-size: 30px !important;
         }
         .diploma-meta-box {
-          margin-top: 12px !important;
-          padding: 10px 14px !important;
+          margin-top: 10px !important;
+          padding: 9px 14px !important;
         }
         .print-tags {
-          margin-top: 8px !important;
+          margin-top: 12px !important;
+          margin-bottom: 2px !important;
+          width: 100% !important;
+          display: flex !important;
+          flex-wrap: wrap !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px !important;
+        }
+        .print-tags .theme-badge-pill,
+        .print-header-block .theme-badge-pill {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-align: center !important;
+          line-height: 1 !important;
+          padding: 5px 13px !important;
+          letter-spacing: 0.01em !important;
         }
         .print-footer-block {
           padding-top: 12px !important;
-          margin-top: 4px !important;
+          margin-top: 2px !important;
         }
         /* Ensure gradient text prints solid & crisp in all PDF engines */
         .diploma-recipient-name,

@@ -91,7 +91,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
       </div>
 
       <!-- Marca de agua central institucional con el logo de la ETSI UHU -->
-      <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.055]">
+      <div class="diploma-watermark absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.055]">
         <div class="w-80 h-80 sm:w-96 sm:h-96 rounded-full overflow-hidden border-4 border-current p-2">
           <img
             src="/images/gdgoc-uhu-logo.jpg"
@@ -140,9 +140,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
           </div>
 
           <!-- Rol o Reconocimiento -->
-          <div class="theme-badge-pill inline-flex items-center gap-2 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-[0.14em] mb-2">
-            {assertion.data.role}
-          </div>
+          <div class="theme-badge-pill inline-flex items-center justify-center text-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider leading-none mb-2">{assertion.data.role.trim()}</div>
 
           <h1 class="print-badge-title font-display text-xl sm:text-3xl font-bold theme-text-primary uppercase tracking-[0.06em] mt-1">
             {badge.data.name}
@@ -165,7 +163,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
               {assertion.data.recipient.name}
             </h2>
             <svg
-              class="diploma-underline-accent absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-32 h-1 rounded-full overflow-hidden"
+              class="diploma-underline-accent absolute -bottom-[3px] left-0 right-0 mx-auto w-32 h-1 rounded-full overflow-hidden"
               viewBox="0 0 128 4"
               preserveAspectRatio="none"
               aria-hidden="true"
@@ -210,11 +208,9 @@ linkedinUrl.searchParams.set('certId', assertionId);
 
           <!-- Tags de Competencias -->
           {badge.data.tags && badge.data.tags.length > 0 && (
-            <div class="print-tags mt-3.5 flex flex-wrap items-center justify-center gap-1.5">
+            <div class="print-tags mt-4 w-full flex flex-wrap items-center justify-center gap-2">
               {badge.data.tags.map((tag: string) => (
-                <span class="theme-badge-pill text-[11px] px-3 py-0.5 rounded-full font-semibold">
-                  #{tag}
-                </span>
+                <span class="theme-badge-pill inline-flex items-center justify-center text-center text-[11px] leading-none px-3.5 py-1.5 rounded-full font-semibold">{`#${tag.trim()}`}</span>
               ))}
             </div>
           )}
@@ -232,14 +228,14 @@ linkedinUrl.searchParams.set('certId', assertionId);
           </div>
 
           <!-- Sello Central Verificado con puntos SVG para impresión perfecta -->
-          <div class="theme-pill-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-full shrink-0">
+          <div class="theme-pill-btn inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-full shrink-0">
             <svg class="w-12 h-2.5 shrink-0 overflow-visible" viewBox="0 0 46 10" aria-hidden="true">
               <circle cx="5" cy="5" r="4" fill="#4285F4" />
               <circle cx="17" cy="5" r="4" fill="#EA4335" />
               <circle cx="29" cy="5" r="4" fill="#FBBC04" />
               <circle cx="41" cy="5" r="4" fill="#34A853" />
             </svg>
-            <span class="text-[11px] font-mono font-bold theme-text-primary ml-0.5">VERIFIED</span>
+            <span class="text-[11px] leading-none font-mono font-bold theme-text-primary">VERIFIED</span>
           </div>
 
           <div class="flex flex-col items-center min-w-[160px] sm:min-w-[200px]">
