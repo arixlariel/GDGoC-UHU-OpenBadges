@@ -93,8 +93,7 @@ jobs:
 
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm -f publish.json 2>/dev/null || true
-          git rm -rf publish/ 2>/dev/null || true
+          git add -u .
           git add -A src/content/badges/ src/content/assertions/
           if ! git diff --staged --quiet; then
             git commit -m "chore(publish): organizar certificados publicados y limpiar cola temporal [skip ci]"
