@@ -1,0 +1,11 @@
+{
+  "name": "Creative UI & Design Jam: Pixel Candy Edition",
+  "description": "Reconocimiento oficial por diseñar y prototipar interfaces interactivas llenas de color, micro-animaciones y creatividad durante la Design Jam de GDG on Campus Universidad de Huelva.",
+  "image": "/images/badges/creative-ui-jam.svg",
+  "criteria": {
+    "narrative": "El participante completó el reto de diseño creativo en equipo, presentando un sistema de diseño original con animaciones CSS avanzadas y experiencia de usuario sobresaliente."
+  },
+  "tags": ["UI/UX", "Creative Coding", "CSS Animations", "Design Jam"],
+  "style": "candy",
+  "issuerId": "gdgoc-uhu"
+}

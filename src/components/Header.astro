@@ -2,19 +2,19 @@
 import { siteConfig, getFullUrl } from '@/config/site';
 ---
 
-<header class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-40 border-b border-[#DADCE0] dark:border-slate-800 shadow-[0_1px_2px_0_rgba(60,64,67,0.06)]">
-  <!-- Top 4-color Google Brand Strip -->
-  <div class="h-1 w-full flex">
+<header class="theme-header sticky top-0 z-40 backdrop-blur-xl transition-all duration-500">
+  <!-- Top Brand Strip (adapts to active theme) -->
+  <div class="theme-top-strip h-1.5 w-full flex overflow-hidden">
     <div class="h-full flex-1 bg-[#4285F4]"></div>
     <div class="h-full flex-1 bg-[#EA4335]"></div>
     <div class="h-full flex-1 bg-[#FBBC04]"></div>
     <div class="h-full flex-1 bg-[#34A853]"></div>
   </div>
 
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
     <a href={getFullUrl('/')} class="flex items-center gap-3 group min-w-0">
-      <!-- Official GDGoC UHU Logo (Uploaded Illustration) -->
-      <div class="w-11 h-11 rounded-xl overflow-hidden border border-[#DADCE0] dark:border-slate-700 shadow-sm shrink-0 group-hover:scale-105 transition-transform bg-white">
+      <!-- Official GDGoC UHU Logo -->
+      <div class="w-11 h-11 rounded-xl overflow-hidden border theme-border shadow-sm shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 bg-white">
         <img
           src="/images/gdgoc-uhu-logo.jpg"
           alt="GDG on Campus Universidad de Huelva"
@@ -22,32 +22,108 @@ import { siteConfig, getFullUrl } from '@/config/site';
         />
       </div>
       <div class="truncate">
-        <div class="font-bold text-[15px] text-[#202124] dark:text-white leading-tight flex items-center gap-1.5 tracking-tight">
-          <span>GDG</span>
-          <span class="font-normal text-[#5F6368] dark:text-slate-400">on Campus</span>
-          <span class="hidden sm:inline-block text-[#DADCE0] dark:text-slate-700">·</span>
-          <span class="hidden sm:inline-block font-medium text-[#1A73E8] dark:text-sky-400 text-xs">Certificados Digitales</span>
+        <div class="font-bold text-[15px] theme-text-primary leading-tight tracking-tight">
+          GDG on Campus
         </div>
-        <div class="text-xs font-medium text-[#5F6368] dark:text-slate-400 leading-tight truncate">
+        <div class="text-xs font-medium theme-text-secondary leading-tight truncate">
           Universidad de Huelva
         </div>
       </div>
     </a>
 
-    <nav class="flex items-center gap-2.5 sm:gap-3 text-sm font-medium shrink-0">
-      <a
-        href={getFullUrl('/')}
-        class="px-3 py-2 rounded-lg text-[#5F6368] dark:text-slate-300 hover:bg-[#F1F3F4] dark:hover:bg-slate-800 hover:text-[#202124] dark:hover:text-white transition-colors hidden md:inline-block"
-      >
-        Certificados Digitales
-      </a>
+    <nav class="flex items-center gap-2 sm:gap-2.5 text-sm font-medium shrink-0">
+      <!-- Style / Theme Switcher Dropdown & Cycle Button -->
+      <div class="relative" id="theme-switcher-container">
+        <button
+          type="button"
+          id="theme-menu-button"
+          aria-expanded="false"
+          class="theme-pill-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer select-none"
+          title="Cambiar estilo visual de la página"
+        >
+          <span id="current-theme-icon" class="text-base leading-none">🏛️</span>
+          <span id="current-theme-label" class="hidden sm:inline">Clásico</span>
+          <svg class="w-3.5 h-3.5 opacity-70 transition-transform duration-200" id="theme-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu with the 5 Styles -->
+        <div
+          id="theme-dropdown-menu"
+          class="hidden absolute right-0 mt-2 w-60 rounded-2xl p-2 shadow-2xl border theme-dropdown-panel z-50 backdrop-blur-2xl transition-all"
+        >
+          <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider theme-text-secondary opacity-75">
+            Selecciona un estilo
+          </div>
+          <button
+            type="button"
+            data-set-theme="classic"
+            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer"
+          >
+            <span class="text-lg">🏛️</span>
+            <div class="flex-1 leading-tight">
+              <div class="font-bold">Clásico Google</div>
+              <div class="text-[11px] opacity-70">Institucional · Material 3</div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            data-set-theme="cyber"
+            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer mt-1"
+          >
+            <span class="text-lg">⚡</span>
+            <div class="flex-1 leading-tight">
+              <div class="font-bold">Cyber Neón</div>
+              <div class="text-[11px] opacity-70">Matrix · Futuro · Glitch</div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            data-set-theme="candy"
+            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer mt-1"
+          >
+            <span class="text-lg">🦄</span>
+            <div class="flex-1 leading-tight">
+              <div class="font-bold">Unicornios & Caramelos</div>
+              <div class="text-[11px] opacity-70">Arcoíris · Pastel · Dulce</div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            data-set-theme="summer"
+            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer mt-1"
+          >
+            <span class="text-lg">🏖️</span>
+            <div class="flex-1 leading-tight">
+              <div class="font-bold">Piscina Verano</div>
+              <div class="text-[11px] opacity-70">Agua Turquesa · Refrescante</div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            data-set-theme="winter"
+            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer mt-1"
+          >
+            <span class="text-lg">❄️</span>
+            <div class="flex-1 leading-tight">
+              <div class="font-bold">Invierno & Nieve</div>
+              <div class="text-[11px] opacity-70">Glaciar · Aurora · Hielo</div>
+            </div>
+          </button>
+        </div>
+      </div>
 
       <!-- LinkedIn Button -->
       <a
         href={siteConfig.linkedinUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-[#DADCE0] dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-[#F8F9FA] dark:hover:bg-slate-700 text-[#202124] dark:text-slate-200 text-xs sm:text-sm font-medium transition-all shadow-2xs"
+        class="theme-pill-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300"
       >
         <svg class="w-4 h-4 text-[#0A66C2] fill-current shrink-0" viewBox="0 0 24 24">
           <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45c-.9 0-1.63.73-1.63 1.63 0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63 0-.9-.73-1.63-1.63-1.63Z" />
@@ -60,7 +136,7 @@ import { siteConfig, getFullUrl } from '@/config/site';
         href={siteConfig.communityUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1A73E8] hover:bg-[#1557B0] text-white shadow-xs hover:shadow-md transition-all text-xs sm:text-sm font-medium"
+        class="theme-primary-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-white transition-all duration-300 text-xs sm:text-sm font-semibold"
       >
         <span>Comunidad</span>
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

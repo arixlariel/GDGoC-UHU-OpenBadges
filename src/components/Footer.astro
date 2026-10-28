@@ -2,20 +2,20 @@
 import { siteConfig } from '@/config/site';
 ---
 
-<footer class="mt-20 border-t border-[#DADCE0] dark:border-slate-800 bg-white dark:bg-slate-900 py-10 text-xs text-[#5F6368] dark:text-slate-400">
+<footer class="theme-footer relative z-10 mt-20 border-t theme-border py-10 text-xs theme-text-secondary backdrop-blur-xl transition-all duration-500">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
     <div class="flex items-center gap-3.5">
       <img
         src="/images/gdgoc-uhu-logo.jpg"
         alt="GDG on Campus UHU"
-        class="w-10 h-10 rounded-lg object-cover border border-[#DADCE0] dark:border-slate-700"
+        class="w-10 h-10 rounded-lg object-cover border theme-border bg-white shadow-xs"
       />
       <div class="flex flex-col items-start gap-0.5">
-        <div class="font-bold text-sm text-[#202124] dark:text-white">
+        <div class="font-bold text-sm theme-text-primary">
           GDG on Campus · Universidad de Huelva
         </div>
-        <div class="text-xs text-[#5F6368] dark:text-slate-400">
-          Certificados Digitales verificados bajo el estándar internacional <span class="font-medium text-[#202124] dark:text-slate-200">Open Badges v2.0</span>
+        <div class="text-xs theme-text-secondary">
+          Certificados Digitales verificados bajo el estándar internacional <span class="font-semibold theme-text-primary">Open Badges 2.0</span>
         </div>
       </div>
     </div>
@@ -25,25 +25,25 @@ import { siteConfig } from '@/config/site';
         href={siteConfig.communityUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-[#1A73E8] dark:hover:text-sky-400 transition-colors"
+        class="theme-link transition-colors"
       >
         Comunidad
       </a>
-      <span class="text-[#DADCE0] dark:text-slate-700">·</span>
+      <span class="opacity-40">·</span>
       <a
         href={siteConfig.linkedinUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-[#1A73E8] dark:hover:text-sky-400 transition-colors"
+        class="theme-link transition-colors"
       >
         LinkedIn
       </a>
-      <span class="text-[#DADCE0] dark:text-slate-700">·</span>
+      <span class="opacity-40">·</span>
       <a
         href="https://openbadges.org"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-[#1A73E8] dark:hover:text-sky-400 transition-colors"
+        class="theme-link transition-colors"
       >
         OpenBadges.org
       </a>

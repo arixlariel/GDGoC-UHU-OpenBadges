@@ -1,0 +1,11 @@
+{
+  "name": "Winter Cloud Summit & Sub-Zero Coding Challenge",
+  "description": "Acreditación oficial por superar los retos algorítmicos y de arquitectura en la nube durante el encuentro invernal de GDG on Campus Universidad de Huelva.",
+  "image": "/images/badges/winter-cloud-freeze.svg",
+  "criteria": {
+    "narrative": "Resolución de los problemas técnicos del desafío invernal y participación en las ponencias de infraestructura distribuida y Kubernetes."
+  },
+  "tags": ["Winter Summit", "Cloud Native", "Algorithms", "Kubernetes"],
+  "style": "winter",
+  "issuerId": "gdgoc-uhu"
+}

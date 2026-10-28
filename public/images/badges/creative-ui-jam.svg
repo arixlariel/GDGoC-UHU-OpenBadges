@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="candyGrad" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF6FD8"/>
+      <stop offset="35%" stop-color="#FF9A8B"/>
+      <stop offset="70%" stop-color="#A18CD1"/>
+      <stop offset="100%" stop-color="#70E1F5"/>
+    </linearGradient>
+    <linearGradient id="rainbowArc" x1="40" y1="120" x2="200" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF4E88"/>
+      <stop offset="25%" stop-color="#FF9F1C"/>
+      <stop offset="50%" stop-color="#FFE66D"/>
+      <stop offset="75%" stop-color="#2EC4B6"/>
+      <stop offset="100%" stop-color="#9B5DE5"/>
+    </linearGradient>
+  </defs>
+  <circle cx="120" cy="120" r="106" fill="url(#candyGrad)" opacity="0.18"/>
+  <circle cx="120" cy="120" r="94" fill="#FFF7FB" stroke="url(#rainbowArc)" stroke-width="8"/>
+  <path d="M58 142 C58 95, 182 95, 182 142" stroke="url(#rainbowArc)" stroke-width="14" stroke-linecap="round" fill="none"/>
+  <path d="M74 142 C74 108, 166 108, 166 142" stroke="#FFD166" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- Candy clouds -->
+  <circle cx="66" cy="148" r="18" fill="#FFFFFF" stroke="#FF85C0" stroke-width="3"/>
+  <circle cx="84" cy="152" r="14" fill="#FFFFFF" stroke="#FF85C0" stroke-width="3"/>
+  <circle cx="174" cy="148" r="18" fill="#FFFFFF" stroke="#B388FF" stroke-width="3"/>
+  <circle cx="156" cy="152" r="14" fill="#FFFFFF" stroke="#B388FF" stroke-width="3"/>
+  <!-- Unicorn Horn / Star -->
+  <polygon points="120,44 132,88 108,88" fill="#FFE66D" stroke="#FF4E88" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="120" cy="136" r="16" fill="#FF6FD8"/>
+  <path d="M104 136 C104 126, 136 126, 136 136" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <text x="120" y="192" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="14" fill="#9B5DE5" letter-spacing="1.5">CANDY UI JAM</text>
+</svg>

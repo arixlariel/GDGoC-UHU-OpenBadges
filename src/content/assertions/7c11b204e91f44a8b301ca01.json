@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Elena Domínguez Vega",
+    "identity": "sha256$3c91a4f7b8e20194d5a6c7b8e9f0123456789abcdef0123456789abcdef01234",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "creative-ui-jam",
+  "role": "Premio Diseño Más Creativo 🦄",
+  "issuedOn": "2026-05-18T17:30:00Z",
+  "evidence": "https://github.com/gdgoc-uhu/candy-ui-jam-showcase"
+}

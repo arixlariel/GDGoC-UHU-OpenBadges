@@ -1,0 +1,11 @@
+{
+  "name": "GDGoC Summer Code & Poolside Bootcamp",
+  "description": "Certificado de superación del bootcamp intensivo de verano de desarrollo web y mobile organizado por GDG on Campus Universidad de Huelva.",
+  "image": "/images/badges/summer-code-camp.svg",
+  "criteria": {
+    "narrative": "Participación activa en las sesiones prácticas de verano, desplegando una aplicación completa en producción junto a la comunidad."
+  },
+  "tags": ["Summer Camp", "Flutter", "Web Dev", "Firebase"],
+  "style": "summer",
+  "issuerId": "gdgoc-uhu"
+}

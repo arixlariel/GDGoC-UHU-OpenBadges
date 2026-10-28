@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Sofía Navarro Ruiz",
+    "identity": "sha256$9a44c6f9d0a42316f7c8e9d0a123456789abcdef0123456789abcdef01234567",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "winter-cloud-freeze",
+  "role": "Finalista Sub-Zero Challenge ❄️",
+  "issuedOn": "2026-12-14T18:00:00Z",
+  "evidence": "https://github.com/gdgoc-uhu/winter-summit-solutions"
+}

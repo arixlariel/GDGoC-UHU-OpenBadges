@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="poolGrad" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00E1FD"/>
+      <stop offset="50%" stop-color="#00B4DB"/>
+      <stop offset="100%" stop-color="#0083B0"/>
+    </linearGradient>
+    <linearGradient id="sunGrad" x1="80" y1="50" x2="160" y2="130" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFF176"/>
+      <stop offset="100%" stop-color="#FF8A65"/>
+    </linearGradient>
+  </defs>
+  <circle cx="120" cy="120" r="106" fill="url(#poolGrad)" opacity="0.2"/>
+  <circle cx="120" cy="120" r="94" fill="#E0F7FA" stroke="url(#poolGrad)" stroke-width="8"/>
+  <!-- Sun -->
+  <circle cx="120" cy="96" r="34" fill="url(#sunGrad)"/>
+  <!-- Pool waves -->
+  <path d="M36 140 Q68 124, 100 140 T164 140 T204 140" stroke="#00B4DB" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M44 162 Q76 146, 108 162 T172 162 T196 162" stroke="#0083B0" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- Bubbles -->
+  <circle cx="72" cy="82" r="7" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="170" cy="76" r="9" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="182" cy="98" r="5" fill="#FFFFFF" opacity="0.8"/>
+  <text x="120" y="196" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="14" fill="#006080" letter-spacing="1.5">SUMMER CAMP</text>
+</svg>

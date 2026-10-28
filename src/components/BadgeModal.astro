@@ -6,8 +6,8 @@ interface Props {
 
 const { assertionUrl, badgeName } = Astro.props;
 
-// Encode URL for direct validator verification
-const validatorUrl = `https://badgecheck.io/?url=${encodeURIComponent(assertionUrl)}`;
+// Official IMS Global Open Badges Validator
+const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
 ---
 
 <!-- Web Component Custom Element -->

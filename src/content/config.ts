@@ -1,5 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 
+const styleEnum = z.enum(['classic', 'hackathon', 'cyber', 'candy', 'summer', 'winter']);
+
 const badgesCollection = defineCollection({
   type: 'data',
   schema: z.object({
@@ -10,7 +12,7 @@ const badgesCollection = defineCollection({
       narrative: z.string(),
     }),
     tags: z.array(z.string()).default([]),
-    style: z.enum(['classic', 'hackathon', 'cyber']).default('classic'),
+    style: styleEnum.default('classic'),
     issuerId: z.string().default('gdgoc-uhu'),
   }),
 });
@@ -31,7 +33,7 @@ const assertionsCollection = defineCollection({
     issuedOn: z.string(),
     expires: z.string().optional(),
     evidence: z.string().optional(),
-    styleOverride: z.enum(['classic', 'hackathon', 'cyber']).optional(),
+    styleOverride: styleEnum.optional(),
   }),
 });
 

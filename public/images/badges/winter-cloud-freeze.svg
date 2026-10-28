@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="iceGrad" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7DD3FC"/>
+      <stop offset="50%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  <circle cx="120" cy="120" r="106" fill="url(#iceGrad)" opacity="0.18"/>
+  <circle cx="120" cy="120" r="94" fill="#F0F9FF" stroke="url(#iceGrad)" stroke-width="8"/>
+  <!-- Snowflake Crystal -->
+  <g stroke="url(#iceGrad)" stroke-width="6" stroke-linecap="round">
+    <line x1="120" y1="54" x2="120" y2="166"/>
+    <line x1="71" y1="82" x2="169" y2="138"/>
+    <line x1="71" y1="138" x2="169" y2="82"/>
+    <!-- Crystal branches -->
+    <polyline points="108,68 120,78 132,68" fill="none"/>
+    <polyline points="108,152 120,142 132,152" fill="none"/>
+    <polyline points="78,98 92,94 86,80" fill="none"/>
+    <polyline points="162,122 148,126 154,140" fill="none"/>
+    <polyline points="86,140 92,126 78,122" fill="none"/>
+    <polyline points="154,80 148,94 162,98" fill="none"/>
+  </g>
+  <circle cx="120" cy="110" r="10" fill="#E0F2FE" stroke="#0284C7" stroke-width="4"/>
+  <text x="120" y="196" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="13" fill="#0369A1" letter-spacing="1.5">WINTER SUMMIT</text>
+</svg>

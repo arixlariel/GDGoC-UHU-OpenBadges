@@ -1,8 +1,7 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import CertificateClassic from '@/components/CertificateClassic.astro';
-import CertificateHackathon from '@/components/CertificateHackathon.astro';
+import CertificateDiploma from '@/components/CertificateDiploma.astro';
 import BadgeModal from '@/components/BadgeModal.astro';
 import { getFullUrl } from '@/config/site';
 
@@ -28,9 +27,10 @@ const badge = badgeEntry;
 const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
 const badgeImageUrl = getFullUrl(badge.data.image);
 
-// Determinar qué estilo renderizar ('classic' o 'hackathon'/'cyber')
-const activeStyle = assertion.data.styleOverride || badge.data.style || 'classic';
-const isDarkStyle = activeStyle === 'hackathon' || activeStyle === 'cyber';
+// Determinar qué estilo propio tiene este certificado
+const rawStyle = assertion.data.styleOverride || badge.data.style || 'classic';
+const normalizedStyle = (rawStyle === 'hackathon' ? 'cyber' : rawStyle) as 'classic' | 'cyber' | 'candy' | 'summer' | 'winter';
+
 const pageTitle = `${badge.data.name} - ${assertion.data.recipient.name} | Certificados Digitales GDGoC UHU`;
 const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgado a ${assertion.data.recipient.name} por GDG on Campus Universidad de Huelva.`;
 ---
@@ -39,22 +39,15 @@ const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgad
   title={pageTitle}
   description={pageDescription}
   image={badgeImageUrl}
-  theme={isDarkStyle ? 'dark' : 'auto'}
+  certStyle={normalizedStyle}
   jsonLdUrl={assertionJsonUrl}
 >
-  {isDarkStyle ? (
-    <CertificateHackathon
-      assertion={assertion}
-      badge={badge}
-      assertionId={assertionId}
-    />
-  ) : (
-    <CertificateClassic
-      assertion={assertion}
-      badge={badge}
-      assertionId={assertionId}
-    />
-  )}
+  <CertificateDiploma
+    assertion={assertion}
+    badge={badge}
+    assertionId={assertionId}
+    initialStyle={normalizedStyle}
+  />
 
   <!-- Modal interactivo Web Component (Añadir a tu perfil) -->
   <BadgeModal
@@ -62,4 +55,3 @@ const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgad
     badgeName={badge.data.name}
   />
 </BaseLayout>
-
