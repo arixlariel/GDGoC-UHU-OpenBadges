@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "issue": "node scripts/issue-badge.mjs",
-    "bulk": "node scripts/bulk-issue.mjs"
+    "bulk": "node scripts/bulk-issue.mjs",
+    "bulk-issue": "node scripts/bulk-issue.mjs"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.5",

@@ -1,6 +1,6 @@
 # GDGoC Universidad de Huelva - Open Badges
 
-Bienvenido al manual oficial de gestión y emisión de certificados digitales para enuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en el estándar internacional **Open Badges 2.0** de 1EdTech. Solo los organizadores (con acceso al correo del GDGoC, quien administra el repositorio) pueden administrar las acreditaciones.
+Bienvenido al manual oficial de gestión y emisión de certificados digitales para nuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en el estándar internacional **Open Badges 2.0** de 1EdTech. Solo los organizadores (con acceso al correo del GDGoC, quien administra el repositorio) pueden administrar las acreditaciones.
 
 ---
 
@@ -16,7 +16,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
    - [Método D: Emisión masiva desde `.csv` con GitHub Actions](#----método-d-emisión-masiva-desde-csv-con-github-actions)
 5. [Cómo publicar los certificados (`git push`)](#5-cómo-publicar-los-certificados-git-push)
 6. [Cómo compartir los certificados con los miembros](#6-cómo-compartir-los-certificados-con-los-miembros)
-7. [Privacidad y Protección de Datos (RGPD/LOPD)](#7-privacidad-y-protección-de-datos-rgpd/lopd)
+7. [Privacidad y Protección de Datos (RGPD/LOPD)](#7-privacidad-y-protección-de-datos-rgpdlopd)
 
 ---
 
@@ -43,7 +43,9 @@ Open Badges/
 │   └── config/
 │       └── site.ts                  <-- Datos del emisor o issuer (GDGoC UHU)
 └── scripts/
-    └── issue-badge.mjs              <-- Asistente automático para emitir certificados
+    ├── issue-badge.mjs              <-- Asistente automático para emitir certificados individuales
+    ├── bulk-issue.mjs               <-- Emisión masiva de certificados desde archivo .csv
+    └── send-emails.mjs              <-- Envío automático de correos con los certificados
 ```
 
 ---
@@ -86,6 +88,7 @@ La primera vez es recomendable crear una carpeta para el proyecto y sus herramie
 
 ```bash
 git clone https://github.com/arixlariel/GDGoC-UHU-OpenBadges.git
+cd GDGoC-UHU-OpenBadges
 npm install
 ```
 
@@ -105,7 +108,7 @@ npm run issue
 El asistente te pedirá:
 1. **Nombre completo**
 2. **Email de contacto** (solo se usa para calcular el hash `SHA-256`)
-3. **`name` de la badge**
+3. **ID de la badge** (nombre del archivo `.json` en `src/content/badges/` sin el `.json`, ej: `workshop-ai-cloud`)
 4. **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
 5. **Enlace a proyecto o evidencia** (opcional)
 
@@ -128,7 +131,7 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
     "type": "email",
     "salt": "gdgoc-uhu-salt-2026"         <-- Se pega justo detrás del email, y ese conjunto es lo que se cifra
   },
-  "badgeId": "workshop-ai-cloud",         <-- Campo `name` de la badge
+  "badgeId": "workshop-ai-cloud",         <-- Nombre del archivo .json de la badge (sin .json)
   "role": "Asistente Certificado",
   "issuedOn": "2026-10-27T18:00:00Z",
   "evidence": "https://github.com/laura/proyecto-final"
@@ -162,7 +165,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 2. En la lista de flujos de trabajo, corre el siguiente workflow:  
    > **Emitir certificados y emails**
 3. Rellena los campos:
-   - **`name` de la badge**
+   - **ID de la badge** (nombre del archivo `.json` en `src/content/badges/` sin el `.json`, ej: `workshop-ai-cloud`)
    - **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
    - **¿Solo emitir a check-ins?**
    - **¿Enviar `gmail` automático con la `URL` del certificado?**
