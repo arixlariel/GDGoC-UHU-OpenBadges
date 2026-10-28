@@ -106,7 +106,7 @@ jobs:
 
       - name: Enviar correos pendientes y limpiar carpeta publish/
         env:
-          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER || 'gdgoc.huelva@gmail.com' }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           SITE_URL: "https://gdguhu.es"
         run: |

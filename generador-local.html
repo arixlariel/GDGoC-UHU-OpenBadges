@@ -751,7 +751,7 @@
               />
             </div>
             <div class="form-group">
-              <label>Enlace a evidencia (opcional)</label>
+              <label>Enlace a evidencia <span style="font-weight: 400;">(opcional)</span></label>
               <input
                 type="url"
                 id="gen-default-evidence"
@@ -893,7 +893,7 @@
               />
             </div>
             <div class="form-group">
-              <label>Enlace a evidencia (opcional)</label>
+              <label>Enlace a evidencia <span style="font-weight: 400;">(opcional)</span></label>
               <input
                 type="url"
                 id="indiv-evidence"
@@ -1085,7 +1085,7 @@
           <div id="preview-pane-email" class="hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
               <div style="font-size:12.5px; color:var(--text-muted);">
-                Asunto: <strong id="email-preview-subject" style="color:var(--text);">Tu certificado oficial — GDG on Campus UHU</strong>
+                Asunto: <strong id="email-preview-subject" style="color:var(--text);">Certificado: Selecciona una badge</strong>
               </div>
             </div>
             <iframe
@@ -1122,7 +1122,7 @@
         </div>
 
         <div class="form-group">
-          <label>Nombre del evento o badge</label>
+          <label>Nombre de la badge</label>
           <input
             type="text"
             id="badge-name"
@@ -1174,7 +1174,7 @@
               oninput="updateBadgePreview()"
             />
             <label class="btn btn-secondary btn-sm" style="margin:0; white-space:nowrap; cursor:pointer;">
-              🖼️ Probar logo local
+              Probar logo local
               <input type="file" accept="image/*" style="display:none" onchange="previewLocalBadgeLogo(event)" />
             </label>
           </div>
@@ -1186,12 +1186,12 @@
         </div>
 
         <div class="form-group">
-          <label>Criterios de obtención</label>
+          <label>Criterios de obtención <span style="font-weight: 400;">(narrative)</span></label>
           <textarea id="badge-narrative" oninput="updateBadgePreview()">Otorgado por asistir presencialmente al 100% del taller y participar en las actividades</textarea>
         </div>
 
         <div class="form-group">
-          <label>Tags separadas por comas</label>
+          <label>Tags <span style="font-weight: 400;">(separados por comas)</span></label>
           <input
             type="text"
             id="badge-tags"
@@ -1213,7 +1213,7 @@
       <!-- Vista previa del JSON de la Badge -->
       <div class="panel">
         <div class="panel-title">
-          <span>Archivo .json (<code id="preview-badge-filename">capture-the-flag-reversing-de-binarios.json</code>)</span>
+          <span>Archivo .json</span>
           <div style="display:flex; gap:8px;">
             <button type="button" class="btn btn-secondary btn-sm" onclick="copyBadgeJson()">
               Copiar .json
@@ -2390,7 +2390,7 @@
         effectiveStyle,
         assertionObj.evidence || ''
       );
-      document.getElementById('email-preview-subject').textContent = `Tu certificado oficial: ${badgeInfo.name} — GDG on Campus UHU`;
+      document.getElementById('email-preview-subject').textContent = `Certificado: ${badgeInfo.name}`;
       const iframe = document.getElementById('email-preview-iframe');
       if (iframe) iframe.srcdoc = emailHtml;
     }
@@ -2403,17 +2403,20 @@
         strip: ['#4285F4', '#EA4335', '#FBBC04', '#34A853'],
         outerBg: '#f8fafc',
         cardBg: '#ffffff',
-        cardBorder: '#e2e8f0',
+        cardBorder: '#dadce0',
         headerBorder: '#f1f5f9',
-        textPrimary: '#0f172a',
+        textPrimary: '#202124',
         textSecondary: '#475569',
-        textMuted: '#64748b',
+        textMuted: '#5f6368',
         accent: '#1967D2',
+        verifiedBg: '#e6f4ea',
+        verifiedBorder: '#ceead6',
+        verifiedText: '#137333',
         rolePillBg: '#e8f0fe',
         rolePillBorder: '#d2e3fc',
         rolePillText: '#1967D2',
-        boxBg: '#f8fafc',
-        boxBorder: '#e2e8f0',
+        boxBg: '#f8f9fa',
+        boxBorder: '#dadce0',
         btnBg: '#4285F4',
         btnText: '#ffffff',
         footerBg: '#f8fafc',
@@ -2421,17 +2424,20 @@
       cyber: {
         strip: ['#00F0FF', '#FF007F', '#FFE600', '#00FF66'],
         outerBg: '#05070F',
-        cardBg: '#0B1124',
+        cardBg: '#070B19',
         cardBorder: '#00F0FF',
         headerBorder: 'rgba(0, 240, 255, 0.25)',
         textPrimary: '#F0F9FF',
         textSecondary: '#CBD5E1',
         textMuted: '#94A3B8',
         accent: '#00F0FF',
+        verifiedBg: 'rgba(0, 255, 102, 0.12)',
+        verifiedBorder: '#00FF66',
+        verifiedText: '#00FF66',
         rolePillBg: 'rgba(0, 240, 255, 0.14)',
         rolePillBorder: '#00F0FF',
         rolePillText: '#00F0FF',
-        boxBg: '#070B19',
+        boxBg: '#0C142C',
         boxBorder: 'rgba(255, 0, 127, 0.45)',
         btnBg: '#00F0FF',
         btnText: '#05070F',
@@ -2447,11 +2453,14 @@
         textSecondary: '#004D61',
         textMuted: '#00587A',
         accent: '#0284C7',
+        verifiedBg: '#E0F2FE',
+        verifiedBorder: '#00E5FF',
+        verifiedText: '#004D61',
         rolePillBg: '#E0F7FA',
         rolePillBorder: '#00BCD4',
         rolePillText: '#006064',
         boxBg: '#F0FDFF',
-        boxBorder: '#80DEEA',
+        boxBorder: '#00BCD4',
         btnBg: '#0284C7',
         btnText: '#FFFFFF',
         footerBg: '#E0F7FA',
@@ -2459,18 +2468,21 @@
       nieve: {
         strip: ['#FFFFFF', '#7DD3FC', '#38BDF8', '#BAE6FD'],
         outerBg: '#071527',
-        cardBg: '#0D2544',
+        cardBg: '#08182E',
         cardBorder: '#7DD3FC',
         headerBorder: 'rgba(186, 230, 253, 0.3)',
         textPrimary: '#F0F9FF',
         textSecondary: '#E0F2FE',
         textMuted: '#BAE6FD',
         accent: '#7DD3FC',
-        rolePillBg: 'rgba(224, 242, 254, 0.16)',
+        verifiedBg: 'rgba(186, 230, 253, 0.15)',
+        verifiedBorder: '#7DD3FC',
+        verifiedText: '#E0F2FE',
+        rolePillBg: 'rgba(224, 242, 254, 0.18)',
         rolePillBorder: '#BAE6FD',
         rolePillText: '#FFFFFF',
-        boxBg: '#08182E',
-        boxBorder: 'rgba(125, 211, 252, 0.45)',
+        boxBg: '#0E2442',
+        boxBorder: 'rgba(125, 211, 252, 0.5)',
         btnBg: '#38BDF8',
         btnText: '#040D1A',
         footerBg: '#08182E',
@@ -2479,17 +2491,20 @@
         strip: ['#FF1493', '#FF85C0', '#FF69B4', '#D81B60'],
         outerBg: '#FFE4F2',
         cardBg: '#FFF9FC',
-        cardBorder: '#FF69B4',
+        cardBorder: '#FF4D94',
         headerBorder: '#FFD1E8',
         textPrimary: '#880E4F',
         textSecondary: '#AD1457',
         textMuted: '#C2185B',
         accent: '#D81B60',
+        verifiedBg: '#FFF0F6',
+        verifiedBorder: '#FF69B4',
+        verifiedText: '#AD1457',
         rolePillBg: '#FFE0F0',
         rolePillBorder: '#FF1493',
         rolePillText: '#AD1457',
-        boxBg: '#FFF0F7',
-        boxBorder: '#FF85C0',
+        boxBg: '#FFE0F0',
+        boxBorder: '#FF69B4',
         btnBg: '#FF1493',
         btnText: '#FFFFFF',
         footerBg: '#FFE8F3',
@@ -2524,7 +2539,7 @@
           </tr>
           <tr>
             <td style="padding:30px 30px 24px 30px;text-align:center;">
-              <div style="display:inline-block;padding:6px 14px;background-color:#ecfdf5;border:1px solid #a7f3d0;border-radius:50px;font-size:12px;font-weight:700;color:#047857;margin-bottom:18px;">
+              <div style="display:inline-block;padding:6px 14px;background-color:${t.verifiedBg};border:1px solid ${t.verifiedBorder};border-radius:50px;font-size:12px;font-weight:700;color:${t.verifiedText};margin-bottom:18px;">
                 ✓ Credencial Digital Oficial Emitida
               </div>
               <div style="font-size:12px;color:${t.textMuted};text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:6px;">
@@ -2535,16 +2550,16 @@
                 ${escapeHtml(role)}
               </div>
               <div style="background-color:${t.boxBg};border:1.5px solid ${t.boxBorder};border-radius:16px;padding:20px;margin:14px 0 20px 0;text-align:center;">
-                <div style="font-size:11px;color:${t.accent};text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px;">Insignia Acreditada</div>
+                <div style="font-size:11px;color:${t.accent};text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px;">Insignia Acreditativa</div>
                 <h3 style="margin:0 0 8px 0;font-size:19px;color:${t.textPrimary};font-weight:800;">${escapeHtml(badgeName)}</h3>
                 <p style="margin:0;font-size:13px;color:${t.textSecondary};line-height:1.5;">${escapeHtml(badgeDesc)}</p>
                 <div style="margin-top:12px;padding-top:10px;border-top:1px dashed ${t.cardBorder};font-size:11px;color:${t.textMuted};font-family:monospace;">
-                  ID del Certificado: <strong style="color:${t.textPrimary};">${escapeHtml(assertionId)}</strong>
+                  ID del certificado: <strong style="color:${t.textPrimary};">${escapeHtml(assertionId)}</strong>
                 </div>
               </div>
               <div style="margin:24px 0 14px 0;">
                 <a href="${certUrl}" target="_blank" style="display:inline-block;background-color:${t.btnBg};color:${t.btnText};text-decoration:none;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:800;">
-                  🎓 Abrir Mi Certificado Oficial →
+                  Abrir mi certificado oficial
                 </a>
               </div>
               ${
@@ -2553,7 +2568,7 @@
                   : ''
               }
               <p style="font-size:12px;color:${t.textMuted};margin:12px 0 0 0;line-height:1.5;">
-                Haz clic en el botón para ver tu certificado en línea, descargarlo en <strong>PDF (1 página horizontal)</strong> listo para imprimir o añadirlo directamente a <strong>LinkedIn</strong> o a tu cartera preferida (OpenBadge Passport, Parchment o Credly).
+                Haz clic en el botón para ver tu certificado en línea, descargarlo en PDF o añadirlo directamente a tu LinkedIn o cartera favorita
               </p>
             </td>
           </tr>
@@ -2684,9 +2699,7 @@
     }
 
     function updateBadgePreview() {
-      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
       const obj = buildNewBadgeObject();
-      document.getElementById('preview-badge-filename').textContent = `${slug}.json`;
       document.getElementById('badge-json-output').textContent = JSON.stringify(obj, null, 2);
     }
 

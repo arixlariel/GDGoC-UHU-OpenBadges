@@ -31,15 +31,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const badgesDir = path.join(rootDir, 'src', 'content', 'badges');
+const assertionsDir = path.join(rootDir, 'src', 'content', 'assertions');
 
 const siteUrl = process.env.SITE_URL || 'https://gdguhu.es';
-const gmailUser = process.env.GMAIL_USER;
+const gmailUser = process.env.GMAIL_USER || 'gdgoc.huelva@gmail.com';
 const gmailPassword = process.env.GMAIL_APP_PASSWORD;
 
 function loadBadge(badgeId) {
   const candidates = [
     path.join(badgesDir, `${badgeId}.json`),
     path.join(badgesDir, 'publish', `${badgeId}.json`),
+    path.join(rootDir, 'publish', `${badgeId}.json`),
   ];
   for (const badgePath of candidates) {
     if (fs.existsSync(badgePath)) {
@@ -53,41 +55,135 @@ function loadBadge(badgeId) {
   return { name: badgeId, description: '' };
 }
 
+function loadAssertion(assertionId) {
+  if (!assertionId) return null;
+  const candidates = [
+    path.join(assertionsDir, `${assertionId}.json`),
+    path.join(assertionsDir, 'publish', `${assertionId}.json`),
+    path.join(rootDir, 'publish', `${assertionId}.json`),
+  ];
+  for (const assertionPath of candidates) {
+    if (fs.existsSync(assertionPath)) {
+      try {
+        return JSON.parse(fs.readFileSync(assertionPath, 'utf-8'));
+      } catch {
+        // continuar
+      }
+    }
+  }
+  return null;
+}
+
 const EMAIL_THEMES = {
   google: {
-    bodyBg: '#f8fafc', cardBg: '#ffffff', cardBorder: '#e2e8f0', headerBorder: '#f1f5f9',
-    textPrimary: '#0f172a', textSecondary: '#64748b', accent: '#4285F4', accentDark: '#1967D2',
-    pillBg: '#e8f0fe', pillBorder: '#d2e3fc', pillText: '#1967D2',
-    boxBg: '#f8fafc', boxBorder: '#e2e8f0', btnBg: '#4285F4', btnText: '#ffffff',
-    barColors: ['#4285F4', '#EA4335', '#FBBC04', '#34A853'],
+    strip: ['#4285F4', '#EA4335', '#FBBC04', '#34A853'],
+    outerBg: '#f8fafc',
+    cardBg: '#ffffff',
+    cardBorder: '#dadce0',
+    headerBorder: '#f1f5f9',
+    textPrimary: '#202124',
+    textSecondary: '#475569',
+    textMuted: '#5f6368',
+    accent: '#1967D2',
+    verifiedBg: '#e6f4ea',
+    verifiedBorder: '#ceead6',
+    verifiedText: '#137333',
+    rolePillBg: '#e8f0fe',
+    rolePillBorder: '#d2e3fc',
+    rolePillText: '#1967D2',
+    boxBg: '#f8f9fa',
+    boxBorder: '#dadce0',
+    btnBg: '#4285F4',
+    btnText: '#ffffff',
+    footerBg: '#f8fafc',
   },
   cyber: {
-    bodyBg: '#060B19', cardBg: '#0B132B', cardBorder: '#00F0FF', headerBorder: '#1E293B',
-    textPrimary: '#F8FAFC', textSecondary: '#94A3B8', accent: '#00F0FF', accentDark: '#00F0FF',
-    pillBg: '#091D34', pillBorder: '#00F0FF', pillText: '#00F0FF',
-    boxBg: '#091326', boxBorder: '#1E293B', btnBg: '#00F0FF', btnText: '#060B19',
-    barColors: ['#00F0FF', '#FF007F', '#00FF66', '#00F0FF'],
+    strip: ['#00F0FF', '#FF007F', '#FFE600', '#00FF66'],
+    outerBg: '#05070F',
+    cardBg: '#070B19',
+    cardBorder: '#00F0FF',
+    headerBorder: 'rgba(0, 240, 255, 0.25)',
+    textPrimary: '#F0F9FF',
+    textSecondary: '#CBD5E1',
+    textMuted: '#94A3B8',
+    accent: '#00F0FF',
+    verifiedBg: 'rgba(0, 255, 102, 0.12)',
+    verifiedBorder: '#00FF66',
+    verifiedText: '#00FF66',
+    rolePillBg: 'rgba(0, 240, 255, 0.14)',
+    rolePillBorder: '#00F0FF',
+    rolePillText: '#00F0FF',
+    boxBg: '#0C142C',
+    boxBorder: 'rgba(255, 0, 127, 0.45)',
+    btnBg: '#00F0FF',
+    btnText: '#05070F',
+    footerBg: '#070B19',
   },
   piscina: {
-    bodyBg: '#E0F7FA', cardBg: '#FFFFFF', cardBorder: '#00E5FF', headerBorder: '#CCFBF1',
-    textPrimary: '#042F2E', textSecondary: '#0F766E', accent: '#00ACC1', accentDark: '#00838F',
-    pillBg: '#CCFBF1', pillBorder: '#2DD4BF', pillText: '#0F766E',
-    boxBg: '#F0FDFA', boxBorder: '#99F6E4', btnBg: '#00ACC1', btnText: '#ffffff',
-    barColors: ['#00F2FE', '#00E5FF', '#0284C7', '#00ACC1'],
+    strip: ['#00F2FE', '#4FACFE', '#00E5FF', '#0284C7'],
+    outerBg: '#E0F7FA',
+    cardBg: '#FFFFFF',
+    cardBorder: '#00BCD4',
+    headerBorder: '#B2EBF2',
+    textPrimary: '#002B3D',
+    textSecondary: '#004D61',
+    textMuted: '#00587A',
+    accent: '#0284C7',
+    verifiedBg: '#E0F2FE',
+    verifiedBorder: '#00E5FF',
+    verifiedText: '#004D61',
+    rolePillBg: '#E0F7FA',
+    rolePillBorder: '#00BCD4',
+    rolePillText: '#006064',
+    boxBg: '#F0FDFF',
+    boxBorder: '#00BCD4',
+    btnBg: '#0284C7',
+    btnText: '#FFFFFF',
+    footerBg: '#E0F7FA',
   },
   nieve: {
-    bodyBg: '#F0F9FF', cardBg: '#FFFFFF', cardBorder: '#BAE6FD', headerBorder: '#E0F2FE',
-    textPrimary: '#0C4A6E', textSecondary: '#0369A1', accent: '#0284C7', accentDark: '#0369A1',
-    pillBg: '#E0F2FE', pillBorder: '#7DD3FC', pillText: '#0369A1',
-    boxBg: '#F8FAFC', boxBorder: '#BAE6FD', btnBg: '#0284C7', btnText: '#ffffff',
-    barColors: ['#7DD3FC', '#38BDF8', '#0284C7', '#bae6fd'],
+    strip: ['#FFFFFF', '#7DD3FC', '#38BDF8', '#BAE6FD'],
+    outerBg: '#071527',
+    cardBg: '#08182E',
+    cardBorder: '#7DD3FC',
+    headerBorder: 'rgba(186, 230, 253, 0.3)',
+    textPrimary: '#F0F9FF',
+    textSecondary: '#E0F2FE',
+    textMuted: '#BAE6FD',
+    accent: '#7DD3FC',
+    verifiedBg: 'rgba(186, 230, 253, 0.15)',
+    verifiedBorder: '#7DD3FC',
+    verifiedText: '#E0F2FE',
+    rolePillBg: 'rgba(224, 242, 254, 0.18)',
+    rolePillBorder: '#BAE6FD',
+    rolePillText: '#FFFFFF',
+    boxBg: '#0E2442',
+    boxBorder: 'rgba(125, 211, 252, 0.5)',
+    btnBg: '#38BDF8',
+    btnText: '#040D1A',
+    footerBg: '#08182E',
   },
   caramelos: {
-    bodyBg: '#FFF5F9', cardBg: '#FFFFFF', cardBorder: '#F9A8D4', headerBorder: '#FCE7F3',
-    textPrimary: '#831843', textSecondary: '#9D174D', accent: '#DB2777', accentDark: '#BE185D',
-    pillBg: '#FCE7F3', pillBorder: '#F472B6', pillText: '#BE185D',
-    boxBg: '#FDF2F8', boxBorder: '#FBCFE8', btnBg: '#DB2777', btnText: '#ffffff',
-    barColors: ['#FF1493', '#FF85C0', '#FF69B4', '#DB2777'],
+    strip: ['#FF1493', '#FF85C0', '#FF69B4', '#D81B60'],
+    outerBg: '#FFE4F2',
+    cardBg: '#FFF9FC',
+    cardBorder: '#FF4D94',
+    headerBorder: '#FFD1E8',
+    textPrimary: '#880E4F',
+    textSecondary: '#AD1457',
+    textMuted: '#C2185B',
+    accent: '#D81B60',
+    verifiedBg: '#FFF0F6',
+    verifiedBorder: '#FF69B4',
+    verifiedText: '#AD1457',
+    rolePillBg: '#FFE0F0',
+    rolePillBorder: '#FF1493',
+    rolePillText: '#AD1457',
+    boxBg: '#FFE0F0',
+    boxBorder: '#FF69B4',
+    btnBg: '#FF1493',
+    btnText: '#FFFFFF',
+    footerBg: '#FFE8F3',
   },
 };
 
@@ -101,7 +197,7 @@ export function buildEmailHTML(
   style = 'google',
   evidence = ''
 ) {
-  const badgeName = badge.name || 'Certificado Oficial GDGoC UHU';
+  const badgeName = badge.name || 'Certificado oficial GDGoC UHU';
   const badgeDesc = badge.description || '';
   const resolvedStyle = style || badge.style || 'google';
   const t = EMAIL_THEMES[resolvedStyle] || EMAIL_THEMES.google;
@@ -113,32 +209,32 @@ export function buildEmailHTML(
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${badgeName}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: ${t.bodyBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: ${t.textPrimary};">
+<body style="margin: 0; padding: 0; background-color: ${t.outerBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: ${t.textPrimary};">
 
   <!-- Barra de Estilo -->
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
     <tr>
-      <td width="25%" height="5" style="background-color: ${t.barColors[0]};"></td>
-      <td width="25%" height="5" style="background-color: ${t.barColors[1]};"></td>
-      <td width="25%" height="5" style="background-color: ${t.barColors[2]};"></td>
-      <td width="25%" height="5" style="background-color: ${t.barColors[3]};"></td>
+      <td width="25%" height="6" style="background-color: ${t.strip[0]};"></td>
+      <td width="25%" height="6" style="background-color: ${t.strip[1]};"></td>
+      <td width="25%" height="6" style="background-color: ${t.strip[2]};"></td>
+      <td width="25%" height="6" style="background-color: ${t.strip[3]};"></td>
     </tr>
   </table>
 
   <!-- Contenedor Principal -->
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: ${t.bodyBg}; padding: 40px 15px;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: ${t.outerBg}; padding: 30px 15px;">
     <tr>
       <td align="center">
         
-        <table role="presentation" width="100%" style="max-width: 600px; background-color: ${t.cardBg}; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; border: 1px solid ${t.cardBorder};" cellspacing="0" cellpadding="0" border="0">
+        <table role="presentation" width="100%" style="max-width: 580px; background-color: ${t.cardBg}; border-radius: 20px; overflow: hidden; border: 2px solid ${t.cardBorder};" cellspacing="0" cellpadding="0" border="0">
           
           <!-- Encabezado con Identidad GDGoC UHU -->
           <tr>
-            <td style="padding: 35px 35px 20px 35px; text-align: center; border-bottom: 1px solid ${t.headerBorder};">
+            <td style="padding: 28px 30px 18px 30px; text-align: center; border-bottom: 1px solid ${t.headerBorder};">
               <h2 style="margin: 0; font-size: 20px; color: ${t.textPrimary}; font-weight: 800; letter-spacing: -0.5px;">
                 GDG on Campus
               </h2>
-              <div style="font-size: 13px; color: ${t.accentDark}; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
+              <div style="font-size: 13px; color: ${t.accent}; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
                 Universidad de Huelva
               </div>
             </td>
@@ -146,46 +242,43 @@ export function buildEmailHTML(
 
           <!-- Insignia y Enhorabuena -->
           <tr>
-            <td style="padding: 35px 35px 25px 35px; text-align: center;">
+            <td style="padding: 30px 30px 24px 30px; text-align: center;">
               
-              <div style="display: inline-block; padding: 6px 14px; background-color: ${t.pillBg}; border: 1px solid ${t.pillBorder}; border-radius: 50px; font-size: 12px; font-weight: 700; color: ${t.pillText}; margin-bottom: 20px;">
+              <div style="display: inline-block; padding: 6px 14px; background-color: ${t.verifiedBg}; border: 1px solid ${t.verifiedBorder}; border-radius: 50px; font-size: 12px; font-weight: 700; color: ${t.verifiedText}; margin-bottom: 18px;">
                 ✓ Credencial Digital Oficial Emitida
               </div>
 
-              <div style="font-size: 13px; color: ${t.textSecondary}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">
+              <div style="font-size: 12px; color: ${t.textMuted}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">
                 Este certificado digital se otorga a:
               </div>
-              <h1 style="margin: 0 0 12px 0; font-size: 26px; color: ${t.textPrimary}; font-weight: 800; letter-spacing: -0.5px;">
+              <h1 style="margin: 0 0 12px 0; font-size: 25px; color: ${t.textPrimary}; font-weight: 800;">
                 ${name}
               </h1>
 
-              ${role ? `<div style="display: inline-block; padding: 4px 12px; background-color: ${t.pillBg}; border: 1px solid ${t.pillBorder}; border-radius: 50px; font-size: 11px; font-weight: 700; color: ${t.pillText}; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px;">${role}</div>` : ''}
+              ${role ? `<div style="display: inline-block; padding: 5px 14px; background-color: ${t.rolePillBg}; border: 1.5px solid ${t.rolePillBorder}; border-radius: 50px; font-size: 11px; font-weight: 700; color: ${t.rolePillText}; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">${role}</div>` : ''}
 
-              <div style="background-color: ${t.boxBg}; border: 1px solid ${t.boxBorder}; border-radius: 16px; padding: 24px; margin: 16px 0 20px 0; text-align: center;">
+              <div style="background-color: ${t.boxBg}; border: 1.5px solid ${t.boxBorder}; border-radius: 16px; padding: 20px; margin: 14px 0 20px 0; text-align: center;">
                 <div style="font-size: 11px; color: ${t.accent}; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;">
-                  Insignia Acreditada
+                  Insignia Acreditativa
                 </div>
-                <h3 style="margin: 0 0 10px 0; font-size: 20px; color: ${t.textPrimary}; font-weight: 800;">
+                <h3 style="margin: 0 0 8px 0; font-size: 19px; color: ${t.textPrimary}; font-weight: 800;">
                   ${badgeName}
                 </h3>
                 ${badgeDesc ? `<p style="margin: 0; font-size: 13px; color: ${t.textSecondary}; line-height: 1.5;">${badgeDesc}</p>` : ''}
-                ${evidence ? `<div style="margin-top: 10px;"><a href="${evidence}" target="_blank" style="font-size: 12px; font-weight: 700; color: ${t.accent}; text-decoration: underline;">Ver Evidencia / Proyecto ↗</a></div>` : ''}
-                ${assertionId ? `<div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed ${t.boxBorder}; font-size: 11px; color: ${t.textSecondary}; font-family: monospace;">ID del Certificado: <strong style="color: ${t.textPrimary};">${assertionId}</strong></div>` : ''}
+                ${assertionId ? `<div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed ${t.cardBorder}; font-size: 11px; color: ${t.textMuted}; font-family: monospace;">ID del certificado: <strong style="color: ${t.textPrimary};">${assertionId}</strong></div>` : ''}
               </div>
 
               <!-- Botón Principal -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 28px 0 15px 0;">
-                <tr>
-                  <td align="center">
-                    <a href="${certUrl}" target="_blank" style="display: inline-block; background-color: ${t.btnBg}; color: ${t.btnText}; text-decoration: none; padding: 15px 32px; border-radius: 12px; font-size: 15px; font-weight: 700; text-align: center;">
-                      🎓 Abrir Mi Certificado Oficial →
-                    </a>
-                  </td>
-                </tr>
-              </table>
+              <div style="margin: 24px 0 14px 0;">
+                <a href="${certUrl}" target="_blank" style="display: inline-block; background-color: ${t.btnBg}; color: ${t.btnText}; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-size: 14px; font-weight: 800; text-align: center;">
+                  Abrir mi certificado oficial
+                </a>
+              </div>
 
-              <p style="font-size: 12px; color: ${t.textSecondary}; margin: 15px 0 0 0; line-height: 1.5;">
-                Haz clic en el botón para ver tu certificado en línea, descargarlo en <strong>PDF (1 página horizontal)</strong> listo para imprimir o añadirlo directamente a <strong>LinkedIn</strong> o a tu cartera preferida (OpenBadge Passport, Parchment o Credly).
+              ${evidence ? `<div style="margin: 10px 0 14px 0;"><a href="${evidence}" target="_blank" style="display: inline-block; color: ${t.accent}; font-size: 12.5px; font-weight: 700; text-decoration: underline;">Ver Evidencia / Proyecto ↗</a></div>` : ''}
+
+              <p style="font-size: 12px; color: ${t.textMuted}; margin: 12px 0 0 0; line-height: 1.5;">
+                Haz clic en el botón para ver tu certificado en línea, descargarlo en PDF o añadirlo directamente a tu LinkedIn o cartera favorita
               </p>
 
             </td>
@@ -193,26 +286,14 @@ export function buildEmailHTML(
 
           <!-- Pie de página del correo -->
           <tr>
-            <td style="padding: 25px 35px; background-color: ${t.boxBg}; border-top: 1px solid ${t.boxBorder}; text-align: center;">
-              <p style="margin: 0 0 8px 0; font-size: 11px; color: ${t.textSecondary}; line-height: 1.4;">
+            <td style="padding: 20px 30px; background-color: ${t.footerBg}; border-top: 1px solid ${t.headerBorder}; text-align: center;">
+              <p style="margin: 0; font-size: 11px; color: ${t.textMuted}; line-height: 1.4;">
                 Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> (IMS Global).<br>
-                Alojado oficialmente en <a href="${siteUrl}" style="color: ${t.accent}; text-decoration: none; font-weight: 600;">${siteUrl}</a>
+                Alojado oficialmente en <a href="${siteUrl}" style="color: ${t.accent}; text-decoration: none; font-weight: 700;">${siteUrl}</a>
               </p>
-              <div style="font-size: 10px; color: ${t.textSecondary}; font-family: monospace; word-break: break-all; margin-top: 6px;">
-                Aserción técnica JSON: <a href="${assertionJsonUrl}" style="color: ${t.accent};">${assertionJsonUrl}</a>
-              </div>
             </td>
           </tr>
 
-        </table>
-
-        <!-- Copyright final -->
-        <table role="presentation" width="100%" style="max-width: 600px; margin-top: 20px;" cellspacing="0" cellpadding="0" border="0">
-          <tr>
-            <td align="center" style="font-size: 11px; color: ${t.textSecondary};">
-              Google Developer Group on Campus · Universidad de Huelva (UHU)
-            </td>
-          </tr>
         </table>
 
       </td>
@@ -279,9 +360,13 @@ async function main() {
   for (let i = 0; i < recipients.length; i++) {
     const item = recipients[i];
     const badge = loadBadge(item.badgeId);
+    const assertionData = loadAssertion(item.assertionId);
+    const resolvedStyle = item.style || assertionData?.styleOverride || badge.style || 'google';
+    const resolvedEvidence = item.evidence || assertionData?.evidence || '';
+    const resolvedRole = item.role || assertionData?.role || 'Asistente Certificado';
     const certUrl = item.url || `${siteUrl}/cert/${item.assertionId}`;
     const assertionJsonUrl = `${siteUrl}/api/badges/assertion/${item.assertionId}.json`;
-    const subject = `Tu certificado oficial: ${badge.name || item.badgeId} — GDG on Campus UHU`;
+    const subject = `Certificado: ${badge.name || item.badgeId}`;
 
     const mailOptions = {
       from: `"GDG on Campus Universidad de Huelva" <${gmailUser}>`,
@@ -292,10 +377,10 @@ async function main() {
         badge,
         certUrl,
         assertionJsonUrl,
-        item.role || 'Asistente Certificado',
+        resolvedRole,
         item.assertionId || '',
-        item.style || badge.style || 'google',
-        item.evidence || ''
+        resolvedStyle,
+        resolvedEvidence
       ),
     };
 
