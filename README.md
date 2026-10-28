@@ -14,12 +14,9 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
    - [Método B: Creación manual](#método-b-creación-manual)
    - [Método C: Emisión masiva con `.csv`](#método-c-emisión-masiva-con-.csv)
    - [Método D: Emisión masiva con GitHub Actions](#método-d-emisión-masiva-con-github-actions)
-5. [Cómo PUBLICAR los Certificados en Internet (`git push`)](#5-cómo-publicar-los-certificados-en-internet-git-push)
-6. [Cómo Compartir el Certificado con el Alumno](#6-cómo-compartir-el-certificado-con-el-alumno)
+5. [Cómo publicar los certificados (`git push`)](#5-cómo-publicar-los-certificados-git-push)
+6. [Cómo compartir los certificados con los miembros](#6-cómo-compartir-los-certificados-con-los-miembros)
 7. [Privacidad y Protección de Datos (RGPD)](#7-privacidad-y-protección-de-datos-rgpd)
-8. [Resolución de Dudas y Problemas Frecuentes](#8-resolución-de-dudas-y-problemas-frecuentes)
-9. [Envío Automático de Correos por Gmail](#9-envío-automático-de-correos-por-gmail)
-10. [Dar acceso a otros organizadores del GDG](#10-dar-acceso-a-otros-organizadores-del-gdg)
 
 ---
 
@@ -150,54 +147,34 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 > Si no tienes el proyecto instalado. Va por tandas y permite mandar correos automáticamente
 
 1. Entra arriba en la pestaña **Actions**
-2. En la lista de flujos de trabajo de la izquierda, selecciona:  
-   **"Emitir certificados y emails"**
-3. Haz clic en el botón **"Run workflow"** (a la derecha).
-4. Rellena los campos:
-   - **ID de la insignia**: el identificador del evento (ej: `workshop-ai-cloud`, `hackathon-2026` o `capture-the-flag-reversing-de-binarios`).
-   - **Rol o Reconocimiento**: por defecto `Asistente Certificado`.
-   - **Solo emitir a quienes hicieron Check-in**: marca la casilla si solo quieres emitir a quienes acudieron presencialmente al evento en Bevy.
-   - **¿Enviar email automático por Gmail?**: déjalo marcado para que les llegue el correo con su enlace.
-   - **Pega el contenido del CSV**: Abre el CSV descargado de la plataforma Bevy (`gdg.community.dev`) con cualquier bloc de notas, copia todo su texto y pégalo directamente en este cuadro.
-5. Pulsa el botón verde **"Run workflow"**.
+2. En la lista de flujos de trabajo, corre el siguiente workflow:  
+   > **Emitir certificados y emails**
+3. Rellena los campos:
+   - **`name` de la badge**
+   - **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
+   - **¿Solo emitir a check-ins?**
+   - **¿Enviar `gmail` automático con `URL` del certificado?**
+   - **Pega el contenido del `.csv`**: Abre el archivo con cualquier bloc de notas para copiar y pegar todo el texto
 
-**¿Qué hace automáticamente GitHub Actions?**
-- Lee el CSV en la memoria efímera de la nube.
-- Genera todos los archivos de certificados con hash SHA-256 (sin exponer emails).
-- Hace el commit y push automático a la rama `main`.
-- Despliega la web en `https://gdguhu.es`.
-- Envía a cada alumno un email desde la cuenta oficial de Gmail del GDGoC con su botón y enlace único.
+***Este método publica automáticamente los certificados y manda los correos***
 
 ---
 
-## 5. Cómo PUBLICAR los Certificados en Internet (`git push`)
-
-Una vez que hayas creado una nueva insignia o emitido certificados, solo tienes que subir los cambios a GitHub.
-
-En tu terminal ejecuta:
+## 5. Cómo publicar los certificados
 
 ```bash
 git add .
-git commit -m "feat(cert): emitir certificados para Taller Flutter"
+git commit -m "feat(cert): emitir certificados para Capture The Flag - Reversing de Binarios"
 git push origin main
 ```
 
-¡Listo! No tienes que hacer nada más.
-El sistema de **GitHub Actions** detectará el push, compilará la web y en **~1 minuto** el certificado estará visible en `https://gdguhu.es`.
-
 ---
 
-## 6. Cómo Compartir el Certificado con el Alumno
+## 6. Cómo compartir los certificados con los miembros
 
-Una vez publicado, el certificado del alumno tiene su propia URL única e intransferible:
+Una vez publicado, el certificado del alumno tiene su propia `URL`, única e intransferible:
 
-👉 **`https://gdguhu.es/cert/<ID-DEL-CERTIFICADO>`**  
-*(Ejemplo real: `https://gdguhu.es/cert/69679d9fa12d24f4a673b54b`)*
-
-### ¿Qué puede hacer el alumno con su enlace?
-1. **Añadir a LinkedIn con 1 clic**: El certificado incluye un botón directo que abre LinkedIn con los campos oficiales pre-rellenados (Nombre del certificado, Organización emisora: GDG on Campus UHU, fecha de emisión y URL de verificación).
-2. **Importar a carteras digitales (Backpacks)**: Al pulsar en *"Añadir a tu perfil"*, el alumno puede copiar el enlace de la aserción Open Badges para importarlo a plataformas como **OpenBadge Passport**, **Badgr**, **Credly** o **Parchment**.
-3. **Validación oficial**: Incluye un botón para validar la autenticidad técnica de la credencial en [BadgeCheck.io](https://badgecheck.io) (validador oficial de IMS Global).
+**`https://gdguhu.es/cert/<NOMBRE24CIFRASHEX>`**  
 
 ---
 
@@ -205,66 +182,6 @@ Una vez publicado, el certificado del alumno tiene su propia URL única e intran
 
 El sistema está diseñado respetando escrupulosamente la normativa europea de protección de datos:
 
-- 🛡️ **Correos electrónicos jamás expuestos**: Los emails nunca se guardan en el repositorio de GitHub ni se muestran en la web. Se anonimizan mediante un hash criptográfico **SHA-256 con salt** unidireccional e irreversible.
-- 🔒 **Falsificación imposible**: Solo los miembros del equipo organizador que tengan permisos en el repositorio pueden publicar o modificar certificados.
-- 🌐 **Soberanía del emisor**: La autenticidad se basa en el estándar *hosted verification*: mientras el certificado provenga del dominio oficial `gdguhu.es`, cualquier entidad reconoce su legitimidad.
-
----
-
-## 8. Resolución de Dudas y Problemas Frecuentes
-
-### ¿Dónde consulto los endpoints JSON oficiales de Open Badges?
-- **Perfil del Emisor (Issuer)**: `https://gdguhu.es/api/badges/issuer.json`
-- **Insignia / Clase (BadgeClass)**: `https://gdguhu.es/api/badges/class/<badgeId>.json`
-- **Acreditación del Alumno (Assertion)**: `https://gdguhu.es/api/badges/assertion/<id>.json`
-
-### ¿Cómo pruebo la web en mi ordenador antes de subirla?
-Si tienes Node.js instalado en tu equipo, puedes probar la web localmente ejecutando:
-```bash
-npm install
-npm run dev
-```
-Y abriendo en tu navegador: `http://localhost:4321`.
-
----
-
-*Manual elaborado para el equipo organizador de Google Developer Groups on Campus — Universidad de Huelva (UHU).*
-
----
-
-## 9. Envío Automático de Correos por Gmail
-
-El sistema puede enviar **automáticamente un email oficial y personalizado** a cada alumno cuando se emite su certificado, usando la cuenta de Gmail del GDGoC (`gdgoc.uhu@gmail.com`).
-
-### Configuración inicial (Solo una vez en GitHub)
-
-#### Paso 1: Generar una Contraseña de Aplicación en Google
-1. Inicia sesión con la cuenta de Gmail del GDG en:  
-   👉 `https://myaccount.google.com/apppasswords`
-   *(Si no te sale la opción, asegúrate de tener la verificación en dos pasos activada en la cuenta).*
-2. En el nombre de la app, pon: `Certificados GDGoC`
-3. Pulsa **Crear**. Google te mostrará una contraseña de **16 letras** (ej: `abcd efgh ijkl mnop`).
-4. Cópiala **sin espacios** (`abcdefghijklmnop`).
-
-#### Paso 2: Guardarla como Secreto en GitHub
-1. En tu repositorio, ve a:  
-   👉 `Settings > Secrets and variables > Actions`
-2. Pulsa en **New repository secret** y añade estos dos:
-   - Nombre: `GMAIL_USER`  
-     Valor: `gdgoc.uhu@gmail.com` (o la cuenta de Gmail del GDG)
-   - Nombre: `GMAIL_APP_PASSWORD`  
-     Valor: El código de 16 caracteres que copiaste de Google.
-
-A partir de ese momento, cada vez que emitas certificados desde la web de GitHub Actions marcando la opción de enviar correos, el sistema enviará los emails automáticamente.
-
----
-
-## 10. Dar acceso a otros organizadores del GDG
-
-Para que cualquier compañero de la directiva o del equipo del GDGoC UHU pueda emitir certificados:
-
-1. Ve a los ajustes de colaboradores de tu repositorio:  
-   👉 `Settings > Collaborators` (o `Settings > Collaborators and teams`)
-2. Pulsa en **"Add people"**.
-3. Busca el usuario de GitHub de tu compañero y envíale la invitación con permisos de **Write** (Escritura).
-4. En cuanto acepte la invitación, ya podrá entrar a la pestaña **Actions** y usar el **Método C** desde el navegador para emitir certificados masivos con Bevy CSV sin tener que clonar nada en su ordenador.
+- **Correos electrónicos jamás expuestos**: Los emails nunca se guardan en el repositorio ni se muestran en la web, se anonimizan mediante el hash **SHA-256** con salt unidireccional e irreversible.
+- **Falsificación imposible**: Solo los organizadores con permisos en el repositorio pueden publicar o modificar certificados.
+- **Verificación confiable**: La autenticidad se basa en el estándar **hosted verification**. Mientras el certificado provenga del dominio oficial privado `gdguhu.es`, cualquier entidad reconoce su legitimidad
