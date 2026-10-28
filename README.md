@@ -12,8 +12,8 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 4. [Cómo crear certificados para los miembros (`Assertion`)](#4-cómo-crear-certificados-para-los-miembros-assertion)
    - [Método A: Asistente automático](#método-a-asistente-automático)
    - [Método B: Creación manual](#método-b-creación-manual)
-   - [Método C: Emisión masiva con `.csv`](#método-c-emisión-masiva-con-.csv)
-   - [Método D: Emisión masiva con GitHub Actions](#método-d-emisión-masiva-con-github-actions)
+   - [Método C: Emisión masiva desde `.csv`](#método-c-emisión-masiva-desde-csv)
+   - [Método D: Emisión masiva desde `.csv` con GitHub Actions](#método-d-emisión-masiva-desde-csv-con-github-actions)
 5. [Cómo publicar los certificados (`git push`)](#5-cómo-publicar-los-certificados-git-push)
 6. [Cómo compartir los certificados con los miembros](#6-cómo-compartir-los-certificados-con-los-miembros)
 7. [Privacidad y Protección de Datos (RGPD/LOPD)](#7-privacidad-y-protección-de-datos-rgpd/lopd)
@@ -82,13 +82,23 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 
 ## 4. Cómo crear certificados para los miembros (`Assertion`)
 
-### --- Método A: Asistente automático
-
-> Si tienes el proyecto instalado. De uno en uno
-
-Abre un terminal, navega a `Open Badges` y ejecuta:
+La primera vez es recomendable crear una carpeta para el proyecto y sus herramientas en nuestro ordenador, en ella se ejecutará un `clone` para instalar el proyecto desde GitHub y un `npm` para las utilidades propietarias. Una vez hecho, ya se puede proceder
 
 ```bash
+git clone https://github.com/arixlariel/GDGoC-UHU-OpenBadges.git
+npm install
+```
+
+**Todas las demás veces que se vaya a hacer un `push` o emisión de certificados es vital hacer antes un `pull`, si no se borrarían los certificados que no se hayan sincronizado**. Si esto ocurre, un organizador que tuviera la base de datos al día deberá restaurarla al punto anterior a la última emisión con un `push`, por lo que es recomendable mantenerlas siempre actualizadas
+
+### --- Método A: Asistente automático
+
+> Requiere tener instalado el proyecto. Es útil certificados individuales
+
+Abre una terminal, navega a la ruta donde guardes el proyecto y ejecuta:
+
+```bash
+git pull
 npm run issue
 ```
 
@@ -105,7 +115,7 @@ El script generará automáticamente un archivo con un nombre único de 24 carac
 
 ### --- Método B: Creación manual
 
-> Si no tienes el proyecto instalado. De uno en uno
+> Puede usarse sin tener el proyecto instalado. Puede ser útil en casos puntuales
 
 Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/content/assertions/` usando la siguiente plantilla:
 
@@ -127,13 +137,14 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
 
 ---
 
-### --- Método C: Emisión masiva con `.csv`
+### --- Método C: Emisión masiva desde `.csv`
 
-> Si tienes el proyecto instalado. Va por tandas
+> Requiere tener instalado el proyecto. Esta opción está diseñada para emitir por tandas con los `.csv` de Bevy (GDG Community).
 
-Esta opción está diseñada para funcionar con los `.csv` de Bevy (GDG Community). Detecta las columnas `First Name`, `Last Name`, `Email`, `Checkin Date (UTC)` y procesa correctamente los nombres. Abre un terminal, navega a `Open Badges` y ejecuta:
+Detecta automáticamente las columnas `First Name`, `Last Name`, `Email`, `Checkin Date (UTC)` y procesa correctamente los nombres. Abre una terminal, navega a la ruta donde guardes el proyecto y ejecuta:
 
 ```bash
+git pull
 npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 ```
 
@@ -142,9 +153,9 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 ---
 
 
-### --- Método D: Emisión masiva con GitHub Actions
+### --- Método D: Emisión masiva desde `.csv` con GitHub Actions
 
-> Si no tienes el proyecto instalado. Va por tandas y permite mandar correos automáticamente
+> No requiere tener instalado el proyecto. Esta es la opción más completa y que conlleva menos riesgo
 
 1. Entra arriba en la pestaña **Actions**
 2. En la lista de flujos de trabajo, corre el siguiente workflow:  
@@ -153,7 +164,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
    - **`name` de la badge**
    - **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
    - **¿Solo emitir a check-ins?**
-   - **¿Enviar `gmail` automático con `URL` del certificado?**
+   - **¿Enviar `gmail` automático con la `URL` del certificado?**
    - **Pega el contenido del `.csv`**: Abre el archivo con cualquier bloc de notas para copiar y pegar todo el texto
 
 ***Este método publica automáticamente los certificados y manda los correos***
@@ -164,7 +175,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 
 ```bash
 git add .
-git commit -m "feat(cert): emitir certificados para Capture The Flag - Reversing de Binarios"
+git commit -m "feat(cert): Emisión de certificados para Capture The Flag - Reversing de Binarios"
 git push origin main
 ```
 
