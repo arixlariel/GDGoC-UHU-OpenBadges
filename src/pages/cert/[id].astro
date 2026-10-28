@@ -28,20 +28,21 @@ const badge = badgeEntry;
 const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
 const badgeImageUrl = getFullUrl(badge.data.image);
 
-// Determinar qué estilo renderizar ('classic' o 'hackathon')
+// Determinar qué estilo renderizar ('classic' o 'hackathon'/'cyber')
 const activeStyle = assertion.data.styleOverride || badge.data.style || 'classic';
-const pageTitle = `${badge.data.name} - ${assertion.data.recipient.name} | GDG on Campus UHU`;
-const pageDescription = `Certificado de logro oficial: ${badge.data.name} otorgado a ${assertion.data.recipient.name} por GDG on Campus Universidad de Huelva.`;
+const isDarkStyle = activeStyle === 'hackathon' || activeStyle === 'cyber';
+const pageTitle = `${badge.data.name} - ${assertion.data.recipient.name} | Certificados Digitales GDGoC UHU`;
+const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgado a ${assertion.data.recipient.name} por GDG on Campus Universidad de Huelva.`;
 ---
 
 <BaseLayout
   title={pageTitle}
   description={pageDescription}
   image={badgeImageUrl}
-  theme={activeStyle === 'hackathon' ? 'dark' : 'auto'}
+  theme={isDarkStyle ? 'dark' : 'auto'}
   jsonLdUrl={assertionJsonUrl}
 >
-  {activeStyle === 'hackathon' ? (
+  {isDarkStyle ? (
     <CertificateHackathon
       assertion={assertion}
       badge={badge}

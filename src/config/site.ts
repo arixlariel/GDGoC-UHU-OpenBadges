@@ -13,8 +13,11 @@ const basePath = process.env.BASE_PATH || '';
 export const siteConfig = {
   url: siteUrl.replace(/\/$/, ''),
   base: basePath,
-  name: 'GDG on Campus Universidad de Huelva - Certificados',
-  description: 'Sistema oficial de verificación de credenciales e insignias digitales Open Badges para GDG on Campus UHU.',
+  name: 'Certificados Digitales · GDG on Campus Universidad de Huelva',
+  shortName: 'Certificados Digitales',
+  description: 'Plataforma oficial de certificados digitales e insignias Open Badges de GDG on Campus Universidad de Huelva.',
+  communityUrl: 'https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/',
+  linkedinUrl: 'https://www.linkedin.com/company/gdg-huelva/?viewAsMember=true',
 };
 
 export function getFullUrl(path: string): string {
@@ -28,8 +31,8 @@ export function getFullUrl(path: string): string {
 export const issuerConfig: IssuerConfig = {
   id: getFullUrl('/api/badges/issuer.json'),
   name: 'GDG on Campus Universidad de Huelva',
-  url: 'https://gdg.community.dev/gdg-on-campus-universidad-de-huelva-huelva-spain/',
+  url: 'https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/',
   email: 'gdgoc.huelva@gmail.com',
-  description: 'Comunidad universitaria oficial de Google Developer Groups en la Universidad de Huelva (UHU), dedicada al aprendizaje, innovación y desarrollo de tecnología.',
-  image: getFullUrl('/images/gdgoc-uhu-logo.svg'),
+  description: 'Comunidad universitaria oficial de Google Developer Groups on Campus en la Universidad de Huelva (UHU).',
+  image: getFullUrl('/images/gdgoc-uhu-logo.jpg'),
 };

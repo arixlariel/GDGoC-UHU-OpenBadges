@@ -14,7 +14,7 @@ interface Props {
 const {
   title = siteConfig.name,
   description = siteConfig.description,
-  image = getFullUrl('/images/gdgoc-uhu-logo.svg'),
+  image = getFullUrl('/images/gdgoc-uhu-logo.jpg'),
   theme = 'auto',
   jsonLdUrl,
 } = Astro.props;
@@ -27,7 +27,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href={getFullUrl('/favicon.svg')} />
+    <link rel="icon" type="image/jpeg" href={getFullUrl('/images/gdgoc-uhu-logo.jpg')} />
     <meta name="generator" content={Astro.generator} />
 
     <!-- SEO Meta Tags -->
@@ -49,17 +49,47 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={image} />
 
-    <!-- Open Badges v2 Discovery Link (si aplica) -->
+    <!-- Open Badges v2 Discovery Link (interno para validadores) -->
     {jsonLdUrl && (
       <link rel="alternate" type="application/ld+json" href={jsonLdUrl} title="Open Badges Assertion" />
     )}
 
-    <!-- Fonts: Inter & JetBrains Mono -->
+    <!-- Google Fonts: Google Sans, Plus Jakarta Sans, Roboto & Google Sans Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=Google+Sans+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style is:global>
+      body {
+        font-family: 'Google Sans', 'Plus Jakarta Sans', 'Roboto', system-ui, -apple-system, sans-serif;
+        color: #202124;
+      }
+
+      @media print {
+        header, footer, .no-print {
+          display: none !important;
+        }
+        body {
+          background: #ffffff !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        main {
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+        .print-diploma-wrapper {
+          box-shadow: none !important;
+          padding: 0 !important;
+          border: none !important;
+          transform: none !important;
+          width: 100% !important;
+          max-width: none !important;
+        }
+      }
+    </style>
   </head>
-  <body class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-[#0B0F19] dark:text-gray-100 antialiased selection:bg-gdg-blue/20 selection:text-gdg-blue">
+  <body class="min-h-screen flex flex-col bg-[#F8F9FA] text-[#202124] dark:bg-[#0B0F19] dark:text-gray-100 antialiased selection:bg-[#E8F0FE] selection:text-[#1A73E8]">
     <Header />
     <main class="flex-1">
       <slot />
@@ -67,4 +97,3 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
     <Footer />
   </body>
 </html>
-

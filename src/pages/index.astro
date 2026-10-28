@@ -8,128 +8,191 @@ const assertions = await getCollection('assertions');
 ---
 
 <BaseLayout
-  title="Certificados Open Badges · GDG on Campus Universidad de Huelva"
-  description="Verificación pública de insignias digitales e hitos académicos para GDGoC Universidad de Huelva."
+  title="Certificados Digitales · GDG on Campus Universidad de Huelva"
+  description="Plataforma oficial de verificación de certificados digitales e insignias Open Badges v2.0 de GDG on Campus Universidad de Huelva."
 >
-  <!-- Hero Section -->
-  <section class="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-gray-100 dark:border-gray-800">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-      <!-- Badge pill -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-900/60 text-gdg-blue dark:text-sky-300 text-xs font-semibold mb-6">
-        <span class="w-2 h-2 rounded-full bg-gdg-blue animate-pulse"></span>
-        <span>Estándar Oficial Open Badges v2.0</span>
-      </div>
+  <!-- Hero Section (Google Brand Guidelines) -->
+  <section class="relative overflow-hidden bg-white dark:bg-[#17181B] border-b border-google-border dark:border-gray-800 pt-10 pb-16 sm:pt-16 sm:pb-20">
+    <!-- Subtle Google Color Ambient Glows -->
+    <div class="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-[#4285F4]/8 blur-3xl"></div>
+    <div class="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-[#FBBC04]/10 blur-3xl"></div>
 
-      <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
-        Certificación y Credenciales Digitales
-        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-gdg-blue via-gdg-red to-gdg-yellow mt-2">
-          GDG on Campus Universidad de Huelva
-        </span>
-      </h1>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+        <!-- Left Column: Title, Copy & Verification Search -->
+        <div class="lg:col-span-7 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F0FE] dark:bg-[#4285F4]/15 border border-[#D2E3FC] dark:border-[#4285F4]/30 text-[#1967D2] dark:text-[#8AB4F8] text-xs font-medium mb-5">
+            <span class="flex gap-1">
+              <span class="w-2 h-2 rounded-full bg-[#4285F4]"></span>
+              <span class="w-2 h-2 rounded-full bg-[#EA4335]"></span>
+              <span class="w-2 h-2 rounded-full bg-[#FBBC04]"></span>
+              <span class="w-2 h-2 rounded-full bg-[#34A853]"></span>
+            </span>
+            <span>Open Badges v2.0 · Verificación Oficial</span>
+          </div>
 
-      <p class="mt-6 text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-        Plataforma abierta y descentralizada de acreditación de competencias técnicas, hackathons y talleres de Google Developer Groups en la UHU.
-      </p>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold text-google-dark dark:text-white tracking-tight leading-[1.12]">
+            Certificados Digitales
+          </h1>
+          <p class="mt-2 font-display text-lg sm:text-xl font-medium text-[#4285F4] dark:text-[#8AB4F8]">
+            GDG on Campus Universidad de Huelva
+          </p>
 
-      <!-- Search / Verify ID Box -->
-      <div class="mt-8 max-w-lg mx-auto">
-        <form onsubmit="event.preventDefault(); const val = document.getElementById('search-cert-id').value.trim(); if(val) window.location.href = './cert/' + val;" class="flex items-center gap-2 bg-gray-50 dark:bg-slate-800/80 p-2 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm focus-within:ring-2 focus-within:ring-gdg-blue">
-          <svg class="w-5 h-5 text-gray-400 ml-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            id="search-cert-id"
-            placeholder="Introduce el ID de tu certificado (ej: 69679d9f...)"
-            class="flex-1 bg-transparent text-xs sm:text-sm text-gray-900 dark:text-white outline-none px-2 font-mono"
-            required
-          />
-          <button
-            type="submit"
-            class="px-4 py-2 rounded-xl bg-gdg-blue hover:bg-blue-600 text-white font-semibold text-xs sm:text-sm transition-colors shadow-sm shrink-0"
-          >
-            Verificar
-          </button>
-        </form>
-      </div>
+          <p class="mt-4 text-sm sm:text-base text-google-grey dark:text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Acreditación oficial de asistencia, ponencias, hackathons y talleres tecnológicos organizados por la comunidad Google Developer Groups en la Universidad de Huelva.
+          </p>
 
-      <!-- Endpoints Open Badges Info -->
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs font-mono">
-        <a
-          href={getFullUrl('/api/badges/issuer.json')}
-          target="_blank"
-          class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 transition-colors"
-        >
-          📋 /api/badges/issuer.json
-        </a>
-        <a
-          href="https://badgecheck.io"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="px-3 py-1.5 rounded-lg bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 hover:bg-purple-100 transition-colors"
-        >
-          ✓ Validador Oficial IMS Global
-        </a>
+          <!-- Search / Verify ID Box -->
+          <div class="mt-7 max-w-lg mx-auto lg:mx-0">
+            <form
+              onsubmit="event.preventDefault(); const val = document.getElementById('search-cert-id').value.trim(); if(val) window.location.href = './cert/' + val;"
+              class="flex items-center gap-2 bg-[#F8F9FA] dark:bg-[#202124] p-2 rounded-full border border-google-border dark:border-gray-700 shadow-sm focus-within:ring-2 focus-within:ring-[#4285F4] focus-within:border-transparent transition-all"
+            >
+              <svg class="w-5 h-5 text-google-grey ml-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                id="search-cert-id"
+                placeholder="Introduce el ID del certificado (ej: 69679d9f...)"
+                class="flex-1 bg-transparent text-xs sm:text-sm text-google-dark dark:text-white placeholder:text-google-grey outline-none px-2 font-mono"
+                required
+              />
+              <button
+                type="submit"
+                class="px-5 py-2.5 rounded-full bg-[#4285F4] hover:bg-[#1967D2] text-white font-medium text-xs sm:text-sm transition-colors shadow-sm shrink-0"
+              >
+                Verificar
+              </button>
+            </form>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs">
+            <a
+              href={issuerConfig.communityUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F8F9FA] dark:bg-[#202124] border border-google-border dark:border-gray-700 text-google-dark dark:text-gray-300 hover:border-[#4285F4] hover:text-[#4285F4] transition-colors font-medium"
+            >
+              <span>🌐 Comunidad GDG UHU</span>
+            </a>
+            <a
+              href={issuerConfig.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F8F9FA] dark:bg-[#202124] border border-google-border dark:border-gray-700 text-google-dark dark:text-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-colors font-medium"
+            >
+              <span>💼 LinkedIn Oficial</span>
+            </a>
+            <a
+              href="https://badgecheck.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#E6F4EA] dark:bg-[#34A853]/15 border border-[#CEEAD6] dark:border-[#34A853]/30 text-[#137333] dark:text-[#81C995] hover:bg-[#CEEAD6]/60 transition-colors font-medium"
+            >
+              <span>✓ Validador IMS Global</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column: Campus ETSI UHU Illustration Card -->
+        <div class="lg:col-span-5">
+          <div class="relative mx-auto max-w-sm lg:max-w-none rounded-3xl overflow-hidden bg-white dark:bg-[#202124] border border-google-border dark:border-gray-800 shadow-[0_12px_36px_rgba(32,33,36,0.08)] p-3">
+            <div class="overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-800">
+              <img
+                src={getFullUrl('/images/gdgoc-uhu-logo.jpg')}
+                alt="Escuela Técnica Superior de Ingeniería - GDG on Campus Universidad de Huelva"
+                class="w-full h-auto object-cover"
+              />
+            </div>
+            <div class="pt-3 px-2 pb-1 flex items-center justify-between text-xs text-google-grey dark:text-gray-400">
+              <span class="font-medium text-google-dark dark:text-gray-200">ETSI · Universidad de Huelva</span>
+              <div class="flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-[#4285F4]"></span>
+                <span class="w-2 h-2 rounded-full bg-[#EA4335]"></span>
+                <span class="w-2 h-2 rounded-full bg-[#FBBC04]"></span>
+                <span class="w-2 h-2 rounded-full bg-[#34A853]"></span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Certificados de Ejemplo / Galería -->
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-    <div class="flex items-center justify-between mb-8">
+  <!-- Certificados Emitidos Recientes -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 py-14">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-2">
       <div>
-        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-          Certificados Emitidos Recientes
+        <h2 class="font-display text-2xl font-bold text-google-dark dark:text-white">
+          Certificados Digitales Emitidos
         </h2>
-        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
-          Comprueba cómo se visualizan en los dos estilos inspirados en GDG UAM.
+        <p class="text-sm text-google-grey dark:text-gray-400 mt-1">
+          Selecciona cualquier credencial para visualizar el diploma oficial, imprimirlo en PDF o añadirlo a LinkedIn.
         </p>
       </div>
+      <span class="inline-flex items-center gap-1.5 text-xs font-medium text-google-grey dark:text-gray-400 bg-white dark:bg-[#202124] px-3 py-1.5 rounded-full border border-google-border dark:border-gray-800 self-start sm:self-auto">
+        <span class="w-2 h-2 rounded-full bg-[#34A853]"></span>
+        {assertions.length} {assertions.length === 1 ? 'credencial activa' : 'credenciales activas'}
+      </span>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       {assertions.map((assertion) => {
         const id = assertion.id.replace(/\.json$/, '');
         const badge = badges.find((b) => b.id.replace(/\.json$/, '') === assertion.data.badgeId);
         const style = assertion.data.styleOverride || badge?.data.style || 'classic';
-        const isHackathon = style === 'hackathon';
+        const isDark = style === 'hackathon' || style === 'cyber';
 
         return (
           <a
             href={getFullUrl(`/cert/${id}`)}
-            class={`block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border ${
-              isHackathon
-                ? 'bg-slate-950 border-cyan-500/40 shadow-[0_0_20px_-5px_rgba(6,182,212,0.2)]'
-                : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-gray-800 shadow-sm'
+            class={`group relative overflow-hidden rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 border ${
+              isDark
+                ? 'bg-[#202124] border-gray-800 hover:border-[#4285F4] shadow-md'
+                : 'bg-white dark:bg-[#202124] border-google-border dark:border-gray-800 hover:border-[#4285F4] shadow-[0_1px_3px_rgba(32,33,36,0.06),0_4px_12px_rgba(32,33,36,0.04)]'
             }`}
           >
-            <div class="flex items-center gap-5">
-              <div class="w-20 h-20 shrink-0 p-2 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-gray-700 flex items-center justify-center">
+            <!-- Top Google 4-color bar -->
+            <div class="absolute top-0 left-0 right-0 h-1 grid grid-cols-4">
+              <div class="bg-[#4285F4]"></div>
+              <div class="bg-[#EA4335]"></div>
+              <div class="bg-[#FBBC04]"></div>
+              <div class="bg-[#34A853]"></div>
+            </div>
+
+            <div class="flex items-center gap-4 pt-1">
+              <div class={`w-16 h-16 shrink-0 p-2 rounded-2xl border flex items-center justify-center ${
+                isDark
+                  ? 'bg-[#17181B] border-gray-800'
+                  : 'bg-[#F8F9FA] dark:bg-[#17181B] border-gray-100 dark:border-gray-800'
+              }`}>
                 {badge && (
                   <img src={badge.data.image} alt={badge.data.name} class="w-full h-full object-contain" />
                 )}
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-1">
-                  <span class={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                    isHackathon
-                      ? 'bg-cyan-950 text-cyan-300 border border-cyan-800'
-                      : 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
+                  <span class={`text-[10px] font-medium uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+                    isDark
+                      ? 'bg-[#4285F4]/20 text-[#8AB4F8] border border-[#4285F4]/30'
+                      : 'bg-[#E8F0FE] text-[#1967D2] dark:bg-[#4285F4]/20 dark:text-[#8AB4F8]'
                   }`}>
-                    {isHackathon ? 'Estilo Hackathon' : 'Estilo Clásico'}
+                    {isDark ? 'Edición Especial' : 'Certificado Oficial'}
                   </span>
-                  <span class="text-[11px] text-gray-400 font-mono truncate">
+                  <span class="text-[11px] text-google-grey font-mono truncate">
                     #{id.substring(0, 8)}
                   </span>
                 </div>
-                <h3 class={`text-base font-bold truncate ${isHackathon ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                <h3 class={`font-display text-base font-bold truncate ${isDark ? 'text-white' : 'text-google-dark dark:text-white'}`}>
                   {badge?.data.name}
                 </h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">
-                  Otorgado a: <strong class={isHackathon ? 'text-cyan-300' : 'text-gray-700 dark:text-gray-200'}>{assertion.data.recipient.name}</strong>
+                <p class={`text-xs mt-1 truncate ${isDark ? 'text-gray-400' : 'text-google-grey dark:text-gray-400'}`}>
+                  Otorgado a <strong class={isDark ? 'text-gray-200 font-medium' : 'text-google-dark dark:text-gray-200 font-medium'}>{assertion.data.recipient.name}</strong>
                 </p>
-                <div class="mt-2 text-[11px] font-semibold text-gdg-blue dark:text-sky-400 flex items-center gap-1">
-                  <span>Ver certificado completo</span>
+                <div class="mt-2.5 text-xs font-medium text-[#4285F4] dark:text-[#8AB4F8] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <span>Ver certificado</span>
                   <span>→</span>
                 </div>
               </div>
@@ -140,50 +203,49 @@ const assertions = await getCollection('assertions');
     </div>
   </section>
 
-  <!-- Características del Sistema -->
-  <section class="bg-gray-50 dark:bg-slate-900/50 border-t border-gray-200 dark:border-gray-800 py-16">
+  <!-- Características del Sistema (Google Material 3 Cards) -->
+  <section class="bg-white dark:bg-[#17181B] border-t border-google-border dark:border-gray-800 py-14">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
-      <div class="text-center max-w-xl mx-auto mb-12">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-          ¿Cómo funciona Open Badges en GDGoC UHU?
+      <div class="text-center max-w-xl mx-auto mb-10">
+        <h2 class="font-display text-2xl font-bold text-google-dark dark:text-white">
+          Estándar Open Badges v2.0
         </h2>
-        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-2">
-          Garantía criptográfica y propiedad soberana de tus credenciales académicas.
+        <p class="text-sm text-google-grey dark:text-gray-400 mt-2">
+          Credenciales verificables con garantía criptográfica y portabilidad internacional.
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
-          <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-gdg-blue flex items-center justify-center font-bold text-lg mb-4">
+        <div class="bg-[#F8F9FA] dark:bg-[#202124] p-6 rounded-2xl border border-google-border dark:border-gray-800">
+          <div class="w-10 h-10 rounded-full bg-[#E8F0FE] dark:bg-[#4285F4]/20 text-[#4285F4] flex items-center justify-center font-display font-bold text-base mb-4">
             1
           </div>
-          <h3 class="font-bold text-gray-900 dark:text-white mb-2">Identidad del Emisor (Issuer)</h3>
-          <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-            GDG on Campus UHU publica su perfil institucional en un endpoint JSON-LD verificable que avala la legitimidad de cada certificado.
+          <h3 class="font-display font-bold text-google-dark dark:text-white mb-2">Autenticidad Verificable</h3>
+          <p class="text-xs text-google-grey dark:text-gray-400 leading-relaxed">
+            Cada certificado está respaldado por metadatos JSON-LD oficiales de GDG on Campus Universidad de Huelva siguiendo la especificación de IMS Global.
           </p>
         </div>
 
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
-          <div class="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-950/60 text-gdg-green flex items-center justify-center font-bold text-lg mb-4">
+        <div class="bg-[#F8F9FA] dark:bg-[#202124] p-6 rounded-2xl border border-google-border dark:border-gray-800">
+          <div class="w-10 h-10 rounded-full bg-[#E6F4EA] dark:bg-[#34A853]/20 text-[#34A853] flex items-center justify-center font-display font-bold text-base mb-4">
             2
           </div>
-          <h3 class="font-bold text-gray-900 dark:text-white mb-2">Acreditación (Assertion)</h3>
-          <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-            Cada estudiante recibe un hash criptográfico SHA-256 de su identidad, preservando su privacidad y evitando falsificaciones.
+          <h3 class="font-display font-bold text-google-dark dark:text-white mb-2">Privacidad Protegida</h3>
+          <p class="text-xs text-google-grey dark:text-gray-400 leading-relaxed">
+            El correo electrónico del titular se protege mediante un hash criptográfico SHA-256 con salt único, permitiendo validar la titularidad sin exponer datos personales.
           </p>
         </div>
 
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
-          <div class="w-10 h-10 rounded-xl bg-yellow-50 dark:bg-yellow-950/60 text-gdg-yellow flex items-center justify-center font-bold text-lg mb-4">
+        <div class="bg-[#F8F9FA] dark:bg-[#202124] p-6 rounded-2xl border border-google-border dark:border-gray-800">
+          <div class="w-10 h-10 rounded-full bg-[#FEF7E0] dark:bg-[#FBBC04]/20 text-[#F9AB00] flex items-center justify-center font-display font-bold text-base mb-4">
             3
           </div>
-          <h3 class="font-bold text-gray-900 dark:text-white mb-2">Portabilidad Universal</h3>
-          <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-            Exporta tu insignia a LinkedIn, OpenBadge Passport, Badgr o Credly con un solo clic para enriquecer tu CV digital.
+          <h3 class="font-display font-bold text-google-dark dark:text-white mb-2">Integración con LinkedIn y PDF</h3>
+          <p class="text-xs text-google-grey dark:text-gray-400 leading-relaxed">
+            Descarga tu diploma en formato horizontal listo para imprimir o añádelo directamente a la sección de Licencias y Certificaciones de tu perfil de LinkedIn.
           </p>
         </div>
       </div>
     </div>
   </section>
 </BaseLayout>
-
