@@ -1,5 +1,4 @@
-name: 🎓 Emitir Certificados y Enviar Emails (Web / Bevy CSV)
-
+name: Emitir certificados y emails
 on:
   workflow_dispatch:
     inputs:
