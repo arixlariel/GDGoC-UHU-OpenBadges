@@ -32,7 +32,7 @@ import { siteConfig, getFullUrl } from '@/config/site';
     </a>
 
     <nav class="flex items-center gap-2 sm:gap-2.5 text-sm font-medium shrink-0">
-      <!-- Style / Theme Switcher Dropdown & Cycle Button -->
+      <!-- Style / Theme Switcher Dropdown -->
       <div class="relative" id="theme-switcher-container">
         <button
           type="button"
@@ -41,95 +41,64 @@ import { siteConfig, getFullUrl } from '@/config/site';
           class="theme-pill-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer select-none"
           title="Cambiar estilo visual de la página"
         >
-          <span id="current-theme-icon" class="text-base leading-none">🏛️</span>
-          <span id="current-theme-label" class="hidden sm:inline">Clásico</span>
+          <span id="current-theme-icon" class="text-base leading-none">🔵</span>
+          <span id="current-theme-label">Google</span>
           <svg class="w-3.5 h-3.5 opacity-70 transition-transform duration-200" id="theme-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
-        <!-- Dropdown Menu with the 5 Styles -->
+        <!-- Dropdown Menu with the 5 Styles (No subtitles, Caramelos at the end) -->
         <div
           id="theme-dropdown-menu"
-          class="hidden absolute right-0 mt-2 w-60 rounded-2xl p-2 shadow-2xl border theme-dropdown-panel z-50 backdrop-blur-2xl transition-all"
+          class="hidden absolute right-0 mt-2 w-48 rounded-2xl p-2 shadow-2xl border theme-dropdown-panel z-50 backdrop-blur-2xl transition-all"
         >
-          <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider theme-text-secondary opacity-75">
-            Selecciona un estilo
-          </div>
           <button
             type="button"
-            data-set-theme="classic"
-            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer"
+            data-set-theme="google"
+            class="theme-option-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-bold transition-all cursor-pointer"
           >
-            <span class="text-lg">🏛️</span>
-            <div class="flex-1 leading-tight">
-              <div class="font-bold">Clásico Google</div>
-              <div class="text-[11px] opacity-70">Institucional · Material 3</div>
-            </div>
+            <span class="text-lg">🔵</span>
+            <span>Google</span>
           </button>
 
           <button
             type="button"
             data-set-theme="cyber"
-            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer mt-1"
+            class="theme-option-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-bold transition-all cursor-pointer mt-1"
           >
             <span class="text-lg">⚡</span>
-            <div class="flex-1 leading-tight">
-              <div class="font-bold">Cyber Neón</div>
-              <div class="text-[11px] opacity-70">Matrix · Futuro · Glitch</div>
-            </div>
+            <span>Cyber</span>
           </button>
 
           <button
             type="button"
-            data-set-theme="candy"
-            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer mt-1"
+            data-set-theme="piscina"
+            class="theme-option-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-bold transition-all cursor-pointer mt-1"
           >
-            <span class="text-lg">🦄</span>
-            <div class="flex-1 leading-tight">
-              <div class="font-bold">Unicornios & Caramelos</div>
-              <div class="text-[11px] opacity-70">Arcoíris · Pastel · Dulce</div>
-            </div>
+            <span class="text-lg">🌊</span>
+            <span>Piscina</span>
           </button>
 
           <button
             type="button"
-            data-set-theme="summer"
-            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer mt-1"
-          >
-            <span class="text-lg">🏖️</span>
-            <div class="flex-1 leading-tight">
-              <div class="font-bold">Piscina Verano</div>
-              <div class="text-[11px] opacity-70">Agua Turquesa · Refrescante</div>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            data-set-theme="winter"
-            class="theme-option-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs sm:text-sm font-medium transition-all cursor-pointer mt-1"
+            data-set-theme="nieve"
+            class="theme-option-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-bold transition-all cursor-pointer mt-1"
           >
             <span class="text-lg">❄️</span>
-            <div class="flex-1 leading-tight">
-              <div class="font-bold">Invierno & Nieve</div>
-              <div class="text-[11px] opacity-70">Glaciar · Aurora · Hielo</div>
-            </div>
+            <span>Nieve</span>
+          </button>
+
+          <button
+            type="button"
+            data-set-theme="caramelos"
+            class="theme-option-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-bold transition-all cursor-pointer mt-1"
+          >
+            <span class="text-lg">🍬</span>
+            <span>Caramelos</span>
           </button>
         </div>
       </div>
-
-      <!-- LinkedIn Button -->
-      <a
-        href={siteConfig.linkedinUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="theme-pill-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300"
-      >
-        <svg class="w-4 h-4 text-[#0A66C2] fill-current shrink-0" viewBox="0 0 24 24">
-          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45c-.9 0-1.63.73-1.63 1.63 0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63 0-.9-.73-1.63-1.63-1.63Z" />
-        </svg>
-        <span>LinkedIn</span>
-      </a>
 
       <!-- Comunidad Button -->
       <a

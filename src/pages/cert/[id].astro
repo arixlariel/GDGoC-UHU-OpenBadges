@@ -27,9 +27,22 @@ const badge = badgeEntry;
 const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
 const badgeImageUrl = getFullUrl(badge.data.image);
 
-// Determinar qué estilo propio tiene este certificado
-const rawStyle = assertion.data.styleOverride || badge.data.style || 'classic';
-const normalizedStyle = (rawStyle === 'hackathon' ? 'cyber' : rawStyle) as 'classic' | 'cyber' | 'candy' | 'summer' | 'winter';
+// Normalizar el estilo propio del certificado
+const styleAliasMap: Record<string, 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos'> = {
+  google: 'google',
+  classic: 'google',
+  cyber: 'cyber',
+  hackathon: 'cyber',
+  piscina: 'piscina',
+  summer: 'piscina',
+  nieve: 'nieve',
+  winter: 'nieve',
+  caramelos: 'caramelos',
+  candy: 'caramelos',
+};
+
+const rawStyle = assertion.data.styleOverride || badge.data.style || 'google';
+const normalizedStyle = styleAliasMap[rawStyle] || 'google';
 
 const pageTitle = `${badge.data.name} - ${assertion.data.recipient.name} | Certificados Digitales GDGoC UHU`;
 const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgado a ${assertion.data.recipient.name} por GDG on Campus Universidad de Huelva.`;

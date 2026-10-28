@@ -8,7 +8,7 @@ interface Props {
   description?: string;
   image?: string;
   theme?: string;
-  certStyle?: 'classic' | 'cyber' | 'candy' | 'summer' | 'winter';
+  certStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
   jsonLdUrl?: string;
 }
 
@@ -20,7 +20,7 @@ const {
   jsonLdUrl,
 } = Astro.props;
 
-const initialTheme = certStyle || 'classic';
+const initialTheme = certStyle || 'google';
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
 ---
 
@@ -65,20 +65,30 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=Google+Sans+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Theme Pre-Init Script (Prevents Flash & Respects Specific Certificate Style) -->
+    <!-- Theme Pre-Init Script: Default is 'google', remembers user's last selection in localStorage, and respects certificate's own style -->
     <script is:inline>
       (function () {
+        const aliasMap = {
+          classic: 'google',
+          google: 'google',
+          cyber: 'cyber',
+          hackathon: 'cyber',
+          summer: 'piscina',
+          piscina: 'piscina',
+          winter: 'nieve',
+          nieve: 'nieve',
+          candy: 'caramelos',
+          caramelos: 'caramelos',
+        };
         const html = document.documentElement;
         const forcedCertStyle = html.getAttribute('data-cert-style');
-        if (forcedCertStyle) {
-          // Si estamos dentro de un certificado específico, respetamos siempre su estilo propio al abrirlo
-          html.setAttribute('data-theme', forcedCertStyle);
+        if (forcedCertStyle && aliasMap[forcedCertStyle]) {
+          // Al abrir un certificado específico, se muestra en su estilo propio
+          html.setAttribute('data-theme', aliasMap[forcedCertStyle]);
         } else {
           const saved = localStorage.getItem('gdgoc-uhu-theme');
-          const valid = ['classic', 'cyber', 'candy', 'summer', 'winter'];
-          if (saved && valid.includes(saved)) {
-            html.setAttribute('data-theme', saved);
-          }
+          const resolved = (saved && aliasMap[saved]) ? aliasMap[saved] : 'google';
+          html.setAttribute('data-theme', resolved);
         }
       })();
     </script>
@@ -121,135 +131,158 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         100% { background-position: 0 60px; }
       }
       @keyframes candyBounce {
-        0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
-        50% { transform: translateY(-28px) rotate(8deg) scale(1.12); }
+        0%, 100% { transform: translateY(0) rotate(-6deg) scale(1); }
+        50% { transform: translateY(-28px) rotate(10deg) scale(1.14); }
+      }
+      @keyframes sprinkleFall {
+        0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+        15% { opacity: 0.85; }
+        85% { opacity: 0.85; }
+        100% { transform: translateY(108vh) rotate(540deg); opacity: 0; }
       }
       @keyframes bubbleRise {
-        0% { transform: translateY(105vh) translateX(0) scale(0.6); opacity: 0; }
-        15% { opacity: 0.75; }
-        85% { opacity: 0.75; }
-        100% { transform: translateY(-15vh) translateX(25px) scale(1.25); opacity: 0; }
+        0% { transform: translateY(105vh) translateX(0) scale(0.5); opacity: 0; }
+        15% { opacity: 0.85; }
+        50% { transform: translateY(45vh) translateX(-22px) scale(1.05); opacity: 0.9; }
+        85% { opacity: 0.8; }
+        100% { transform: translateY(-15vh) translateX(24px) scale(1.35); opacity: 0; }
       }
       @keyframes poolWaveBob {
         0%, 100% { transform: translateY(0px) rotate(-4deg); }
-        50% { transform: translateY(-16px) rotate(6deg); }
+        50% { transform: translateY(-18px) rotate(7deg); }
       }
-      @keyframes snowFall {
-        0% { transform: translateY(-10vh) translateX(0px) rotate(0deg); opacity: 0; }
-        10% { opacity: 0.9; }
+      @keyframes waveSlideLeft {
+        0%, 100% { transform: translateX(0) scaleY(1); }
+        50% { transform: translateX(-4%) scaleY(1.18); }
+      }
+      @keyframes waveSlideRight {
+        0%, 100% { transform: translateX(-4%) scaleY(1.12); }
+        50% { transform: translateX(0%) scaleY(0.92); }
+      }
+      @keyframes blizzardSnow {
+        0% { transform: translateY(-12vh) translateX(-10vw) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.95; }
+        90% { opacity: 0.95; }
+        100% { transform: translateY(108vh) translateX(28vw) rotate(520deg); opacity: 0; }
+      }
+      @keyframes hailDrop {
+        0% { transform: translateY(-10vh) translateX(-15vw) skewX(-22deg); opacity: 0; }
+        15% { opacity: 0.9; }
         90% { opacity: 0.9; }
-        100% { transform: translateY(108vh) translateX(35px) rotate(360deg); opacity: 0; }
+        100% { transform: translateY(110vh) translateX(38vw) skewX(-22deg); opacity: 0; }
+      }
+      @keyframes windGust {
+        0% { transform: translateX(-110vw) translateY(0) skewX(-25deg); opacity: 0; }
+        25% { opacity: 0.55; }
+        75% { opacity: 0.55; }
+        100% { transform: translateX(120vw) translateY(12vh) skewX(-25deg); opacity: 0; }
       }
       @keyframes auroraWave {
         0%, 100% { transform: translateX(-8%) skewX(-8deg) scaleY(1); opacity: 0.45; }
         50% { transform: translateX(8%) skewX(8deg) scaleY(1.25); opacity: 0.8; }
       }
-      @keyframes shimmerBorder {
-        0% { filter: hue-rotate(0deg); }
-        100% { filter: hue-rotate(360deg); }
-      }
 
       /* Toggle visibility of theme-specific FX layers */
       .fx-layer { display: none; pointer-events: none; }
-      html[data-theme="classic"] .fx-classic { display: block; }
+      html[data-theme="google"] .fx-google { display: block; }
       html[data-theme="cyber"] .fx-cyber { display: block; }
-      html[data-theme="candy"] .fx-candy { display: block; }
-      html[data-theme="summer"] .fx-summer { display: block; }
-      html[data-theme="winter"] .fx-winter { display: block; }
+      html[data-theme="piscina"] .fx-piscina { display: block; }
+      html[data-theme="nieve"] .fx-nieve { display: block; }
+      html[data-theme="caramelos"] .fx-caramelos { display: block; }
 
       /* ==========================================================================
-         1. THEME: CLASSIC (Google Brand Guidelines + Animated Orbs & 3D Hovers)
+         1. THEME: GOOGLE (Clásico Google · Material 3 · 4 Colores Oficiales)
          ========================================================================== */
-      html[data-theme="classic"] body {
-        background: radial-gradient(circle at 15% 15%, rgba(66, 133, 244, 0.08), transparent 40%),
-                    radial-gradient(circle at 85% 25%, rgba(234, 67, 53, 0.07), transparent 40%),
-                    radial-gradient(circle at 75% 85%, rgba(52, 168, 83, 0.08), transparent 40%),
-                    radial-gradient(circle at 20% 80%, rgba(251, 188, 4, 0.09), transparent 40%),
+      html[data-theme="google"] body {
+        background: radial-gradient(circle at 15% 15%, rgba(66, 133, 244, 0.09), transparent 40%),
+                    radial-gradient(circle at 85% 25%, rgba(234, 67, 53, 0.08), transparent 40%),
+                    radial-gradient(circle at 75% 85%, rgba(52, 168, 83, 0.09), transparent 40%),
+                    radial-gradient(circle at 20% 80%, rgba(251, 188, 4, 0.1), transparent 40%),
                     #F8F9FA;
         color: #202124;
       }
-      html[data-theme="classic"] .theme-header {
+      html[data-theme="google"] .theme-header {
         background: rgba(255, 255, 255, 0.88);
         border-bottom: 1px solid #DADCE0;
         box-shadow: 0 4px 20px rgba(32, 33, 36, 0.05);
       }
-      html[data-theme="classic"] .theme-footer {
+      html[data-theme="google"] .theme-footer {
         background: rgba(255, 255, 255, 0.9);
       }
-      html[data-theme="classic"] .theme-border { border-color: #DADCE0; }
-      html[data-theme="classic"] .theme-text-primary { color: #202124; }
-      html[data-theme="classic"] .theme-text-secondary { color: #5F6368; }
-      html[data-theme="classic"] .theme-accent-text {
+      html[data-theme="google"] .theme-border { border-color: #DADCE0; }
+      html[data-theme="google"] .theme-text-primary { color: #202124; }
+      html[data-theme="google"] .theme-text-secondary { color: #5F6368; }
+      html[data-theme="google"] .theme-accent-text {
         background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC04, #34A853);
         background-size: 200% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         animation: rainbowFlow 6s linear infinite;
       }
-      html[data-theme="classic"] .theme-hero-section {
+      html[data-theme="google"] .theme-hero-section {
         background: rgba(255, 255, 255, 0.75);
         border-bottom: 1px solid #DADCE0;
       }
-      html[data-theme="classic"] .theme-badge-pill {
+      html[data-theme="google"] .theme-badge-pill {
         background: #E8F0FE;
         border: 1px solid #D2E3FC;
         color: #1967D2;
       }
-      html[data-theme="classic"] .theme-pill-btn {
+      html[data-theme="google"] .theme-pill-btn {
         background: #FFFFFF;
         border: 1px solid #DADCE0;
         color: #202124;
         box-shadow: 0 2px 6px rgba(32,33,36,0.05);
       }
-      html[data-theme="classic"] .theme-pill-btn:hover {
+      html[data-theme="google"] .theme-pill-btn:hover {
         border-color: #4285F4;
         transform: translateY(-2px) scale(1.04);
         box-shadow: 0 8px 20px rgba(66, 133, 244, 0.22);
       }
-      html[data-theme="classic"] .theme-primary-btn {
+      html[data-theme="google"] .theme-primary-btn {
         background: linear-gradient(135deg, #4285F4, #1967D2);
         box-shadow: 0 4px 14px rgba(66, 133, 244, 0.35);
       }
-      html[data-theme="classic"] .theme-primary-btn:hover {
+      html[data-theme="google"] .theme-primary-btn:hover {
         transform: translateY(-2px) scale(1.05);
         box-shadow: 0 8px 25px rgba(66, 133, 244, 0.5);
       }
-      html[data-theme="classic"] .theme-dropdown-panel {
+      html[data-theme="google"] .theme-dropdown-panel {
         background: rgba(255, 255, 255, 0.96);
         border-color: #DADCE0;
         color: #202124;
       }
-      html[data-theme="classic"] .theme-option-btn:hover {
+      html[data-theme="google"] .theme-option-btn:hover {
         background: #E8F0FE;
         color: #1967D2;
         transform: translateX(4px);
       }
-      html[data-theme="classic"] .theme-card {
+      html[data-theme="google"] .theme-card {
         background: rgba(255, 255, 255, 0.92);
         border: 1px solid #DADCE0;
         box-shadow: 0 4px 20px rgba(32, 33, 36, 0.06);
         transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
-      html[data-theme="classic"] .theme-card:hover {
+      html[data-theme="google"] .theme-card:hover {
         transform: translateY(-8px) scale(1.02) rotate(-0.4deg);
         border-color: #4285F4;
         box-shadow: -8px 12px 30px rgba(66, 133, 244, 0.18),
                     8px 12px 30px rgba(234, 67, 53, 0.14),
                     0 20px 40px rgba(52, 168, 83, 0.12);
       }
-      html[data-theme="classic"] .theme-search-box {
+      html[data-theme="google"] .theme-search-box {
         background: #FFFFFF;
         border: 2px solid #DADCE0;
         box-shadow: 0 6px 24px rgba(66, 133, 244, 0.1);
       }
-      html[data-theme="classic"] .theme-search-box:focus-within {
+      html[data-theme="google"] .theme-search-box:focus-within {
         border-color: #4285F4;
         box-shadow: 0 8px 30px rgba(66, 133, 244, 0.25);
         transform: scale(1.02);
       }
 
       /* ==========================================================================
-         2. THEME: CYBER (Neon Matrix · Glitch · Laser Scanlines · Cyberpunk)
+         2. THEME: CYBER (Neon Matrix · Glitch · Laser Scanlines)
          ========================================================================== */
       html[data-theme="cyber"] body {
         background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.16), transparent 50%),
@@ -356,316 +389,335 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
 
       /* ==========================================================================
-         3. THEME: CANDY (Arcoíris · Unicornios · Caramelos · Algodón de Azúcar)
+         3. THEME: PISCINA (Agua Turquesa · Muchas Olas y Burbujas · Súper Refrescante)
          ========================================================================== */
-      html[data-theme="candy"] body {
-        font-family: 'Fredoka', 'Google Sans', sans-serif;
-        background: linear-gradient(135deg, #FFE3F1 0%, #F3E5F5 25%, #E1F5FE 50%, #FFF9C4 75%, #FFE0B2 100%);
-        background-size: 400% 400%;
-        animation: rainbowFlow 12s ease infinite;
-        color: #5B2C6F;
+      html[data-theme="piscina"] body {
+        background: radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.55), transparent 35%),
+                    radial-gradient(circle at 80% 40%, rgba(0, 229, 255, 0.45), transparent 40%),
+                    linear-gradient(180deg, #CCFBF1 0%, #67E8F9 35%, #22D3EE 70%, #0284C7 100%);
+        background-attachment: fixed;
+        color: #003140;
       }
-      html[data-theme="candy"] .theme-top-strip {
-        height: 8px;
-        background: linear-gradient(90deg, #FF4E88, #FF9F1C, #FFE66D, #2EC4B6, #5BC0BE, #9B5DE5, #FF4E88);
+      html[data-theme="piscina"] .theme-top-strip {
+        height: 7px;
+        background: linear-gradient(90deg, #00F2FE, #4FACFE, #00E5FF, #76FF03, #00F2FE);
         background-size: 200% 100%;
         animation: rainbowFlow 4s linear infinite;
+        box-shadow: 0 2px 14px rgba(0, 229, 255, 0.6);
       }
-      html[data-theme="candy"] .theme-top-strip > div { display: none; }
-      html[data-theme="candy"] .theme-header {
-        background: rgba(255, 245, 251, 0.82);
-        border-bottom: 3px dashed #FF85C0;
-        box-shadow: 0 8px 30px rgba(255, 78, 136, 0.18);
+      html[data-theme="piscina"] .theme-top-strip > div { display: none; }
+      html[data-theme="piscina"] .theme-header {
+        background: rgba(224, 247, 250, 0.78);
+        border-bottom: 2px solid rgba(0, 229, 255, 0.6);
+        box-shadow: 0 8px 30px rgba(2, 132, 199, 0.2);
       }
-      html[data-theme="candy"] .theme-footer {
-        background: rgba(255, 245, 251, 0.88);
-        border-top: 3px dashed #FF85C0;
+      html[data-theme="piscina"] .theme-footer {
+        background: rgba(1, 65, 92, 0.88);
+        color: #E0F7FA !important;
+        border-top: 2px solid rgba(0, 229, 255, 0.5);
       }
-      html[data-theme="candy"] .theme-border { border-color: #FFB3D9; }
-      html[data-theme="candy"] .theme-text-primary { color: #591C87; }
-      html[data-theme="candy"] .theme-text-secondary { color: #9D4EDD; }
-      html[data-theme="candy"] .theme-accent-text {
-        background: linear-gradient(90deg, #FF2A85, #FF8E2B, #10B981, #8B5CF6, #FF2A85);
+      html[data-theme="piscina"] .theme-footer .theme-text-primary,
+      html[data-theme="piscina"] .theme-footer .theme-text-secondary {
+        color: #E0F7FA !important;
+      }
+      html[data-theme="piscina"] .theme-border { border-color: rgba(0, 188, 212, 0.5); }
+      html[data-theme="piscina"] .theme-text-primary { color: #002B3D; }
+      html[data-theme="piscina"] .theme-text-secondary { color: #00587A; }
+      html[data-theme="piscina"] .theme-accent-text {
+        background: linear-gradient(90deg, #0284C7, #00B4DB, #00897B, #0284C7);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: rainbowFlow 4s linear infinite;
+      }
+      html[data-theme="piscina"] .theme-hero-section {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.68) 0%, rgba(165, 243, 252, 0.52) 100%);
+        border-bottom: 2px solid rgba(0, 229, 255, 0.55);
+      }
+      html[data-theme="piscina"] .theme-badge-pill {
+        background: rgba(224, 247, 250, 0.92);
+        border: 2px solid #00BCD4;
+        color: #006064;
+        box-shadow: 0 4px 16px rgba(0, 188, 212, 0.35);
+      }
+      html[data-theme="piscina"] .theme-pill-btn {
+        background: rgba(255, 255, 255, 0.88);
+        border: 2px solid #00E5FF;
+        color: #004D61;
+        box-shadow: 0 4px 16px rgba(0, 188, 212, 0.25);
+      }
+      html[data-theme="piscina"] .theme-pill-btn:hover {
+        background: linear-gradient(135deg, #00F2FE, #4FACFE);
+        color: #FFFFFF;
+        border-color: #FFFFFF;
+        transform: translateY(-4px) scale(1.08) rotate(-2deg);
+        box-shadow: 0 12px 28px rgba(0, 180, 219, 0.55);
+      }
+      html[data-theme="piscina"] .theme-primary-btn {
+        background: linear-gradient(135deg, #00B4DB, #0083B0);
+        box-shadow: 0 6px 20px rgba(0, 180, 219, 0.5);
+      }
+      html[data-theme="piscina"] .theme-primary-btn:hover {
+        transform: translateY(-4px) scale(1.09) rotate(2deg);
+        box-shadow: 0 12px 30px rgba(0, 229, 255, 0.75);
+      }
+      html[data-theme="piscina"] .theme-dropdown-panel {
+        background: rgba(224, 247, 250, 0.96);
+        border: 2px solid #00BCD4;
+        color: #003847;
+      }
+      html[data-theme="piscina"] .theme-option-btn:hover {
+        background: rgba(0, 229, 255, 0.28);
+        color: #004D61;
+        transform: translateX(5px);
+      }
+      html[data-theme="piscina"] .theme-card {
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(14px);
+        border: 2px solid rgba(0, 229, 255, 0.65);
+        box-shadow: 0 14px 34px rgba(2, 132, 199, 0.22), inset 0 0 24px rgba(165, 243, 252, 0.45);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      html[data-theme="piscina"] .theme-card:hover {
+        transform: translateY(-10px) scale(1.035) rotate(-1.2deg);
+        border-color: #FFFFFF;
+        box-shadow: 0 22px 48px rgba(2, 132, 199, 0.45),
+                    0 0 32px rgba(0, 229, 255, 0.75),
+                    inset 0 0 28px rgba(224, 247, 250, 0.8);
+      }
+      html[data-theme="piscina"] .theme-search-box {
+        background: rgba(255, 255, 255, 0.92);
+        border: 2px solid #00BCD4;
+        box-shadow: 0 8px 28px rgba(0, 151, 167, 0.28);
+      }
+      html[data-theme="piscina"] .theme-search-box:focus-within {
+        border-color: #0284C7;
+        transform: scale(1.03);
+        box-shadow: 0 12px 36px rgba(0, 229, 255, 0.65);
+      }
+
+      /* ==========================================================================
+         4. THEME: NIEVE (Frío Polar · Ventisca · Granizo · Hielo Escarchado)
+         ========================================================================== */
+      html[data-theme="nieve"] body {
+        background: radial-gradient(circle at 50% 0%, rgba(186, 230, 253, 0.22), transparent 55%),
+                    linear-gradient(180deg, #040D1A 0%, #0A1E38 40%, #103156 75%, #1B4978 100%);
+        background-attachment: fixed;
+        color: #F0F9FF;
+      }
+      html[data-theme="nieve"] .theme-top-strip {
+        height: 6px;
+        background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #38BDF8, #BAE6FD, #FFFFFF);
+        background-size: 200% 100%;
+        animation: rainbowFlow 4s linear infinite;
+        box-shadow: 0 0 18px rgba(186, 230, 253, 0.8);
+      }
+      html[data-theme="nieve"] .theme-top-strip > div { display: none; }
+      html[data-theme="nieve"] .theme-header {
+        background: rgba(8, 22, 42, 0.82);
+        border-bottom: 1.5px solid rgba(186, 230, 253, 0.45);
+        box-shadow: 0 8px 32px rgba(2, 132, 199, 0.3), inset 0 -1px 12px rgba(255, 255, 255, 0.15);
+      }
+      html[data-theme="nieve"] .theme-footer {
+        background: rgba(6, 17, 32, 0.9);
+        border-top: 1.5px solid rgba(186, 230, 253, 0.4);
+      }
+      html[data-theme="nieve"] .theme-border { border-color: rgba(186, 230, 253, 0.45); }
+      html[data-theme="nieve"] .theme-text-primary {
+        color: #F0F9FF;
+        text-shadow: 0 0 14px rgba(186, 230, 253, 0.35);
+      }
+      html[data-theme="nieve"] .theme-text-secondary { color: #BAE6FD; }
+      html[data-theme="nieve"] .theme-accent-text {
+        background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #38BDF8, #E0F2FE);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: rainbowFlow 4s linear infinite;
+      }
+      html[data-theme="nieve"] .theme-hero-section {
+        background: rgba(10, 28, 52, 0.58);
+        border-bottom: 1.5px solid rgba(186, 230, 253, 0.4);
+        box-shadow: inset 0 0 40px rgba(186, 230, 253, 0.08);
+      }
+      html[data-theme="nieve"] .theme-badge-pill {
+        background: rgba(224, 242, 254, 0.18);
+        border: 1.5px solid rgba(255, 255, 255, 0.7);
+        color: #FFFFFF;
+        box-shadow: 0 0 18px rgba(125, 211, 252, 0.4);
+      }
+      html[data-theme="nieve"] .theme-pill-btn {
+        background: rgba(14, 36, 66, 0.82);
+        border: 1.5px solid rgba(186, 230, 253, 0.6);
+        color: #E0F2FE;
+        box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.18);
+      }
+      html[data-theme="nieve"] .theme-pill-btn:hover {
+        background: rgba(224, 242, 254, 0.28);
+        border-color: #FFFFFF;
+        color: #FFFFFF;
+        transform: translateY(-3px) scale(1.06);
+        box-shadow: 0 0 28px rgba(186, 230, 253, 0.75), inset 0 0 18px rgba(255, 255, 255, 0.45);
+      }
+      html[data-theme="nieve"] .theme-primary-btn {
+        background: linear-gradient(135deg, #38BDF8, #0284C7);
+        box-shadow: 0 0 22px rgba(56, 189, 248, 0.55);
+      }
+      html[data-theme="nieve"] .theme-primary-btn:hover {
+        transform: translateY(-3px) scale(1.07);
+        box-shadow: 0 0 34px rgba(224, 242, 254, 0.9);
+      }
+      html[data-theme="nieve"] .theme-dropdown-panel {
+        background: rgba(8, 24, 46, 0.96);
+        border: 1.5px solid rgba(186, 230, 253, 0.65);
+        color: #F0F9FF;
+        box-shadow: 0 15px 45px rgba(2, 132, 199, 0.5);
+      }
+      html[data-theme="nieve"] .theme-option-btn:hover {
+        background: rgba(186, 230, 253, 0.22);
+        color: #FFFFFF;
+        transform: translateX(5px);
+      }
+      html[data-theme="nieve"] .theme-card {
+        background: rgba(14, 38, 68, 0.65);
+        backdrop-filter: blur(18px);
+        border: 1.5px solid rgba(186, 230, 253, 0.5);
+        box-shadow: 0 10px 35px rgba(2, 12, 27, 0.45), inset 0 0 28px rgba(255, 255, 255, 0.14);
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      html[data-theme="nieve"] .theme-card:hover {
+        transform: translateY(-9px) scale(1.03);
+        border-color: #FFFFFF;
+        box-shadow: 0 18px 46px rgba(56, 189, 248, 0.5),
+                    0 0 30px rgba(255, 255, 255, 0.6),
+                    inset 0 0 34px rgba(255, 255, 255, 0.28);
+      }
+      html[data-theme="nieve"] .theme-search-box {
+        background: rgba(10, 30, 56, 0.85);
+        backdrop-filter: blur(16px);
+        border: 2px solid rgba(186, 230, 253, 0.65);
+        box-shadow: 0 0 28px rgba(56, 189, 248, 0.3);
+      }
+      html[data-theme="nieve"] .theme-search-box:focus-within {
+        border-color: #FFFFFF;
+        transform: scale(1.03);
+        box-shadow: 0 0 38px rgba(224, 242, 254, 0.75);
+      }
+
+      /* ==========================================================================
+         5. THEME: CARAMELOS (Súper Rosa · Golosinas · Pasteles · Toppings)
+         ========================================================================== */
+      html[data-theme="caramelos"] body {
+        font-family: 'Fredoka', 'Google Sans', sans-serif;
+        background: radial-gradient(circle at 20% 20%, rgba(255, 105, 180, 0.25), transparent 40%),
+                    radial-gradient(circle at 80% 70%, rgba(255, 20, 147, 0.2), transparent 40%),
+                    linear-gradient(135deg, #FFD1E8 0%, #FFC2E2 30%, #FFE4F2 60%, #FFB8DE 100%);
+        background-attachment: fixed;
+        color: #7A0045;
+      }
+      html[data-theme="caramelos"] .theme-top-strip {
+        height: 9px;
+        background: repeating-linear-gradient(
+          45deg,
+          #FF1493,
+          #FF1493 14px,
+          #FF85C0 14px,
+          #FF85C0 28px,
+          #FFF0F6 28px,
+          #FFF0F6 42px,
+          #FF69B4 42px,
+          #FF69B4 56px
+        );
+        background-size: 200% 200%;
+        animation: rainbowFlow 6s linear infinite;
+        box-shadow: 0 3px 15px rgba(255, 20, 147, 0.35);
+      }
+      html[data-theme="caramelos"] .theme-top-strip > div { display: none; }
+      html[data-theme="caramelos"] .theme-header {
+        background: rgba(255, 240, 248, 0.88);
+        border-bottom: 3px dashed #FF4D94;
+        box-shadow: 0 8px 30px rgba(255, 20, 147, 0.22);
+      }
+      html[data-theme="caramelos"] .theme-footer {
+        background: rgba(255, 230, 243, 0.92);
+        border-top: 3px dashed #FF4D94;
+      }
+      html[data-theme="caramelos"] .theme-border { border-color: #FF85C0; }
+      html[data-theme="caramelos"] .theme-text-primary { color: #880E4F; }
+      html[data-theme="caramelos"] .theme-text-secondary { color: #C2185B; }
+      html[data-theme="caramelos"] .theme-accent-text {
+        background: linear-gradient(90deg, #FF007F, #FF1493, #FF69B4, #D81B60, #FF007F);
         background-size: 200% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         animation: rainbowFlow 3.5s linear infinite;
       }
-      html[data-theme="candy"] .theme-hero-section {
-        background: rgba(255, 255, 255, 0.55);
-        border-bottom: 3px dashed #FFB3D9;
+      html[data-theme="caramelos"] .theme-hero-section {
+        background: rgba(255, 245, 250, 0.68);
+        border-bottom: 3px dashed #FF85C0;
       }
-      html[data-theme="candy"] .theme-badge-pill {
-        background: linear-gradient(90deg, rgba(255, 182, 230, 0.65), rgba(208, 18fff, 0.65), rgba(255, 243, 176, 0.65));
-        border: 2px solid #FF6FD8;
-        color: #A21CAF;
-        box-shadow: 0 4px 15px rgba(255, 111, 216, 0.3);
+      html[data-theme="caramelos"] .theme-badge-pill {
+        background: #FFE0F0;
+        border: 2px solid #FF1493;
+        color: #AD1457;
+        box-shadow: 0 4px 15px rgba(255, 20, 147, 0.28);
       }
-      html[data-theme="candy"] .theme-pill-btn {
-        background: rgba(255, 255, 255, 0.9);
-        border: 2px solid #FF85C0;
-        color: #9D174D;
-        box-shadow: 0 4px 14px rgba(255, 133, 192, 0.3);
+      html[data-theme="caramelos"] .theme-pill-btn {
+        background: #FFF5FA;
+        border: 2px solid #FF69B4;
+        color: #AD1457;
+        box-shadow: 0 4px 14px rgba(255, 105, 180, 0.3);
       }
-      html[data-theme="candy"] .theme-pill-btn:hover {
-        background: linear-gradient(135deg, #FF85C0, #B388FF);
+      html[data-theme="caramelos"] .theme-pill-btn:hover {
+        background: linear-gradient(135deg, #FF1493, #FF69B4);
         color: #FFFFFF;
         border-color: #FFFFFF;
         transform: translateY(-4px) scale(1.1) rotate(3deg);
-        box-shadow: 0 12px 28px rgba(255, 78, 136, 0.45);
+        box-shadow: 0 12px 28px rgba(255, 20, 147, 0.5);
       }
-      html[data-theme="candy"] .theme-primary-btn {
-        background: linear-gradient(90deg, #FF4E88, #FF9F1C, #9B5DE5);
+      html[data-theme="caramelos"] .theme-primary-btn {
+        background: linear-gradient(90deg, #FF1493, #FF69B4, #EC407A);
         background-size: 200% auto;
         animation: rainbowFlow 4s linear infinite;
-        box-shadow: 0 6px 20px rgba(255, 78, 136, 0.45);
+        box-shadow: 0 6px 20px rgba(255, 20, 147, 0.45);
       }
-      html[data-theme="candy"] .theme-primary-btn:hover {
+      html[data-theme="caramelos"] .theme-primary-btn:hover {
         transform: translateY(-4px) scale(1.12) rotate(-3deg);
-        box-shadow: 0 12px 30px rgba(155, 93, 229, 0.6);
+        box-shadow: 0 12px 30px rgba(255, 20, 147, 0.65);
       }
-      html[data-theme="candy"] .theme-dropdown-panel {
-        background: rgba(255, 248, 253, 0.97);
-        border: 3px solid #FF85C0;
-        color: #591C87;
-        box-shadow: 0 15px 40px rgba(255, 78, 136, 0.3);
+      html[data-theme="caramelos"] .theme-dropdown-panel {
+        background: rgba(255, 242, 249, 0.98);
+        border: 3px solid #FF69B4;
+        color: #880E4F;
+        box-shadow: 0 15px 40px rgba(255, 20, 147, 0.32);
       }
-      html[data-theme="candy"] .theme-option-btn:hover {
-        background: linear-gradient(90deg, #FFE3F1, #F3E5F5);
-        color: #D946EF;
+      html[data-theme="caramelos"] .theme-option-btn:hover {
+        background: #FFD1E8;
+        color: #C2185B;
         transform: scale(1.04) rotate(1deg);
       }
-      html[data-theme="candy"] .theme-card {
-        background: rgba(255, 255, 255, 0.85);
-        border: 3px solid #FFB3D9;
+      html[data-theme="caramelos"] .theme-card {
+        background: rgba(255, 250, 253, 0.9);
+        border: 3px solid #FF85C0;
         border-radius: 28px;
-        box-shadow: 0 10px 30px rgba(255, 111, 216, 0.2);
+        box-shadow: 0 10px 30px rgba(255, 20, 147, 0.22), inset 0 0 20px rgba(255, 182, 193, 0.35);
         transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       }
-      html[data-theme="candy"] .theme-card:hover {
+      html[data-theme="caramelos"] .theme-card:hover {
         transform: translateY(-12px) scale(1.05) rotate(1.8deg);
-        border-color: #9B5DE5;
-        box-shadow: 0 22px 45px rgba(255, 78, 136, 0.38),
-                    0 0 30px rgba(255, 230, 109, 0.6);
+        border-color: #FF1493;
+        box-shadow: 0 22px 45px rgba(255, 20, 147, 0.42),
+                    0 0 30px rgba(255, 105, 180, 0.65);
       }
-      html[data-theme="candy"] .theme-search-box {
-        background: rgba(255, 255, 255, 0.95);
-        border: 3px solid #FF85C0;
-        box-shadow: 0 8px 28px rgba(255, 111, 216, 0.28);
+      html[data-theme="caramelos"] .theme-search-box {
+        background: #FFF9FC;
+        border: 3px solid #FF69B4;
+        box-shadow: 0 8px 28px rgba(255, 20, 147, 0.28);
       }
-      html[data-theme="candy"] .theme-search-box:focus-within {
-        border-color: #9B5DE5;
+      html[data-theme="caramelos"] .theme-search-box:focus-within {
+        border-color: #FF1493;
         transform: scale(1.04) rotate(-0.8deg);
-        box-shadow: 0 12px 35px rgba(155, 93, 229, 0.45);
-      }
-
-      /* ==========================================================================
-         4. THEME: SUMMER (Piscina Refrescante · Agua Turquesa · Olas & Sol)
-         ========================================================================== */
-      html[data-theme="summer"] body {
-        background: linear-gradient(180deg, #E0F7FA 0%, #80DEEA 45%, #26C6DA 85%, #00ACC1 100%);
-        background-attachment: fixed;
-        color: #003642;
-      }
-      html[data-theme="summer"] .theme-top-strip {
-        height: 7px;
-        background: linear-gradient(90deg, #00E5FF, #FFE57F, #FF8A65, #00B4DB, #00E5FF);
-        background-size: 200% 100%;
-        animation: rainbowFlow 5s linear infinite;
-      }
-      html[data-theme="summer"] .theme-top-strip > div { display: none; }
-      html[data-theme="summer"] .theme-header {
-        background: rgba(224, 247, 250, 0.82);
-        border-bottom: 2px solid rgba(0, 180, 219, 0.45);
-        box-shadow: 0 8px 28px rgba(0, 131, 176, 0.18);
-      }
-      html[data-theme="summer"] .theme-footer {
-        background: rgba(0, 77, 97, 0.85);
-        color: #E0F7FA !important;
-        border-top: 2px solid rgba(0, 229, 255, 0.4);
-      }
-      html[data-theme="summer"] .theme-footer .theme-text-primary,
-      html[data-theme="summer"] .theme-footer .theme-text-secondary {
-        color: #E0F7FA !important;
-      }
-      html[data-theme="summer"] .theme-border { border-color: rgba(0, 172, 193, 0.4); }
-      html[data-theme="summer"] .theme-text-primary { color: #003847; }
-      html[data-theme="summer"] .theme-text-secondary { color: #00607A; }
-      html[data-theme="summer"] .theme-accent-text {
-        background: linear-gradient(90deg, #0083B0, #FF6F00, #00B4DB);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: rainbowFlow 4s linear infinite;
-      }
-      html[data-theme="summer"] .theme-hero-section {
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(178, 235, 242, 0.45) 100%);
-        border-bottom: 2px solid rgba(0, 180, 219, 0.4);
-      }
-      html[data-theme="summer"] .theme-badge-pill {
-        background: rgba(255, 245, 157, 0.85);
-        border: 2px solid #FFB300;
-        color: #E65100;
-        box-shadow: 0 4px 15px rgba(255, 179, 0, 0.3);
-      }
-      html[data-theme="summer"] .theme-pill-btn {
-        background: rgba(255, 255, 255, 0.88);
-        border: 2px solid #00BCD4;
-        color: #006064;
-        box-shadow: 0 4px 14px rgba(0, 188, 212, 0.25);
-      }
-      html[data-theme="summer"] .theme-pill-btn:hover {
-        background: linear-gradient(135deg, #00E5FF, #00B4DB);
-        color: #003642;
-        border-color: #FFF176;
-        transform: translateY(-4px) scale(1.08) rotate(-2deg);
-        box-shadow: 0 12px 26px rgba(0, 180, 219, 0.45);
-      }
-      html[data-theme="summer"] .theme-primary-btn {
-        background: linear-gradient(135deg, #FF7043, #FFA726);
-        box-shadow: 0 6px 20px rgba(255, 112, 67, 0.45);
-      }
-      html[data-theme="summer"] .theme-primary-btn:hover {
-        transform: translateY(-4px) scale(1.09) rotate(2deg);
-        box-shadow: 0 12px 28px rgba(255, 112, 67, 0.65);
-      }
-      html[data-theme="summer"] .theme-dropdown-panel {
-        background: rgba(224, 247, 250, 0.96);
-        border: 2px solid #00BCD4;
-        color: #003847;
-      }
-      html[data-theme="summer"] .theme-option-btn:hover {
-        background: rgba(0, 229, 255, 0.25);
-        color: #006064;
-        transform: translateX(5px);
-      }
-      html[data-theme="summer"] .theme-card {
-        background: rgba(255, 255, 255, 0.82);
-        border: 2px solid rgba(0, 188, 212, 0.5);
-        box-shadow: 0 12px 32px rgba(0, 131, 176, 0.2), inset 0 0 20px rgba(128, 222, 234, 0.25);
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      html[data-theme="summer"] .theme-card:hover {
-        transform: translateY(-10px) scale(1.035) rotate(-1.2deg);
-        border-color: #FF7043;
-        box-shadow: 0 22px 45px rgba(0, 131, 176, 0.4),
-                    0 0 28px rgba(0, 229, 255, 0.6);
-      }
-      html[data-theme="summer"] .theme-search-box {
-        background: rgba(255, 255, 255, 0.92);
-        border: 2px solid #00BCD4;
-        box-shadow: 0 8px 28px rgba(0, 151, 167, 0.25);
-      }
-      html[data-theme="summer"] .theme-search-box:focus-within {
-        border-color: #FF7043;
-        transform: scale(1.03);
-        box-shadow: 0 12px 34px rgba(0, 229, 255, 0.55);
-      }
-
-      /* ==========================================================================
-         5. THEME: WINTER (Frío · Nieve Cayendo · Hielo Glaciar & Aurora Boreal)
-         ========================================================================== */
-      html[data-theme="winter"] body {
-        background: linear-gradient(180deg, #061224 0%, #0C2340 45%, #163B65 85%, #1E4E79 100%);
-        background-attachment: fixed;
-        color: #F0F9FF;
-      }
-      html[data-theme="winter"] .theme-top-strip {
-        height: 6px;
-        background: linear-gradient(90deg, #E0F2FE, #38BDF8, #818CF8, #2DD4BF, #E0F2FE);
-        background-size: 200% 100%;
-        animation: rainbowFlow 5s linear infinite;
-        box-shadow: 0 0 14px rgba(125, 211, 252, 0.6);
-      }
-      html[data-theme="winter"] .theme-top-strip > div { display: none; }
-      html[data-theme="winter"] .theme-header {
-        background: rgba(10, 25, 47, 0.78);
-        border-bottom: 1px solid rgba(186, 230, 253, 0.35);
-        box-shadow: 0 8px 32px rgba(2, 132, 199, 0.25);
-      }
-      html[data-theme="winter"] .theme-footer {
-        background: rgba(7, 19, 36, 0.88);
-        border-top: 1px solid rgba(186, 230, 253, 0.3);
-      }
-      html[data-theme="winter"] .theme-border { border-color: rgba(186, 230, 253, 0.35); }
-      html[data-theme="winter"] .theme-text-primary {
-        color: #F0F9FF;
-        text-shadow: 0 0 14px rgba(125, 211, 252, 0.3);
-      }
-      html[data-theme="winter"] .theme-text-secondary { color: #BAE6FD; }
-      html[data-theme="winter"] .theme-accent-text {
-        background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #A5B4FC, #5EEAD4);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: rainbowFlow 5s linear infinite;
-      }
-      html[data-theme="winter"] .theme-hero-section {
-        background: rgba(12, 32, 58, 0.55);
-        border-bottom: 1px solid rgba(186, 230, 253, 0.3);
-      }
-      html[data-theme="winter"] .theme-badge-pill {
-        background: rgba(224, 242, 254, 0.15);
-        border: 1px solid rgba(186, 230, 253, 0.6);
-        color: #E0F2FE;
-        box-shadow: 0 0 16px rgba(125, 211, 252, 0.3);
-      }
-      html[data-theme="winter"] .theme-pill-btn {
-        background: rgba(15, 38, 68, 0.78);
-        border: 1px solid rgba(186, 230, 253, 0.5);
-        color: #E0F2FE;
-        box-shadow: inset 0 0 12px rgba(224, 242, 254, 0.15);
-      }
-      html[data-theme="winter"] .theme-pill-btn:hover {
-        background: rgba(186, 230, 253, 0.25);
-        border-color: #FFFFFF;
-        color: #FFFFFF;
-        transform: translateY(-3px) scale(1.06);
-        box-shadow: 0 0 24px rgba(125, 211, 252, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.35);
-      }
-      html[data-theme="winter"] .theme-primary-btn {
-        background: linear-gradient(135deg, #38BDF8, #6366F1);
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.45);
-      }
-      html[data-theme="winter"] .theme-primary-btn:hover {
-        transform: translateY(-3px) scale(1.07);
-        box-shadow: 0 0 30px rgba(186, 230, 253, 0.8);
-      }
-      html[data-theme="winter"] .theme-dropdown-panel {
-        background: rgba(10, 26, 48, 0.95);
-        border: 1px solid rgba(186, 230, 253, 0.55);
-        color: #F0F9FF;
-        box-shadow: 0 15px 40px rgba(2, 132, 199, 0.45);
-      }
-      html[data-theme="winter"] .theme-option-btn:hover {
-        background: rgba(125, 211, 252, 0.2);
-        color: #FFFFFF;
-        transform: translateX(5px);
-      }
-      html[data-theme="winter"] .theme-card {
-        background: rgba(16, 42, 74, 0.62);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(186, 230, 253, 0.4);
-        box-shadow: 0 8px 32px rgba(2, 12, 27, 0.35), inset 0 0 24px rgba(224, 242, 254, 0.1);
-        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      html[data-theme="winter"] .theme-card:hover {
-        transform: translateY(-9px) scale(1.03);
-        border-color: #FFFFFF;
-        box-shadow: 0 18px 42px rgba(56, 189, 248, 0.4),
-                    0 0 25px rgba(224, 242, 254, 0.5),
-                    inset 0 0 30px rgba(255, 255, 255, 0.22);
-      }
-      html[data-theme="winter"] .theme-search-box {
-        background: rgba(12, 33, 60, 0.82);
-        backdrop-filter: blur(16px);
-        border: 2px solid rgba(186, 230, 253, 0.55);
-        box-shadow: 0 0 26px rgba(56, 189, 248, 0.25);
-      }
-      html[data-theme="winter"] .theme-search-box:focus-within {
-        border-color: #FFFFFF;
-        transform: scale(1.03);
-        box-shadow: 0 0 36px rgba(186, 230, 253, 0.65);
+        box-shadow: 0 12px 35px rgba(255, 20, 147, 0.5);
       }
 
       /* Print Rules */
@@ -699,8 +751,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
          ======================================================================== -->
     <div id="theme-fx-container" class="fixed inset-0 pointer-events-none overflow-hidden z-0 no-print">
 
-      <!-- 1. CLASSIC FX: Floating Google 4-Color Orbs & Geometric Rings -->
-      <div class="fx-layer fx-classic absolute inset-0">
+      <!-- 1. GOOGLE FX: Floating Google 4-Color Orbs & Geometric Rings -->
+      <div class="fx-layer fx-google absolute inset-0">
         <div class="absolute top-16 left-[8%] w-72 h-72 rounded-full bg-[#4285F4]/12 blur-3xl" style="animation: floatSlow 9s ease-in-out infinite;"></div>
         <div class="absolute top-36 right-[10%] w-80 h-80 rounded-full bg-[#EA4335]/10 blur-3xl" style="animation: floatReverse 11s ease-in-out infinite;"></div>
         <div class="absolute bottom-20 left-[18%] w-72 h-72 rounded-full bg-[#FBBC04]/14 blur-3xl" style="animation: floatReverse 10s ease-in-out infinite;"></div>
@@ -728,51 +780,112 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         <span class="absolute bottom-[28%] right-[12%] font-mono text-xs text-[#00F0FF]/50 font-bold" style="animation: floatSlow 5.5s ease-in-out infinite;">[GDG_UHU::CYBER_NODE]</span>
       </div>
 
-      <!-- 3. CANDY FX: Floating Unicorns, Rainbows, Lollipops, Candies & Sparkles -->
-      <div class="fx-layer fx-candy absolute inset-0">
-        <span class="absolute top-[12%] left-[6%] text-4xl opacity-80 select-none" style="animation: candyBounce 4.5s ease-in-out infinite;">🦄</span>
-        <span class="absolute top-[16%] right-[8%] text-4xl opacity-80 select-none" style="animation: candyBounce 5.2s ease-in-out infinite 0.5s;">🌈</span>
-        <span class="absolute top-[45%] left-[4%] text-3xl opacity-75 select-none" style="animation: candyBounce 4.8s ease-in-out infinite 1s;">🍭</span>
-        <span class="absolute top-[52%] right-[5%] text-3xl opacity-75 select-none" style="animation: candyBounce 5.5s ease-in-out infinite 1.4s;">🍬</span>
-        <span class="absolute bottom-[18%] left-[10%] text-4xl opacity-80 select-none" style="animation: candyBounce 4.2s ease-in-out infinite 0.8s;">🧁</span>
-        <span class="absolute bottom-[14%] right-[12%] text-4xl opacity-80 select-none" style="animation: candyBounce 5s ease-in-out infinite 0.3s;">🦄</span>
-        <span class="absolute top-[28%] left-[25%] text-2xl opacity-70 select-none" style="animation: floatSlow 3.8s ease-in-out infinite;">✨</span>
-        <span class="absolute top-[68%] right-[24%] text-2xl opacity-70 select-none" style="animation: floatReverse 4.1s ease-in-out infinite;">🌟</span>
+      <!-- 3. PISCINA FX: Multi-Layer Animated Waves, Lots of Rising Water Bubbles & Refreshing Pool Vibes -->
+      <div class="fx-layer fx-piscina absolute inset-0">
+        <!-- Shimmering sun reflection -->
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br from-[#FFFFFF] via-[#80DEEA] to-transparent opacity-70 blur-2xl" style="animation: floatSlow 7s ease-in-out infinite;"></div>
+        <!-- Animated Multi-Layered Translucent Pool Waves at Bottom -->
+        <svg class="absolute bottom-0 left-0 w-[110%] h-48 opacity-45" style="animation: waveSlideLeft 6s ease-in-out infinite;" viewBox="0 0 1440 320" preserveAspectRatio="none">
+          <path fill="#00E5FF" d="M0,160L60,170.7C120,181,240,203,360,192C480,181,600,139,720,138.7C840,139,960,181,1080,197.3C1200,213,1320,203,1380,197.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
+        <svg class="absolute bottom-0 left-0 w-[110%] h-40 opacity-50" style="animation: waveSlideRight 4.5s ease-in-out infinite;" viewBox="0 0 1440 320" preserveAspectRatio="none">
+          <path fill="#FFFFFF" d="M0,224L80,213.3C160,203,320,181,480,186.7C640,192,800,224,960,224C1120,224,1280,192,1360,176L1440,160L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+        </svg>
+        <svg class="absolute top-12 left-0 w-[110%] h-32 opacity-30" style="animation: waveSlideLeft 7.5s ease-in-out infinite;" viewBox="0 0 1440 320" preserveAspectRatio="none">
+          <path fill="#FFFFFF" d="M0,96L80,112C160,128,320,160,480,154.7C640,149,800,107,960,101.3C1120,96,1280,128,1360,144L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+        </svg>
+
+        <!-- Abundant Rising Water Bubbles (CSS spheres + bubble emojis) -->
+        <div class="absolute left-[6%] w-6 h-6 rounded-full border-2 border-white/80 bg-white/30 shadow-[inset_0_0_8px_#fff]" style="animation: bubbleRise 6.5s linear infinite;"></div>
+        <div class="absolute left-[14%] w-10 h-10 rounded-full border-2 border-white/80 bg-white/25 shadow-[inset_0_0_12px_#fff]" style="animation: bubbleRise 8.2s linear infinite 1.2s;"></div>
+        <div class="absolute left-[22%] w-4 h-4 rounded-full border border-white/90 bg-white/35" style="animation: bubbleRise 5.8s linear infinite 2.5s;"></div>
+        <div class="absolute left-[31%] w-8 h-8 rounded-full border-2 border-white/80 bg-white/25 shadow-[inset_0_0_10px_#fff]" style="animation: bubbleRise 7.4s linear infinite 0.7s;"></div>
+        <div class="absolute left-[42%] w-5 h-5 rounded-full border-2 border-white/80 bg-white/30" style="animation: bubbleRise 6.9s linear infinite 3.1s;"></div>
+        <div class="absolute left-[54%] w-11 h-11 rounded-full border-2 border-white/80 bg-white/20 shadow-[inset_0_0_14px_#fff]" style="animation: bubbleRise 9s linear infinite 1.8s;"></div>
+        <div class="absolute left-[65%] w-6 h-6 rounded-full border-2 border-white/80 bg-white/30" style="animation: bubbleRise 6.2s linear infinite 4.2s;"></div>
+        <div class="absolute left-[76%] w-9 h-9 rounded-full border-2 border-white/80 bg-white/25 shadow-[inset_0_0_10px_#fff]" style="animation: bubbleRise 7.8s linear infinite 0.4s;"></div>
+        <div class="absolute left-[85%] w-5 h-5 rounded-full border border-white/90 bg-white/35" style="animation: bubbleRise 5.5s linear infinite 2.1s;"></div>
+        <div class="absolute left-[93%] w-8 h-8 rounded-full border-2 border-white/80 bg-white/25 shadow-[inset_0_0_10px_#fff]" style="animation: bubbleRise 8.5s linear infinite 3.6s;"></div>
+
+        <span class="absolute left-[10%] text-2xl" style="animation: bubbleRise 7.5s linear infinite 0.5s;">🫧</span>
+        <span class="absolute left-[28%] text-3xl" style="animation: bubbleRise 9.2s linear infinite 2.2s;">🫧</span>
+        <span class="absolute left-[49%] text-2xl" style="animation: bubbleRise 8.1s linear infinite 3.8s;">🫧</span>
+        <span class="absolute left-[70%] text-3xl" style="animation: bubbleRise 8.7s linear infinite 1.4s;">🫧</span>
+        <span class="absolute left-[89%] text-2xl" style="animation: bubbleRise 7.2s linear infinite 2.9s;">🫧</span>
+
+        <!-- Refreshing waves, splashes & ice cubes -->
+        <span class="absolute top-[16%] left-[5%] text-4xl opacity-90 select-none" style="animation: poolWaveBob 3.8s ease-in-out infinite;">🌊</span>
+        <span class="absolute top-[22%] right-[7%] text-4xl opacity-90 select-none" style="animation: poolWaveBob 4.4s ease-in-out infinite 0.5s;">💦</span>
+        <span class="absolute top-[52%] left-[4%] text-3xl opacity-85 select-none" style="animation: poolWaveBob 4.1s ease-in-out infinite 1.1s;">🧊</span>
+        <span class="absolute top-[58%] right-[5%] text-4xl opacity-90 select-none" style="animation: poolWaveBob 3.6s ease-in-out infinite 0.8s;">🌊</span>
+        <span class="absolute bottom-[18%] left-[9%] text-4xl opacity-90 select-none" style="animation: poolWaveBob 4.5s ease-in-out infinite 0.3s;">🛟</span>
+        <span class="absolute bottom-[20%] right-[9%] text-3xl opacity-85 select-none" style="animation: poolWaveBob 4s ease-in-out infinite 1.5s;">💦</span>
       </div>
 
-      <!-- 4. SUMMER FX: Rising Pool Bubbles, Caustic Light & Floating Beach Elements -->
-      <div class="fx-layer fx-summer absolute inset-0">
-        <!-- Sun glow top right -->
-        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br from-[#FFF59D] via-[#FFB74D] to-transparent opacity-60 blur-2xl" style="animation: floatSlow 8s ease-in-out infinite;"></div>
-        <!-- Rising pool bubbles -->
-        <span class="absolute left-[10%] text-2xl" style="animation: bubbleRise 8s linear infinite;">🫧</span>
-        <span class="absolute left-[26%] text-xl" style="animation: bubbleRise 11s linear infinite 2s;">🫧</span>
-        <span class="absolute left-[48%] text-3xl" style="animation: bubbleRise 9.5s linear infinite 4s;">🫧</span>
-        <span class="absolute left-[72%] text-xl" style="animation: bubbleRise 10s linear infinite 1s;">🫧</span>
-        <span class="absolute left-[88%] text-2xl" style="animation: bubbleRise 8.5s linear infinite 3s;">🫧</span>
-        <!-- Bobbing pool & summer icons -->
-        <span class="absolute top-[15%] left-[6%] text-4xl opacity-85 select-none" style="animation: poolWaveBob 4s ease-in-out infinite;">🏖️</span>
-        <span class="absolute top-[20%] right-[9%] text-4xl opacity-90 select-none" style="animation: poolWaveBob 5s ease-in-out infinite 0.6s;">☀️</span>
-        <span class="absolute bottom-[20%] left-[8%] text-3xl opacity-80 select-none" style="animation: poolWaveBob 4.5s ease-in-out infinite 1.2s;">🌊</span>
-        <span class="absolute bottom-[16%] right-[10%] text-4xl opacity-85 select-none" style="animation: poolWaveBob 4.8s ease-in-out infinite 0.4s;">🌴</span>
-        <span class="absolute top-[55%] right-[5%] text-3xl opacity-80 select-none" style="animation: poolWaveBob 3.9s ease-in-out infinite 1.5s;">🍉</span>
+      <!-- 4. NIEVE FX: Freezing Blizzard Wind Streaks, Heavy Snowfall & Diagonal Hailstones (Granizo) -->
+      <div class="fx-layer fx-nieve absolute inset-0">
+        <!-- Icy screen-edge frost vignette -->
+        <div class="absolute inset-0 shadow-[inset_0_0_90px_rgba(186,230,253,0.35)]"></div>
+        <!-- Aurora Borealis glow -->
+        <div class="absolute -top-20 left-[10%] right-[10%] h-72 rounded-full bg-gradient-to-r from-[#38BDF8]/30 via-[#BAE6FD]/35 to-[#818CF8]/30 blur-3xl" style="animation: auroraWave 9s ease-in-out infinite;"></div>
+
+        <!-- Freezing Wind Gust Streaks (Viento Helado) -->
+        <div class="absolute top-[18%] left-0 w-96 h-[2px] bg-gradient-to-r from-transparent via-white/60 to-transparent blur-[0.5px]" style="animation: windGust 3.2s linear infinite;"></div>
+        <div class="absolute top-[34%] left-0 w-[28rem] h-[3px] bg-gradient-to-r from-transparent via-sky-200/55 to-transparent blur-[1px]" style="animation: windGust 2.6s linear infinite 0.8s;"></div>
+        <div class="absolute top-[52%] left-0 w-80 h-[2px] bg-gradient-to-r from-transparent via-white/50 to-transparent" style="animation: windGust 3.5s linear infinite 1.5s;"></div>
+        <div class="absolute top-[68%] left-0 w-[32rem] h-[3px] bg-gradient-to-r from-transparent via-sky-100/60 to-transparent blur-[1px]" style="animation: windGust 2.9s linear infinite 0.4s;"></div>
+        <div class="absolute top-[84%] left-0 w-96 h-[2px] bg-gradient-to-r from-transparent via-white/55 to-transparent" style="animation: windGust 3.1s linear infinite 2.1s;"></div>
+        <span class="absolute top-[26%] left-[6%] text-3xl opacity-65" style="animation: floatSlow 3.5s ease-in-out infinite;">🌬️</span>
+        <span class="absolute bottom-[24%] right-[7%] text-3xl opacity-65" style="animation: floatReverse 4s ease-in-out infinite;">🥶</span>
+
+        <!-- Fast Diagonal Hailstones (Granizo) -->
+        <div class="absolute left-[8%] w-2 h-3.5 rounded-full bg-white/90 shadow-[0_0_8px_#fff]" style="animation: hailDrop 2.1s linear infinite;"></div>
+        <div class="absolute left-[19%] w-2.5 h-4 rounded-full bg-sky-100/90 shadow-[0_0_8px_#fff]" style="animation: hailDrop 1.8s linear infinite 0.5s;"></div>
+        <div class="absolute left-[31%] w-2 h-3 rounded-full bg-white/85" style="animation: hailDrop 2.3s linear infinite 1.1s;"></div>
+        <div class="absolute left-[44%] w-2.5 h-4 rounded-full bg-white/95 shadow-[0_0_8px_#fff]" style="animation: hailDrop 1.9s linear infinite 0.2s;"></div>
+        <div class="absolute left-[57%] w-2 h-3.5 rounded-full bg-sky-100/90" style="animation: hailDrop 2.2s linear infinite 1.4s;"></div>
+        <div class="absolute left-[68%] w-2.5 h-4 rounded-full bg-white/90 shadow-[0_0_8px_#fff]" style="animation: hailDrop 1.7s linear infinite 0.9s;"></div>
+        <div class="absolute left-[81%] w-2 h-3.5 rounded-full bg-white/85" style="animation: hailDrop 2.0s linear infinite 0.3s;"></div>
+        <div class="absolute left-[92%] w-2.5 h-4 rounded-full bg-sky-100/95" style="animation: hailDrop 1.85s linear infinite 1.6s;"></div>
+
+        <!-- Heavy Wind-Blown Snowflakes -->
+        <span class="absolute left-[2%] text-xl text-white/90" style="animation: blizzardSnow 5.5s linear infinite;">❄️</span>
+        <span class="absolute left-[9%] text-sm text-sky-100/85" style="animation: blizzardSnow 6.8s linear infinite 1.2s;">❅</span>
+        <span class="absolute left-[16%] text-2xl text-white/90" style="animation: blizzardSnow 5.2s linear infinite 2.4s;">❆</span>
+        <span class="absolute left-[24%] text-lg text-sky-200/85" style="animation: blizzardSnow 6.1s linear infinite 0.6s;">❄️</span>
+        <span class="absolute left-[33%] text-xl text-white/90" style="animation: blizzardSnow 5.8s linear infinite 3.1s;">❅</span>
+        <span class="absolute left-[41%] text-2xl text-sky-100/95" style="animation: blizzardSnow 4.9s linear infinite 1.7s;">❄️</span>
+        <span class="absolute left-[50%] text-base text-white/85" style="animation: blizzardSnow 6.4s linear infinite 2.8s;">❆</span>
+        <span class="absolute left-[59%] text-xl text-sky-100/90" style="animation: blizzardSnow 5.3s linear infinite 0.3s;">❄️</span>
+        <span class="absolute left-[67%] text-2xl text-white/95" style="animation: blizzardSnow 5.7s linear infinite 1.9s;">❅</span>
+        <span class="absolute left-[75%] text-sm text-sky-200/85" style="animation: blizzardSnow 6.6s linear infinite 3.5s;">❆</span>
+        <span class="absolute left-[83%] text-xl text-white/90" style="animation: blizzardSnow 5.1s linear infinite 0.9s;">❄️</span>
+        <span class="absolute left-[91%] text-2xl text-sky-100/90" style="animation: blizzardSnow 5.9s linear infinite 2.2s;">❅</span>
       </div>
 
-      <!-- 5. WINTER FX: Aurora Borealis & Continuous Falling Snowflakes -->
-      <div class="fx-layer fx-winter absolute inset-0">
-        <!-- Aurora Borealis ribbons -->
-        <div class="absolute -top-20 left-[10%] right-[10%] h-72 rounded-full bg-gradient-to-r from-[#2DD4BF]/30 via-[#38BDF8]/35 to-[#818CF8]/30 blur-3xl" style="animation: auroraWave 10s ease-in-out infinite;"></div>
-        <!-- Falling Snowflakes -->
-        <span class="absolute left-[5%] text-xl text-white/80" style="animation: snowFall 9s linear infinite;">❄️</span>
-        <span class="absolute left-[14%] text-sm text-sky-200/75" style="animation: snowFall 12s linear infinite 2s;">❅</span>
-        <span class="absolute left-[23%] text-2xl text-white/85" style="animation: snowFall 8.5s linear infinite 4s;">❆</span>
-        <span class="absolute left-[34%] text-base text-sky-100/70" style="animation: snowFall 11s linear infinite 1s;">❄️</span>
-        <span class="absolute left-[46%] text-xl text-white/80" style="animation: snowFall 10s linear infinite 5s;">❅</span>
-        <span class="absolute left-[58%] text-2xl text-sky-200/85" style="animation: snowFall 9.2s linear infinite 2.5s;">❄️</span>
-        <span class="absolute left-[69%] text-sm text-white/75" style="animation: snowFall 13s linear infinite 3.5s;">❆</span>
-        <span class="absolute left-[79%] text-xl text-sky-100/80" style="animation: snowFall 8.8s linear infinite 0.7s;">❄️</span>
-        <span class="absolute left-[88%] text-2xl text-white/90" style="animation: snowFall 10.5s linear infinite 1.8s;">❅</span>
-        <span class="absolute left-[94%] text-base text-sky-200/75" style="animation: snowFall 11.5s linear infinite 4.2s;">❆</span>
+      <!-- 5. CARAMELOS FX: Pink Patisserie, Candies, Cakes, Donuts & Falling Sugar Sprinkles/Toppings -->
+      <div class="fx-layer fx-caramelos absolute inset-0">
+        <!-- Colorful Sugar Toppings / Sprinkles Raining Down -->
+        <div class="absolute left-[7%] w-4 h-1.5 rounded-full bg-[#FF1493]" style="animation: sprinkleFall 6s linear infinite;"></div>
+        <div class="absolute left-[15%] w-4 h-1.5 rounded-full bg-[#00E5FF]" style="animation: sprinkleFall 7.5s linear infinite 1.2s;"></div>
+        <div class="absolute left-[24%] w-4 h-1.5 rounded-full bg-[#FFD600]" style="animation: sprinkleFall 6.8s linear infinite 2.5s;"></div>
+        <div class="absolute left-[35%] w-4 h-1.5 rounded-full bg-[#FF4081]" style="animation: sprinkleFall 5.9s linear infinite 0.8s;"></div>
+        <div class="absolute left-[48%] w-4 h-1.5 rounded-full bg-[#7C4DFF]" style="animation: sprinkleFall 7.2s linear infinite 3.1s;"></div>
+        <div class="absolute left-[61%] w-4 h-1.5 rounded-full bg-[#00E676]" style="animation: sprinkleFall 6.4s linear infinite 1.7s;"></div>
+        <div class="absolute left-[73%] w-4 h-1.5 rounded-full bg-[#FF1493]" style="animation: sprinkleFall 7.1s linear infinite 0.4s;"></div>
+        <div class="absolute left-[84%] w-4 h-1.5 rounded-full bg-[#FFD600]" style="animation: sprinkleFall 6.2s linear infinite 2.9s;"></div>
+        <div class="absolute left-[93%] w-4 h-1.5 rounded-full bg-[#FF4081]" style="animation: sprinkleFall 6.7s linear infinite 1.5s;"></div>
+
+        <!-- Floating Candies, Pastries, Cakes & Sweet Toppings -->
+        <span class="absolute top-[12%] left-[5%] text-4xl opacity-90 select-none" style="animation: candyBounce 4.2s ease-in-out infinite;">🍬</span>
+        <span class="absolute top-[15%] right-[7%] text-4xl opacity-90 select-none" style="animation: candyBounce 4.8s ease-in-out infinite 0.4s;">🧁</span>
+        <span class="absolute top-[36%] left-[4%] text-4xl opacity-85 select-none" style="animation: candyBounce 4.5s ease-in-out infinite 0.9s;">🍭</span>
+        <span class="absolute top-[42%] right-[5%] text-4xl opacity-85 select-none" style="animation: candyBounce 5.1s ease-in-out infinite 1.3s;">🍰</span>
+        <span class="absolute bottom-[26%] left-[7%] text-4xl opacity-90 select-none" style="animation: candyBounce 4.4s ease-in-out infinite 0.6s;">🍩</span>
+        <span class="absolute bottom-[22%] right-[8%] text-4xl opacity-90 select-none" style="animation: candyBounce 4.9s ease-in-out infinite 0.2s;">🍦</span>
+        <span class="absolute bottom-[10%] left-[18%] text-3xl opacity-85 select-none" style="animation: candyBounce 3.9s ease-in-out infinite 1.1s;">🍓</span>
+        <span class="absolute top-[24%] left-[22%] text-3xl opacity-80 select-none" style="animation: floatSlow 4.1s ease-in-out infinite;">🍒</span>
+        <span class="absolute bottom-[14%] right-[20%] text-3xl opacity-85 select-none" style="animation: floatReverse 4.3s ease-in-out infinite;">🍪</span>
       </div>
 
     </div>
@@ -786,15 +899,15 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
     <!-- Global Theme Switcher Interactive Script -->
     <script>
       const THEME_META: Record<string, { icon: string; label: string }> = {
-        classic: { icon: '🏛️', label: 'Clásico' },
+        google: { icon: '🔵', label: 'Google' },
         cyber: { icon: '⚡', label: 'Cyber' },
-        candy: { icon: '🦄', label: 'Unicornio' },
-        summer: { icon: '🏖️', label: 'Piscina' },
-        winter: { icon: '❄️', label: 'Invierno' },
+        piscina: { icon: '🌊', label: 'Piscina' },
+        nieve: { icon: '❄️', label: 'Nieve' },
+        caramelos: { icon: '🍬', label: 'Caramelos' },
       };
 
       function updateThemeUI(theme: string) {
-        const meta = THEME_META[theme] || THEME_META.classic;
+        const meta = THEME_META[theme] || THEME_META.google;
         const iconEl = document.getElementById('current-theme-icon');
         const labelEl = document.getElementById('current-theme-label');
         if (iconEl) iconEl.textContent = meta.icon;
@@ -803,9 +916,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         document.querySelectorAll('[data-set-theme]').forEach((btn) => {
           const t = btn.getAttribute('data-set-theme');
           if (t === theme) {
-            btn.classList.add('ring-2', 'ring-current', 'font-bold');
+            btn.classList.add('ring-2', 'ring-current');
           } else {
-            btn.classList.remove('ring-2', 'ring-current', 'font-bold');
+            btn.classList.remove('ring-2', 'ring-current');
           }
         });
       }
@@ -820,7 +933,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
 
       // Initialize Header UI with current active theme
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 'classic';
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'google';
       updateThemeUI(currentTheme);
 
       // Dropdown open/close logic
@@ -842,7 +955,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
 
       document.querySelectorAll('[data-set-theme]').forEach((btn) => {
         btn.addEventListener('click', () => {
-          const selected = btn.getAttribute('data-set-theme') || 'classic';
+          const selected = btn.getAttribute('data-set-theme') || 'google';
           applyTheme(selected, true);
           dropdown?.classList.add('hidden');
           chevron?.classList.remove('rotate-180');

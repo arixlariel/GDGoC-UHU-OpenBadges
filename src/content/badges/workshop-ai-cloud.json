@@ -6,7 +6,7 @@
     "narrative": "Asistencia presencial completa al taller y realización satisfactoria de los laboratorios prácticos en Google Cloud Console e integración con Gemini API."
   },
   "tags": ["Workshop", "Gemini API", "GCP", "Machine Learning"],
-  "style": "classic",
+  "style": "google",
   "issuerId": "gdgoc-uhu"
 }
 

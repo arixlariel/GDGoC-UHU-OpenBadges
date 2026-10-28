@@ -1,6 +1,17 @@
 import { defineCollection, z } from 'astro:content';
 
-const styleEnum = z.enum(['classic', 'hackathon', 'cyber', 'candy', 'summer', 'winter']);
+const styleEnum = z.enum([
+  'google',
+  'classic',
+  'cyber',
+  'hackathon',
+  'piscina',
+  'summer',
+  'nieve',
+  'winter',
+  'caramelos',
+  'candy',
+]);
 
 const badgesCollection = defineCollection({
   type: 'data',
@@ -12,7 +23,7 @@ const badgesCollection = defineCollection({
       narrative: z.string(),
     }),
     tags: z.array(z.string()).default([]),
-    style: styleEnum.default('classic'),
+    style: styleEnum.default('google'),
     issuerId: z.string().default('gdgoc-uhu'),
   }),
 });

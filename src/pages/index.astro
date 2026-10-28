@@ -6,36 +6,61 @@ import { getFullUrl } from '@/config/site';
 const badges = await getCollection('badges');
 const assertions = await getCollection('assertions');
 
+const styleAliasMap: Record<string, 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos'> = {
+  google: 'google',
+  classic: 'google',
+  cyber: 'cyber',
+  hackathon: 'cyber',
+  piscina: 'piscina',
+  summer: 'piscina',
+  nieve: 'nieve',
+  winter: 'nieve',
+  caramelos: 'caramelos',
+  candy: 'caramelos',
+};
+
+const styleOrder: Record<string, number> = {
+  google: 1,
+  cyber: 2,
+  piscina: 3,
+  nieve: 4,
+  caramelos: 5,
+};
+
+// Ordenar los certificados de ejemplo según el orden de estilos (Google, Cyber, Piscina, Nieve, Caramelos)
+const sortedAssertions = [...assertions].sort((a, b) => {
+  const badgeA = badges.find((bg) => bg.id.replace(/\.json$/, '') === a.data.badgeId);
+  const badgeB = badges.find((bg) => bg.id.replace(/\.json$/, '') === b.data.badgeId);
+  const styleA = styleAliasMap[a.data.styleOverride || badgeA?.data.style || 'google'] || 'google';
+  const styleB = styleAliasMap[b.data.styleOverride || badgeB?.data.style || 'google'] || 'google';
+  return (styleOrder[styleA] || 99) - (styleOrder[styleB] || 99);
+});
+
 const styleMeta: Record<string, { label: string; icon: string; pillClass: string }> = {
-  classic: {
-    label: 'Estilo Clásico',
-    icon: '🏛️',
+  google: {
+    label: 'Google',
+    icon: '🔵',
     pillClass: 'bg-[#E8F0FE] text-[#1967D2] border border-[#D2E3FC]',
   },
   cyber: {
-    label: 'Estilo Cyber',
+    label: 'Cyber',
     icon: '⚡',
     pillClass: 'bg-[#091326] text-[#00F0FF] border border-[#00F0FF]/50',
   },
-  hackathon: {
-    label: 'Estilo Cyber',
-    icon: '⚡',
-    pillClass: 'bg-[#091326] text-[#00F0FF] border border-[#00F0FF]/50',
-  },
-  candy: {
-    label: 'Estilo Unicornio',
-    icon: '🦄',
-    pillClass: 'bg-[#FCE7F3] text-[#BE185D] border border-[#F472B6]',
-  },
-  summer: {
-    label: 'Estilo Piscina',
-    icon: '🏖️',
+  piscina: {
+    label: 'Piscina',
+    icon: '🌊',
     pillClass: 'bg-[#CCFBF1] text-[#0F766E] border border-[#2DD4BF]',
   },
-  winter: {
-    label: 'Estilo Invierno',
+  nieve: {
+    label: 'Nieve',
     icon: '❄️',
     pillClass: 'bg-[#E0F2FE] text-[#0369A1] border border-[#7DD3FC]',
+  },
+  caramelos: {
+    label: 'Caramelos',
+    icon: '🍬',
+    pillClass: 'bg-[#FCE7F3] text-[#BE185D] border border-[#F472B6]',
   },
 };
 ---
@@ -128,7 +153,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
     </div>
   </section>
 
-  <!-- Certificados Emitidos Recientes (5 Estilos de Ejemplo) -->
+  <!-- Certificados Emitidos Recientes -->
   <section class="max-w-5xl mx-auto px-4 sm:px-6 py-14 relative z-10">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-2">
       <div>
@@ -141,17 +166,17 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
       </div>
       <span class="theme-pill-btn inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-1.5 rounded-full self-start sm:self-auto">
         <span class="w-2 h-2 rounded-full bg-[#34A853] animate-ping"></span>
-        {assertions.length} {assertions.length === 1 ? 'credencial activa' : 'credenciales activas'}
+        {sortedAssertions.length} {sortedAssertions.length === 1 ? 'credencial activa' : 'credenciales activas'}
       </span>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {assertions.map((assertion) => {
+      {sortedAssertions.map((assertion) => {
         const id = assertion.id.replace(/\.json$/, '');
         const badge = badges.find((b) => b.id.replace(/\.json$/, '') === assertion.data.badgeId);
-        const rawStyle = assertion.data.styleOverride || badge?.data.style || 'classic';
-        const styleKey = rawStyle === 'hackathon' ? 'cyber' : rawStyle;
-        const meta = styleMeta[styleKey] || styleMeta.classic;
+        const rawStyle = assertion.data.styleOverride || badge?.data.style || 'google';
+        const styleKey = styleAliasMap[rawStyle] || 'google';
+        const meta = styleMeta[styleKey] || styleMeta.google;
 
         return (
           <a
@@ -159,7 +184,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
             class="theme-card group relative overflow-hidden rounded-2xl p-5 block"
           >
             <!-- Top accent bar per certificate style -->
-            {styleKey === 'classic' && (
+            {styleKey === 'google' && (
               <div class="absolute top-0 left-0 right-0 h-1.5 grid grid-cols-4">
                 <div class="bg-[#4285F4]"></div>
                 <div class="bg-[#EA4335]"></div>
@@ -170,14 +195,14 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
             {styleKey === 'cyber' && (
               <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#00F0FF] via-[#FF007F] to-[#00FF66]"></div>
             )}
-            {styleKey === 'candy' && (
-              <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#FF4E88] via-[#FFE66D] via-[#2EC4B6] to-[#9B5DE5]"></div>
+            {styleKey === 'piscina' && (
+              <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#00F2FE] via-[#00E5FF] to-[#0284C7]"></div>
             )}
-            {styleKey === 'summer' && (
-              <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#00E5FF] via-[#FFE57F] to-[#FF7043]"></div>
+            {styleKey === 'nieve' && (
+              <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#FFFFFF] via-[#7DD3FC] to-[#38BDF8]"></div>
             )}
-            {styleKey === 'winter' && (
-              <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#E0F2FE] via-[#38BDF8] to-[#818CF8]"></div>
+            {styleKey === 'caramelos' && (
+              <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#FF1493] via-[#FF85C0] to-[#FF69B4]"></div>
             )}
 
             <div class="flex items-center gap-4 pt-1">

@@ -71,14 +71,17 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
     "narrative": "Otorgado por asistir presencialmente al 100% del taller y participar en las actividades"
   },
   "tags": ["CTF", "Reversing", "Binarios", "Ghidra"],
-  "style": "classic",
+  "style": "google",
   "issuerId": "gdgoc-uhu"
 }
 ```
 
 #### Opciones de estilo (`style`):
-- `classic`: Institucional, blanco
-- `cyber`: Modo oscuro, neón
+- `google`: Clásico Google institucional, blanco con los 4 colores oficiales (por defecto)
+- `cyber`: Modo oscuro, neón y estética matrix/glitch
+- `piscina`: Verano refrescante, agua turquesa con olas y burbujas
+- `nieve`: Invierno polar, ventisca helada, nieve y granizo
+- `caramelos`: Dulce y rosa, golosinas, pasteles y toppings
 
 ---
 

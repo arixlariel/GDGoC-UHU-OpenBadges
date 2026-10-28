@@ -5,10 +5,10 @@ interface Props {
   assertion: any;
   badge: any;
   assertionId: string;
-  initialStyle: 'classic' | 'cyber' | 'candy' | 'summer' | 'winter';
+  initialStyle: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
 }
 
-const { assertion, badge, assertionId, initialStyle } = Astro.props;
+const { assertion, badge, assertionId } = Astro.props;
 
 const issueDate = new Date(assertion.data.issuedOn).toLocaleDateString('es-ES', {
   year: 'numeric',
@@ -30,13 +30,13 @@ linkedinUrl.searchParams.set('certId', assertionId);
 ---
 
 <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
-  <!-- Contenedor Exterior del Diploma (cambia radicalmente según el estilo activo) -->
+  <!-- Contenedor Exterior del Diploma (cambia según el estilo activo) -->
   <div class="print-diploma-wrapper diploma-outer rounded-3xl p-2 sm:p-5 transition-all duration-500">
     
     <!-- Tarjeta Principal del Diploma -->
     <div class="diploma-inner relative rounded-2xl overflow-hidden p-6 sm:p-12 md:p-14 flex flex-col items-center text-center min-h-[640px] justify-between transition-all duration-500">
       
-      <!-- Barra superior decorativa del diploma -->
+      <!-- Barra superior decorativa del diploma (Google 4 colores) -->
       <div class="diploma-top-bar absolute top-0 left-0 right-0 h-2.5 flex">
         <div class="flex-1 bg-[#4285F4]"></div>
         <div class="flex-1 bg-[#EA4335]"></div>
@@ -49,8 +49,8 @@ linkedinUrl.searchParams.set('certId', assertionId);
       <div class="diploma-frame-2 absolute inset-4 sm:inset-6 rounded-lg pointer-events-none transition-all duration-500"></div>
 
       <!-- Decoraciones de esquina específicas por estilo -->
-      <!-- 1. Classic Ornaments -->
-      <div class="fx-layer fx-classic">
+      <!-- 1. Google Ornaments -->
+      <div class="fx-layer fx-google">
         <svg class="absolute -top-12 -left-12 w-52 h-52 opacity-10 pointer-events-none" viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="80" stroke="#4285F4" stroke-width="4" />
           <circle cx="100" cy="100" r="55" stroke="#EA4335" stroke-width="3" stroke-dasharray="8 8" />
@@ -73,28 +73,28 @@ linkedinUrl.searchParams.set('certId', assertionId);
         </svg>
       </div>
 
-      <!-- 3. Candy Ornaments -->
-      <div class="fx-layer fx-candy">
-        <span class="absolute top-6 left-8 text-3xl opacity-75 select-none" style="animation: candyBounce 4s ease-in-out infinite;">🦄</span>
-        <span class="absolute top-6 right-8 text-3xl opacity-75 select-none" style="animation: candyBounce 4.5s ease-in-out infinite 0.4s;">🌈</span>
-        <span class="absolute bottom-6 left-8 text-3xl opacity-75 select-none" style="animation: candyBounce 4.2s ease-in-out infinite 0.8s;">🍭</span>
-        <span class="absolute bottom-6 right-8 text-3xl opacity-75 select-none" style="animation: candyBounce 4.8s ease-in-out infinite 1.2s;">🍬</span>
+      <!-- 3. Piscina Ornaments -->
+      <div class="fx-layer fx-piscina">
+        <span class="absolute top-6 left-8 text-3xl opacity-85 select-none" style="animation: poolWaveBob 3.8s ease-in-out infinite;">🌊</span>
+        <span class="absolute top-6 right-8 text-3xl opacity-85 select-none" style="animation: poolWaveBob 4.2s ease-in-out infinite 0.4s;">💦</span>
+        <span class="absolute bottom-6 left-8 text-3xl opacity-85 select-none" style="animation: poolWaveBob 4s ease-in-out infinite 0.8s;">🫧</span>
+        <span class="absolute bottom-6 right-8 text-3xl opacity-85 select-none" style="animation: poolWaveBob 4.5s ease-in-out infinite 1.2s;">🌊</span>
       </div>
 
-      <!-- 4. Summer Ornaments -->
-      <div class="fx-layer fx-summer">
-        <span class="absolute top-6 left-8 text-3xl opacity-80 select-none" style="animation: poolWaveBob 4s ease-in-out infinite;">🏖️</span>
-        <span class="absolute top-6 right-8 text-3xl opacity-80 select-none" style="animation: poolWaveBob 4.5s ease-in-out infinite 0.5s;">☀️</span>
-        <span class="absolute bottom-6 left-8 text-3xl opacity-80 select-none" style="animation: poolWaveBob 4.2s ease-in-out infinite 0.9s;">🌊</span>
-        <span class="absolute bottom-6 right-8 text-3xl opacity-80 select-none" style="animation: poolWaveBob 4.7s ease-in-out infinite 1.3s;">🌴</span>
+      <!-- 4. Nieve Ornaments -->
+      <div class="fx-layer fx-nieve">
+        <span class="absolute top-6 left-8 text-3xl opacity-85 select-none" style="animation: floatSlow 4.5s ease-in-out infinite;">❄️</span>
+        <span class="absolute top-6 right-8 text-3xl opacity-85 select-none" style="animation: floatReverse 5s ease-in-out infinite;">🌬️</span>
+        <span class="absolute bottom-6 left-8 text-3xl opacity-85 select-none" style="animation: floatReverse 4.2s ease-in-out infinite;">❆</span>
+        <span class="absolute bottom-6 right-8 text-3xl opacity-85 select-none" style="animation: floatSlow 4.8s ease-in-out infinite;">❄️</span>
       </div>
 
-      <!-- 5. Winter Ornaments -->
-      <div class="fx-layer fx-winter">
-        <span class="absolute top-6 left-8 text-3xl opacity-80 select-none" style="animation: floatSlow 5s ease-in-out infinite;">❄️</span>
-        <span class="absolute top-6 right-8 text-3xl opacity-80 select-none" style="animation: floatReverse 5.5s ease-in-out infinite;">❅</span>
-        <span class="absolute bottom-6 left-8 text-3xl opacity-80 select-none" style="animation: floatReverse 4.8s ease-in-out infinite;">❆</span>
-        <span class="absolute bottom-6 right-8 text-3xl opacity-80 select-none" style="animation: floatSlow 5.2s ease-in-out infinite;">❄️</span>
+      <!-- 5. Caramelos Ornaments -->
+      <div class="fx-layer fx-caramelos">
+        <span class="absolute top-6 left-8 text-3xl opacity-90 select-none" style="animation: candyBounce 4s ease-in-out infinite;">🧁</span>
+        <span class="absolute top-6 right-8 text-3xl opacity-90 select-none" style="animation: candyBounce 4.5s ease-in-out infinite 0.4s;">🍬</span>
+        <span class="absolute bottom-6 left-8 text-3xl opacity-90 select-none" style="animation: candyBounce 4.2s ease-in-out infinite 0.8s;">🍩</span>
+        <span class="absolute bottom-6 right-8 text-3xl opacity-90 select-none" style="animation: candyBounce 4.8s ease-in-out infinite 1.2s;">🍰</span>
       </div>
 
       <!-- Marca de agua central sutil -->
@@ -319,20 +319,20 @@ linkedinUrl.searchParams.set('certId', assertionId);
   /* ==========================================================================
      DIPLOMA-SPECIFIC STYLING PER THEME
      ========================================================================== */
-  /* 1. Classic Diploma */
-  html[data-theme="classic"] .diploma-outer {
+  /* 1. Google Diploma */
+  html[data-theme="google"] .diploma-outer {
     background: #FFFFFF;
     border: 1px solid #DADCE0;
     box-shadow: 0 12px 40px rgba(32, 33, 36, 0.08);
   }
-  html[data-theme="classic"] .diploma-inner {
+  html[data-theme="google"] .diploma-inner {
     background: #FFFFFF;
     border: 1px solid #DADCE0;
   }
-  html[data-theme="classic"] .diploma-frame-1 { border: 1px solid #E8EAED; }
-  html[data-theme="classic"] .diploma-frame-2 { border: 1px solid #F1F3F4; }
-  html[data-theme="classic"] .diploma-recipient-name { color: #202124; }
-  html[data-theme="classic"] .diploma-meta-box {
+  html[data-theme="google"] .diploma-frame-1 { border: 1px solid #E8EAED; }
+  html[data-theme="google"] .diploma-frame-2 { border: 1px solid #F1F3F4; }
+  html[data-theme="google"] .diploma-recipient-name { color: #202124; }
+  html[data-theme="google"] .diploma-meta-box {
     background: #F8F9FA;
     border: 1px solid #DADCE0;
   }
@@ -362,72 +362,80 @@ linkedinUrl.searchParams.set('certId', assertionId);
     box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1);
   }
 
-  /* 3. Candy Diploma */
-  html[data-theme="candy"] .diploma-outer {
-    background: linear-gradient(135deg, #FF6FD8, #FFE66D, #2EC4B6, #9B5DE5);
-    padding: 8px !important;
-    box-shadow: 0 20px 50px rgba(255, 78, 136, 0.35);
-  }
-  html[data-theme="candy"] .diploma-inner {
-    background: linear-gradient(180deg, #FFFDF9 0%, #FFF0F8 100%);
-  }
-  html[data-theme="candy"] .diploma-top-bar { display: none; }
-  html[data-theme="candy"] .diploma-frame-1 { border: 3px dashed #FF85C0; }
-  html[data-theme="candy"] .diploma-frame-2 { border: 2px dotted #B388FF; }
-  html[data-theme="candy"] .diploma-recipient-name {
-    background: linear-gradient(90deg, #FF2A85, #FF8E2B, #8B5CF6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  html[data-theme="candy"] .diploma-meta-box {
-    background: rgba(255, 230, 245, 0.65);
-    border: 2px solid #FFB3D9;
-  }
-
-  /* 4. Summer Diploma */
-  html[data-theme="summer"] .diploma-outer {
-    background: linear-gradient(135deg, #00E5FF, #FFF176, #FF7043, #00B4DB);
+  /* 3. Piscina Diploma */
+  html[data-theme="piscina"] .diploma-outer {
+    background: linear-gradient(135deg, #00F2FE, #4FACFE, #00E5FF, #0284C7);
     padding: 6px !important;
-    box-shadow: 0 20px 55px rgba(0, 131, 176, 0.38);
+    box-shadow: 0 20px 55px rgba(2, 132, 199, 0.42);
   }
-  html[data-theme="summer"] .diploma-inner {
+  html[data-theme="piscina"] .diploma-inner {
     background: linear-gradient(180deg, #FFFFFF 0%, #E0F7FA 100%);
   }
-  html[data-theme="summer"] .diploma-top-bar { display: none; }
-  html[data-theme="summer"] .diploma-frame-1 { border: 2px solid rgba(0, 188, 212, 0.5); }
-  html[data-theme="summer"] .diploma-frame-2 { border: 1px dashed rgba(255, 112, 67, 0.45); }
-  html[data-theme="summer"] .diploma-recipient-name {
-    background: linear-gradient(90deg, #0083B0, #00B4DB, #FF6F00);
+  html[data-theme="piscina"] .diploma-top-bar { display: none; }
+  html[data-theme="piscina"] .diploma-frame-1 { border: 2px solid rgba(0, 188, 212, 0.55); }
+  html[data-theme="piscina"] .diploma-frame-2 { border: 1.5px dashed rgba(2, 132, 199, 0.4); }
+  html[data-theme="piscina"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #0284C7, #00B4DB, #00897B);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  html[data-theme="summer"] .diploma-meta-box {
-    background: rgba(255, 255, 255, 0.85);
-    border: 2px solid rgba(0, 188, 212, 0.45);
+  html[data-theme="piscina"] .diploma-meta-box {
+    background: rgba(255, 255, 255, 0.88);
+    border: 2px solid rgba(0, 188, 212, 0.5);
   }
 
-  /* 5. Winter Diploma */
-  html[data-theme="winter"] .diploma-outer {
-    background: linear-gradient(135deg, #E0F2FE, #38BDF8, #818CF8, #2DD4BF);
+  /* 4. Nieve Diploma */
+  html[data-theme="nieve"] .diploma-outer {
+    background: linear-gradient(135deg, #FFFFFF, #7DD3FC, #38BDF8, #BAE6FD);
     padding: 5px !important;
-    box-shadow: 0 20px 60px rgba(2, 132, 199, 0.45), 0 0 35px rgba(186, 230, 253, 0.35);
+    box-shadow: 0 20px 60px rgba(2, 132, 199, 0.5), 0 0 38px rgba(224, 242, 254, 0.45);
   }
-  html[data-theme="winter"] .diploma-inner {
-    background: linear-gradient(180deg, #0B1D36 0%, #102A4C 100%);
+  html[data-theme="nieve"] .diploma-inner {
+    background: linear-gradient(180deg, #08182E 0%, #0F294A 100%);
   }
-  html[data-theme="winter"] .diploma-top-bar { display: none; }
-  html[data-theme="winter"] .diploma-frame-1 { border: 1.5px solid rgba(186, 230, 253, 0.45); }
-  html[data-theme="winter"] .diploma-frame-2 { border: 1px dashed rgba(125, 211, 252, 0.35); }
-  html[data-theme="winter"] .diploma-recipient-name {
-    background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #C7D2FE);
+  html[data-theme="nieve"] .diploma-top-bar { display: none; }
+  html[data-theme="nieve"] .diploma-frame-1 { border: 1.5px solid rgba(224, 242, 254, 0.55); }
+  html[data-theme="nieve"] .diploma-frame-2 { border: 1px dashed rgba(125, 211, 252, 0.4); }
+  html[data-theme="nieve"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #E0F2FE);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 12px rgba(125, 211, 252, 0.35));
+    filter: drop-shadow(0 0 12px rgba(186, 230, 253, 0.45));
   }
-  html[data-theme="winter"] .diploma-meta-box {
-    background: rgba(15, 38, 68, 0.75);
-    border: 1px solid rgba(186, 230, 253, 0.4);
-    box-shadow: inset 0 0 20px rgba(224, 242, 254, 0.1);
+  html[data-theme="nieve"] .diploma-meta-box {
+    background: rgba(14, 36, 66, 0.8);
+    border: 1.5px solid rgba(186, 230, 253, 0.5);
+    box-shadow: inset 0 0 22px rgba(255, 255, 255, 0.14);
+  }
+
+  /* 5. Caramelos Diploma */
+  html[data-theme="caramelos"] .diploma-outer {
+    background: repeating-linear-gradient(
+      45deg,
+      #FF1493,
+      #FF1493 16px,
+      #FF85C0 16px,
+      #FF85C0 32px,
+      #FFF0F6 32px,
+      #FFF0F6 48px
+    );
+    padding: 8px !important;
+    box-shadow: 0 20px 50px rgba(255, 20, 147, 0.38);
+  }
+  html[data-theme="caramelos"] .diploma-inner {
+    background: linear-gradient(180deg, #FFF9FC 0%, #FFE4F2 100%);
+  }
+  html[data-theme="caramelos"] .diploma-top-bar { display: none; }
+  html[data-theme="caramelos"] .diploma-frame-1 { border: 3px dashed #FF4D94; }
+  html[data-theme="caramelos"] .diploma-frame-2 { border: 2px dotted #FF85C0; }
+  html[data-theme="caramelos"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #D81B60, #FF1493, #FF69B4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="caramelos"] .diploma-meta-box {
+    background: rgba(255, 224, 240, 0.78);
+    border: 2px solid #FF69B4;
   }
 </style>
 
