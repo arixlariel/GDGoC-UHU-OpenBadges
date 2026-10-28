@@ -93,7 +93,7 @@ npm install
 
 ### --- Método A: Asistente automático
 
-> Requiere tener instalado el proyecto. Es útil certificados individuales
+> Requiere tener instalado el proyecto. Es útil para certificados individuales
 
 Abre una terminal, navega a la ruta donde guardes el proyecto y ejecuta:
 
@@ -139,7 +139,7 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
 
 ### --- Método C: Emisión masiva desde `.csv`
 
-> Requiere tener instalado el proyecto. Esta opción está diseñada para emitir por tandas con los `.csv` de Bevy (GDG Community).
+> Requiere tener instalado el proyecto. Esta opción está diseñada para emitir por tandas con los `.csv` de Bevy (GDG Community) y emitir correos
 
 Detecta automáticamente las columnas `First Name`, `Last Name`, `Email`, `Checkin Date (UTC)` y procesa correctamente los nombres. Abre una terminal, navega a la ruta donde guardes el proyecto y ejecuta:
 
@@ -149,6 +149,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 ```
 
 - Si añades `--only-checked-in`, solo emitirá certificado a quienes tengan asistencia registrada
+- Usando este método se mandarán correos automáticos a la hora de publicar los certificados
 
 ---
 
@@ -167,11 +168,13 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
    - **¿Enviar `gmail` automático con la `URL` del certificado?**
    - **Pega el contenido del `.csv`**: Abre el archivo con cualquier bloc de notas para copiar y pegar todo el texto
 
-***Este método publica automáticamente los certificados y manda los correos***
+***Este método publica automáticamente los certificados (paso 5) y permite mandar correos personalizados automáticamente***
 
 ---
 
 ## 5. Cómo publicar los certificados (`git push`)
+
+Abre una terminal, navega a la ruta donde guardes el proyecto y ejecuta:
 
 ```bash
 git add .
