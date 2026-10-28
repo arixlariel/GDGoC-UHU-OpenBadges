@@ -87,37 +87,41 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 
 ### --- Método A: Asistente automático
 
-Abre tu terminal en la carpeta `Open Badges` y ejecuta:
+> Si tienes el proyecto instalado. De uno en uno
+
+Abre un terminal, navega a `Open Badges` y ejecuta:
 
 ```bash
 npm run issue
 ```
 
-El asistente te irá guiando paso a paso:
-1. **Nombre completo del alumno**: (ej: `Laura Benítez Romero`)
-2. **Email del alumno**: (ej: `laura@alu.uhu.es`). *El email solo se usa para calcular el hash criptográfico SHA-256; nunca se guarda en el repositorio*.
-3. **ID de la insignia**: Introduce el identificador del evento (ej: `hackathon-2026`).
-4. **Rol o Reconocimiento**: (ej: `Participante`, `1er Premio - Mejor Proyecto`, `Ponente`).
-5. **Enlace a proyecto / evidencia (opcional)**: Si es un hackathon o workshop, puedes poner el link a su GitHub.
+El asistente te pedirá:
+1. **Nombre completo**
+2. **Email de contacto** (solo se usa para calcular el hash `SHA-256`)
+3. **`name` de la badge**
+4. **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
+5. **Enlace a proyecto o evidencia (opcional)**
 
-El script generará automáticamente un archivo con un ID único de 24 caracteres en `src/content/assertions/<id>.json`.
+El script generará automáticamente un archivo con un nombre único de 24 caracteres en `src/content/assertions/`
 
 ---
 
 ### --- Método B: Creación manual
 
-Si prefieres crearlo a mano o mediante un script de hojas de cálculo (Google Sheets / Excel), crea un archivo con un ID aleatorio de 24 caracteres hexadecimales (ej. `69679d9fa12d24f4a673b54b.json`) dentro de `src/content/assertions/`:
+> Si no tienes el proyecto instalado. De uno en uno
+
+Crea un `.json` con un ID aleatorio de 24 caracteres hexadecimales en `src/content/assertions/` usando la siguiente plantilla:
 
 ```json
 {
   "recipient": {
     "name": "Laura Benítez Romero",
-    "identity": "sha256$a8b2c4...",
+    "identity": "sha256$a8b2c4...",        <-- Correo cifrado (hash)
     "hashed": true,
     "type": "email",
     "salt": "gdgoc-uhu-salt-2026"
   },
-  "badgeId": "workshop-ai-cloud",
+  "badgeId": "workshop-ai-cloud",         <-- Campo `name` de la badge
   "role": "Asistente Certificado",
   "issuedOn": "2026-10-27T18:00:00Z",
   "evidence": "https://github.com/laura/proyecto-final"
@@ -126,9 +130,32 @@ Si prefieres crearlo a mano o mediante un script de hojas de cálculo (Google Sh
 
 ---
 
-### --- Método C: Emisión masiva desde el navegador web
+### --- Método C: Emisión masiva con `.csv`
 
-> 💡 **Para cualquier compañero del equipo organizador que NO tenga el proyecto instalado en su ordenador.** Funciona 100% online desde GitHub sin necesidad de terminal ni Node.js.
+> Si tienes el proyecto instalado. Va por tandas
+
+Esta opción está diseñada para funcionar con los `.csv` de Bevy (GDG Community). Detecta las columnas `First Name`, `Last Name`, `Email`, `Checkin Date (UTC)` y procesa correctamente los nombres. Abre un terminal, navega a `Open Badges` y ejecuta:
+
+```bash
+npm run bulk -- asistentes.csv --badge workshop-ai-cloud --role "Asistente Certificado"
+```
+
+- Si añades `--only-checked-in`, solo emitirá certificado a quienes tengan confirmada la asistencia presencial.
+
+Luego simplemente publicas los certificados:
+```bash
+git add .
+git commit -m "feat(cert): emitir certificados para el evento"
+git push origin main
+```
+
+
+---
+
+
+### --- Método C: Emisión masiva con GitHub Actions
+
+> Si no tienes el proyecto instalado. Va por tandas
 
 1. Entra a la pestaña **Actions** de tu repositorio:  
    👉 `https://github.com/arixlariel/GDGoC-UHU-OpenBadges/actions`
@@ -149,28 +176,6 @@ Si prefieres crearlo a mano o mediante un script de hojas de cálculo (Google Sh
 - Hace el commit y push automático a la rama `main`.
 - Despliega la web en `https://gdguhu.es`.
 - Envía a cada alumno un email desde la cuenta oficial de Gmail del GDGoC con su botón y enlace único.
-
----
-
-### --- Método D: Emisión masiva desde terminal con CSV de Bevy
-
-Si prefieres hacerlo desde tu terminal con el archivo CSV descargado de Bevy / GDG Community:
-
-```bash
-npm run bulk -- asistentes.csv --badge workshop-ai-cloud --role "Asistente Certificado"
-```
-
-El script detecta de forma nativa las columnas del export de **Bevy** (`First Name`, `Last Name`, `Email`, `Checkin Date (UTC)`):
-- Pone los nombres en formato elegante automáticamente (convierte `MARINA ÁLVAREZ` a `Marina Álvarez` o `yobana chanini` a `Yobana Chanini`).
-- Evita apellidos duplicados (limpia casos como `Álvaro Ortiz` + `Ortiz`).
-- Si añades `--only-checked-in`, solo emitirá certificado a quienes tengan confirmada la asistencia presencial.
-
-Luego simplemente publicas los certificados:
-```bash
-git add .
-git commit -m "feat(cert): emitir certificados para el evento"
-git push origin main
-```
 
 ---
 
