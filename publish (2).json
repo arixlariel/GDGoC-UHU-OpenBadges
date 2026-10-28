@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "generatedAt": "2026-10-28T19:56:20.078Z",
+  "badges": [
+    {
+      "id": "workshop-ai-cloud",
+      "data": {
+        "name": "Taller de IA Generativa & Google Cloud",
+        "description": "Certificado oficial por completar el taller práctico de Inteligencia Artificial Generativa con Gemini y despliegue en Google Cloud Platform organizado por GDG on Campus UHU.",
+        "image": "/images/badges/workshop-ai-cloud.svg",
+        "criteria": {
+          "narrative": "El estudiante asistió a la sesión formativa y completó los laboratorios prácticos."
+        },
+        "tags": [
+          "Google Cloud",
+          "Gemini AI",
+          "Vertex AI",
+          "Workshop"
+        ],
+        "style": "google"
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "d957e9154fb3ffe86408d517",
+      "data": {
+        "recipient": {
+          "name": "Ariel",
+          "identity": "sha256$5c472b6a7e73f99aae9d8d9423ff3ace906898ce2e14f50849998ca2080b0c09",
+          "hashed": true,
+          "type": "email",
+          "salt": "gdgoc-uhu-salt-2026"
+        },
+        "badgeId": "workshop-ai-cloud",
+        "role": "Asistente Certificado",
+        "issuedOn": "2026-10-28T19:55:28.470Z",
+        "styleOverride": "google"
+      }
+    }
+  ],
+  "pendingEmails": [
+    {
+      "nombre": "Ariel",
+      "email": "arielbustilloleon@gmail.com",
+      "assertionId": "d957e9154fb3ffe86408d517",
+      "badgeId": "workshop-ai-cloud",
+      "role": "Asistente Certificado",
+      "style": "google",
+      "evidence": "",
+      "url": "https://gdguhu.es/cert/d957e9154fb3ffe86408d517"
+    }
+  ]
+}
