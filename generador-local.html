@@ -220,6 +220,76 @@
       font-size: 12px;
     }
 
+    .combobox-wrap {
+      position: relative;
+      flex: 1;
+    }
+    .combobox-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .combobox-input-wrap input {
+      padding-right: 32px;
+    }
+    .combobox-toggle {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 6px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+    .combobox-toggle:hover {
+      color: var(--blue);
+      background: #eff6ff;
+    }
+    .combobox-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14);
+      max-height: 230px;
+      overflow-y: auto;
+      z-index: 80;
+      display: none;
+    }
+    .combobox-menu.open {
+      display: block;
+    }
+    .combobox-option {
+      padding: 9px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: background 0.12s;
+    }
+    .combobox-option:last-child { border-bottom: none; }
+    .combobox-option:hover, .combobox-option.active {
+      background: #eff6ff;
+    }
+    .combobox-option-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .combobox-option-name {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
     .style-selector {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -637,10 +707,25 @@
 
           <div class="form-group">
             <label>ID de la badge</label>
-            <div style="display: flex; gap: 8px;">
-              <select id="gen-badge-id" onchange="onGenericBadgeChange(this.value)">
-                <option value="" disabled selected>Selecciona una badge...</option>
-              </select>
+            <div style="display: flex; gap: 8px; align-items: stretch;">
+              <div class="combobox-wrap" id="badge-combobox-wrap">
+                <div class="combobox-input-wrap">
+                  <input
+                    type="text"
+                    id="gen-badge-id"
+                    class="mono"
+                    value=""
+                    placeholder="Selecciona o escribe un ID..."
+                    autocomplete="off"
+                    onfocus="openBadgeDropdownMenu()"
+                    oninput="onGenericBadgeInput(this.value)"
+                  />
+                  <button type="button" class="combobox-toggle" onclick="toggleBadgeDropdownMenu(event)" title="Ver badges disponibles">
+                    ▾
+                  </button>
+                </div>
+                <div id="badge-dropdown-menu" class="combobox-menu"></div>
+              </div>
               <button
                 type="button"
                 class="btn btn-secondary btn-sm"
@@ -655,7 +740,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>Rol por defecto</label>
+              <label>Rol o reconocimiento</label>
               <input
                 type="text"
                 id="gen-default-role"
@@ -755,8 +840,8 @@
 
           <!-- Botón Único de Descarga de Carpeta Publish -->
           <div class="action-bar">
-            <button type="button" class="btn btn-success" style="width:100%; padding: 12px;" onclick="downloadPublishFolderZip()">
-              📦 Descargar carpeta publish
+            <button type="button" class="btn btn-success" style="width:100%; padding: 12px;" onclick="downloadPublishFolderUncompressed()">
+              Descargar carpeta publish
             </button>
           </div>
         </div>
@@ -1000,7 +1085,7 @@
           <div id="preview-pane-email" class="hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
               <div style="font-size:12.5px; color:var(--text-muted);">
-                Asunto: <strong id="email-preview-subject" style="color:var(--text);">🎓 Tu certificado oficial — GDG on Campus UHU</strong>
+                Asunto: <strong id="email-preview-subject" style="color:var(--text);">Tu certificado oficial — GDG on Campus UHU</strong>
               </div>
             </div>
             <iframe
@@ -1014,10 +1099,10 @@
           <div id="preview-pane-json" class="hidden">
             <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px;">
               <button type="button" class="btn btn-secondary btn-sm" onclick="copyCurrentAssertionJson()">
-                📋 Copiar .json
+                Copiar .json
               </button>
               <button type="button" class="btn btn-primary btn-sm" onclick="downloadSingleAssertionJson()">
-                ⬇️ Descargar .json
+                Descargar .json
               </button>
             </div>
             <pre id="assertion-json-output" class="json-code-box"></pre>
@@ -1116,8 +1201,8 @@
         </div>
 
         <div class="action-bar" style="flex-direction:column;">
-          <button type="button" class="btn btn-success" style="width:100%; padding:12px;" onclick="downloadBadgePublishZip()">
-            📦 Descargar carpeta publish
+          <button type="button" class="btn btn-success" style="width:100%; padding:12px;" onclick="downloadBadgePublishFolderUncompressed()">
+            Descargar carpeta publish
           </button>
           <button type="button" class="btn btn-secondary" style="width:100%;" onclick="useCreatedBadgeForCerts()">
             Usar esta badge en Crear certificados →
@@ -1131,10 +1216,10 @@
           <span>Archivo .json (<code id="preview-badge-filename">capture-the-flag-reversing-de-binarios.json</code>)</span>
           <div style="display:flex; gap:8px;">
             <button type="button" class="btn btn-secondary btn-sm" onclick="copyBadgeJson()">
-              📋 Copiar .json
+              Copiar .json
             </button>
             <button type="button" class="btn btn-primary btn-sm" onclick="downloadBadgeJsonFile()">
-              ⬇️ Descargar .json
+              Descargar .json
             </button>
           </div>
         </div>
@@ -1232,6 +1317,7 @@
       '8d22c305f82e55b9c402fa02',
       '9e33d406a73f66c0d503fb03',
     ]);
+    var recipients = [];
 
     function generateUniqueHexId24() {
       let candidate = '';
@@ -1248,7 +1334,7 @@
       } while (
         attempts < 100 &&
         (SYSTEM_USED_IDS.has(candidate) ||
-          (typeof recipients !== 'undefined' && recipients.some((r) => r.id === candidate)))
+          (Array.isArray(recipients) && recipients.some((r) => r.id === candidate)))
       );
       SYSTEM_USED_IDS.add(candidate);
       return candidate;
@@ -1412,90 +1498,61 @@
     }
 
     /* ========================================================================
-       3. GENERADOR ZIP PURO EN JAVASCRIPT (Crea la carpeta publish/)
+       3. GUARDADO DE CARPETA PUBLISH SIN COMPRIMIR
        ======================================================================== */
-    const CRC_TABLE = new Uint32Array(256);
-    for (let n = 0; n < 256; n++) {
-      let c = n;
-      for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-      CRC_TABLE[n] = c >>> 0;
-    }
-    function crc32(bytes) {
-      let c = 0xffffffff;
-      for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
-      return (c ^ 0xffffffff) >>> 0;
-    }
-    function createZipBlob(files) {
-      const encoder = new TextEncoder();
-      const localParts = [];
-      const centralParts = [];
-      let offset = 0;
+    let lastPublishDirHandle = null;
 
-      for (const f of files) {
-        const nameBytes = encoder.encode(f.name);
-        const dataBytes = encoder.encode(f.content);
-        const crc = crc32(dataBytes);
+    async function saveFilesToPublishFolderUncompressed(files) {
+      // En navegadores con soporte de File System Access API (Chrome, Brave, Opera, Edge)
+      // crea directamente la carpeta "publish" sin comprimir en la ubicación elegida.
+      if (window.showDirectoryPicker) {
+        try {
+          const pickerOpts = {
+            id: 'gdgoc_publish_dir',
+            mode: 'readwrite',
+          };
+          if (lastPublishDirHandle) {
+            pickerOpts.startIn = lastPublishDirHandle;
+          } else {
+            pickerOpts.startIn = 'downloads';
+          }
+          const pickedDir = await window.showDirectoryPicker(pickerOpts);
+          lastPublishDirHandle = pickedDir;
 
-        const localHeader = new Uint8Array(30 + nameBytes.length);
-        const lv = new DataView(localHeader.buffer);
-        lv.setUint32(0, 0x04034b50, true);
-        lv.setUint16(4, 20, true);
-        lv.setUint16(6, 0, true);
-        lv.setUint16(8, 0, true);
-        lv.setUint16(10, 0, true);
-        lv.setUint16(12, 0, true);
-        lv.setUint32(14, crc, true);
-        lv.setUint32(18, dataBytes.length, true);
-        lv.setUint32(22, dataBytes.length, true);
-        lv.setUint16(26, nameBytes.length, true);
-        lv.setUint16(28, 0, true);
-        localHeader.set(nameBytes, 30);
+          // Si el usuario ya seleccionó una carpeta llamada "publish", escribir dentro de ella;
+          // si seleccionó otra carpeta (ej. Descargas, Escritorio o la raíz del repo), crear la subcarpeta "publish" sin comprimir.
+          const targetPublishDir =
+            pickedDir.name === 'publish'
+              ? pickedDir
+              : await pickedDir.getDirectoryHandle('publish', { create: true });
 
-        const centralHeader = new Uint8Array(46 + nameBytes.length);
-        const cv = new DataView(centralHeader.buffer);
-        cv.setUint32(0, 0x02014b50, true);
-        cv.setUint16(4, 20, true);
-        cv.setUint16(6, 20, true);
-        cv.setUint16(8, 0, true);
-        cv.setUint16(10, 0, true);
-        cv.setUint16(12, 0, true);
-        cv.setUint16(14, 0, true);
-        cv.setUint32(16, crc, true);
-        cv.setUint32(20, dataBytes.length, true);
-        cv.setUint32(24, dataBytes.length, true);
-        cv.setUint16(28, nameBytes.length, true);
-        cv.setUint16(30, 0, true);
-        cv.setUint16(32, 0, true);
-        cv.setUint16(34, 0, true);
-        cv.setUint16(36, 0, true);
-        cv.setUint32(38, 0, true);
-        cv.setUint32(42, offset, true);
-        centralHeader.set(nameBytes, 46);
-
-        localParts.push(localHeader, dataBytes);
-        centralParts.push(centralHeader);
-        offset += localHeader.length + dataBytes.length;
+          for (const f of files) {
+            const cleanFileName = f.name.replace(/^publish\//, '');
+            const fileHandle = await targetPublishDir.getFileHandle(cleanFileName, { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(f.content);
+            await writable.close();
+          }
+          showToast(`Carpeta publish guardada sin comprimir (${files.length} ${files.length === 1 ? 'archivo' : 'archivos'}).`);
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
       }
 
-      let centralSize = 0;
-      for (const p of centralParts) centralSize += p.length;
-
-      const eocd = new Uint8Array(22);
-      const ev = new DataView(eocd.buffer);
-      ev.setUint32(0, 0x06054b50, true);
-      ev.setUint16(4, 0, true);
-      ev.setUint16(6, 0, true);
-      ev.setUint16(8, files.length, true);
-      ev.setUint16(10, files.length, true);
-      ev.setUint32(12, centralSize, true);
-      ev.setUint32(16, offset, true);
-      ev.setUint16(20, 0, true);
-
-      return new Blob([...localParts, ...centralParts, eocd], { type: 'application/zip' });
+      // Alternativa directa sin comprimir para Firefox / Safari: descarga cada archivo .json directamente sin .zip
+      files.forEach((f, idx) => {
+        const cleanFileName = f.name.replace(/^publish\//, '');
+        setTimeout(() => {
+          const blob = new Blob([f.content], { type: 'application/json' });
+          triggerDownload(blob, cleanFileName);
+        }, idx * 180);
+      });
+      showToast(`Descargados ${files.length} ${files.length === 1 ? 'archivo' : 'archivos'} .json sin comprimir.`);
     }
 
     /* ========================================================================
-       4. CATÁLOGO DE BADGES DEL SISTEMA Y PERSISTENCIA DE BADGES CARGADAS
+       4. CATÁLOGO DE BADGES DEL SISTEMA Y DESPLEGABLE / BUSCADOR DE ID DE BADGE
        ======================================================================== */
     const KNOWN_BADGES = {
       'workshop-ai-cloud': {
@@ -1556,15 +1613,114 @@
       populateBadgeSelectDropdown();
     }
 
-    function populateBadgeSelectDropdown(selectedSlug) {
-      const sel = document.getElementById('gen-badge-id');
-      const currentVal = selectedSlug !== undefined ? selectedSlug : sel.value;
-      let html = `<option value="" disabled ${!currentVal ? 'selected' : ''}>Selecciona una badge...</option>`;
-      Object.keys(KNOWN_BADGES).forEach((id) => {
-        const isSel = currentVal === id ? 'selected' : '';
-        html += `<option value="${escapeHtml(id)}" ${isSel}>${escapeHtml(id)}</option>`;
-      });
-      sel.innerHTML = html;
+    function populateBadgeSelectDropdown(selectedSlug, filterText = '') {
+      const inputEl = document.getElementById('gen-badge-id');
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (selectedSlug !== undefined && inputEl) {
+        inputEl.value = selectedSlug;
+      }
+      if (!menuEl) return;
+
+      const currentVal = (inputEl ? inputEl.value : '').trim();
+      const q = (filterText || '').toLowerCase().trim();
+      const ids = Object.keys(KNOWN_BADGES);
+      const filtered = q
+        ? ids.filter((id) => id.toLowerCase().includes(q) || (KNOWN_BADGES[id]?.name || '').toLowerCase().includes(q))
+        : ids;
+
+      if (filtered.length === 0) {
+        menuEl.innerHTML = `<div style="padding:10px 12px; font-size:11.5px; color:#64748b;">Usando ID personalizado: <strong class="mono">${escapeHtml(currentVal || q)}</strong></div>`;
+        return;
+      }
+
+      menuEl.innerHTML = filtered
+        .map((id) => {
+          const b = KNOWN_BADGES[id] || {};
+          const isAct = currentVal === id ? 'active' : '';
+          return `
+            <div class="combobox-option ${isAct}" onmousedown="selectBadgeFromDropdown('${escapeHtml(id)}')">
+              <span class="combobox-option-id">${escapeHtml(id)}</span>
+              <span class="combobox-option-name">${escapeHtml(b.name || id)}</span>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    function openBadgeDropdownMenu() {
+      populateBadgeSelectDropdown(undefined, '');
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (menuEl) menuEl.classList.add('open');
+    }
+
+    function closeBadgeDropdownMenu() {
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (menuEl) menuEl.classList.remove('open');
+    }
+
+    function toggleBadgeDropdownMenu(e) {
+      if (e) e.stopPropagation();
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (!menuEl) return;
+      if (menuEl.classList.contains('open')) {
+        menuEl.classList.remove('open');
+      } else {
+        populateBadgeSelectDropdown(undefined, '');
+        menuEl.classList.add('open');
+        document.getElementById('gen-badge-id')?.focus();
+      }
+    }
+
+    function selectBadgeFromDropdown(badgeId) {
+      const inputEl = document.getElementById('gen-badge-id');
+      if (inputEl) inputEl.value = badgeId;
+      closeBadgeDropdownMenu();
+      onGenericBadgeChange(badgeId);
+    }
+
+    function onGenericBadgeInput(val) {
+      populateBadgeSelectDropdown(undefined, val);
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (menuEl) menuEl.classList.add('open');
+      onGenericBadgeChange(val.trim());
+    }
+
+    document.addEventListener('click', (e) => {
+      const wrap = document.getElementById('badge-combobox-wrap');
+      if (wrap && !wrap.contains(e.target)) {
+        closeBadgeDropdownMenu();
+      }
+    });
+
+    // Sincronizar automáticamente desde el repositorio de GitHub cualquier badge nueva en src/content/badges/
+    async function syncBadgesFromGitHubRepo() {
+      if (typeof fetch !== 'function') return;
+      try {
+        const res = await fetch('https://api.github.com/repos/arixlariel/GDGoC-UHU-OpenBadges/contents/src/content/badges');
+        if (!res.ok) return;
+        const list = await res.json();
+        if (!Array.isArray(list)) return;
+        for (const item of list) {
+          if (item.type === 'file' && item.name.endsWith('.json') && item.download_url) {
+            const slug = item.name.replace(/\.json$/i, '');
+            if (!KNOWN_BADGES[slug]) {
+              const bRes = await fetch(item.download_url);
+              if (bRes.ok) {
+                const data = await bRes.json();
+                KNOWN_BADGES[slug] = {
+                  name: data.name || slug,
+                  description: data.description || '',
+                  image: data.image ? 'https://gdguhu.es' + data.image : '',
+                  criteria: data.criteria || { narrative: '' },
+                  tags: data.tags || [],
+                  style: data.style || 'google',
+                };
+              }
+            }
+          }
+        }
+        populateBadgeSelectDropdown();
+      } catch {}
     }
 
     const currentYearSalt = 'gdgoc-uhu-salt-' + new Date().getFullYear();
@@ -1574,7 +1730,7 @@
     let lastBadgeFileHandle = null;
     let selectedIndex = 0;
 
-    let recipients = [
+    recipients = [
       {
         id: generateUniqueHexId24(),
         name: 'Laura Benítez Romero',
@@ -1728,8 +1884,11 @@
     }
 
     function parseCSV(content) {
-      const lines = content.trim().split(/\r?\n/);
+      const clean = String(content || '').replace(/^\uFEFF/, '').trim();
+      const lines = clean.split(/\r\n|\n|\r/);
       if (lines.length < 2) return [];
+      const firstLine = lines[0];
+      const sep = (firstLine.match(/;/g) || []).length > (firstLine.match(/,/g) || []).length ? ';' : ',';
       function splitLine(line) {
         const values = [];
         let current = '', inQuotes = false;
@@ -1742,7 +1901,7 @@
             } else {
               inQuotes = !inQuotes;
             }
-          } else if (char === ',' && !inQuotes) {
+          } else if (char === sep && !inQuotes) {
             values.push(current.trim());
             current = '';
           } else {
@@ -1861,7 +2020,7 @@
       if (file) readCsvFile(file);
     }
     function readCsvFile(file) {
-      document.getElementById('dropzone-title-text').textContent = `Archivo cargado: ${file.name}`;
+      document.getElementById('dropzone-title-text').textContent = file.name;
       const reader = new FileReader();
       reader.onload = (ev) => {
         lastRawCsvContent = String(ev.target.result || '');
@@ -2231,7 +2390,7 @@
         effectiveStyle,
         assertionObj.evidence || ''
       );
-      document.getElementById('email-preview-subject').textContent = `🎓 Tu certificado oficial: ${badgeInfo.name} — GDG on Campus UHU`;
+      document.getElementById('email-preview-subject').textContent = `Tu certificado oficial: ${badgeInfo.name} — GDG on Campus UHU`;
       const iframe = document.getElementById('email-preview-iframe');
       if (iframe) iframe.srcdoc = emailHtml;
     }
@@ -2420,7 +2579,9 @@
     function getAllAssertionFilesForPublish() {
       const badgeId = document.getElementById('gen-badge-id').value.trim();
       if (!badgeId) {
-        showToast('⚠️ Por favor, selecciona primero un "ID de la badge" en Datos genéricos.');
+        showToast('⚠️ Selecciona o escribe primero un "ID de la badge" en Datos genéricos.');
+        openBadgeDropdownMenu();
+        document.getElementById('gen-badge-id')?.focus();
         return null;
       }
       const includeEmails = document.getElementById('gen-send-emails').checked;
@@ -2456,12 +2617,10 @@
       return files;
     }
 
-    function downloadPublishFolderZip() {
+    async function downloadPublishFolderUncompressed() {
       const files = getAllAssertionFilesForPublish();
       if (!files) return;
-      const blob = createZipBlob(files);
-      triggerDownload(blob, 'publish.zip');
-      showToast(`📦 Descargada carpeta publish (${recipients.length} certificados listos para subir a GitHub).`);
+      await saveFilesToPublishFolderUncompressed(files);
     }
 
     function downloadSingleAssertionJson() {
@@ -2470,7 +2629,7 @@
       const obj = buildAssertionObject(current);
       const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
       triggerDownload(blob, `${current.id}.json`);
-      showToast(`⬇️ Descargado ${current.id}.json`);
+      showToast(`Descargado ${current.id}.json`);
     }
 
     /* ========================================================================
@@ -2546,7 +2705,7 @@
       reader.readAsDataURL(file);
     }
 
-    function downloadBadgePublishZip() {
+    async function downloadBadgePublishFolderUncompressed() {
       const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
       const obj = buildNewBadgeObject();
       saveCustomBadgeToMemory(slug, {
@@ -2554,9 +2713,7 @@
         image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
       });
       const content = JSON.stringify(obj, null, 2);
-      const blob = createZipBlob([{ name: `publish/${slug}.json`, content }]);
-      triggerDownload(blob, 'publish.zip');
-      showToast(`📦 Descargada carpeta publish con ${slug}.json (y añadida al desplegable de badges).`);
+      await saveFilesToPublishFolderUncompressed([{ name: `publish/${slug}.json`, content }]);
     }
 
     function downloadBadgeJsonFile() {
@@ -2569,7 +2726,7 @@
       const content = JSON.stringify(obj, null, 2);
       const blob = new Blob([content], { type: 'application/json' });
       triggerDownload(blob, `${slug}.json`);
-      showToast(`⬇️ Descargado ${slug}.json`);
+      showToast(`Descargado ${slug}.json`);
     }
 
     function useCreatedBadgeForCerts() {
@@ -2647,6 +2804,7 @@
 
     // Inicializar al abrir (con el desplegable de ID de la badge sin nada preseleccionado)
     populateBadgeSelectDropdown('');
+    syncBadgesFromGitHubRepo();
     renderRecipientList();
     renderCurrentSelection();
     updateBadgePreview();

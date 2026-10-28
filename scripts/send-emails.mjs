@@ -281,7 +281,7 @@ async function main() {
     const badge = loadBadge(item.badgeId);
     const certUrl = item.url || `${siteUrl}/cert/${item.assertionId}`;
     const assertionJsonUrl = `${siteUrl}/api/badges/assertion/${item.assertionId}.json`;
-    const subject = `🎓 Tu certificado oficial: ${badge.name || item.badgeId} — GDG on Campus UHU`;
+    const subject = `Tu certificado oficial: ${badge.name || item.badgeId} — GDG on Campus UHU`;
 
     const mailOptions = {
       from: `"GDG on Campus Universidad de Huelva" <${gmailUser}>`,
