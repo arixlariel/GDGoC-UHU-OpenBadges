@@ -1,6 +1,6 @@
 # GDGoC Universidad de Huelva - Open Badges
 
-Bienvenido al manual oficial de gestión y emisión de certificados digitales para nuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en el estándar internacional **Open Badges 2.0** de 1EdTech. Solo los organizadores (con acceso al correo del GDGoC, quien administra el repositorio) pueden administrar las acreditaciones.
+Bienvenido al manual oficial de gestión y emisión de certificados digitales para nuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en el estándar internacional **Open Badges 2.0** de 1EdTech (IMS Global). Solo los organizadores (con acceso al correo del GDGoC, quien administra el repositorio) pueden administrar las acreditaciones.
 
 ---
 
