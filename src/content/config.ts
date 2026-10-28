@@ -2,15 +2,10 @@ import { defineCollection, z } from 'astro:content';
 
 const styleEnum = z.enum([
   'google',
-  'classic',
   'cyber',
-  'hackathon',
   'piscina',
-  'summer',
   'nieve',
-  'winter',
   'caramelos',
-  'candy',
 ]);
 
 const badgesCollection = defineCollection({

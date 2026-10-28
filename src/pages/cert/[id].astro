@@ -27,22 +27,7 @@ const badge = badgeEntry;
 const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
 const badgeImageUrl = getFullUrl(badge.data.image);
 
-// Normalizar el estilo propio del certificado
-const styleAliasMap: Record<string, 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos'> = {
-  google: 'google',
-  classic: 'google',
-  cyber: 'cyber',
-  hackathon: 'cyber',
-  piscina: 'piscina',
-  summer: 'piscina',
-  nieve: 'nieve',
-  winter: 'nieve',
-  caramelos: 'caramelos',
-  candy: 'caramelos',
-};
-
-const rawStyle = assertion.data.styleOverride || badge.data.style || 'google';
-const normalizedStyle = styleAliasMap[rawStyle] || 'google';
+const certStyle = (assertion.data.styleOverride || badge.data.style || 'google') as 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
 
 const pageTitle = `${badge.data.name} - ${assertion.data.recipient.name} | Certificados Digitales GDGoC UHU`;
 const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgado a ${assertion.data.recipient.name} por GDG on Campus Universidad de Huelva.`;
@@ -52,17 +37,17 @@ const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgad
   title={pageTitle}
   description={pageDescription}
   image={badgeImageUrl}
-  certStyle={normalizedStyle}
+  certStyle={certStyle}
   jsonLdUrl={assertionJsonUrl}
 >
   <CertificateDiploma
     assertion={assertion}
     badge={badge}
     assertionId={assertionId}
-    initialStyle={normalizedStyle}
+    initialStyle={certStyle}
   />
 
-  <!-- Modal interactivo Web Component (Añadir a tu perfil) -->
+  <!-- Modal interactivo Web Component (Añadir a tu cartera) -->
   <BadgeModal
     assertionUrl={assertionJsonUrl}
     badgeName={badge.data.name}

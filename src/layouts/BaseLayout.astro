@@ -68,26 +68,14 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
     <!-- Theme Pre-Init Script: Default is 'google', remembers user's last selection in localStorage, and respects certificate's own style -->
     <script is:inline>
       (function () {
-        const aliasMap = {
-          classic: 'google',
-          google: 'google',
-          cyber: 'cyber',
-          hackathon: 'cyber',
-          summer: 'piscina',
-          piscina: 'piscina',
-          winter: 'nieve',
-          nieve: 'nieve',
-          candy: 'caramelos',
-          caramelos: 'caramelos',
-        };
+        const validThemes = ['google', 'cyber', 'piscina', 'nieve', 'caramelos'];
         const html = document.documentElement;
         const forcedCertStyle = html.getAttribute('data-cert-style');
-        if (forcedCertStyle && aliasMap[forcedCertStyle]) {
-          // Al abrir un certificado específico, se muestra en su estilo propio
-          html.setAttribute('data-theme', aliasMap[forcedCertStyle]);
+        if (forcedCertStyle && validThemes.includes(forcedCertStyle)) {
+          html.setAttribute('data-theme', forcedCertStyle);
         } else {
           const saved = localStorage.getItem('gdgoc-uhu-theme');
-          const resolved = (saved && aliasMap[saved]) ? aliasMap[saved] : 'google';
+          const resolved = (saved && validThemes.includes(saved)) ? saved : 'google';
           html.setAttribute('data-theme', resolved);
         }
       })();
@@ -720,8 +708,19 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         box-shadow: 0 12px 35px rgba(255, 20, 147, 0.5);
       }
 
-      /* Print Rules */
+      /* ==========================================================================
+         PRINT / PDF EXPORT RULES (Ensures all bars, logos, and separators print!)
+         ========================================================================== */
+      @page {
+        size: A4 landscape;
+        margin: 8mm;
+      }
       @media print {
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          color-adjust: exact !important;
+        }
         header, footer, .no-print, #theme-fx-container {
           display: none !important;
         }
@@ -734,13 +733,54 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           padding: 0 !important;
           margin: 0 !important;
         }
+        .print-container {
+          padding: 0 !important;
+          margin: 0 !important;
+          max-width: 100% !important;
+        }
         .print-diploma-wrapper {
           box-shadow: none !important;
-          padding: 0 !important;
-          border: none !important;
           transform: none !important;
           width: 100% !important;
           max-width: none !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+        }
+        .diploma-inner {
+          min-height: 0 !important;
+          padding: 28px 40px !important;
+        }
+        /* Ensure gradient text prints solid & crisp in all PDF engines */
+        .diploma-recipient-name,
+        .theme-accent-text {
+          -webkit-background-clip: initial !important;
+          background-clip: initial !important;
+          -webkit-text-fill-color: initial !important;
+          background: none !important;
+          filter: none !important;
+        }
+        html[data-theme="google"] .diploma-recipient-name,
+        html[data-theme="piscina"] .diploma-recipient-name,
+        html[data-theme="caramelos"] .diploma-recipient-name {
+          color: #202124 !important;
+        }
+        html[data-theme="cyber"] .diploma-recipient-name,
+        html[data-theme="nieve"] .diploma-recipient-name {
+          color: #38BDF8 !important;
+        }
+        html[data-theme="google"] .theme-accent-text,
+        html[data-theme="piscina"] .theme-accent-text {
+          color: #1967D2 !important;
+        }
+        html[data-theme="caramelos"] .theme-accent-text {
+          color: #D81B60 !important;
+        }
+        html[data-theme="cyber"] .theme-accent-text,
+        html[data-theme="nieve"] .theme-accent-text {
+          color: #7DD3FC !important;
+        }
+        img {
+          filter: none !important;
         }
       }
     </style>
@@ -795,7 +835,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           <path fill="#FFFFFF" d="M0,96L80,112C160,128,320,160,480,154.7C640,149,800,107,960,101.3C1120,96,1280,128,1360,144L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
         </svg>
 
-        <!-- Abundant Rising Water Bubbles (CSS spheres + bubble emojis) -->
+        <!-- Abundant Rising Water Bubbles -->
         <div class="absolute left-[6%] w-6 h-6 rounded-full border-2 border-white/80 bg-white/30 shadow-[inset_0_0_8px_#fff]" style="animation: bubbleRise 6.5s linear infinite;"></div>
         <div class="absolute left-[14%] w-10 h-10 rounded-full border-2 border-white/80 bg-white/25 shadow-[inset_0_0_12px_#fff]" style="animation: bubbleRise 8.2s linear infinite 1.2s;"></div>
         <div class="absolute left-[22%] w-4 h-4 rounded-full border border-white/90 bg-white/35" style="animation: bubbleRise 5.8s linear infinite 2.5s;"></div>

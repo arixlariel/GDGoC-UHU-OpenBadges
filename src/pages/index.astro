@@ -6,19 +6,6 @@ import { getFullUrl } from '@/config/site';
 const badges = await getCollection('badges');
 const assertions = await getCollection('assertions');
 
-const styleAliasMap: Record<string, 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos'> = {
-  google: 'google',
-  classic: 'google',
-  cyber: 'cyber',
-  hackathon: 'cyber',
-  piscina: 'piscina',
-  summer: 'piscina',
-  nieve: 'nieve',
-  winter: 'nieve',
-  caramelos: 'caramelos',
-  candy: 'caramelos',
-};
-
 const styleOrder: Record<string, number> = {
   google: 1,
   cyber: 2,
@@ -31,8 +18,8 @@ const styleOrder: Record<string, number> = {
 const sortedAssertions = [...assertions].sort((a, b) => {
   const badgeA = badges.find((bg) => bg.id.replace(/\.json$/, '') === a.data.badgeId);
   const badgeB = badges.find((bg) => bg.id.replace(/\.json$/, '') === b.data.badgeId);
-  const styleA = styleAliasMap[a.data.styleOverride || badgeA?.data.style || 'google'] || 'google';
-  const styleB = styleAliasMap[b.data.styleOverride || badgeB?.data.style || 'google'] || 'google';
+  const styleA = a.data.styleOverride || badgeA?.data.style || 'google';
+  const styleB = b.data.styleOverride || badgeB?.data.style || 'google';
   return (styleOrder[styleA] || 99) - (styleOrder[styleB] || 99);
 });
 
@@ -174,8 +161,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
       {sortedAssertions.map((assertion) => {
         const id = assertion.id.replace(/\.json$/, '');
         const badge = badges.find((b) => b.id.replace(/\.json$/, '') === assertion.data.badgeId);
-        const rawStyle = assertion.data.styleOverride || badge?.data.style || 'google';
-        const styleKey = styleAliasMap[rawStyle] || 'google';
+        const styleKey = assertion.data.styleOverride || badge?.data.style || 'google';
         const meta = styleMeta[styleKey] || styleMeta.google;
 
         return (
@@ -247,7 +233,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           Estándar Open Badges 2.0
         </h2>
         <p class="text-sm theme-text-secondary mt-2">
-          Credenciales verificables con garantía criptográfica y portabilidad internacional.
+          Credenciales verificables con garantía criptográfica y portabilidad internacional
         </p>
       </div>
 
@@ -258,7 +244,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </div>
           <h3 class="font-display font-bold theme-text-primary mb-2">Autenticidad Verificable</h3>
           <p class="text-xs theme-text-secondary leading-relaxed">
-            Cada certificado está respaldado por metadatos JSON-LD oficiales de GDG on Campus Universidad de Huelva siguiendo la especificación de IMS Global.
+            Cada certificado está respaldado por metadatos JSON-LD oficiales de GDG on Campus Universidad de Huelva, siguiendo la especificación de IMS Global
           </p>
         </div>
 
@@ -268,7 +254,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </div>
           <h3 class="font-display font-bold theme-text-primary mb-2">Privacidad Protegida</h3>
           <p class="text-xs theme-text-secondary leading-relaxed">
-            El correo electrónico del titular se protege mediante un hash criptográfico SHA-256 con salt único, permitiendo validar la titularidad sin exponer datos personales.
+            El correo electrónico del titular se protege mediante un hash criptográfico SHA-256 con salt único, permitiendo validar la titularidad sin exponer datos personales
           </p>
         </div>
 
@@ -278,7 +264,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </div>
           <h3 class="font-display font-bold theme-text-primary mb-2">Integración con LinkedIn y PDF</h3>
           <p class="text-xs theme-text-secondary leading-relaxed">
-            Descarga tu diploma en formato horizontal listo para imprimir o añádelo directamente a la sección de Licencias y Certificaciones de tu perfil de LinkedIn.
+            Descarga tu diploma en formato horizontal listo para imprimir o añádelo directamente a tu LinkedIn u otras carteras
           </p>
         </div>
       </div>

@@ -29,20 +29,25 @@ linkedinUrl.searchParams.set('certUrl', certUrl);
 linkedinUrl.searchParams.set('certId', assertionId);
 ---
 
-<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
-  <!-- Contenedor Exterior del Diploma (cambia según el estilo activo) -->
+<div class="print-container max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
+  <!-- Contenedor Exterior del Diploma -->
   <div class="print-diploma-wrapper diploma-outer rounded-3xl p-2 sm:p-5 transition-all duration-500">
     
     <!-- Tarjeta Principal del Diploma -->
     <div class="diploma-inner relative rounded-2xl overflow-hidden p-6 sm:p-12 md:p-14 flex flex-col items-center text-center min-h-[640px] justify-between transition-all duration-500">
       
-      <!-- Barra superior decorativa del diploma (Google 4 colores) -->
-      <div class="diploma-top-bar absolute top-0 left-0 right-0 h-2.5 flex">
-        <div class="flex-1 bg-[#4285F4]"></div>
-        <div class="flex-1 bg-[#EA4335]"></div>
-        <div class="flex-1 bg-[#FBBC04]"></div>
-        <div class="flex-1 bg-[#34A853]"></div>
-      </div>
+      <!-- Barra superior decorativa en SVG (se imprime siempre en PDF incluso sin fondos activados) -->
+      <svg
+        class="diploma-top-bar absolute top-0 left-0 right-0 w-full h-2.5"
+        viewBox="0 0 400 10"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <rect x="0" y="0" width="100" height="10" fill="#4285F4" />
+        <rect x="100" y="0" width="100" height="10" fill="#EA4335" />
+        <rect x="200" y="0" width="100" height="10" fill="#FBBC04" />
+        <rect x="300" y="0" width="100" height="10" fill="#34A853" />
+      </svg>
 
       <!-- Marcos interiores del diploma -->
       <div class="diploma-frame-1 absolute inset-3 sm:inset-5 rounded-xl pointer-events-none transition-all duration-500"></div>
@@ -99,7 +104,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
 
       <!-- Marca de agua central sutil -->
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.04]">
-        <img src={badge.data.image} alt="" class="w-96 h-96 object-contain" />
+        <img src={badge.data.image} alt="" loading="eager" decoding="sync" class="w-96 h-96 object-contain" />
       </div>
 
       <!-- CAPA DE CONTENIDO DEL DIPLOMA -->
@@ -112,6 +117,8 @@ linkedinUrl.searchParams.set('certId', assertionId);
               <img
                 src="/images/gdgoc-uhu-logo.jpg"
                 alt="GDG on Campus Universidad de Huelva"
+                loading="eager"
+                decoding="sync"
                 class="h-12 w-12 sm:h-14 sm:w-14 rounded-xl object-cover border theme-border bg-white shadow-xs"
               />
               <div class="text-left">
@@ -124,11 +131,14 @@ linkedinUrl.searchParams.set('certId', assertionId);
               </div>
             </div>
 
-            <div class="h-9 w-[1px] bg-current opacity-20"></div>
+            <!-- Separador vertical con borde real para impresión PDF -->
+            <div class="h-10 border-l-2 theme-border"></div>
 
             <img
               src={badge.data.image}
               alt={badge.data.name}
+              loading="eager"
+              decoding="sync"
               class="h-12 w-12 sm:h-14 sm:w-14 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300"
             />
           </div>
@@ -153,17 +163,22 @@ linkedinUrl.searchParams.set('certId', assertionId);
             Este certificado digital se otorga a
           </p>
 
-          <!-- Nombre del Alumno -->
+          <!-- Nombre del Alumno con línea y barra de 4 colores en SVG (impresión garantizada) -->
           <div class="relative inline-block px-4 sm:px-10 pb-3 mb-5 border-b-2 theme-border min-w-[260px] sm:min-w-[420px]">
             <h2 class="diploma-recipient-name font-display text-3xl sm:text-5xl font-bold tracking-tight leading-tight">
               {assertion.data.recipient.name}
             </h2>
-            <div class="diploma-underline-accent absolute -bottom-[2px] left-1/2 -translate-x-1/2 w-32 h-1 flex rounded-full overflow-hidden">
-              <div class="flex-1 bg-[#4285F4]"></div>
-              <div class="flex-1 bg-[#EA4335]"></div>
-              <div class="flex-1 bg-[#FBBC04]"></div>
-              <div class="flex-1 bg-[#34A853]"></div>
-            </div>
+            <svg
+              class="diploma-underline-accent absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-32 h-1 rounded-full overflow-hidden"
+              viewBox="0 0 128 4"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <rect x="0" y="0" width="32" height="4" fill="#4285F4" />
+              <rect x="32" y="0" width="32" height="4" fill="#EA4335" />
+              <rect x="64" y="0" width="32" height="4" fill="#FBBC04" />
+              <rect x="96" y="0" width="32" height="4" fill="#34A853" />
+            </svg>
           </div>
 
           <!-- Descripción y Criterios -->
@@ -182,7 +197,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
               <span class="text-[11px] font-bold uppercase tracking-wider theme-text-secondary">Rol Acreditado</span>
               <span class="text-sm font-bold theme-text-primary">{assertion.data.role}</span>
             </div>
-            <div class="flex flex-col gap-0.5 sm:border-x theme-border px-2">
+            <div class="flex flex-col gap-0.5 sm:border-x-2 theme-border px-2">
               <span class="text-[11px] font-bold uppercase tracking-wider theme-text-secondary">Entidad Emisora</span>
               <span class="text-sm font-bold theme-text-primary">GDG on Campus UHU</span>
             </div>
@@ -210,30 +225,32 @@ linkedinUrl.searchParams.set('certId', assertionId);
         </div>
 
         <!-- Pie del Diploma: Bloques de Sello y Firma Institucional -->
-        <div class="w-full pt-6 mt-2 flex flex-col sm:flex-row items-center justify-around gap-6 border-t theme-border">
+        <div class="w-full pt-6 mt-2 flex flex-col sm:flex-row items-center justify-around gap-6 border-t-2 theme-border">
           <div class="flex flex-col items-center min-w-[200px]">
             <div class="text-xs font-bold theme-accent-text tracking-widest uppercase mb-1.5">
               GDG on Campus UHU
             </div>
-            <div class="w-44 h-[1px] bg-current opacity-20 mb-1.5"></div>
+            <div class="w-44 border-t-2 theme-border mb-1.5"></div>
             <div class="text-xs font-bold theme-text-primary">Universidad de Huelva</div>
             <div class="text-[11px] theme-text-secondary">Comunidad Oficial de Desarrolladores</div>
           </div>
 
-          <!-- Sello Central Verificado -->
+          <!-- Sello Central Verificado con puntos SVG para impresión perfecta -->
           <div class="theme-pill-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-full">
-            <span class="w-2 h-2 rounded-full bg-[#4285F4]"></span>
-            <span class="w-2 h-2 rounded-full bg-[#EA4335]"></span>
-            <span class="w-2 h-2 rounded-full bg-[#FBBC04]"></span>
-            <span class="w-2 h-2 rounded-full bg-[#34A853]"></span>
-            <span class="text-[11px] font-mono font-bold theme-text-primary ml-1">VERIFIED</span>
+            <svg class="w-11 h-2.5 shrink-0" viewBox="0 0 44 10" aria-hidden="true">
+              <circle cx="5" cy="5" r="4" fill="#4285F4" />
+              <circle cx="17" cy="5" r="4" fill="#EA4335" />
+              <circle cx="29" cy="5" r="4" fill="#FBBC04" />
+              <circle cx="41" cy="5" r="4" fill="#34A853" />
+            </svg>
+            <span class="text-[11px] font-mono font-bold theme-text-primary ml-0.5">VERIFIED</span>
           </div>
 
           <div class="flex flex-col items-center min-w-[200px]">
             <div class="font-mono text-xs font-semibold theme-text-secondary mb-1.5">
               {assertionId.slice(0, 16)}...
             </div>
-            <div class="w-44 h-[1px] bg-current opacity-20 mb-1.5"></div>
+            <div class="w-44 border-t-2 theme-border mb-1.5"></div>
             <div class="text-xs font-bold theme-text-primary">Credencial Criptográfica</div>
             <div class="text-[11px] theme-text-secondary">Verificación Alojada SHA-256</div>
           </div>
@@ -243,7 +260,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
     </div>
   </div>
 
-  <!-- Barra de Acciones Inferior -->
+  <!-- Barra de Acciones Inferior (Sin botón de compartir, con "Añadir a tu cartera") -->
   <div class="no-print mt-6 flex flex-wrap items-center justify-center gap-3">
     <button
       type="button"
@@ -253,7 +270,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
-      <span>Añadir a tu perfil</span>
+      <span>Añadir a tu cartera</span>
     </button>
 
     <a
@@ -277,19 +294,6 @@ linkedinUrl.searchParams.set('certId', assertionId);
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
       </svg>
       <span>Imprimir / PDF</span>
-    </button>
-
-    <button
-      type="button"
-      id="share-cert-btn"
-      data-url={certUrl}
-      data-title={`${badge.data.name} - ${assertion.data.recipient.name}`}
-      class="theme-pill-btn px-4 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer"
-    >
-      <svg class="w-4 h-4 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-      </svg>
-      <span id="share-btn-text">Compartir</span>
     </button>
 
     {assertion.data.evidence && (
@@ -347,7 +351,6 @@ linkedinUrl.searchParams.set('certId', assertionId);
     background: #070B19;
     border: none;
   }
-  html[data-theme="cyber"] .diploma-top-bar { display: none; }
   html[data-theme="cyber"] .diploma-frame-1 { border: 1px solid rgba(0, 240, 255, 0.35); }
   html[data-theme="cyber"] .diploma-frame-2 { border: 1px dashed rgba(255, 0, 127, 0.3); }
   html[data-theme="cyber"] .diploma-recipient-name {
@@ -371,7 +374,6 @@ linkedinUrl.searchParams.set('certId', assertionId);
   html[data-theme="piscina"] .diploma-inner {
     background: linear-gradient(180deg, #FFFFFF 0%, #E0F7FA 100%);
   }
-  html[data-theme="piscina"] .diploma-top-bar { display: none; }
   html[data-theme="piscina"] .diploma-frame-1 { border: 2px solid rgba(0, 188, 212, 0.55); }
   html[data-theme="piscina"] .diploma-frame-2 { border: 1.5px dashed rgba(2, 132, 199, 0.4); }
   html[data-theme="piscina"] .diploma-recipient-name {
@@ -393,7 +395,6 @@ linkedinUrl.searchParams.set('certId', assertionId);
   html[data-theme="nieve"] .diploma-inner {
     background: linear-gradient(180deg, #08182E 0%, #0F294A 100%);
   }
-  html[data-theme="nieve"] .diploma-top-bar { display: none; }
   html[data-theme="nieve"] .diploma-frame-1 { border: 1.5px solid rgba(224, 242, 254, 0.55); }
   html[data-theme="nieve"] .diploma-frame-2 { border: 1px dashed rgba(125, 211, 252, 0.4); }
   html[data-theme="nieve"] .diploma-recipient-name {
@@ -425,7 +426,6 @@ linkedinUrl.searchParams.set('certId', assertionId);
   html[data-theme="caramelos"] .diploma-inner {
     background: linear-gradient(180deg, #FFF9FC 0%, #FFE4F2 100%);
   }
-  html[data-theme="caramelos"] .diploma-top-bar { display: none; }
   html[data-theme="caramelos"] .diploma-frame-1 { border: 3px dashed #FF4D94; }
   html[data-theme="caramelos"] .diploma-frame-2 { border: 2px dotted #FF85C0; }
   html[data-theme="caramelos"] .diploma-recipient-name {
@@ -438,25 +438,3 @@ linkedinUrl.searchParams.set('certId', assertionId);
     border: 2px solid #FF69B4;
   }
 </style>
-
-<script>
-  const shareBtn = document.getElementById('share-cert-btn');
-  const shareText = document.getElementById('share-btn-text');
-  shareBtn?.addEventListener('click', async () => {
-    const url = shareBtn.getAttribute('data-url') || window.location.href;
-    const title = shareBtn.getAttribute('data-title') || document.title;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, url });
-      } catch {}
-    } else {
-      await navigator.clipboard.writeText(url);
-      if (shareText) {
-        shareText.textContent = '¡Enlace copiado!';
-        setTimeout(() => {
-          shareText.textContent = 'Compartir';
-        }, 2000);
-      }
-    }
-  });
-</script>
