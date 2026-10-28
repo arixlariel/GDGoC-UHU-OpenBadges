@@ -53,9 +53,58 @@ function loadBadge(badgeId) {
   return { name: badgeId, description: '' };
 }
 
-export function buildEmailHTML(name, badge, certUrl, assertionJsonUrl, role = 'Asistente Certificado', assertionId = '') {
+const EMAIL_THEMES = {
+  google: {
+    bodyBg: '#f8fafc', cardBg: '#ffffff', cardBorder: '#e2e8f0', headerBorder: '#f1f5f9',
+    textPrimary: '#0f172a', textSecondary: '#64748b', accent: '#4285F4', accentDark: '#1967D2',
+    pillBg: '#e8f0fe', pillBorder: '#d2e3fc', pillText: '#1967D2',
+    boxBg: '#f8fafc', boxBorder: '#e2e8f0', btnBg: '#4285F4', btnText: '#ffffff',
+    barColors: ['#4285F4', '#EA4335', '#FBBC04', '#34A853'],
+  },
+  cyber: {
+    bodyBg: '#060B19', cardBg: '#0B132B', cardBorder: '#00F0FF', headerBorder: '#1E293B',
+    textPrimary: '#F8FAFC', textSecondary: '#94A3B8', accent: '#00F0FF', accentDark: '#00F0FF',
+    pillBg: '#091D34', pillBorder: '#00F0FF', pillText: '#00F0FF',
+    boxBg: '#091326', boxBorder: '#1E293B', btnBg: '#00F0FF', btnText: '#060B19',
+    barColors: ['#00F0FF', '#FF007F', '#00FF66', '#00F0FF'],
+  },
+  piscina: {
+    bodyBg: '#E0F7FA', cardBg: '#FFFFFF', cardBorder: '#00E5FF', headerBorder: '#CCFBF1',
+    textPrimary: '#042F2E', textSecondary: '#0F766E', accent: '#00ACC1', accentDark: '#00838F',
+    pillBg: '#CCFBF1', pillBorder: '#2DD4BF', pillText: '#0F766E',
+    boxBg: '#F0FDFA', boxBorder: '#99F6E4', btnBg: '#00ACC1', btnText: '#ffffff',
+    barColors: ['#00F2FE', '#00E5FF', '#0284C7', '#00ACC1'],
+  },
+  nieve: {
+    bodyBg: '#F0F9FF', cardBg: '#FFFFFF', cardBorder: '#BAE6FD', headerBorder: '#E0F2FE',
+    textPrimary: '#0C4A6E', textSecondary: '#0369A1', accent: '#0284C7', accentDark: '#0369A1',
+    pillBg: '#E0F2FE', pillBorder: '#7DD3FC', pillText: '#0369A1',
+    boxBg: '#F8FAFC', boxBorder: '#BAE6FD', btnBg: '#0284C7', btnText: '#ffffff',
+    barColors: ['#7DD3FC', '#38BDF8', '#0284C7', '#bae6fd'],
+  },
+  caramelos: {
+    bodyBg: '#FFF5F9', cardBg: '#FFFFFF', cardBorder: '#F9A8D4', headerBorder: '#FCE7F3',
+    textPrimary: '#831843', textSecondary: '#9D174D', accent: '#DB2777', accentDark: '#BE185D',
+    pillBg: '#FCE7F3', pillBorder: '#F472B6', pillText: '#BE185D',
+    boxBg: '#FDF2F8', boxBorder: '#FBCFE8', btnBg: '#DB2777', btnText: '#ffffff',
+    barColors: ['#FF1493', '#FF85C0', '#FF69B4', '#DB2777'],
+  },
+};
+
+export function buildEmailHTML(
+  name,
+  badge,
+  certUrl,
+  assertionJsonUrl,
+  role = 'Asistente Certificado',
+  assertionId = '',
+  style = 'google',
+  evidence = ''
+) {
   const badgeName = badge.name || 'Certificado Oficial GDGoC UHU';
   const badgeDesc = badge.description || '';
+  const resolvedStyle = style || badge.style || 'google';
+  const t = EMAIL_THEMES[resolvedStyle] || EMAIL_THEMES.google;
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -64,32 +113,32 @@ export function buildEmailHTML(name, badge, certUrl, assertionJsonUrl, role = 'A
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${badgeName}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1e293b;">
+<body style="margin: 0; padding: 0; background-color: ${t.bodyBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: ${t.textPrimary};">
 
-  <!-- Barra Google Colors -->
+  <!-- Barra de Estilo -->
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
     <tr>
-      <td width="25%" height="5" style="background-color: #4285F4;"></td>
-      <td width="25%" height="5" style="background-color: #EA4335;"></td>
-      <td width="25%" height="5" style="background-color: #FBBC04;"></td>
-      <td width="25%" height="5" style="background-color: #34A853;"></td>
+      <td width="25%" height="5" style="background-color: ${t.barColors[0]};"></td>
+      <td width="25%" height="5" style="background-color: ${t.barColors[1]};"></td>
+      <td width="25%" height="5" style="background-color: ${t.barColors[2]};"></td>
+      <td width="25%" height="5" style="background-color: ${t.barColors[3]};"></td>
     </tr>
   </table>
 
   <!-- Contenedor Principal -->
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f8fafc; padding: 40px 15px;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: ${t.bodyBg}; padding: 40px 15px;">
     <tr>
       <td align="center">
         
-        <table role="presentation" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); overflow: hidden; border: 1px solid #e2e8f0;" cellspacing="0" cellpadding="0" border="0">
+        <table role="presentation" width="100%" style="max-width: 600px; background-color: ${t.cardBg}; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; border: 1px solid ${t.cardBorder};" cellspacing="0" cellpadding="0" border="0">
           
           <!-- Encabezado con Identidad GDGoC UHU -->
           <tr>
-            <td style="padding: 35px 35px 20px 35px; text-align: center; border-bottom: 1px solid #f1f5f9;">
-              <h2 style="margin: 0; font-size: 20px; color: #1e293b; font-weight: 800; letter-spacing: -0.5px;">
+            <td style="padding: 35px 35px 20px 35px; text-align: center; border-bottom: 1px solid ${t.headerBorder};">
+              <h2 style="margin: 0; font-size: 20px; color: ${t.textPrimary}; font-weight: 800; letter-spacing: -0.5px;">
                 GDG on Campus
               </h2>
-              <div style="font-size: 13px; color: #1967D2; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
+              <div style="font-size: 13px; color: ${t.accentDark}; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
                 Universidad de Huelva
               </div>
             </td>
@@ -99,42 +148,43 @@ export function buildEmailHTML(name, badge, certUrl, assertionJsonUrl, role = 'A
           <tr>
             <td style="padding: 35px 35px 25px 35px; text-align: center;">
               
-              <div style="display: inline-block; padding: 6px 14px; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 50px; font-size: 12px; font-weight: 700; color: #047857; margin-bottom: 20px;">
+              <div style="display: inline-block; padding: 6px 14px; background-color: ${t.pillBg}; border: 1px solid ${t.pillBorder}; border-radius: 50px; font-size: 12px; font-weight: 700; color: ${t.pillText}; margin-bottom: 20px;">
                 ✓ Credencial Digital Oficial Emitida
               </div>
 
-              <div style="font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">
+              <div style="font-size: 13px; color: ${t.textSecondary}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">
                 Este certificado digital se otorga a:
               </div>
-              <h1 style="margin: 0 0 12px 0; font-size: 26px; color: #0f172a; font-weight: 800; letter-spacing: -0.5px;">
+              <h1 style="margin: 0 0 12px 0; font-size: 26px; color: ${t.textPrimary}; font-weight: 800; letter-spacing: -0.5px;">
                 ${name}
               </h1>
 
-              ${role ? `<div style="display: inline-block; padding: 4px 12px; background-color: #e8f0fe; border: 1px solid #d2e3fc; border-radius: 50px; font-size: 11px; font-weight: 700; color: #1967D2; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px;">${role}</div>` : ''}
+              ${role ? `<div style="display: inline-block; padding: 4px 12px; background-color: ${t.pillBg}; border: 1px solid ${t.pillBorder}; border-radius: 50px; font-size: 11px; font-weight: 700; color: ${t.pillText}; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px;">${role}</div>` : ''}
 
-              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; margin: 16px 0 20px 0; text-align: center;">
-                <div style="font-size: 11px; color: #4285F4; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;">
+              <div style="background-color: ${t.boxBg}; border: 1px solid ${t.boxBorder}; border-radius: 16px; padding: 24px; margin: 16px 0 20px 0; text-align: center;">
+                <div style="font-size: 11px; color: ${t.accent}; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;">
                   Insignia Acreditada
                 </div>
-                <h3 style="margin: 0 0 10px 0; font-size: 20px; color: #1e293b; font-weight: 800;">
+                <h3 style="margin: 0 0 10px 0; font-size: 20px; color: ${t.textPrimary}; font-weight: 800;">
                   ${badgeName}
                 </h3>
-                ${badgeDesc ? `<p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">${badgeDesc}</p>` : ''}
-                ${assertionId ? `<div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #cbd5e1; font-size: 11px; color: #64748b; font-family: monospace;">ID del Certificado: <strong style="color: #0f172a;">${assertionId}</strong></div>` : ''}
+                ${badgeDesc ? `<p style="margin: 0; font-size: 13px; color: ${t.textSecondary}; line-height: 1.5;">${badgeDesc}</p>` : ''}
+                ${evidence ? `<div style="margin-top: 10px;"><a href="${evidence}" target="_blank" style="font-size: 12px; font-weight: 700; color: ${t.accent}; text-decoration: underline;">Ver Evidencia / Proyecto ↗</a></div>` : ''}
+                ${assertionId ? `<div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed ${t.boxBorder}; font-size: 11px; color: ${t.textSecondary}; font-family: monospace;">ID del Certificado: <strong style="color: ${t.textPrimary};">${assertionId}</strong></div>` : ''}
               </div>
 
               <!-- Botón Principal -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 28px 0 15px 0;">
                 <tr>
                   <td align="center">
-                    <a href="${certUrl}" target="_blank" style="display: inline-block; background-color: #4285F4; color: #ffffff; text-decoration: none; padding: 15px 32px; border-radius: 12px; font-size: 15px; font-weight: 700; box-shadow: 0 4px 14px rgba(66, 133, 244, 0.35); text-align: center;">
+                    <a href="${certUrl}" target="_blank" style="display: inline-block; background-color: ${t.btnBg}; color: ${t.btnText}; text-decoration: none; padding: 15px 32px; border-radius: 12px; font-size: 15px; font-weight: 700; text-align: center;">
                       🎓 Abrir Mi Certificado Oficial →
                     </a>
                   </td>
                 </tr>
               </table>
 
-              <p style="font-size: 12px; color: #64748b; margin: 15px 0 0 0; line-height: 1.5;">
+              <p style="font-size: 12px; color: ${t.textSecondary}; margin: 15px 0 0 0; line-height: 1.5;">
                 Haz clic en el botón para ver tu certificado en línea, descargarlo en <strong>PDF (1 página horizontal)</strong> listo para imprimir o añadirlo directamente a <strong>LinkedIn</strong> o a tu cartera preferida (OpenBadge Passport, Parchment o Credly).
               </p>
 
@@ -143,13 +193,13 @@ export function buildEmailHTML(name, badge, certUrl, assertionJsonUrl, role = 'A
 
           <!-- Pie de página del correo -->
           <tr>
-            <td style="padding: 25px 35px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; text-align: center;">
-              <p style="margin: 0 0 8px 0; font-size: 11px; color: #64748b; line-height: 1.4;">
+            <td style="padding: 25px 35px; background-color: ${t.boxBg}; border-top: 1px solid ${t.boxBorder}; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 11px; color: ${t.textSecondary}; line-height: 1.4;">
                 Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> (IMS Global).<br>
-                Alojado oficialmente en <a href="${siteUrl}" style="color: #4285F4; text-decoration: none; font-weight: 600;">${siteUrl}</a>
+                Alojado oficialmente en <a href="${siteUrl}" style="color: ${t.accent}; text-decoration: none; font-weight: 600;">${siteUrl}</a>
               </p>
-              <div style="font-size: 10px; color: #94a3b8; font-family: monospace; word-break: break-all; margin-top: 6px;">
-                Aserción técnica JSON: <a href="${assertionJsonUrl}" style="color: #64748b;">${assertionJsonUrl}</a>
+              <div style="font-size: 10px; color: ${t.textSecondary}; font-family: monospace; word-break: break-all; margin-top: 6px;">
+                Aserción técnica JSON: <a href="${assertionJsonUrl}" style="color: ${t.accent};">${assertionJsonUrl}</a>
               </div>
             </td>
           </tr>
@@ -159,7 +209,7 @@ export function buildEmailHTML(name, badge, certUrl, assertionJsonUrl, role = 'A
         <!-- Copyright final -->
         <table role="presentation" width="100%" style="max-width: 600px; margin-top: 20px;" cellspacing="0" cellpadding="0" border="0">
           <tr>
-            <td align="center" style="font-size: 11px; color: #94a3b8;">
+            <td align="center" style="font-size: 11px; color: ${t.textSecondary};">
               Google Developer Group on Campus · Universidad de Huelva (UHU)
             </td>
           </tr>
@@ -243,7 +293,9 @@ async function main() {
         certUrl,
         assertionJsonUrl,
         item.role || 'Asistente Certificado',
-        item.assertionId || ''
+        item.assertionId || '',
+        item.style || badge.style || 'google',
+        item.evidence || ''
       ),
     };
 

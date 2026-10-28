@@ -183,17 +183,17 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 
 ### --- Método E: Generador visual local (`generador-local.html`)
 
-> Funciona sin terminal en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o arrastrando el `.csv`, con vista previa en vivo y edición individual
+> Funciona sin terminal en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o arrastrando el `.csv`, con vista previa en tiempo real del certificado, del correo y del `.json`
 
-1. Haz doble clic sobre el archivo `generador-local.html` (situado en la raíz de la carpeta del proyecto, a la misma altura que este `README.md`) para abrirlo en tu navegador
+1. Haz doble clic sobre el archivo `generador-local.html` (situado en la raíz de la carpeta del proyecto) o ábrelo directamente sin descargarlo desde **[este enlace al generador](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html)**
 2. Elige arriba la modalidad:
-   - **🏅 Crear Nueva Badge (Evento)**: Rellena el nombre del evento, descripción, criterios, tags y selecciona uno de los 5 estilos (`google`, `cyber`, `piscina`, `nieve`, `caramelos`)
-   - **🎓 Crear Certificados (CSV o Manual)**:
-     - Introduce los **datos genéricos** que no vienen en el `.csv`: el `badgeId`, el `role` por defecto (`Asistente Certificado`, `Participante`, ...), la evidencia opcional y si deseas filtrar por Check-in
-     - **Arrastra y suelta el `.csv`** de Bevy (o añade personas manualmente). Aparecerá una **lista interactiva con todos los certificados que se van a crear**
-     - Haz clic sobre **cualquier persona de la lista** para ver su **diploma en vivo** (y la **vista previa de su correo electrónico**) o para modificarle un dato específico solo a esa persona (por ejemplo, cambiar su rol a `Ponente` o `1er Premio` o añadir su enlace de proyecto)
-3. Pulsa el botón de guardar para almacenar los archivos generados dentro de la carpeta `publish` correspondiente (`src/content/badges/publish/` o `src/content/assertions/publish/`) o descargar el paquete `publish.zip`
-4. Sube o arrastra el contenido de la carpeta `publish` a GitHub y haz el commit (o haz `git push` desde el punto 5): **GitHub colocará automáticamente los archivos en su carpeta definitiva y enviará los correos electrónicos a cada asistente**
+   - **Crear nueva badge**: Rellena el nombre del evento, descripción, criterios, tags y selecciona uno de los 5 estilos (`google`, `cyber`, `piscina`, `nieve`, `caramelos`)
+   - **Crear certificados**:
+     - En **Datos genéricos**, selecciona el **ID de la badge** en el desplegable, el rol por defecto, el enlace a evidencia opcional, el estilo visual y las casillas de check-ins o envío de correos automáticos
+     - En **Cargar asistentes**, arrastra y suelta tu `.csv` de Bevy (o añade personas manualmente). Aparecerá la lista **Certificados a generar** con buscador por nombre, correo o ID del certificado y botones de **Deshacer / Rehacer** (`Ctrl+Z` / `Ctrl+Shift+Z` o `Cmd+Z` / `Cmd+Shift+Z`)
+     - Haz clic sobre **cualquier persona de la lista** para ver en tiempo real las pestañas **Certificado**, **Correo** y **Archivo .json**, o edita sus datos individuales en **Personalizar certificado** (nombre con autocorrección, correo, rol, evidencia, estilo visual o ID único randomizado)
+3. Pulsa **Descargar carpeta publish** para bajar automáticamente el paquete `publish.zip` con la estructura lista
+4. Descomprime y arrastra la carpeta `publish` dentro de `src/content/badges/` o `src/content/assertions/` en GitHub y haz el commit (o haz `git push` desde el punto 5): **GitHub colocará automáticamente los archivos en su carpeta definitiva y enviará los correos electrónicos con su estilo visual correspondiente a cada asistente**
 
 ---
 

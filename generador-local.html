@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador Local Open Badges 2.0 · GDGoC Universidad de Huelva</title>
+  <title>Generador local de badges y certificados · GDGoC Universidad de Huelva</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -30,7 +30,6 @@
       display: flex;
       flex-direction: column;
     }
-    /* Top Google 4-color bar */
     .google-strip {
       height: 6px;
       display: grid;
@@ -42,7 +41,6 @@
     .google-strip div:nth-child(3) { background: var(--yellow); }
     .google-strip div:nth-child(4) { background: var(--green); }
 
-    /* Top Header */
     .app-header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
@@ -82,7 +80,6 @@
       color: var(--blue);
     }
 
-    /* Mode Switcher Tabs */
     .mode-tabs {
       display: flex;
       background: var(--surface-2);
@@ -102,33 +99,44 @@
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
-    .mode-tab:hover {
-      color: var(--text);
-    }
+    .mode-tab:hover { color: var(--text); }
     .mode-tab.active {
       background: var(--blue);
       color: #fff;
       box-shadow: 0 2px 10px rgba(66, 133, 244, 0.35);
     }
 
-    .browser-compat-pill {
-      font-size: 11px;
-      font-weight: 600;
-      color: #047857;
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      padding: 6px 12px;
-      border-radius: 999px;
+    .history-controls {
       display: flex;
       align-items: center;
       gap: 6px;
     }
+    .history-btn {
+      border: 1.5px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .history-btn:hover:not(:disabled) {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: #fff;
+    }
+    .history-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
-    /* Main Workspace Layout */
     .workspace {
       max-width: 1440px;
       width: 100%;
@@ -143,9 +151,7 @@
       align-items: start;
     }
     @media (max-width: 1080px) {
-      .grid-2col {
-        grid-template-columns: 1fr;
-      }
+      .grid-2col { grid-template-columns: 1fr; }
     }
 
     .panel {
@@ -159,23 +165,14 @@
       font-size: 16px;
       font-weight: 800;
       color: var(--text);
-      margin-bottom: 4px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
     }
-    .panel-desc {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      margin-bottom: 18px;
-      line-height: 1.45;
-    }
 
-    /* Form Controls */
-    .form-group {
-      margin-bottom: 14px;
-    }
+    .form-group { margin-bottom: 14px; }
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -187,11 +184,6 @@
       font-weight: 700;
       color: #334155;
       margin-bottom: 5px;
-    }
-    label .hint {
-      font-weight: 500;
-      color: var(--text-muted);
-      font-size: 11px;
     }
     input[type="text"],
     input[type="email"],
@@ -209,10 +201,15 @@
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
     }
-    input:focus, select:focus, textarea:focus {
+    input:focus:not([readonly]), select:focus, textarea:focus {
       border-color: var(--blue);
       background: #fff;
       box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.14);
+    }
+    input[readonly] {
+      background: #f1f5f9;
+      color: #475569;
+      cursor: default;
     }
     textarea {
       resize: vertical;
@@ -223,7 +220,6 @@
       font-size: 12px;
     }
 
-    /* Style Selector Grid */
     .style-selector {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -258,12 +254,11 @@
       box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
     }
 
-    /* Drag & Drop CSV Zone */
     .dropzone {
       border: 2px dashed #94a3b8;
       background: #f8fafc;
       border-radius: 14px;
-      padding: 22px 16px;
+      padding: 20px 16px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -273,22 +268,13 @@
       border-color: var(--blue);
       background: #eff6ff;
     }
-    .dropzone-icon {
-      font-size: 28px;
-      margin-bottom: 6px;
-    }
+    .dropzone-icon { font-size: 26px; margin-bottom: 4px; }
     .dropzone-title {
       font-size: 13.5px;
       font-weight: 700;
       color: var(--text);
     }
-    .dropzone-sub {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
 
-    /* Buttons */
     .btn {
       border: none;
       border-radius: 10px;
@@ -339,9 +325,7 @@
       padding: 6px 10px;
       font-size: 11.5px;
     }
-    .btn-danger:hover {
-      background: #fee2e2;
-    }
+    .btn-danger:hover { background: #fee2e2; }
     .btn-sm {
       padding: 6px 12px;
       font-size: 12px;
@@ -357,7 +341,6 @@
       border-top: 1px solid var(--border);
     }
 
-    /* Recipient List */
     .cert-list-container {
       border: 1.5px solid var(--border);
       border-radius: 12px;
@@ -407,7 +390,6 @@
       color: #b45309;
     }
 
-    /* Checkboxes */
     .checkbox-row {
       display: flex;
       align-items: center;
@@ -418,14 +400,17 @@
       margin-bottom: 8px;
       cursor: pointer;
     }
+    .checkbox-row.disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
     .checkbox-row input {
       width: 16px;
       height: 16px;
       accent-color: var(--blue);
-      cursor: pointer;
+      cursor: inherit;
     }
 
-    /* Sub-tabs for Preview Panel */
     .preview-tabs {
       display: flex;
       gap: 6px;
@@ -453,12 +438,12 @@
     }
 
     /* ==========================================================================
-       LIVE DIPLOMA PREVIEW REPLICA (Supports All 5 Themes Identically to Web)
+       LIVE DIPLOMA PREVIEW REPLICA (5 Official Styles)
        ========================================================================== */
     .diploma-preview-outer {
       padding: 6px;
       border-radius: 24px;
-      transition: all 0.4s ease;
+      transition: all 0.35s ease;
     }
     .diploma-preview-inner {
       position: relative;
@@ -471,7 +456,7 @@
       text-align: center;
       min-height: 540px;
       justify-content: space-between;
-      transition: all 0.4s ease;
+      transition: all 0.35s ease;
     }
     .diploma-frame-1 {
       position: absolute;
@@ -486,7 +471,7 @@
       pointer-events: none;
     }
 
-    /* Theme 1: Google */
+    /* 1. Google */
     .diploma-theme-google .diploma-preview-outer {
       background: linear-gradient(135deg, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%);
       box-shadow: 0 14px 40px rgba(32, 33, 36, 0.12);
@@ -502,7 +487,7 @@
     .diploma-theme-google .dp-meta { background: #F8F9FA; border: 2px solid #DADCE0; }
     .diploma-theme-google .dp-verified { background: #FFFFFF; border: 1px solid #DADCE0; color: #202124; }
 
-    /* Theme 2: Cyber */
+    /* 2. Cyber */
     .diploma-theme-cyber .diploma-preview-outer {
       background: linear-gradient(135deg, #00F0FF, #FF007F, #FFE600, #00FF66);
       box-shadow: 0 0 35px rgba(0, 240, 255, 0.3);
@@ -518,7 +503,7 @@
     .diploma-theme-cyber .dp-meta { background: rgba(12, 20, 44, 0.92); border: 2px solid rgba(0, 240, 255, 0.4); }
     .diploma-theme-cyber .dp-verified { background: rgba(12, 18, 38, 0.9); border: 1px solid rgba(0, 240, 255, 0.5); color: #00F0FF; }
 
-    /* Theme 3: Piscina */
+    /* 3. Piscina */
     .diploma-theme-piscina .diploma-preview-outer {
       background: linear-gradient(135deg, #00F2FE, #4FACFE, #00E5FF, #0284C7);
       box-shadow: 0 16px 40px rgba(2, 132, 199, 0.3);
@@ -534,7 +519,7 @@
     .diploma-theme-piscina .dp-meta { background: rgba(255, 255, 255, 0.88); border: 2px solid rgba(0, 188, 212, 0.5); }
     .diploma-theme-piscina .dp-verified { background: rgba(255, 255, 255, 0.9); border: 2px solid #00E5FF; color: #004D61; }
 
-    /* Theme 4: Nieve */
+    /* 4. Nieve */
     .diploma-theme-nieve .diploma-preview-outer {
       background: linear-gradient(135deg, #FFFFFF, #7DD3FC, #38BDF8, #BAE6FD);
       box-shadow: 0 16px 45px rgba(2, 132, 199, 0.4);
@@ -550,7 +535,7 @@
     .diploma-theme-nieve .dp-meta { background: rgba(14, 36, 66, 0.85); border: 2px solid rgba(186, 230, 253, 0.5); }
     .diploma-theme-nieve .dp-verified { background: rgba(14, 36, 66, 0.85); border: 1.5px solid rgba(186, 230, 253, 0.6); color: #E0F2FE; }
 
-    /* Theme 5: Caramelos */
+    /* 5. Caramelos */
     .diploma-theme-caramelos .diploma-preview-outer {
       background: repeating-linear-gradient(45deg, #FF1493, #FF1493 16px, #FF85C0 16px, #FF85C0 32px, #FFF0F6 32px, #FFF0F6 48px);
       box-shadow: 0 16px 40px rgba(255, 20, 147, 0.3);
@@ -599,7 +584,6 @@
       gap: 10px;
     }
     .toast.show { display: flex; }
-
     .hidden { display: none !important; }
   </style>
 </head>
@@ -611,140 +595,129 @@
       <img src="./public/images/gdgoc-uhu-logo.jpg" onerror="this.style.display='none'" alt="GDGoC UHU" class="brand-logo" />
       <div>
         <div class="brand-title">GDG on Campus Universidad de Huelva</div>
-        <div class="brand-sub">Generador Local de Badges y Certificados (Método E)</div>
+        <div class="brand-sub">Generador local de badges y certificados</div>
       </div>
     </div>
 
     <div class="mode-tabs" role="tablist">
       <button type="button" class="mode-tab active" id="tab-mode-certs" onclick="switchMainMode('certs')">
-        <span>🎓</span>
-        <span>Crear Certificados (CSV o Manual)</span>
+        Crear certificados
       </button>
       <button type="button" class="mode-tab" id="tab-mode-badge" onclick="switchMainMode('badge')">
-        <span>🏅</span>
-        <span>Crear Nueva Badge (Evento)</span>
+        Crear nueva badge
       </button>
     </div>
 
-    <div class="browser-compat-pill" title="Funciona 100% offline en Chrome, Brave, Opera, Firefox y Safari">
-      <span>✓</span>
-      <span>Chrome · Brave · Opera · Firefox · Safari</span>
+    <div class="history-controls">
+      <button type="button" id="btn-undo" class="history-btn" onclick="performUndo()" disabled title="Deshacer (Ctrl+Z / Cmd+Z)">
+        <span>↶</span>
+        <span>Deshacer</span>
+      </button>
+      <button type="button" id="btn-redo" class="history-btn" onclick="performRedo()" disabled title="Rehacer (Ctrl+Shift+Z / Cmd+Shift+Z)">
+        <span>↷</span>
+        <span>Rehacer</span>
+      </button>
     </div>
   </header>
 
   <main class="workspace">
 
     <!-- ======================================================================
-         MODO 1: CREAR CERTIFICADOS (ASSERTIONS) — CSV DRAG & DROP O MANUAL
+         MODO 1: CREAR CERTIFICADOS
          ====================================================================== -->
     <div id="view-mode-certs" class="grid-2col">
-      <!-- Columna Izquierda: Configuración Genérica + CSV + Lista de Certificados -->
+      <!-- Columna Izquierda: Datos genéricos + Cargar asistentes -->
       <div style="display: flex; flex-direction: column; gap: 20px;">
 
-        <!-- Paso 1: Datos Genéricos -->
+        <!-- Datos genéricos -->
         <div class="panel">
           <div class="panel-title">
-            <span>1. Datos Genéricos de la Emisión</span>
-            <span class="pill-mini">Valores por defecto</span>
+            <span>Datos genéricos</span>
           </div>
-          <p class="panel-desc">
-            Estos valores se aplicarán a todos los certificados que cargues desde el <code>.csv</code> o añadas manualmente (luego podrás editar a cualquier persona individualmente).
-          </p>
 
           <div class="form-group">
-            <label>
-              ID de la Badge (<code>badgeId</code>)
-              <span class="hint">— Nombre del archivo en <code>src/content/badges/</code> sin <code>.json</code></span>
-            </label>
+            <label>ID de la badge</label>
             <div style="display: flex; gap: 8px;">
-              <input
-                type="text"
-                id="gen-badge-id"
-                list="preset-badges-list"
-                value="workshop-ai-cloud"
-                placeholder="ej: capture-the-flag-reversing-de-binarios"
-                oninput="onGenericConfigChange()"
-              />
-              <datalist id="preset-badges-list">
-                <option value="workshop-ai-cloud">Taller IA & Google Cloud (google)</option>
-                <option value="hackathon-2026">Hackathon GDGoC UHU 2026 (cyber)</option>
-                <option value="summer-code-camp">Summer Pool Code Camp (piscina)</option>
-                <option value="winter-cloud-freeze">Winter Cloud Freeze Summit (nieve)</option>
-                <option value="creative-ui-jam">Sweet Candy UI/UX Jam (caramelos)</option>
-              </datalist>
-              <label class="btn btn-secondary btn-sm" style="margin:0; white-space: nowrap; cursor: pointer;" title="Cargar archivo .json de una badge de tu ordenador para previsualizar sus textos reales">
+              <select id="gen-badge-id" onchange="onGenericBadgeChange(this.value)">
+                <option value="" disabled selected>Selecciona una badge...</option>
+              </select>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                style="margin:0; white-space: nowrap;"
+                onclick="openBadgeJsonPicker()"
+              >
                 📂 Cargar badge.json
-                <input type="file" accept=".json" style="display:none" onchange="loadBadgeJsonFile(event)" />
-              </label>
+              </button>
+              <input type="file" id="fallback-badge-file-input" accept=".json,application/json" style="display:none" onchange="handleBadgeFileInput(event)" />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Rol por defecto (<code>role</code>)</label>
+              <label>Rol por defecto</label>
               <input
                 type="text"
                 id="gen-default-role"
                 value="Asistente Certificado"
                 placeholder="ej: Asistente Certificado, Ponente..."
+                onfocus="saveHistorySnapshot()"
                 oninput="onGenericRoleChange(this.value)"
               />
             </div>
             <div class="form-group">
-              <label>Evidencia genérica <span class="hint">(opcional)</span></label>
+              <label>Enlace a evidencia (opcional)</label>
               <input
                 type="url"
                 id="gen-default-evidence"
                 value=""
                 placeholder="https://github.com/..."
+                onfocus="saveHistorySnapshot()"
                 oninput="onGenericEvidenceChange(this.value)"
               />
             </div>
           </div>
 
           <div class="form-group">
-            <label>Estilo visual del diploma (para la vista previa)</label>
-            <div class="style-selector" id="certs-style-selector">
-              <button type="button" class="style-btn active" data-style="google" onclick="setCertPreviewStyle('google')">
+            <label>Estilo visual</label>
+            <div class="style-selector" id="certs-generic-style-selector">
+              <button type="button" class="style-btn active" data-style="google" onclick="onGenericStyleChange('google')">
                 <span class="icon">🔵</span><span>Google</span>
               </button>
-              <button type="button" class="style-btn" data-style="cyber" onclick="setCertPreviewStyle('cyber')">
+              <button type="button" class="style-btn" data-style="cyber" onclick="onGenericStyleChange('cyber')">
                 <span class="icon">⚡</span><span>Cyber</span>
               </button>
-              <button type="button" class="style-btn" data-style="piscina" onclick="setCertPreviewStyle('piscina')">
+              <button type="button" class="style-btn" data-style="piscina" onclick="onGenericStyleChange('piscina')">
                 <span class="icon">🌊</span><span>Piscina</span>
               </button>
-              <button type="button" class="style-btn" data-style="nieve" onclick="setCertPreviewStyle('nieve')">
+              <button type="button" class="style-btn" data-style="nieve" onclick="onGenericStyleChange('nieve')">
                 <span class="icon">❄️</span><span>Nieve</span>
               </button>
-              <button type="button" class="style-btn" data-style="caramelos" onclick="setCertPreviewStyle('caramelos')">
+              <button type="button" class="style-btn" data-style="caramelos" onclick="onGenericStyleChange('caramelos')">
                 <span class="icon">🍬</span><span>Caramelos</span>
               </button>
             </div>
           </div>
 
-          <label class="checkbox-row">
-            <input type="checkbox" id="gen-only-checkedin" onchange="reparseLastCsvIfAny()" />
-            <span>Filtrar solo asistentes con Check-in confirmado (en CSV de Bevy)</span>
+          <label class="checkbox-row disabled" id="checkin-checkbox-label">
+            <input type="checkbox" id="gen-only-checkedin" disabled onchange="reparseLastCsvIfAny()" />
+            <span>¿Solo emitir a check-ins?</span>
           </label>
 
           <label class="checkbox-row" style="margin-bottom:0;">
             <input type="checkbox" id="gen-send-emails" checked onchange="renderCurrentSelection()" />
-            <span>Enviar correos automáticos al hacer commit en GitHub (incluye cola <code>_pending-emails.json</code>)</span>
+            <span>Enviar correos automáticamente al hacer commit</span>
           </label>
         </div>
 
-        <!-- Paso 2: Arrastrar CSV o Añadir Manualmente -->
+        <!-- Cargar asistentes -->
         <div class="panel">
           <div class="panel-title">
-            <span>2. Cargar Asistentes (CSV o Individual)</span>
+            <span>Cargar asistentes</span>
             <button type="button" class="btn btn-secondary btn-sm" onclick="addManualRecipient()">
               + Añadir persona manualmente
             </button>
           </div>
-          <p class="panel-desc">
-            Arrastra aquí el archivo <code>.csv</code> exportado de <strong>Bevy (GDG Community)</strong> o cualquier CSV con columnas <code>nombre, email</code>.
-          </p>
 
           <div
             id="csv-dropzone"
@@ -755,25 +728,24 @@
             ondrop="handleDropCsv(event)"
           >
             <div class="dropzone-icon">📄</div>
-            <div class="dropzone-title" id="dropzone-title-text">Arrastra y suelta tu archivo .CSV aquí o haz clic para seleccionarlo</div>
-            <div class="dropzone-sub">Detecta automáticamente First Name, Last Name, Email y Checkin Date (UTC)</div>
+            <div class="dropzone-title" id="dropzone-title-text">Arrastra y suelta tu .csv o haz click aquí</div>
             <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFileSelect(event)" />
           </div>
 
-          <!-- Lista de todos los certificados que se van a crear -->
+          <!-- Lista de certificados -->
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 8px; gap: 8px;">
             <label style="margin:0;">
-              Lista de Certificados a Generar (<span id="cert-count-badge">1</span>)
+              Certificados a generar (<span id="cert-count-badge">1</span>)
             </label>
             <div style="display:flex; gap:6px;">
               <input
                 type="text"
                 id="cert-list-search"
-                placeholder="Buscar en la lista..."
-                style="padding: 5px 10px; font-size: 12px; width: 165px;"
+                placeholder="Buscar nombre, ID o correo..."
+                style="padding: 5px 10px; font-size: 12px; width: 185px;"
                 oninput="renderRecipientList()"
               />
-              <button type="button" class="btn btn-danger" onclick="clearAllRecipients()" title="Vaciar lista">
+              <button type="button" class="btn btn-danger" onclick="clearAllRecipients()">
                 Vaciar
               </button>
             </div>
@@ -781,95 +753,125 @@
 
           <div id="cert-list-box" class="cert-list-container"></div>
 
-          <!-- Botones de Guardado en carpeta publish/ -->
-          <div class="action-bar" style="flex-direction: column;">
-            <button type="button" class="btn btn-success" style="width:100%; padding: 12px;" onclick="saveAssertionsToPublishFolder()">
-              📂 Guardar en carpeta src/content/assertions/publish
+          <!-- Botón Único de Descarga de Carpeta Publish -->
+          <div class="action-bar">
+            <button type="button" class="btn btn-success" style="width:100%; padding: 12px;" onclick="downloadPublishFolderZip()">
+              📦 Descargar carpeta publish
             </button>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%;">
-              <button type="button" class="btn btn-primary" onclick="downloadAssertionsZip()">
-                📦 Descargar publish.zip
-              </button>
-              <button type="button" class="btn btn-secondary" onclick="downloadSingleAssertionJson()">
-                ⬇️ Descargar este .json
-              </button>
-            </div>
-            <p style="font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.4;">
-              En <strong>Chrome, Brave y Opera</strong> el botón verde escribe directamente en la carpeta <code>publish</code>. En <strong>Firefox y Safari</strong> descarga el paquete <code>publish.zip</code> listo para descomprimir y arrastrar a GitHub.
-            </p>
           </div>
         </div>
       </div>
 
-      <!-- Columna Derecha: Edición Individual del Seleccionado + Vista Previa (Diploma / Email / JSON) -->
+      <!-- Columna Derecha: Personalizar certificado + Vista Previa -->
       <div style="display: flex; flex-direction: column; gap: 20px;">
 
-        <!-- Editor Individual para el Certificado Seleccionado -->
+        <!-- Personalizar certificado -->
         <div class="panel">
           <div class="panel-title">
-            <span>✏️ Editar Certificado Seleccionado (<span id="selected-index-label">#1</span>)</span>
+            <span>Personalizar certificado</span>
             <button type="button" class="btn btn-danger" onclick="deleteSelectedRecipient()">
               Eliminar este certificado
             </button>
           </div>
-          <p class="panel-desc">
-            Si a esta persona en concreto quieres cambiarle el rol (ej. ponerle <em>"Ponente"</em> o <em>"1er Premio"</em>), corregir su nombre o añadirle un enlace de proyecto, edítalo aquí:
-          </p>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Nombre completo del destinatario</label>
-              <input type="text" id="indiv-name" oninput="updateSelectedRecipientFromInputs()" />
+              <label>Nombre completo</label>
+              <input
+                type="text"
+                id="indiv-name"
+                onfocus="saveHistorySnapshot()"
+                oninput="updateSelectedRecipientFromInputs(false)"
+                onblur="autocorrectSelectedName()"
+              />
             </div>
             <div class="form-group">
-              <label>Correo electrónico (se cifra con SHA-256 + salt)</label>
-              <input type="email" id="indiv-email" oninput="updateSelectedRecipientFromInputs()" />
+              <label>Correo de contacto</label>
+              <input
+                type="email"
+                id="indiv-email"
+                onfocus="saveHistorySnapshot()"
+                oninput="updateSelectedRecipientFromInputs(false)"
+                onblur="autocorrectSelectedEmail()"
+              />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Rol o reconocimiento de esta persona</label>
-              <input type="text" id="indiv-role" oninput="updateSelectedRecipientFromInputs()" />
+              <label>Rol o reconocimiento</label>
+              <input
+                type="text"
+                id="indiv-role"
+                onfocus="saveHistorySnapshot()"
+                oninput="updateSelectedRecipientFromInputs(false)"
+              />
             </div>
             <div class="form-group">
-              <label>Enlace a Evidencia / Proyecto <span class="hint">(si está vacío no sale el botón)</span></label>
-              <input type="url" id="indiv-evidence" placeholder="https://github.com/..." oninput="updateSelectedRecipientFromInputs()" />
+              <label>Enlace a evidencia (opcional)</label>
+              <input
+                type="url"
+                id="indiv-evidence"
+                placeholder="https://github.com/..."
+                onfocus="saveHistorySnapshot()"
+                oninput="updateSelectedRecipientFromInputs(false)"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Estilo visual de este certificado</label>
+            <div class="style-selector" id="indiv-style-selector">
+              <button type="button" class="style-btn active" data-style="google" onclick="onIndividualStyleChange('google')">
+                <span class="icon">🔵</span><span>Google</span>
+              </button>
+              <button type="button" class="style-btn" data-style="cyber" onclick="onIndividualStyleChange('cyber')">
+                <span class="icon">⚡</span><span>Cyber</span>
+              </button>
+              <button type="button" class="style-btn" data-style="piscina" onclick="onIndividualStyleChange('piscina')">
+                <span class="icon">🌊</span><span>Piscina</span>
+              </button>
+              <button type="button" class="style-btn" data-style="nieve" onclick="onIndividualStyleChange('nieve')">
+                <span class="icon">❄️</span><span>Nieve</span>
+              </button>
+              <button type="button" class="style-btn" data-style="caramelos" onclick="onIndividualStyleChange('caramelos')">
+                <span class="icon">🍬</span><span>Caramelos</span>
+              </button>
             </div>
           </div>
 
           <div class="form-row" style="margin-bottom:0;">
             <div class="form-group" style="margin-bottom:0;">
-              <label>ID único del Certificado (24 caracteres hex)</label>
+              <label>ID único randomizado</label>
               <div style="display:flex; gap:6px;">
-                <input type="text" id="indiv-id" class="mono" oninput="updateSelectedRecipientFromInputs()" />
-                <button type="button" class="btn btn-secondary btn-sm" onclick="regenerateSelectedId()" title="Generar nuevo ID aleatorio">
+                <input type="text" id="indiv-id" class="mono" readonly />
+                <button type="button" class="btn btn-secondary btn-sm" onclick="regenerateSelectedId()" title="Generar nuevo ID único aleatorio">
                   🎲
                 </button>
               </div>
             </div>
             <div class="form-group" style="margin-bottom:0;">
-              <label>Hash SHA-256 calculado (<code>recipient.identity</code>)</label>
-              <input type="text" id="indiv-hash" class="mono" readonly style="background:#f1f5f9; color:#475569;" />
+              <label>Hash SHA-256 + salt</label>
+              <input type="text" id="indiv-hash" class="mono" readonly />
             </div>
           </div>
         </div>
 
-        <!-- Panel de Vista Previa Interactiva (Diploma / Email / JSON) -->
+        <!-- Panel de Vista Previa (Certificado / Correo / Archivo .json) -->
         <div class="panel">
           <div class="preview-tabs">
             <button type="button" class="preview-tab active" id="subtab-diploma" onclick="switchPreviewSubtab('diploma')">
-              🎓 Vista Previa del Diploma
+              Certificado
             </button>
             <button type="button" class="preview-tab" id="subtab-email" onclick="switchPreviewSubtab('email')">
-              📧 Vista Previa del Correo (Prueba de Email)
+              Correo
             </button>
             <button type="button" class="preview-tab" id="subtab-json" onclick="switchPreviewSubtab('json')">
-              {} Archivo .json Generado
+              Archivo .json
             </button>
           </div>
 
-          <!-- Subvista 1: Diploma -->
+          <!-- Subvista 1: Certificado -->
           <div id="preview-pane-diploma">
             <div id="diploma-theme-wrapper" class="diploma-theme-google">
               <div class="diploma-preview-outer">
@@ -907,7 +909,7 @@
                     </div>
 
                     <h2 id="dp-badge-title" class="dp-text-primary" style="font-size:24px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">
-                      Taller de IA Generativa & Google Cloud
+                      Selecciona una badge
                     </h2>
                     <div id="dp-issue-date" class="dp-text-secondary" style="font-size:12.5px; font-weight:600; margin-top:4px;">
                       28 de octubre de 2026
@@ -985,40 +987,37 @@
                 </div>
               </div>
 
-              <!-- Barra de botones inferior de vista previa (muestra si aparece o no el botón de Evidencia) -->
-              <div style="margin-top:14px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
-                <span class="btn btn-primary btn-sm" style="pointer-events:none;">+ Añadir a tu cartera</span>
-                <span class="btn btn-secondary btn-sm" style="pointer-events:none;">in Añadir a LinkedIn</span>
-                <span class="btn btn-secondary btn-sm" style="pointer-events:none;">🖨️ Imprimir / PDF</span>
-                <span id="dp-evidence-btn" class="btn btn-secondary btn-sm hidden" style="pointer-events:none; border-color:#4285F4; color:#1967D2;">
+              <!-- Solo botón de evidencia condicional (si el campo tiene contenido) -->
+              <div id="dp-evidence-wrapper" class="hidden" style="margin-top:14px; display:flex; justify-content:center;">
+                <span id="dp-evidence-btn" class="btn btn-secondary btn-sm" style="pointer-events:none; border-color:#4285F4; color:#1967D2;">
                   Ver Evidencia / Proyecto ↗
                 </span>
               </div>
             </div>
           </div>
 
-          <!-- Subvista 2: Vista Previa del Correo Electrónico -->
+          <!-- Subvista 2: Correo -->
           <div id="preview-pane-email" class="hidden">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
               <div style="font-size:12.5px; color:var(--text-muted);">
                 Asunto: <strong id="email-preview-subject" style="color:var(--text);">🎓 Tu certificado oficial — GDG on Campus UHU</strong>
               </div>
-              <button type="button" class="btn btn-secondary btn-sm" onclick="downloadEmailPreviewHtml()">
-                ⬇️ Descargar prueba de correo (.html)
-              </button>
             </div>
             <iframe
               id="email-preview-iframe"
-              title="Vista Previa del Email"
+              title="Vista Previa del Correo"
               style="width:100%; height:560px; border:1px solid var(--border); border-radius:14px; background:#f8fafc;"
             ></iframe>
           </div>
 
-          <!-- Subvista 3: Código JSON -->
+          <!-- Subvista 3: Archivo .json -->
           <div id="preview-pane-json" class="hidden">
-            <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px;">
               <button type="button" class="btn btn-secondary btn-sm" onclick="copyCurrentAssertionJson()">
-                📋 Copiar JSON
+                📋 Copiar .json
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="downloadSingleAssertionJson()">
+                ⬇️ Descargar .json
               </button>
             </div>
             <pre id="assertion-json-output" class="json-code-box"></pre>
@@ -1029,20 +1028,16 @@
     </div>
 
     <!-- ======================================================================
-         MODO 2: CREAR NUEVA BADGE (BADGECLASS)
+         MODO 2: CREAR NUEVA BADGE
          ====================================================================== -->
     <div id="view-mode-badge" class="grid-2col hidden">
       <div class="panel">
         <div class="panel-title">
-          <span>🏅 Definir Nueva Badge (<code>BadgeClass</code>)</span>
-          <span class="pill-mini">Evento / Taller</span>
+          <span>Crear nueva badge</span>
         </div>
-        <p class="panel-desc">
-          Rellena los datos del evento o taller. Se guardará en <code>src/content/badges/publish/</code> lista para arrastrar a GitHub.
-        </p>
 
         <div class="form-group">
-          <label>Nombre del Evento / Insignia (<code>name</code>)</label>
+          <label>Nombre del evento o badge</label>
           <input
             type="text"
             id="badge-name"
@@ -1052,10 +1047,7 @@
         </div>
 
         <div class="form-group">
-          <label>
-            Nombre del archivo JSON (<code>badgeId</code>)
-            <span class="hint">— Se guardará como <code>&lt;id&gt;.json</code></span>
-          </label>
+          <label>ID de la badge</label>
           <input
             type="text"
             id="badge-slug"
@@ -1066,7 +1058,7 @@
         </div>
 
         <div class="form-group">
-          <label>Estilo visual asignado a esta Badge (<code>style</code>)</label>
+          <label>Estilo visual</label>
           <div class="style-selector" id="badge-creator-style-selector">
             <button type="button" class="style-btn active" data-style="google" onclick="setBadgeCreatorStyle('google')">
               <span class="icon">🔵</span><span>Google</span>
@@ -1087,16 +1079,13 @@
         </div>
 
         <div class="form-group">
-          <label>
-            Ruta del logo en el repositorio (<code>image</code>)
-            <span class="hint">— Guardar imagen en <code>public/images/badges/</code></span>
-          </label>
+          <label>Ruta del logo en el repositorio</label>
           <div style="display:flex; gap:8px;">
             <input
               type="text"
               id="badge-image"
               class="mono"
-              value="/images/badges/capture-the-flag-reversing-de-binarios.svg"
+              value="/images/badges/capture-the-flag-reversing-de-binarios.png"
               oninput="updateBadgePreview()"
             />
             <label class="btn btn-secondary btn-sm" style="margin:0; white-space:nowrap; cursor:pointer;">
@@ -1107,17 +1096,17 @@
         </div>
 
         <div class="form-group">
-          <label>Descripción del certificado (<code>description</code>)</label>
+          <label>Descripción</label>
           <textarea id="badge-desc" oninput="updateBadgePreview()">Certificado oficial de asistencia al taller organizado por GDGoC Universidad de Huelva</textarea>
         </div>
 
         <div class="form-group">
-          <label>Criterios de obtención (<code>criteria.narrative</code>)</label>
+          <label>Criterios de obtención</label>
           <textarea id="badge-narrative" oninput="updateBadgePreview()">Otorgado por asistir presencialmente al 100% del taller y participar en las actividades</textarea>
         </div>
 
         <div class="form-group">
-          <label>Tags / Competencias separadas por comas (<code>tags</code>)</label>
+          <label>Tags separadas por comas</label>
           <input
             type="text"
             id="badge-tags"
@@ -1127,31 +1116,28 @@
         </div>
 
         <div class="action-bar" style="flex-direction:column;">
-          <button type="button" class="btn btn-success" style="width:100%; padding:12px;" onclick="saveBadgeToPublishFolder()">
-            📂 Guardar en carpeta src/content/badges/publish
+          <button type="button" class="btn btn-success" style="width:100%; padding:12px;" onclick="downloadBadgePublishZip()">
+            📦 Descargar carpeta publish
           </button>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%;">
-            <button type="button" class="btn btn-primary" onclick="downloadBadgeJsonFile()">
-              ⬇️ Descargar <span id="btn-badge-filename">badge.json</span>
-            </button>
-            <button type="button" class="btn btn-secondary" onclick="useCreatedBadgeForCerts()">
-              🎓 Usar esta Badge para emitir certificados →
-            </button>
-          </div>
+          <button type="button" class="btn btn-secondary" style="width:100%;" onclick="useCreatedBadgeForCerts()">
+            Usar esta badge en Crear certificados →
+          </button>
         </div>
       </div>
 
       <!-- Vista previa del JSON de la Badge -->
       <div class="panel">
         <div class="panel-title">
-          <span>Vista Previa del archivo <code>src/content/badges/publish/<span id="preview-badge-filename">capture-the-flag-reversing-de-binarios.json</span></code></span>
-          <button type="button" class="btn btn-secondary btn-sm" onclick="copyBadgeJson()">
-            📋 Copiar JSON
-          </button>
+          <span>Archivo .json (<code id="preview-badge-filename">capture-the-flag-reversing-de-binarios.json</code>)</span>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="copyBadgeJson()">
+              📋 Copiar .json
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="downloadBadgeJsonFile()">
+              ⬇️ Descargar .json
+            </button>
+          </div>
         </div>
-        <p class="panel-desc">
-          Recuerda guardar también el icono <code>.svg</code> o <code>.png</code> en <code>public/images/badges/</code>.
-        </p>
         <pre id="badge-json-output" class="json-code-box"></pre>
       </div>
     </div>
@@ -1162,7 +1148,7 @@
 
   <script>
     /* ========================================================================
-       1. IMPLEMENTACIÓN PURA DE SHA-256 (Funciona en file:// en todos los navegadores)
+       1. IMPLEMENTACIÓN PURA DE SHA-256 (100% Offline)
        ======================================================================== */
     function sha256Hex(ascii) {
       function rightRotate(value, amount) {
@@ -1182,9 +1168,7 @@
       const isComposite = {};
       for (let candidate = 2; primeCounter < 64; candidate++) {
         if (!isComposite[candidate]) {
-          for (i = 0; i < 313; i += candidate) {
-            isComposite[i] = candidate;
-          }
+          for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
           hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
           k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
         }
@@ -1202,7 +1186,6 @@
         const w = words.slice(j, (j += 16));
         const oldHash = h.slice(0);
         for (i = 0; i < 64; i++) {
-          const i2 = i + j;
           const w15 = w[i - 15], w2 = w[i - 2];
           const a = h[0], e = h[4];
           const temp1 =
@@ -1241,18 +1224,38 @@
       return 'sha256$' + sha256Hex(clean + salt);
     }
 
-    function generateHexId24() {
-      const bytes = new Uint8Array(12);
-      if (window.crypto && window.crypto.getRandomValues) {
-        window.crypto.getRandomValues(bytes);
-      } else {
-        for (let i = 0; i < 12; i++) bytes[i] = Math.floor(Math.random() * 256);
-      }
-      return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+    // Conjunto de IDs existentes en el sistema para garantizar que nunca se genere un duplicado
+    const SYSTEM_USED_IDS = new Set([
+      '69679d9fa12d24f4a673b54b',
+      '6ae00a61a65e3dd2d40bcb0f',
+      '7c11b204e91f44a8b301ca01',
+      '8d22c305f82e55b9c402fa02',
+      '9e33d406a73f66c0d503fb03',
+    ]);
+
+    function generateUniqueHexId24() {
+      let candidate = '';
+      let attempts = 0;
+      do {
+        const bytes = new Uint8Array(12);
+        if (window.crypto && window.crypto.getRandomValues) {
+          window.crypto.getRandomValues(bytes);
+        } else {
+          for (let i = 0; i < 12; i++) bytes[i] = Math.floor(Math.random() * 256);
+        }
+        candidate = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+        attempts++;
+      } while (
+        attempts < 100 &&
+        (SYSTEM_USED_IDS.has(candidate) ||
+          (typeof recipients !== 'undefined' && recipients.some((r) => r.id === candidate)))
+      );
+      SYSTEM_USED_IDS.add(candidate);
+      return candidate;
     }
 
     /* ========================================================================
-       2. GENERADOR LIGERO DE QR VECTORIAL (ISO/IEC 18004)
+       2. GENERADOR DE QR VECTORIAL (ISO/IEC 18004)
        ======================================================================== */
     const QR_VERSIONS = [
       { version: 1, total: 26, data: 19, ec: 7, align: [] },
@@ -1409,7 +1412,7 @@
     }
 
     /* ========================================================================
-       3. GENERADOR ZIP PURO EN JAVASCRIPT (Para Firefox, Safari y descarga rápida)
+       3. GENERADOR ZIP PURO EN JAVASCRIPT (Crea la carpeta publish/)
        ======================================================================== */
     const CRC_TABLE = new Uint32Array(256);
     for (let n = 0; n < 256; n++) {
@@ -1423,7 +1426,6 @@
       return (c ^ 0xffffffff) >>> 0;
     }
     function createZipBlob(files) {
-      // files: [{ name: 'publish/xxx.json', content: '...' }]
       const encoder = new TextEncoder();
       const localParts = [];
       const centralParts = [];
@@ -1493,7 +1495,7 @@
     }
 
     /* ========================================================================
-       4. ESTADO DE LA APLICACIÓN Y CATÁLOGO DE BADGES CONOCIDAS
+       4. CATÁLOGO DE BADGES DEL SISTEMA Y PERSISTENCIA DE BADGES CARGADAS
        ======================================================================== */
     const KNOWN_BADGES = {
       'workshop-ai-cloud': {
@@ -1538,27 +1540,139 @@
       },
     };
 
+    // Cargar badges personalizadas recordadas en localStorage
+    try {
+      const savedCustomBadges = JSON.parse(localStorage.getItem('gdgoc-uhu-custom-badges') || '{}');
+      Object.assign(KNOWN_BADGES, savedCustomBadges);
+    } catch {}
+
+    function saveCustomBadgeToMemory(slug, badgeObj) {
+      KNOWN_BADGES[slug] = badgeObj;
+      try {
+        const saved = JSON.parse(localStorage.getItem('gdgoc-uhu-custom-badges') || '{}');
+        saved[slug] = badgeObj;
+        localStorage.setItem('gdgoc-uhu-custom-badges', JSON.stringify(saved));
+      } catch {}
+      populateBadgeSelectDropdown();
+    }
+
+    function populateBadgeSelectDropdown(selectedSlug) {
+      const sel = document.getElementById('gen-badge-id');
+      const currentVal = selectedSlug !== undefined ? selectedSlug : sel.value;
+      let html = `<option value="" disabled ${!currentVal ? 'selected' : ''}>Selecciona una badge...</option>`;
+      Object.keys(KNOWN_BADGES).forEach((id) => {
+        const isSel = currentVal === id ? 'selected' : '';
+        html += `<option value="${escapeHtml(id)}" ${isSel}>${escapeHtml(id)}</option>`;
+      });
+      sel.innerHTML = html;
+    }
+
     const currentYearSalt = 'gdgoc-uhu-salt-' + new Date().getFullYear();
-    let activeCertPreviewStyle = 'google';
+    let genericStyle = 'google';
     let activeBadgeCreatorStyle = 'google';
     let lastRawCsvContent = '';
+    let lastBadgeFileHandle = null;
     let selectedIndex = 0;
 
     let recipients = [
       {
-        id: generateHexId24(),
+        id: generateUniqueHexId24(),
         name: 'Laura Benítez Romero',
         email: 'laura.benitez@alu.uhu.es',
         role: 'Asistente Certificado',
         evidence: '',
+        style: 'google',
         issuedOn: new Date().toISOString(),
         customRole: false,
         customEvidence: false,
+        customStyle: false,
       },
     ];
 
     /* ========================================================================
-       5. UTILIDADES DE NOMBRES Y PARSER CSV (Compatible con Bevy y Genérico)
+       5. SISTEMA UNDO / REDO (Compatible con Ctrl+Z, Ctrl+Shift+Z, Cmd+Z, Cmd+Shift+Z)
+       ======================================================================== */
+    const undoStack = [];
+    const redoStack = [];
+    const MAX_HISTORY = 50;
+
+    function cloneState() {
+      return JSON.stringify({
+        recipients,
+        selectedIndex,
+        genericStyle,
+        badgeId: document.getElementById('gen-badge-id')?.value || '',
+        defaultRole: document.getElementById('gen-default-role')?.value || '',
+        defaultEvidence: document.getElementById('gen-default-evidence')?.value || '',
+      });
+    }
+
+    function saveHistorySnapshot() {
+      const snap = cloneState();
+      if (undoStack.length > 0 && undoStack[undoStack.length - 1] === snap) return;
+      undoStack.push(snap);
+      if (undoStack.length > MAX_HISTORY) undoStack.shift();
+      redoStack.length = 0;
+      updateHistoryButtons();
+    }
+
+    function restoreStateSnapshot(snapStr) {
+      try {
+        const state = JSON.parse(snapStr);
+        recipients = state.recipients || [];
+        selectedIndex = Math.min(state.selectedIndex || 0, Math.max(0, recipients.length - 1));
+        genericStyle = state.genericStyle || 'google';
+        if (document.getElementById('gen-badge-id')) document.getElementById('gen-badge-id').value = state.badgeId || '';
+        if (document.getElementById('gen-default-role')) document.getElementById('gen-default-role').value = state.defaultRole || '';
+        if (document.getElementById('gen-default-evidence')) document.getElementById('gen-default-evidence').value = state.defaultEvidence || '';
+        updateGenericStyleButtonsUI();
+        renderRecipientList();
+        renderCurrentSelection();
+      } catch {}
+    }
+
+    function performUndo() {
+      if (undoStack.length === 0) return;
+      redoStack.push(cloneState());
+      const prev = undoStack.pop();
+      restoreStateSnapshot(prev);
+      updateHistoryButtons();
+      showToast('↶ Acción deshecha');
+    }
+
+    function performRedo() {
+      if (redoStack.length === 0) return;
+      undoStack.push(cloneState());
+      const next = redoStack.pop();
+      restoreStateSnapshot(next);
+      updateHistoryButtons();
+      showToast('↷ Acción rehecha');
+    }
+
+    function updateHistoryButtons() {
+      document.getElementById('btn-undo').disabled = undoStack.length === 0;
+      document.getElementById('btn-redo').disabled = redoStack.length === 0;
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      if (!isCtrlOrCmd) return;
+      const key = e.key.toLowerCase();
+      if (key === 'z' && !e.shiftKey) {
+        if (undoStack.length > 0) {
+          e.preventDefault();
+          performUndo();
+        }
+      } else if ((key === 'z' && e.shiftKey) || key === 'y') {
+        if (redoStack.length > 0) {
+          e.preventDefault();
+          performRedo();
+        }
+      }
+    });
+
+    /* ========================================================================
+       6. AUTOCORRECCIÓN DE NOMBRES Y PARSER CSV
        ======================================================================== */
     function toTitleCase(str) {
       if (!str) return '';
@@ -1574,12 +1688,43 @@
     function cleanFullName(firstName, lastName) {
       const f = (firstName || '').trim();
       const l = (lastName || '').trim();
-      if (!l) return toTitleCase(f);
+      if (!l) {
+        // También eliminar palabras finales duplicadas si vienen en un solo campo (ej: "Álvaro Ortiz Ortiz")
+        const parts = f.split(/\s+/);
+        if (parts.length >= 2 && parts[parts.length - 1].toLowerCase() === parts[parts.length - 2].toLowerCase()) {
+          parts.pop();
+        }
+        return toTitleCase(parts.join(' '));
+      }
       if (!f) return toTitleCase(l);
       if (f.toLowerCase() === l.toLowerCase() || f.toLowerCase().endsWith(l.toLowerCase())) {
         return toTitleCase(f);
       }
       return toTitleCase(f + ' ' + l);
+    }
+
+    function autocorrectSelectedName() {
+      const current = recipients[selectedIndex];
+      if (!current || !current.name) return;
+      const corrected = cleanFullName(current.name, '');
+      if (corrected !== current.name) {
+        current.name = corrected;
+        document.getElementById('indiv-name').value = corrected;
+        renderRecipientList();
+        renderLivePreviewsOnly();
+      }
+    }
+
+    function autocorrectSelectedEmail() {
+      const current = recipients[selectedIndex];
+      if (!current || !current.email) return;
+      const corrected = current.email.toLowerCase().trim().replace(/\s+/g, '');
+      if (corrected !== current.email) {
+        current.email = corrected;
+        document.getElementById('indiv-email').value = corrected;
+        renderRecipientList();
+        renderLivePreviewsOnly();
+      }
     }
 
     function parseCSV(content) {
@@ -1619,17 +1764,25 @@
       return { header, rows };
     }
 
-    function importFromCsvText(csvText) {
+    function importFromCsvText(csvText, recordUndo = true) {
       const parsed = parseCSV(csvText);
       if (!parsed || !parsed.rows || parsed.rows.length === 0) {
         showToast('⚠️ El archivo CSV está vacío o no tiene filas válidas.');
         return;
       }
+      if (recordUndo) saveHistorySnapshot();
+
+      // Desbloquear la casilla "¿Solo emitir a check-ins?" al haber subido un CSV exitosamente
+      const checkinInput = document.getElementById('gen-only-checkedin');
+      const checkinLabel = document.getElementById('checkin-checkbox-label');
+      checkinInput.disabled = false;
+      checkinLabel.classList.remove('disabled');
+
       const { header, rows } = parsed;
       const isBevy = header.includes('first name') && header.includes('email');
       const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado';
       const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
-      const onlyCheckedIn = document.getElementById('gen-only-checkedin').checked;
+      const onlyCheckedIn = checkinInput.checked;
 
       const seenEmails = new Set();
       const loaded = [];
@@ -1641,12 +1794,12 @@
 
         if (isBevy) {
           name = cleanFullName(r['first name'], r['last name']);
-          email = (r['email'] || '').trim();
+          email = (r['email'] || '').toLowerCase().trim();
           const checkinCol = r['checkin date (utc)'] || r['checkin date'] || '';
           checkedIn = Boolean(checkinCol && checkinCol.trim().length > 0);
         } else {
-          name = toTitleCase(r['nombre'] || r['name'] || r['alumno'] || r['estudiante'] || '');
-          email = (r['email'] || r['correo'] || r['mail'] || '').trim();
+          name = cleanFullName(r['nombre'] || r['name'] || r['alumno'] || r['estudiante'] || '', '');
+          email = (r['email'] || r['correo'] || r['mail'] || '').toLowerCase().trim();
           if (r['role'] || r['rol']) {
             role = (r['role'] || r['rol']).trim();
             hasCustomRole = true;
@@ -1660,24 +1813,25 @@
         if (!name || !email) continue;
         if (onlyCheckedIn && !checkedIn) continue;
 
-        const emailKey = email.toLowerCase();
-        if (seenEmails.has(emailKey)) continue;
-        seenEmails.add(emailKey);
+        if (seenEmails.has(email)) continue;
+        seenEmails.add(email);
 
         loaded.push({
-          id: generateHexId24(),
+          id: generateUniqueHexId24(),
           name,
           email,
           role,
           evidence,
+          style: genericStyle,
           issuedOn: nowIso,
           customRole: hasCustomRole,
           customEvidence: hasCustomEvidence,
+          customStyle: false,
         });
       }
 
       if (loaded.length === 0) {
-        showToast('⚠️ Ningún asistente cumple los criterios (revisa el filtro de Check-in).');
+        showToast('⚠️ Ningún asistente cumple los criterios.');
         return;
       }
 
@@ -1685,7 +1839,7 @@
       selectedIndex = 0;
       renderRecipientList();
       renderCurrentSelection();
-      showToast(`✅ ${loaded.length} certificados cargados desde el CSV (sin duplicados).`);
+      showToast(`✅ ${loaded.length} certificados cargados desde el CSV.`);
     }
 
     function handleDragOver(e) {
@@ -1711,16 +1865,16 @@
       const reader = new FileReader();
       reader.onload = (ev) => {
         lastRawCsvContent = String(ev.target.result || '');
-        importFromCsvText(lastRawCsvContent);
+        importFromCsvText(lastRawCsvContent, true);
       };
       reader.readAsText(file, 'utf-8');
     }
     function reparseLastCsvIfAny() {
-      if (lastRawCsvContent) importFromCsvText(lastRawCsvContent);
+      if (lastRawCsvContent) importFromCsvText(lastRawCsvContent, true);
     }
 
     /* ========================================================================
-       6. GESTIÓN DE LA LISTA DE CERTIFICADOS Y EDICIÓN INDIVIDUAL
+       7. LISTA DE CERTIFICADOS, BUSCADOR Y PERSONALIZACIÓN INDIVIDUAL
        ======================================================================== */
     function renderRecipientList() {
       const box = document.getElementById('cert-list-box');
@@ -1728,22 +1882,23 @@
       document.getElementById('cert-count-badge').textContent = String(recipients.length);
 
       if (recipients.length === 0) {
-        box.innerHTML = `<div style="padding:20px; text-align:center; font-size:12.5px; color:#64748b;">No hay certificados en la lista. Arrastra un CSV o pulsa "+ Añadir persona".</div>`;
+        box.innerHTML = `<div style="padding:20px; text-align:center; font-size:12.5px; color:#64748b;">No hay certificados en la lista.</div>`;
         return;
       }
 
       let html = '';
       recipients.forEach((item, idx) => {
+        // Buscar por nombre, por código de certificado (ID) y por correo
         if (
           query &&
           !item.name.toLowerCase().includes(query) &&
-          !item.email.toLowerCase().includes(query) &&
-          !item.role.toLowerCase().includes(query)
+          !item.id.toLowerCase().includes(query) &&
+          !item.email.toLowerCase().includes(query)
         ) {
           return;
         }
         const isActive = idx === selectedIndex;
-        const isEdited = item.customRole || item.customEvidence;
+        const isEdited = item.customRole || item.customEvidence || item.customStyle;
         html += `
           <div class="cert-list-item ${isActive ? 'active' : ''}" onclick="selectRecipient(${idx})">
             <div style="min-width:0; flex:1;">
@@ -1756,7 +1911,7 @@
                 ${escapeHtml(item.role)} · <span class="mono">${escapeHtml(item.email)}</span>
               </div>
             </div>
-            <span class="pill-mini mono">${item.id.slice(0, 6)}</span>
+            <span class="pill-mini mono">${item.id.slice(0, 8)}</span>
           </div>
         `;
       });
@@ -1771,17 +1926,20 @@
     }
 
     function addManualRecipient() {
+      saveHistorySnapshot();
       const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado';
       const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
       recipients.push({
-        id: generateHexId24(),
+        id: generateUniqueHexId24(),
         name: 'Nuevo Asistente ' + (recipients.length + 1),
         email: `asistente${recipients.length + 1}@alu.uhu.es`,
         role: defaultRole,
         evidence: defaultEvidence,
+        style: genericStyle,
         issuedOn: new Date().toISOString(),
         customRole: false,
         customEvidence: false,
+        customStyle: false,
       });
       selectedIndex = recipients.length - 1;
       renderRecipientList();
@@ -1790,26 +1948,31 @@
 
     function deleteSelectedRecipient() {
       if (recipients.length <= 1) {
-        showToast('ℹ️ Debe haber al menos 1 certificado en la vista previa.');
+        showToast('ℹ️ Debe quedar al menos 1 certificado en la lista.');
         return;
       }
+      saveHistorySnapshot();
       recipients.splice(selectedIndex, 1);
       if (selectedIndex >= recipients.length) selectedIndex = recipients.length - 1;
       renderRecipientList();
       renderCurrentSelection();
+      showToast('🗑️ Certificado eliminado (puedes pulsar Deshacer o Ctrl+Z para recuperarlo).');
     }
 
     function clearAllRecipients() {
+      saveHistorySnapshot();
       recipients = [
         {
-          id: generateHexId24(),
+          id: generateUniqueHexId24(),
           name: 'Nombre del Asistente',
           email: 'alumno@alu.uhu.es',
           role: document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado',
           evidence: document.getElementById('gen-default-evidence').value.trim(),
+          style: genericStyle,
           issuedOn: new Date().toISOString(),
           customRole: false,
           customEvidence: false,
+          customStyle: false,
         },
       ];
       selectedIndex = 0;
@@ -1820,7 +1983,8 @@
     function regenerateSelectedId() {
       const current = recipients[selectedIndex];
       if (!current) return;
-      current.id = generateHexId24();
+      saveHistorySnapshot();
+      current.id = generateUniqueHexId24();
       renderRecipientList();
       renderCurrentSelection();
     }
@@ -1832,7 +1996,6 @@
       const newEmail = document.getElementById('indiv-email').value;
       const newRole = document.getElementById('indiv-role').value;
       const newEvidence = document.getElementById('indiv-evidence').value;
-      const newId = document.getElementById('indiv-id').value.trim();
 
       const defaultRole = document.getElementById('gen-default-role').value.trim();
       const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
@@ -1841,7 +2004,6 @@
       current.email = newEmail;
       current.role = newRole;
       current.evidence = newEvidence;
-      if (newId) current.id = newId;
       current.customRole = newRole.trim() !== defaultRole;
       current.customEvidence = newEvidence.trim() !== defaultEvidence;
 
@@ -1849,10 +2011,10 @@
       renderLivePreviewsOnly();
     }
 
-    function onGenericConfigChange() {
-      const badgeId = document.getElementById('gen-badge-id').value.trim();
-      if (KNOWN_BADGES[badgeId]) {
-        setCertPreviewStyle(KNOWN_BADGES[badgeId].style || 'google');
+    function onGenericBadgeChange(badgeId) {
+      saveHistorySnapshot();
+      if (KNOWN_BADGES[badgeId] && KNOWN_BADGES[badgeId].style) {
+        onGenericStyleChange(KNOWN_BADGES[badgeId].style, false);
       }
       renderCurrentSelection();
     }
@@ -1873,15 +2035,74 @@
       renderCurrentSelection();
     }
 
-    function loadBadgeJsonFile(event) {
+    function onGenericStyleChange(style, recordUndo = true) {
+      if (recordUndo) saveHistorySnapshot();
+      genericStyle = style;
+      updateGenericStyleButtonsUI();
+      recipients.forEach((r) => {
+        if (!r.customStyle) r.style = style;
+      });
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function updateGenericStyleButtonsUI() {
+      document.querySelectorAll('#certs-generic-style-selector .style-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-style') === genericStyle);
+      });
+    }
+
+    function onIndividualStyleChange(style) {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+      saveHistorySnapshot();
+      current.style = style;
+      current.customStyle = style !== genericStyle;
+      updateIndividualStyleButtonsUI(style);
+      renderRecipientList();
+      renderLivePreviewsOnly();
+    }
+
+    function updateIndividualStyleButtonsUI(style) {
+      document.querySelectorAll('#indiv-style-selector .style-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-style') === style);
+      });
+    }
+
+    // Selector de archivo badge.json que recuerda la última ruta usada
+    async function openBadgeJsonPicker() {
+      if (window.showOpenFilePicker) {
+        try {
+          const opts = {
+            id: 'gdgoc-uhu-badge-json',
+            multiple: false,
+            types: [{ description: 'Badge JSON', accept: { 'application/json': ['.json'] } }],
+          };
+          if (lastBadgeFileHandle) opts.startIn = lastBadgeFileHandle;
+          const [fileHandle] = await window.showOpenFilePicker(opts);
+          lastBadgeFileHandle = fileHandle;
+          const file = await fileHandle.getFile();
+          processBadgeJsonFile(file);
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+      document.getElementById('fallback-badge-file-input').click();
+    }
+
+    function handleBadgeFileInput(event) {
       const file = event.target.files?.[0];
-      if (!file) return;
+      if (file) processBadgeJsonFile(file);
+    }
+
+    function processBadgeJsonFile(file) {
       const slug = file.name.replace(/\.json$/i, '');
       const reader = new FileReader();
       reader.onload = (ev) => {
         try {
           const data = JSON.parse(String(ev.target.result || '{}'));
-          KNOWN_BADGES[slug] = {
+          const badgeObj = {
             name: data.name || slug,
             description: data.description || '',
             image: data.image ? './public' + data.image : '',
@@ -1889,10 +2110,11 @@
             tags: data.tags || [],
             style: data.style || 'google',
           };
-          document.getElementById('gen-badge-id').value = slug;
-          setCertPreviewStyle(KNOWN_BADGES[slug].style);
+          saveCustomBadgeToMemory(slug, badgeObj);
+          populateBadgeSelectDropdown(slug);
+          onGenericStyleChange(badgeObj.style, false);
           renderCurrentSelection();
-          showToast(`✅ Insignia "${slug}" cargada en la vista previa.`);
+          showToast(`✅ Badge "${slug}" cargada y añadida al desplegable.`);
         } catch {
           showToast('❌ El archivo seleccionado no es un JSON válido.');
         }
@@ -1900,18 +2122,10 @@
       reader.readAsText(file, 'utf-8');
     }
 
-    function setCertPreviewStyle(style) {
-      activeCertPreviewStyle = style;
-      document.querySelectorAll('#certs-style-selector .style-btn').forEach((btn) => {
-        btn.classList.toggle('active', btn.getAttribute('data-style') === style);
-      });
-      const wrapper = document.getElementById('diploma-theme-wrapper');
-      wrapper.className = 'diploma-theme-' + style;
-    }
-
     function buildAssertionObject(item) {
-      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'workshop-ai-cloud';
+      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'sin-seleccionar';
       const identity = computeOpenBadgeIdentity(item.email, currentYearSalt);
+      const effectiveStyle = item.style || genericStyle || 'google';
       const obj = {
         recipient: {
           name: item.name.trim(),
@@ -1923,6 +2137,7 @@
         badgeId,
         role: (item.role || 'Asistente Certificado').trim(),
         issuedOn: item.issuedOn || new Date().toISOString(),
+        styleOverride: effectiveStyle,
       };
       if (item.evidence && item.evidence.trim().length > 0) {
         obj.evidence = item.evidence.trim();
@@ -1934,12 +2149,12 @@
       const current = recipients[selectedIndex];
       if (!current) return;
 
-      document.getElementById('selected-index-label').textContent = `#${selectedIndex + 1} de ${recipients.length}`;
       document.getElementById('indiv-name').value = current.name;
       document.getElementById('indiv-email').value = current.email;
       document.getElementById('indiv-role').value = current.role;
       document.getElementById('indiv-evidence').value = current.evidence || '';
       document.getElementById('indiv-id').value = current.id;
+      updateIndividualStyleButtonsUI(current.style || genericStyle);
 
       renderLivePreviewsOnly();
     }
@@ -1948,24 +2163,29 @@
       const current = recipients[selectedIndex];
       if (!current) return;
 
-      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'workshop-ai-cloud';
-      const badgeInfo = KNOWN_BADGES[badgeId] || {
-        name: badgeId.replace(/-/g, ' ').toUpperCase(),
+      const selectedBadgeId = document.getElementById('gen-badge-id').value.trim();
+      const effectiveStyle = current.style || genericStyle || 'google';
+      const badgeInfo = KNOWN_BADGES[selectedBadgeId] || {
+        name: selectedBadgeId ? selectedBadgeId.replace(/-/g, ' ').toUpperCase() : 'SELECCIONA UNA BADGE',
         description: 'Certificado digital oficial emitido por GDG on Campus Universidad de Huelva.',
         image: './public/images/gdgoc-uhu-logo.jpg',
-        criteria: { narrative: 'Por completar satisfactoriamente las actividades del evento.' },
+        criteria: { narrative: 'Otorgado por completar satisfactoriamente las actividades del evento.' },
         tags: ['GDGoC UHU', 'Open Badges 2.0'],
-        style: activeCertPreviewStyle,
+        style: effectiveStyle,
       };
 
       const assertionObj = buildAssertionObject(current);
       document.getElementById('indiv-hash').value = assertionObj.recipient.identity;
 
-      // Actualizar vista previa del Diploma
+      // Aplicar tema del certificado seleccionado
+      const wrapper = document.getElementById('diploma-theme-wrapper');
+      wrapper.className = 'diploma-theme-' + effectiveStyle;
+
+      // Actualizar vista previa del Certificado
       document.getElementById('dp-role-pill').textContent = assertionObj.role;
       document.getElementById('dp-meta-role').textContent = assertionObj.role;
       document.getElementById('dp-badge-title').textContent = badgeInfo.name;
-      document.getElementById('dp-recipient-name').textContent = assertionObj.recipient.name || 'Nombre del Alumno';
+      document.getElementById('dp-recipient-name').textContent = assertionObj.recipient.name || 'Nombre Completo';
       document.getElementById('dp-badge-desc').textContent = badgeInfo.description;
       document.getElementById('dp-badge-narrative').textContent = badgeInfo.criteria?.narrative || '';
       document.getElementById('dp-full-id').textContent = current.id;
@@ -1982,12 +2202,12 @@
         .map((t) => `<span class="dp-pill" style="font-size:10.5px; font-weight:700; padding:4px 11px; border-radius:999px;">#${escapeHtml(t)}</span>`)
         .join('');
 
-      // Botón de Evidencia condicional
-      const evBtn = document.getElementById('dp-evidence-btn');
+      // Botón de Evidencia condicional (único botón debajo del certificado)
+      const evWrapper = document.getElementById('dp-evidence-wrapper');
       if (assertionObj.evidence) {
-        evBtn.classList.remove('hidden');
+        evWrapper.classList.remove('hidden');
       } else {
-        evBtn.classList.add('hidden');
+        evWrapper.classList.add('hidden');
       }
 
       // QR Vectorial
@@ -2000,43 +2220,147 @@
       // JSON Output
       document.getElementById('assertion-json-output').textContent = JSON.stringify(assertionObj, null, 2);
 
-      // Email Preview
-      const emailHtml = generateOfficialEmailHtml(
+      // Email Preview adaptado en tiempo real al estilo del certificado y sus campos
+      const emailHtml = generateThemedEmailHtml(
         assertionObj.recipient.name,
         badgeInfo,
         certUrl,
         `https://gdguhu.es/api/badges/assertion/${current.id}.json`,
         assertionObj.role,
-        current.id
+        current.id,
+        effectiveStyle,
+        assertionObj.evidence || ''
       );
       document.getElementById('email-preview-subject').textContent = `🎓 Tu certificado oficial: ${badgeInfo.name} — GDG on Campus UHU`;
       const iframe = document.getElementById('email-preview-iframe');
       if (iframe) iframe.srcdoc = emailHtml;
     }
 
-    function generateOfficialEmailHtml(name, badge, certUrl, assertionJsonUrl, role, assertionId) {
+    /* ========================================================================
+       8. PLANTILLA DE CORREO ELECTRÓNICO ADAPTADA A LOS 5 ESTILOS EN TIEMPO REAL
+       ======================================================================== */
+    const EMAIL_THEMES = {
+      google: {
+        strip: ['#4285F4', '#EA4335', '#FBBC04', '#34A853'],
+        outerBg: '#f8fafc',
+        cardBg: '#ffffff',
+        cardBorder: '#e2e8f0',
+        headerBorder: '#f1f5f9',
+        textPrimary: '#0f172a',
+        textSecondary: '#475569',
+        textMuted: '#64748b',
+        accent: '#1967D2',
+        rolePillBg: '#e8f0fe',
+        rolePillBorder: '#d2e3fc',
+        rolePillText: '#1967D2',
+        boxBg: '#f8fafc',
+        boxBorder: '#e2e8f0',
+        btnBg: '#4285F4',
+        btnText: '#ffffff',
+        footerBg: '#f8fafc',
+      },
+      cyber: {
+        strip: ['#00F0FF', '#FF007F', '#FFE600', '#00FF66'],
+        outerBg: '#05070F',
+        cardBg: '#0B1124',
+        cardBorder: '#00F0FF',
+        headerBorder: 'rgba(0, 240, 255, 0.25)',
+        textPrimary: '#F0F9FF',
+        textSecondary: '#CBD5E1',
+        textMuted: '#94A3B8',
+        accent: '#00F0FF',
+        rolePillBg: 'rgba(0, 240, 255, 0.14)',
+        rolePillBorder: '#00F0FF',
+        rolePillText: '#00F0FF',
+        boxBg: '#070B19',
+        boxBorder: 'rgba(255, 0, 127, 0.45)',
+        btnBg: '#00F0FF',
+        btnText: '#05070F',
+        footerBg: '#070B19',
+      },
+      piscina: {
+        strip: ['#00F2FE', '#4FACFE', '#00E5FF', '#0284C7'],
+        outerBg: '#E0F7FA',
+        cardBg: '#FFFFFF',
+        cardBorder: '#00BCD4',
+        headerBorder: '#B2EBF2',
+        textPrimary: '#002B3D',
+        textSecondary: '#004D61',
+        textMuted: '#00587A',
+        accent: '#0284C7',
+        rolePillBg: '#E0F7FA',
+        rolePillBorder: '#00BCD4',
+        rolePillText: '#006064',
+        boxBg: '#F0FDFF',
+        boxBorder: '#80DEEA',
+        btnBg: '#0284C7',
+        btnText: '#FFFFFF',
+        footerBg: '#E0F7FA',
+      },
+      nieve: {
+        strip: ['#FFFFFF', '#7DD3FC', '#38BDF8', '#BAE6FD'],
+        outerBg: '#071527',
+        cardBg: '#0D2544',
+        cardBorder: '#7DD3FC',
+        headerBorder: 'rgba(186, 230, 253, 0.3)',
+        textPrimary: '#F0F9FF',
+        textSecondary: '#E0F2FE',
+        textMuted: '#BAE6FD',
+        accent: '#7DD3FC',
+        rolePillBg: 'rgba(224, 242, 254, 0.16)',
+        rolePillBorder: '#BAE6FD',
+        rolePillText: '#FFFFFF',
+        boxBg: '#08182E',
+        boxBorder: 'rgba(125, 211, 252, 0.45)',
+        btnBg: '#38BDF8',
+        btnText: '#040D1A',
+        footerBg: '#08182E',
+      },
+      caramelos: {
+        strip: ['#FF1493', '#FF85C0', '#FF69B4', '#D81B60'],
+        outerBg: '#FFE4F2',
+        cardBg: '#FFF9FC',
+        cardBorder: '#FF69B4',
+        headerBorder: '#FFD1E8',
+        textPrimary: '#880E4F',
+        textSecondary: '#AD1457',
+        textMuted: '#C2185B',
+        accent: '#D81B60',
+        rolePillBg: '#FFE0F0',
+        rolePillBorder: '#FF1493',
+        rolePillText: '#AD1457',
+        boxBg: '#FFF0F7',
+        boxBorder: '#FF85C0',
+        btnBg: '#FF1493',
+        btnText: '#FFFFFF',
+        footerBg: '#FFE8F3',
+      },
+    };
+
+    function generateThemedEmailHtml(name, badge, certUrl, assertionJsonUrl, role, assertionId, style, evidenceUrl) {
+      const t = EMAIL_THEMES[style] || EMAIL_THEMES.google;
       const badgeName = badge.name || 'Certificado Oficial GDGoC UHU';
       const badgeDesc = badge.description || '';
       return `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>${escapeHtml(badgeName)}</title></head>
-<body style="margin:0;padding:0;background-color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1e293b;">
+<body style="margin:0;padding:0;background-color:${t.outerBg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:${t.textPrimary};">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
     <tr>
-      <td width="25%" height="5" style="background-color:#4285F4;"></td>
-      <td width="25%" height="5" style="background-color:#EA4335;"></td>
-      <td width="25%" height="5" style="background-color:#FBBC04;"></td>
-      <td width="25%" height="5" style="background-color:#34A853;"></td>
+      <td width="25%" height="6" style="background-color:${t.strip[0]};"></td>
+      <td width="25%" height="6" style="background-color:${t.strip[1]};"></td>
+      <td width="25%" height="6" style="background-color:${t.strip[2]};"></td>
+      <td width="25%" height="6" style="background-color:${t.strip[3]};"></td>
     </tr>
   </table>
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f8fafc;padding:30px 15px;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${t.outerBg};padding:30px 15px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" style="max-width:580px;background-color:#ffffff;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.05);overflow:hidden;border:1px solid #e2e8f0;" cellspacing="0" cellpadding="0" border="0">
+        <table role="presentation" width="100%" style="max-width:580px;background-color:${t.cardBg};border-radius:20px;overflow:hidden;border:2px solid ${t.cardBorder};" cellspacing="0" cellpadding="0" border="0">
           <tr>
-            <td style="padding:28px 30px 18px 30px;text-align:center;border-bottom:1px solid #f1f5f9;">
-              <h2 style="margin:0;font-size:20px;color:#1e293b;font-weight:800;letter-spacing:-0.5px;">GDG on Campus</h2>
-              <div style="font-size:13px;color:#1967D2;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Universidad de Huelva</div>
+            <td style="padding:28px 30px 18px 30px;text-align:center;border-bottom:1px solid ${t.headerBorder};">
+              <h2 style="margin:0;font-size:20px;color:${t.textPrimary};font-weight:800;letter-spacing:-0.5px;">GDG on Campus</h2>
+              <div style="font-size:13px;color:${t.accent};font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Universidad de Huelva</div>
             </td>
           </tr>
           <tr>
@@ -2044,36 +2368,41 @@
               <div style="display:inline-block;padding:6px 14px;background-color:#ecfdf5;border:1px solid #a7f3d0;border-radius:50px;font-size:12px;font-weight:700;color:#047857;margin-bottom:18px;">
                 ✓ Credencial Digital Oficial Emitida
               </div>
-              <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:6px;">
+              <div style="font-size:12px;color:${t.textMuted};text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:6px;">
                 Este certificado digital se otorga a:
               </div>
-              <h1 style="margin:0 0 12px 0;font-size:25px;color:#0f172a;font-weight:800;">${escapeHtml(name)}</h1>
-              <div style="display:inline-block;padding:4px 12px;background-color:#e8f0fe;border:1px solid #d2e3fc;border-radius:50px;font-size:11px;font-weight:700;color:#1967D2;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;">
+              <h1 style="margin:0 0 12px 0;font-size:25px;color:${t.textPrimary};font-weight:800;">${escapeHtml(name)}</h1>
+              <div style="display:inline-block;padding:5px 14px;background-color:${t.rolePillBg};border:1.5px solid ${t.rolePillBorder};border-radius:50px;font-size:11px;font-weight:700;color:${t.rolePillText};text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;">
                 ${escapeHtml(role)}
               </div>
-              <div style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:20px;margin:14px 0 20px 0;text-align:center;">
-                <div style="font-size:11px;color:#4285F4;text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px;">Insignia Acreditada</div>
-                <h3 style="margin:0 0 8px 0;font-size:19px;color:#1e293b;font-weight:800;">${escapeHtml(badgeName)}</h3>
-                <p style="margin:0;font-size:13px;color:#475569;line-height:1.5;">${escapeHtml(badgeDesc)}</p>
-                <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #cbd5e1;font-size:11px;color:#64748b;font-family:monospace;">
-                  ID del Certificado: <strong style="color:#0f172a;">${escapeHtml(assertionId)}</strong>
+              <div style="background-color:${t.boxBg};border:1.5px solid ${t.boxBorder};border-radius:16px;padding:20px;margin:14px 0 20px 0;text-align:center;">
+                <div style="font-size:11px;color:${t.accent};text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px;">Insignia Acreditada</div>
+                <h3 style="margin:0 0 8px 0;font-size:19px;color:${t.textPrimary};font-weight:800;">${escapeHtml(badgeName)}</h3>
+                <p style="margin:0;font-size:13px;color:${t.textSecondary};line-height:1.5;">${escapeHtml(badgeDesc)}</p>
+                <div style="margin-top:12px;padding-top:10px;border-top:1px dashed ${t.cardBorder};font-size:11px;color:${t.textMuted};font-family:monospace;">
+                  ID del Certificado: <strong style="color:${t.textPrimary};">${escapeHtml(assertionId)}</strong>
                 </div>
               </div>
               <div style="margin:24px 0 14px 0;">
-                <a href="${certUrl}" target="_blank" style="display:inline-block;background-color:#4285F4;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:700;">
+                <a href="${certUrl}" target="_blank" style="display:inline-block;background-color:${t.btnBg};color:${t.btnText};text-decoration:none;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:800;">
                   🎓 Abrir Mi Certificado Oficial →
                 </a>
               </div>
-              <p style="font-size:12px;color:#64748b;margin:12px 0 0 0;line-height:1.5;">
+              ${
+                evidenceUrl
+                  ? `<div style="margin:10px 0 14px 0;"><a href="${escapeHtml(evidenceUrl)}" target="_blank" style="display:inline-block;color:${t.accent};font-size:12.5px;font-weight:700;text-decoration:underline;">Ver Evidencia / Proyecto ↗</a></div>`
+                  : ''
+              }
+              <p style="font-size:12px;color:${t.textMuted};margin:12px 0 0 0;line-height:1.5;">
                 Haz clic en el botón para ver tu certificado en línea, descargarlo en <strong>PDF (1 página horizontal)</strong> listo para imprimir o añadirlo directamente a <strong>LinkedIn</strong> o a tu cartera preferida (OpenBadge Passport, Parchment o Credly).
               </p>
             </td>
           </tr>
           <tr>
-            <td style="padding:20px 30px;background-color:#f8fafc;border-top:1px solid #e2e8f0;text-align:center;">
-              <p style="margin:0;font-size:11px;color:#64748b;line-height:1.4;">
+            <td style="padding:20px 30px;background-color:${t.footerBg};border-top:1px solid ${t.headerBorder};text-align:center;">
+              <p style="margin:0;font-size:11px;color:${t.textMuted};line-height:1.4;">
                 Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> (IMS Global).<br>
-                Alojado oficialmente en <a href="https://gdguhu.es" style="color:#4285F4;text-decoration:none;font-weight:600;">https://gdguhu.es</a>
+                Alojado oficialmente en <a href="https://gdguhu.es" style="color:${t.accent};text-decoration:none;font-weight:700;">https://gdguhu.es</a>
               </p>
             </td>
           </tr>
@@ -2086,10 +2415,14 @@
     }
 
     /* ========================================================================
-       7. GUARDADO Y EXPORTACIÓN A CARPETA PUBLISH (Todos los navegadores)
+       9. DESCARGA AUTOMÁTICA DE LA CARPETA PUBLISH
        ======================================================================== */
     function getAllAssertionFilesForPublish() {
-      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'workshop-ai-cloud';
+      const badgeId = document.getElementById('gen-badge-id').value.trim();
+      if (!badgeId) {
+        showToast('⚠️ Por favor, selecciona primero un "ID de la badge" en Datos genéricos.');
+        return null;
+      }
       const includeEmails = document.getElementById('gen-send-emails').checked;
       const files = [];
       const emailQueue = [];
@@ -2097,8 +2430,7 @@
       for (const r of recipients) {
         const obj = buildAssertionObject(r);
         files.push({
-          filename: `${r.id}.json`,
-          zipPath: `publish/${r.id}.json`,
+          name: `publish/${r.id}.json`,
           content: JSON.stringify(obj, null, 2),
         });
         if (includeEmails && r.email && r.email.includes('@')) {
@@ -2108,6 +2440,8 @@
             assertionId: r.id,
             badgeId,
             role: obj.role,
+            style: obj.styleOverride || 'google',
+            evidence: obj.evidence || '',
             url: `https://gdguhu.es/cert/${r.id}`,
           });
         }
@@ -2115,43 +2449,19 @@
 
       if (includeEmails && emailQueue.length > 0) {
         files.push({
-          filename: `_pending-emails.json`,
-          zipPath: `publish/_pending-emails.json`,
+          name: `publish/_pending-emails.json`,
           content: JSON.stringify(emailQueue, null, 2),
         });
       }
       return files;
     }
 
-    async function saveAssertionsToPublishFolder() {
+    function downloadPublishFolderZip() {
       const files = getAllAssertionFilesForPublish();
-      if (window.showDirectoryPicker) {
-        try {
-          const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-          for (const f of files) {
-            const fileHandle = await dirHandle.getFileHandle(f.filename, { create: true });
-            const writable = await fileHandle.createWritable();
-            await writable.write(f.content);
-            await writable.close();
-          }
-          showToast(`🎉 ¡${files.length} archivos guardados directamente en la carpeta seleccionada!`);
-          return;
-        } catch (err) {
-          if (err && err.name === 'AbortError') return;
-        }
-      }
-      // Fallback automático para Firefox y Safari
-      downloadAssertionsZip();
-    }
-
-    function downloadAssertionsZip() {
-      const files = getAllAssertionFilesForPublish().map((f) => ({
-        name: f.zipPath,
-        content: f.content,
-      }));
+      if (!files) return;
       const blob = createZipBlob(files);
-      triggerDownload(blob, 'publish-assertions.zip');
-      showToast(`📦 Descargado publish-assertions.zip con ${files.length} archivos dentro de publish/`);
+      triggerDownload(blob, 'publish.zip');
+      showToast(`📦 Descargada carpeta publish (${recipients.length} certificados listos para subir a GitHub).`);
     }
 
     function downloadSingleAssertionJson() {
@@ -2163,15 +2473,8 @@
       showToast(`⬇️ Descargado ${current.id}.json`);
     }
 
-    function downloadEmailPreviewHtml() {
-      const iframe = document.getElementById('email-preview-iframe');
-      const blob = new Blob([iframe.srcdoc || ''], { type: 'text/html' });
-      triggerDownload(blob, 'prueba-email-certificado.html');
-      showToast('⬇️ Descargada vista previa del correo (prueba-email-certificado.html)');
-    }
-
     /* ========================================================================
-       8. MODO CREAR NUEVA BADGE (BADGECLASS)
+       10. MODO CREAR NUEVA BADGE
        ======================================================================== */
     function slugify(text) {
       return text
@@ -2187,7 +2490,7 @@
     function onBadgeNameInput(val) {
       const slug = slugify(val) || 'nueva-badge';
       document.getElementById('badge-slug').value = slug;
-      document.getElementById('badge-image').value = `/images/badges/${slug}.svg`;
+      document.getElementById('badge-image').value = `/images/badges/${slug}.png`;
       updateBadgePreview();
     }
 
@@ -2225,7 +2528,6 @@
       const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
       const obj = buildNewBadgeObject();
       document.getElementById('preview-badge-filename').textContent = `${slug}.json`;
-      document.getElementById('btn-badge-filename').textContent = `${slug}.json`;
       document.getElementById('badge-json-output').textContent = JSON.stringify(obj, null, 2);
     }
 
@@ -2237,38 +2539,34 @@
       reader.onload = (ev) => {
         const dataUrl = String(ev.target.result || '');
         const obj = buildNewBadgeObject();
-        KNOWN_BADGES[slug] = {
-          ...obj,
-          image: dataUrl,
-        };
+        saveCustomBadgeToMemory(slug, { ...obj, image: dataUrl });
         document.getElementById('dp-badge-img').src = dataUrl;
         showToast('✅ Logo cargado en memoria para la vista previa.');
       };
       reader.readAsDataURL(file);
     }
 
-    async function saveBadgeToPublishFolder() {
+    function downloadBadgePublishZip() {
       const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
-      const content = JSON.stringify(buildNewBadgeObject(), null, 2);
-      if (window.showDirectoryPicker) {
-        try {
-          const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-          const fileHandle = await dirHandle.getFileHandle(`${slug}.json`, { create: true });
-          const writable = await fileHandle.createWritable();
-          await writable.write(content);
-          await writable.close();
-          showToast(`🎉 Guardado ${slug}.json directamente en la carpeta seleccionada.`);
-          return;
-        } catch (err) {
-          if (err && err.name === 'AbortError') return;
-        }
-      }
-      downloadBadgeJsonFile();
+      const obj = buildNewBadgeObject();
+      saveCustomBadgeToMemory(slug, {
+        ...obj,
+        image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
+      });
+      const content = JSON.stringify(obj, null, 2);
+      const blob = createZipBlob([{ name: `publish/${slug}.json`, content }]);
+      triggerDownload(blob, 'publish.zip');
+      showToast(`📦 Descargada carpeta publish con ${slug}.json (y añadida al desplegable de badges).`);
     }
 
     function downloadBadgeJsonFile() {
       const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
-      const content = JSON.stringify(buildNewBadgeObject(), null, 2);
+      const obj = buildNewBadgeObject();
+      saveCustomBadgeToMemory(slug, {
+        ...obj,
+        image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
+      });
+      const content = JSON.stringify(obj, null, 2);
       const blob = new Blob([content], { type: 'application/json' });
       triggerDownload(blob, `${slug}.json`);
       showToast(`⬇️ Descargado ${slug}.json`);
@@ -2277,19 +2575,19 @@
     function useCreatedBadgeForCerts() {
       const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
       const obj = buildNewBadgeObject();
-      KNOWN_BADGES[slug] = {
+      saveCustomBadgeToMemory(slug, {
         ...obj,
         image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
-      };
-      document.getElementById('gen-badge-id').value = slug;
-      setCertPreviewStyle(obj.style);
+      });
+      populateBadgeSelectDropdown(slug);
+      onGenericStyleChange(obj.style, false);
       switchMainMode('certs');
       renderCurrentSelection();
-      showToast(`🎓 Badge "${slug}" seleccionada para emitir certificados.`);
+      showToast(`🎓 Badge "${slug}" añadida y seleccionada.`);
     }
 
     /* ========================================================================
-       9. NAVEGACIÓN DE PESTAÑAS Y UTILIDADES UI
+       11. NAVEGACIÓN DE PESTAÑAS Y UTILIDADES UI
        ======================================================================== */
     function switchMainMode(mode) {
       const isCerts = mode === 'certs';
@@ -2310,13 +2608,13 @@
     function copyCurrentAssertionJson() {
       const text = document.getElementById('assertion-json-output').textContent;
       navigator.clipboard.writeText(text);
-      showToast('📋 JSON del certificado copiado al portapapeles.');
+      showToast('📋 Archivo .json copiado al portapapeles.');
     }
 
     function copyBadgeJson() {
       const text = document.getElementById('badge-json-output').textContent;
       navigator.clipboard.writeText(text);
-      showToast('📋 JSON de la Badge copiado al portapapeles.');
+      showToast('📋 Archivo .json copiado al portapapeles.');
     }
 
     function triggerDownload(blob, filename) {
@@ -2347,7 +2645,8 @@
       toastTimer = setTimeout(() => el.classList.remove('show'), 4000);
     }
 
-    // Inicializar al abrir
+    // Inicializar al abrir (con el desplegable de ID de la badge sin nada preseleccionado)
+    populateBadgeSelectDropdown('');
     renderRecipientList();
     renderCurrentSelection();
     updateBadgePreview();
