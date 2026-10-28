@@ -72,7 +72,7 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
   "description": "Certificado oficial de asistencia al taller organizado por GDGoC Universidad de Huelva",
   "image": "/images/badges/capture-the-flag-reversing-de-binarios.png",
   "criteria": {
-    "narrative": "Otorgado por asistir presencialmente al 100% del taller y participar en las actividades"
+    "narrative": "Otorgado por asistir presencialmente al 100% del taller y participar en las actividades presentadas"
   },
   "tags": ["CTF", "Reversing", "Binarios", "Ghidra"],
   "style": "google",
