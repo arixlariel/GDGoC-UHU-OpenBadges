@@ -168,7 +168,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 > No requiere tener instalado el proyecto. Esta es la opción más completa y que conlleva menos riesgo
 
 1. Entra arriba en la pestaña **Actions**
-2. En la lista de flujos de trabajo, corre el siguiente workflow:  
+2. En la lista de flujos de trabajo, corre el siguiente workflow:
    > **Emitir certificados y emails**
 3. Rellena los campos:
    - **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `capture-the-flag-reversing-de-binarios`)
@@ -183,17 +183,12 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 
 ### --- Método E: Generador visual local (`generador-local.html`)
 
-> Funciona sin terminal en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o arrastrando el `.csv`, con vista previa en tiempo real del certificado, del correo y del `.json`
+> Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vista previa en tiempo real del certificado, el correo, el `.json` y demás
 
-1. Haz doble clic sobre el archivo `generador-local.html` (situado en la raíz de la carpeta del proyecto) o ábrelo directamente sin descargarlo desde **[este enlace al generador](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html)**
-2. Elige arriba la modalidad:
-   - **Crear nueva badge**: Rellena el nombre del evento, descripción, criterios, tags y selecciona uno de los 5 estilos (`google`, `cyber`, `piscina`, `nieve`, `caramelos`)
-   - **Crear certificados**:
-     - En **Datos genéricos**, selecciona el **ID de la badge** en el desplegable, el rol por defecto, el enlace a evidencia opcional, el estilo visual y las casillas de check-ins o envío de correos automáticos
-     - En **Cargar asistentes**, arrastra y suelta tu `.csv` de Bevy (o añade personas manualmente). Aparecerá la lista **Certificados a generar** con buscador por nombre, correo o ID del certificado y botones de **Deshacer / Rehacer** (`Ctrl+Z` / `Ctrl+Shift+Z` o `Cmd+Z` / `Cmd+Shift+Z`)
-     - Haz clic sobre **cualquier persona de la lista** para ver en tiempo real las pestañas **Certificado**, **Correo** y **Archivo .json**, o edita sus datos individuales en **Personalizar certificado** (nombre con autocorrección, correo, rol, evidencia, estilo visual o ID único randomizado)
-3. Pulsa **Descargar carpeta publish** para bajar automáticamente el paquete `publish.zip` con la estructura lista
-4. Descomprime y arrastra la carpeta `publish` dentro de `src/content/badges/` o `src/content/assertions/` en GitHub y haz el commit (o haz `git push` desde el punto 5): **GitHub colocará automáticamente los archivos en su carpeta definitiva y enviará los correos electrónicos con su estilo visual correspondiente a cada asistente**
+1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este enlace al **[generador local](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html)**
+2. Configura las badges, certificados y correos a generar
+3. Pulsa **Descargar carpeta** para bajar automáticamente el paquete `publish.zip` con los .json
+4. Arrastra la carpeta `publish` a `src/content/badges/` o `src/content/assertions/` en GitHub y haz el commit (o haz `git push` desde el punto 5): **GitHub colocará automáticamente los archivos en su carpeta definitiva y enviará los correos electrónicos con su estilo visual correspondiente a cada asistente**
 
 ---
 
