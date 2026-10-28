@@ -32,31 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Procesar carpetas publish/ (mover badges y certificados nuevos)
+      - name: Procesar publicaciones pendientes (publish.json o carpetas publish/)
         run: |
-          mkdir -p src/content/badges/publish src/content/assertions/publish
-          # Si hay cola de emails pendientes en publish/ (raíz o subcarpetas), guardarla en /tmp
-          for pfile in publish/_pending-emails.json src/content/assertions/publish/_pending-emails.json src/content/assertions/_pending-emails.json; do
-            if [ -f "$pfile" ]; then
-              cp "$pfile" /tmp/pending-emails.json
-              rm -f "$pfile"
-            fi
-          done
-          # Clasificar automáticamente cualquier archivo .json subido en publish/ (raíz del repositorio)
-          if [ -d publish ]; then
-            for f in publish/*.json; do
-              [ -e "$f" ] || continue
-              if grep -q '"recipient"' "$f"; then
-                mv -f "$f" src/content/assertions/
-              else
-                mv -f "$f" src/content/badges/
-              fi
-            done
-          fi
-          # Mover cualquier badge nueva desde src/content/badges/publish/ a badges/
-          find src/content/badges/publish -maxdepth 1 -type f -name "*.json" ! -name "_*" -exec mv -f {} src/content/badges/ \;
-          # Mover cualquier certificado nuevo desde src/content/assertions/publish/ a assertions/
-          find src/content/assertions/publish -maxdepth 1 -type f -name "*.json" ! -name "_*" -exec mv -f {} src/content/assertions/ \;
+          node scripts/process-publish.mjs
 
       - name: Build site
         env:
@@ -98,70 +76,34 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Enviar correos pendientes y limpiar carpeta publish/
+      - name: Procesar publicaciones, organizar repositorio y enviar correos
         env:
-          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER || 'arielbustilloleon@gmail.com' }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           SITE_URL: "https://gdguhu.es"
         run: |
-          HAS_CHANGES=false
-          PENDING_FILE=""
+          node scripts/process-publish.mjs
 
-          for pfile in publish/_pending-emails.json src/content/assertions/publish/_pending-emails.json src/content/assertions/_pending-emails.json; do
-            if [ -f "$pfile" ]; then
-              cp "$pfile" /tmp/pending-emails.json
-              rm -f "$pfile"
-              PENDING_FILE="/tmp/pending-emails.json"
-              HAS_CHANGES=true
-            fi
-          done
-
-          # Si se subió la carpeta publish/ directamente en la raíz, clasificar cada .json automáticamente
-          if [ -d publish ]; then
-            for f in publish/*.json; do
-              [ -e "$f" ] || continue
-              if grep -q '"recipient"' "$f"; then
-                mv -f "$f" src/content/assertions/
-              else
-                mv -f "$f" src/content/badges/
-              fi
-              HAS_CHANGES=true
-            done
-            rmdir publish 2>/dev/null || rm -rf publish
-            HAS_CHANGES=true
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f publish.json 2>/dev/null || true
+          git rm -rf publish/ 2>/dev/null || true
+          git add -A src/content/badges/ src/content/assertions/
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(publish): organizar certificados publicados y limpiar cola temporal [skip ci]"
+            git pull --rebase origin main || true
+            git push origin main || true
           fi
 
-          # Mover archivos de publish/ a sus carpetas definitivas si estaban en subcarpetas publish/
-          for f in src/content/badges/publish/*.json; do
-            [ -e "$f" ] || continue
-            mv -f "$f" src/content/badges/
-            HAS_CHANGES=true
-          done
-          for f in src/content/assertions/publish/*.json; do
-            [ -e "$f" ] || continue
-            mv -f "$f" src/content/assertions/
-            HAS_CHANGES=true
-          done
-
-          if [ "$HAS_CHANGES" = "true" ]; then
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -A publish src/content/badges/ src/content/assertions/ 2>/dev/null || git add src/content/badges/ src/content/assertions/
-            if ! git diff --staged --quiet; then
-              git commit -m "chore(publish): organizar certificados publicados y limpiar cola temporal [skip ci]"
-              git push origin main
-            fi
-          fi
-
-          if [ -n "$PENDING_FILE" ] && [ -f "$PENDING_FILE" ]; then
+          if [ -f /tmp/pending-emails.json ]; then
             npm install nodemailer
-            node scripts/send-emails.mjs "$PENDING_FILE"
-            rm -f "$PENDING_FILE"
+            node scripts/send-emails.mjs /tmp/pending-emails.json || echo "⚠️ Advertencia al enviar correos (comprueba GMAIL_APP_PASSWORD en Secrets)"
+            rm -f /tmp/pending-emails.json
           fi
-

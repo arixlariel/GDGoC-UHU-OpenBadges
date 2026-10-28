@@ -34,8 +34,8 @@ const badgesDir = path.join(rootDir, 'src', 'content', 'badges');
 const assertionsDir = path.join(rootDir, 'src', 'content', 'assertions');
 
 const siteUrl = process.env.SITE_URL || 'https://gdguhu.es';
-const gmailUser = process.env.GMAIL_USER || 'gdgoc.huelva@gmail.com';
-const gmailPassword = process.env.GMAIL_APP_PASSWORD;
+const gmailUser = process.env.GMAIL_USER || 'arielbustilloleon@gmail.com';
+const gmailPassword = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
 
 function loadBadge(badgeId) {
   const candidates = [

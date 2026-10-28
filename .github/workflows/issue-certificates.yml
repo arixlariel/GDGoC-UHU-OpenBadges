@@ -82,7 +82,7 @@ jobs:
       - name: Enviar emails a los alumnos desde la cuenta oficial de Gmail
         if: ${{ inputs.send_emails }}
         env:
-          GMAIL_USER: ${{ secrets.GMAIL_USER || 'gdgoc.huelva@gmail.com' }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER || 'arielbustilloleon@gmail.com' }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           SITE_URL: "https://gdguhu.es"
         run: |
