@@ -186,7 +186,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 
 1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este **[enlace](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/bcec851a8dc271fb9643b946386ffb2ca84212dc/generador-local.html)**
 2. Configura las badges, certificados y correos a generar
-3. Pulsa **Descargar publish.json** para guardar el archivo con los `.json`
+3. Pulsa `Descargar publish.json` para guardar el archivo maestro
 4. Arrastra `publish.json` (o la carpeta `publish` si usas archivos sueltos) directamente a la raíz del repositorio en GitHub y haz el commit (o continua al punto 5)
 
 ---
