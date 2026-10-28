@@ -14,6 +14,7 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# Batch de emails (contiene emails reales, NO debe subirse a Git)
+# Archivos de asistentes CSV (mantener privados en local)
+*.csv
+!scripts/ejemplo-*.csv
 src/content/assertions/_last-batch.csv
-

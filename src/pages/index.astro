@@ -86,7 +86,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           <!-- Search / Verify ID Box -->
           <div class="mt-7 max-w-lg mx-auto lg:mx-0">
             <form
-              onsubmit="event.preventDefault(); const val = document.getElementById('search-cert-id').value.trim(); if(val) window.location.href = '/cert/' + encodeURIComponent(val);"
+              onsubmit={`event.preventDefault(); const val = document.getElementById("search-cert-id").value.trim(); if(val) window.location.href = "${getFullUrl("/cert/")}" + encodeURIComponent(val);`}
               class="theme-search-box flex items-center gap-2 p-2 rounded-full transition-all duration-300"
             >
               <svg class="w-5 h-5 theme-text-secondary ml-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
