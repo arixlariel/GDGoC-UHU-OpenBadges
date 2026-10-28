@@ -113,10 +113,10 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
 {
   "recipient": {
     "name": "Laura Benítez Romero",
-    "identity": "sha256$a8b2c4...",        <-- Correo cifrado (SHA-256)
-    "hashed": true,
+    "identity": "sha256$a8b2c4...",       <-- Correo cifrado (SHA-256) con prefijo mandatorio `sha256$`
+    "hashed": true,                       <-- Siempre en `true`
     "type": "email",
-    "salt": "gdgoc-uhu-salt-2026"
+    "salt": "gdgoc-uhu-salt-2026"         <-- Se pega justo detrás del email, y ese conjunto es lo que se cifra
   },
   "badgeId": "workshop-ai-cloud",         <-- Campo `name` de la badge
   "role": "Asistente Certificado",
