@@ -982,7 +982,7 @@
                       <div class="dp-border" style="height:34px; border-left:2px solid;"></div>
                       <img
                         id="dp-badge-img"
-                        src="./public/images/badges/workshop-ai-cloud.svg"
+                        src="/images/badges/workshop-ai-cloud.svg"
                         onerror="this.style.display='none'"
                         alt="Badge"
                         style="width:46px; height:46px; object-fit:contain;"
@@ -1520,7 +1520,7 @@
       'workshop-ai-cloud': {
         name: 'Taller de IA Generativa & Google Cloud',
         description: 'Certificado oficial por completar el taller práctico de Inteligencia Artificial Generativa con Gemini y despliegue en Google Cloud Platform organizado por GDG on Campus UHU.',
-        image: './public/images/badges/workshop-ai-cloud.svg',
+        image: '/images/badges/workshop-ai-cloud.svg',
         criteria: { narrative: 'El estudiante asistió a la sesión formativa y completó los laboratorios prácticos.' },
         tags: ['Google Cloud', 'Gemini AI', 'Vertex AI', 'Workshop'],
         style: 'google',
@@ -1528,7 +1528,7 @@
       'hackathon-2026': {
         name: 'Hackathon GDGoC UHU 2026',
         description: 'Otorgado por la participación activa en el Hackathon Tecnológico 2026 organizado por GDG on Campus en la Universidad de Huelva, habiendo ideado, programado y defendido una solución técnica innovadora.',
-        image: './public/images/badges/hackathon-2026.svg',
+        image: '/images/badges/hackathon-2026.svg',
         criteria: { narrative: 'El portador de esta insignia completó 24 horas ininterrumpidas de desarrollo de software colaborativo.' },
         tags: ['Hackathon', 'Google Cloud', 'AI', 'Open Source', 'Teamwork'],
         style: 'cyber',
@@ -1536,7 +1536,7 @@
       'summer-code-camp': {
         name: 'Summer Pool Code Camp 2026',
         description: 'Acreditación oficial por superar el Bootcamp intensivo de verano de desarrollo web y tecnologías cloud organizado por el Google Developer Group on Campus de la Universidad de Huelva.',
-        image: './public/images/badges/summer-code-camp.svg',
+        image: '/images/badges/summer-code-camp.svg',
         criteria: { narrative: 'El participante completó los retos prácticos del campamento tecnológico de verano.' },
         tags: ['Summer Camp', 'Web Dev', 'Flutter', 'Firebase'],
         style: 'piscina',
@@ -1544,7 +1544,7 @@
       'winter-cloud-freeze': {
         name: 'Winter Cloud Freeze Summit',
         description: 'Certificado oficial de participación en las jornadas de invierno sobre arquitectura en la nube, ciberseguridad y sistemas distribuidos de GDG on Campus Universidad de Huelva.',
-        image: './public/images/badges/winter-cloud-freeze.svg',
+        image: '/images/badges/winter-cloud-freeze.svg',
         criteria: { narrative: 'Asistencia completa y resolución de los laboratorios técnicos del encuentro invernal.' },
         tags: ['Cloud', 'Kubernetes', 'Security', 'Winter Summit'],
         style: 'nieve',
@@ -1552,7 +1552,7 @@
       'creative-ui-jam': {
         name: 'Sweet Candy UI/UX Creative Jam',
         description: 'Reconocimiento oficial por participar en la Creative Jam de diseño de interfaces, accesibilidad y sistemas de diseño interactivos de GDG on Campus Universidad de Huelva.',
-        image: './public/images/badges/creative-ui-jam.svg',
+        image: '/images/badges/creative-ui-jam.svg',
         criteria: { narrative: 'Diseño y presentación de un prototipo interactivo completo evaluado por el jurado.' },
         tags: ['UI/UX', 'Design Systems', 'CSS', 'Creative Jam'],
         style: 'caramelos',
@@ -2639,7 +2639,7 @@
     function onBadgeNameInput(val) {
       const slug = slugify(val) || 'nueva-badge';
       document.getElementById('badge-slug').value = slug;
-      document.getElementById('badge-image').value = `/images/badges/${slug}.png`;
+      document.getElementById('badge-image').value = `/images/badges/${slug}.svg`;
       updateBadgePreview();
     }
 

@@ -1,7 +1,7 @@
 {
   "recipient": {
     "name": "Lucía Morales Beltrán",
-    "identity": "sha256$e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "identity": "sha256$2867875db0e5a72fa344085486d9849c228489da4c261e7312bc82ca705d03d5",
     "hashed": true,
     "type": "email",
     "salt": "gdgoc-uhu-salt-2026"

@@ -63,7 +63,10 @@ function computeReedSolomon(data: Uint8Array, ecLen: number): Uint8Array {
 
 function encodeData(text: string) {
   const bytes = new TextEncoder().encode(text);
-  const spec = VERSIONS.find((v) => v.data - 2 >= bytes.length) || VERSIONS[VERSIONS.length - 1];
+  const spec = VERSIONS.find((v) => v.data - 2 >= bytes.length);
+  if (!spec) {
+    throw new Error(`El texto a codificar es demasiado largo (${bytes.length} bytes). El generador QR integrado soporta un máximo de ${VERSIONS[VERSIONS.length - 1].data - 2} bytes.`);
+  }
 
   const bits: number[] = [];
   const pushBits = (val: number, len: number) => {
