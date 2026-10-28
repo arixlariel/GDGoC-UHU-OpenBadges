@@ -18,7 +18,7 @@
  *   ]
  *
  * VARIABLES DE ENTORNO REQUERIDAS:
- *   - GMAIL_USER: Correo de Gmail del GDGoC (ej: gdgoc.uhu@gmail.com)
+ *   - GMAIL_USER: Correo de Gmail del GDGoC (ej: gdgoc.huelva@gmail.com)
  *   - GMAIL_APP_PASSWORD: Contraseña de aplicación de Google de 16 caracteres
  */
 

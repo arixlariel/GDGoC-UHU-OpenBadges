@@ -29,7 +29,7 @@ export const issuerConfig: IssuerConfig = {
   id: getFullUrl('/api/badges/issuer.json'),
   name: 'GDG on Campus Universidad de Huelva',
   url: 'https://gdg.community.dev/gdg-on-campus-universidad-de-huelva-huelva-spain/',
-  email: 'gdgoc.uhu@gmail.com',
+  email: 'gdgoc.huelva@gmail.com',
   description: 'Comunidad universitaria oficial de Google Developer Groups en la Universidad de Huelva (UHU), dedicada al aprendizaje, innovación y desarrollo de tecnología.',
   image: getFullUrl('/images/gdgoc-uhu-logo.svg'),
 };

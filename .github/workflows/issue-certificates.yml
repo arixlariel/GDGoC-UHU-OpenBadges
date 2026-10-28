@@ -69,7 +69,7 @@ jobs:
       - name: Guardar en Git y publicar en la web
         run: |
           git config --global user.name "GDGoC UHU Bot"
-          git config --global user.email "gdgoc.uhu@gmail.com"
+          git config --global user.email "gdgoc.huelva@gmail.com"
           git add src/content/assertions/
           if git diff --staged --quiet; then
             echo "No hay nuevos certificados para añadir (quizás ya estaban generados)."
@@ -94,3 +94,4 @@ jobs:
           else
             echo "No se generó lista de certificados para enviar correos."
           fi
+
