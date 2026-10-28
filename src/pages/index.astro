@@ -86,7 +86,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           <!-- Search / Verify ID Box -->
           <div class="mt-7 max-w-lg mx-auto lg:mx-0">
             <form
-              onsubmit="event.preventDefault(); const val = document.getElementById('search-cert-id').value.trim(); if(val) window.location.href = './cert/' + val;"
+              onsubmit="event.preventDefault(); const val = document.getElementById('search-cert-id').value.trim(); if(val) window.location.href = '/cert/' + encodeURIComponent(val);"
               class="theme-search-box flex items-center gap-2 p-2 rounded-full transition-all duration-300"
             >
               <svg class="w-5 h-5 theme-text-secondary ml-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,7 +157,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
       </span>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div id="cert-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {sortedAssertions.map((assertion) => {
         const id = assertion.id.replace(/\.json$/, '');
         const badge = badges.find((b) => b.id.replace(/\.json$/, '') === assertion.data.badgeId);
@@ -167,7 +167,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
         return (
           <a
             href={getFullUrl(`/cert/${id}`)}
-            class="theme-card group relative overflow-hidden rounded-2xl p-5 block"
+            class="cert-card-item theme-card group relative overflow-hidden rounded-2xl p-5 block"
           >
             <!-- Top accent bar per certificate style -->
             {styleKey === 'google' && (
@@ -223,6 +223,34 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
         );
       })}
     </div>
+
+    <!-- Selección aleatoria de hasta 6 certificados en cada recarga -->
+    <script is:inline>
+      (function () {
+        const grid = document.getElementById('cert-cards-grid');
+        if (!grid) return;
+        const cards = Array.from(grid.querySelectorAll('.cert-card-item'));
+        if (cards.length === 0) return;
+
+        // Algoritmo Fisher-Yates para barajar aleatoriamente en cada recarga
+        for (let i = cards.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const temp = cards[i];
+          cards[i] = cards[j];
+          cards[j] = temp;
+        }
+
+        const maxVisible = 6;
+        cards.forEach((card, index) => {
+          if (index < maxVisible) {
+            card.style.display = '';
+            grid.appendChild(card);
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      })();
+    </script>
   </section>
 
   <!-- Características del Sistema -->

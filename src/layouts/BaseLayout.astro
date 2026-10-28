@@ -1028,7 +1028,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
 
     </div>
 
-    <Header />
+    <Header lockedStyle={certStyle} />
     <main class="flex-1 relative z-10">
       <slot />
     </main>

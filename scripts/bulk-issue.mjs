@@ -83,6 +83,48 @@ function hashEmail(email, salt) {
   return `sha256$${hash.digest('hex')}`;
 }
 
+// Cargar certificados existentes para evitar emitir duplicados (mismo email o nombre + misma insignia)
+function loadExistingAssertions() {
+  if (!fs.existsSync(assertionsDir)) return [];
+  const files = fs.readdirSync(assertionsDir).filter((f) => f.endsWith('.json'));
+  const existing = [];
+  for (const file of files) {
+    try {
+      const raw = fs.readFileSync(path.join(assertionsDir, file), 'utf-8');
+      const data = JSON.parse(raw);
+      existing.push({
+        id: file.replace(/\.json$/, ''),
+        badgeId: data.badgeId,
+        nameNorm: (data.recipient?.name || '').toLowerCase().trim(),
+        identity: data.recipient?.identity || '',
+        salt: data.recipient?.salt || '',
+      });
+    } catch {
+      // Ignorar archivos corruptos
+    }
+  }
+  return existing;
+}
+
+function findDuplicateAssertion(existingList, email, nombre, badgeId) {
+  const nameNorm = (nombre || '').toLowerCase().trim();
+  const emailNorm = (email || '').toLowerCase().trim();
+
+  for (const item of existingList) {
+    if (item.badgeId !== badgeId) continue;
+    if (item.salt && emailNorm) {
+      const candidateHash = hashEmail(emailNorm, item.salt);
+      if (candidateHash === item.identity) {
+        return item.id;
+      }
+    }
+    if (nameNorm && item.nameNorm === nameNorm) {
+      return item.id;
+    }
+  }
+  return null;
+}
+
 // Parser CSV robusto compatible con comas entre comillas
 function parseCSV(content) {
   const lines = content.trim().split(/\r?\n/);
@@ -270,12 +312,21 @@ async function main() {
     fs.mkdirSync(assertionsDir, { recursive: true });
   }
 
+  const existingAssertions = loadExistingAssertions();
   const salt = 'gdgoc-uhu-salt-' + new Date().getFullYear();
   const issuedOn = new Date().toISOString();
   const results = [];
   let emitted = 0;
+  let skippedDuplicates = 0;
 
   for (const a of attendees) {
+    const duplicateId = findDuplicateAssertion(existingAssertions, a.email, a.nombre, a.badgeId);
+    if (duplicateId) {
+      console.log(`  ⏭️  Omitido (duplicado): ${a.nombre} ya tiene este certificado → https://gdguhu.es/cert/${duplicateId}`);
+      skippedDuplicates++;
+      continue;
+    }
+
     const assertionId = generateAssertionId();
     const identityHash = hashEmail(a.email, salt);
 
@@ -299,6 +350,15 @@ async function main() {
     const filePath = path.join(assertionsDir, `${assertionId}.json`);
     fs.writeFileSync(filePath, JSON.stringify(assertionData, null, 2), 'utf-8');
 
+    // Añadir a la lista en memoria para evitar también duplicados dentro del mismo CSV
+    existingAssertions.push({
+      id: assertionId,
+      badgeId: a.badgeId,
+      nameNorm: a.nombre.toLowerCase().trim(),
+      identity: identityHash,
+      salt,
+    });
+
     results.push({
       nombre: a.nombre,
       email: a.email,
@@ -318,7 +378,10 @@ async function main() {
   }
 
   console.log('\n══════════════════════════════════════════════════════════');
-  console.log(`  🎉 ¡ÉXITO! Se han generado ${emitted} certificados.`);
+  console.log(`  🎉 ¡ÉXITO! Se han generado ${emitted} certificados nuevos.`);
+  if (skippedDuplicates > 0) {
+    console.log(`  🛡️  Duplicados evitados automáticamente: ${skippedDuplicates}`);
+  }
   console.log('══════════════════════════════════════════════════════════\n');
   console.log('  Pasos para publicarlos:');
   console.log('    git add .');

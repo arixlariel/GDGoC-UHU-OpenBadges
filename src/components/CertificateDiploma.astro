@@ -1,5 +1,6 @@
 ---
 import { getFullUrl } from '@/config/site';
+import { generateQrSvgPath } from '@/utils/qrcode';
 
 interface Props {
   assertion: any;
@@ -17,6 +18,7 @@ const issueDate = new Date(assertion.data.issuedOn).toLocaleDateString('es-ES', 
 });
 
 const certUrl = getFullUrl(`/cert/${assertionId}`);
+const qr = generateQrSvgPath(certUrl);
 const hasEvidence = Boolean(assertion.data.evidence && assertion.data.evidence.trim().length > 0);
 
 // LinkedIn Add to Profile URL
@@ -227,15 +229,32 @@ linkedinUrl.searchParams.set('certId', assertionId);
             <div class="text-[11px] theme-text-secondary">Comunidad Oficial de Desarrolladores</div>
           </div>
 
-          <!-- Sello Central Verificado con puntos SVG para impresión perfecta -->
-          <div class="theme-pill-btn inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-full shrink-0">
-            <svg class="w-12 h-2.5 shrink-0 overflow-visible" viewBox="0 0 46 10" aria-hidden="true">
-              <circle cx="5" cy="5" r="4" fill="#4285F4" />
-              <circle cx="17" cy="5" r="4" fill="#EA4335" />
-              <circle cx="29" cy="5" r="4" fill="#FBBC04" />
-              <circle cx="41" cy="5" r="4" fill="#34A853" />
-            </svg>
-            <span class="text-[11px] leading-none font-mono font-bold theme-text-primary">VERIFIED</span>
+          <!-- Sello Central Verificado + Código QR Vectorial de Verificación -->
+          <div class="flex items-center justify-center gap-2.5 shrink-0">
+            <div
+              class="p-1 rounded-xl border-2 theme-border bg-white shrink-0"
+              title={`Escanea para verificar: ${certUrl}`}
+            >
+              <svg
+                class="w-12 h-12 sm:w-14 sm:h-14 block"
+                viewBox={`-1 -1 ${qr.size + 2} ${qr.size + 2}`}
+                shape-rendering="crispEdges"
+                aria-label="Código QR de verificación del certificado"
+              >
+                <rect x="-1" y="-1" width={qr.size + 2} height={qr.size + 2} fill="#FFFFFF" />
+                <path d={qr.path} fill="#111827" />
+              </svg>
+            </div>
+
+            <div class="theme-pill-btn inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full shrink-0">
+              <svg class="w-12 h-2.5 shrink-0 overflow-visible" viewBox="0 0 46 10" aria-hidden="true">
+                <circle cx="5" cy="5" r="4" fill="#4285F4" />
+                <circle cx="17" cy="5" r="4" fill="#EA4335" />
+                <circle cx="29" cy="5" r="4" fill="#FBBC04" />
+                <circle cx="41" cy="5" r="4" fill="#34A853" />
+              </svg>
+              <span class="text-[11px] leading-none font-mono font-bold theme-text-primary">VERIFIED</span>
+            </div>
           </div>
 
           <div class="flex-1 flex flex-col items-center">

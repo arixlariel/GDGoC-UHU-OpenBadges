@@ -41,6 +41,33 @@ function hashEmail(email, salt) {
   return `sha256$${hash.digest('hex')}`;
 }
 
+function findDuplicateAssertion(email, name, badgeId) {
+  if (!fs.existsSync(assertionsDir)) return null;
+  const files = fs.readdirSync(assertionsDir).filter((f) => f.endsWith('.json'));
+  const nameNorm = (name || '').toLowerCase().trim();
+  const emailNorm = (email || '').toLowerCase().trim();
+
+  for (const file of files) {
+    try {
+      const data = JSON.parse(fs.readFileSync(path.join(assertionsDir, file), 'utf-8'));
+      if (data.badgeId !== badgeId) continue;
+      const existingId = file.replace(/\.json$/, '');
+      if (data.recipient?.salt && emailNorm) {
+        const candidateHash = hashEmail(emailNorm, data.recipient.salt);
+        if (candidateHash === data.recipient.identity) {
+          return existingId;
+        }
+      }
+      if (nameNorm && (data.recipient?.name || '').toLowerCase().trim() === nameNorm) {
+        return existingId;
+      }
+    } catch {
+      // Ignorar archivos corruptos
+    }
+  }
+  return null;
+}
+
 async function askQuestion(rl, query, defaultValue = '') {
   return new Promise((resolve) => {
     const prompt = defaultValue ? `${query} [${defaultValue}]: ` : `${query}: `;
@@ -90,6 +117,14 @@ async function main() {
 
     const role = await askQuestion(rl, '4. Rol / Reconocimiento', 'Participante');
     const evidence = await askQuestion(rl, '5. Enlace a proyecto o evidencia (opcional, Enter para omitir)', '');
+
+    const duplicateId = findDuplicateAssertion(email, name, badgeId);
+    if (duplicateId) {
+      console.error(`\n⚠️  Certificado duplicado detectado:`);
+      console.error(`   "${name}" (${email}) ya tiene un certificado emitido para "${badgeId}".`);
+      console.error(`   ID existente: ${duplicateId} → https://gdguhu.es/cert/${duplicateId}\n`);
+      process.exit(1);
+    }
 
     const salt = 'gdgoc-uhu-salt-' + new Date().getFullYear();
     const identityHash = hashEmail(email, salt);

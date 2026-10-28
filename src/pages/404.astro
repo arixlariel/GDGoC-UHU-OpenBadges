@@ -1,0 +1,75 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getFullUrl } from '@/config/site';
+---
+
+<BaseLayout
+  title="404 · Certificado o página no encontrada | GDGoC UHU"
+  description="No se ha encontrado el certificado digital o la página solicitada en la plataforma Open Badges de GDG on Campus Universidad de Huelva."
+>
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10 flex items-center justify-center">
+    <div class="theme-card w-full rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden">
+      <!-- Top 4-color accent bar -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 grid grid-cols-4">
+        <div class="bg-[#4285F4]"></div>
+        <div class="bg-[#EA4335]"></div>
+        <div class="bg-[#FBBC04]"></div>
+        <div class="bg-[#34A853]"></div>
+      </div>
+
+      <!-- Status Pill -->
+      <div class="theme-badge-pill inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
+        <span class="w-2 h-2 rounded-full bg-[#EA4335] animate-ping"></span>
+        <span>Error 404 · Credencial no localizada</span>
+      </div>
+
+      <!-- Big 404 Number -->
+      <div class="font-display text-6xl sm:text-8xl font-extrabold theme-accent-text leading-none tracking-tight select-none">
+        404
+      </div>
+
+      <h1 class="font-display text-2xl sm:text-3xl font-bold theme-text-primary mt-4">
+        Certificado o página no encontrada
+      </h1>
+
+      <p class="mt-3 text-sm sm:text-base theme-text-secondary max-w-lg mx-auto leading-relaxed">
+        No existe ninguna credencial digital ni página en esta ruta. Si estabas intentando verificar un certificado, comprueba que hayas introducido el ID completo sin espacios ni errores.
+      </p>
+
+      <!-- Direct Search Box to retry ID verification -->
+      <div class="mt-8 max-w-md mx-auto">
+        <form
+          onsubmit="event.preventDefault(); const val = document.getElementById('search-404-cert-id').value.trim(); if(val) window.location.href = '/cert/' + encodeURIComponent(val);"
+          class="theme-search-box flex items-center gap-2 p-2 rounded-full transition-all duration-300"
+        >
+          <svg class="w-5 h-5 theme-text-secondary ml-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            id="search-404-cert-id"
+            placeholder="Introduce el ID del certificado"
+            class="flex-1 bg-transparent text-xs sm:text-sm theme-text-primary placeholder:opacity-60 outline-none px-2 font-mono"
+            required
+          />
+          <button
+            type="submit"
+            class="theme-primary-btn px-5 py-2.5 rounded-full text-white font-semibold text-xs sm:text-sm transition-all duration-300 shrink-0 cursor-pointer"
+          >
+            Verificar
+          </button>
+        </form>
+      </div>
+
+      <!-- Back to Home Button -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href={getFullUrl('/')}
+          class="theme-pill-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300"
+        >
+          <span>← Volver a la página principal</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
