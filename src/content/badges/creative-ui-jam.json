@@ -1,11 +1,16 @@
 {
-  "name": "Creative UI & Design Jam: Sweet Candy Edition",
-  "description": "Reconocimiento oficial por diseñar y prototipar interfaces interactivas llenas de color, micro-animaciones y creatividad durante la Design Jam de GDG on Campus Universidad de Huelva.",
+  "name": "Sweet Candy UI/UX Creative Jam",
+  "description": "Reconocimiento oficial por participar en la Creative Jam de diseño de interfaces, accesibilidad y sistemas de diseño interactivos de GDG on Campus Universidad de Huelva.",
   "image": "/images/badges/creative-ui-jam.svg",
   "criteria": {
-    "narrative": "El participante completó el reto de diseño creativo en equipo, presentando un sistema de diseño original con animaciones CSS avanzadas y experiencia de usuario sobresaliente."
+    "narrative": "Diseño y presentación de un prototipo interactivo completo evaluado por el jurado."
   },
-  "tags": ["UI/UX", "Creative Coding", "CSS Animations", "Design Jam"],
+  "tags": [
+    "UI/UX",
+    "Design Systems",
+    "CSS",
+    "Creative Jam"
+  ],
   "style": "caramelos",
   "issuerId": "gdgoc-uhu"
 }

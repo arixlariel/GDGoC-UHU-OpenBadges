@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Carmen Gutiérrez Sánchez",
+    "identity": "sha256$f7e6009252f61e6b4647bc3af8fa49125bf027f65d5c456be2ad9a41457647d0",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "creative-ui-jam",
+  "role": "Persona sexualmente interesante",
+  "issuedOn": "2026-10-28T20:02:17.832Z",
+  "styleOverride": "caramelos"
+}

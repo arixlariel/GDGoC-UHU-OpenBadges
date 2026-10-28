@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Jesús Páez Porquera",
+    "identity": "sha256$0c9b7406c923055cf0278f4912cbe0fee459a1ba90d5618cee09650983f26e5e",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "creative-ui-jam",
+  "role": "Persona sexualmente interesante",
+  "issuedOn": "2026-10-28T20:02:19.133Z",
+  "styleOverride": "caramelos"
+}
