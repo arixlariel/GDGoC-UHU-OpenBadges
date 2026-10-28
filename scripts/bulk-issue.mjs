@@ -364,6 +364,7 @@ async function main() {
       email: a.email,
       assertionId,
       badgeId: a.badgeId,
+      role: a.role,
       url: `https://gdguhu.es/cert/${assertionId}`,
     });
 
@@ -371,7 +372,24 @@ async function main() {
     emitted++;
   }
 
-  // Guardar lista temporal solo si se solicitó expresamente para envío de emails
+  // Guardar lista temporal para envío automático de emails al hacer commit/push
+  if (results.length > 0) {
+    const publishDir = path.join(assertionsDir, 'publish');
+    if (!fs.existsSync(publishDir)) {
+      fs.mkdirSync(publishDir, { recursive: true });
+    }
+    const pendingEmailsPath = path.join(publishDir, '_pending-emails.json');
+    let existingPending = [];
+    if (fs.existsSync(pendingEmailsPath)) {
+      try {
+        existingPending = JSON.parse(fs.readFileSync(pendingEmailsPath, 'utf-8'));
+      } catch {
+        existingPending = [];
+      }
+    }
+    fs.writeFileSync(pendingEmailsPath, JSON.stringify([...existingPending, ...results], null, 2), 'utf-8');
+  }
+
   if (outputList) {
     const listPath = path.resolve(outputList);
     fs.writeFileSync(listPath, JSON.stringify(results, null, 2), 'utf-8');

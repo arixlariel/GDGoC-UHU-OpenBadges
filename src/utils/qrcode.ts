@@ -232,3 +232,4 @@ export function generateQrSvgPath(text: string): { size: number; path: string } 
 
   return { size, path };
 }
+

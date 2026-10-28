@@ -14,6 +14,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
    - [Método B: Creación manual](#----método-b-creación-manual)
    - [Método C: Emisión masiva desde `.csv`](#----método-c-emisión-masiva-desde-csv)
    - [Método D: Emisión masiva desde `.csv` con GitHub Actions](#----método-d-emisión-masiva-desde-csv-con-github-actions)
+   - [Método E: Generador visual local (`generador-local.html`)](#----método-e-generador-visual-local-generador-localhtml)
 5. [Cómo publicar los certificados (`git push`)](#5-cómo-publicar-los-certificados-git-push)
 6. [Cómo compartir los certificados con los miembros](#6-cómo-compartir-los-certificados-con-los-miembros)
 7. [Privacidad y Protección de Datos (RGPD/LOPD)](#7-privacidad-y-protección-de-datos-rgpdlopd)
@@ -33,13 +34,16 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 
 ```text
 Open Badges/
+├── generador-local.html             <-- Generador visual offline (Badges, CSV y vista previa)
 ├── public/
 │   └── images/
 │       └── badges/                  <-- Aquí se guardan los logo.png de las badges
 ├── src/
 │   ├── content/
 │   │   ├── badges/                  <-- Aquí se definen los badge.json
+│   │   │   └── publish/             <-- Carpeta temporal para subir nuevas badges
 │   │   └── assertions/              <-- Aquí se guardan los certificado.json de los alumnos
+│   │       └── publish/             <-- Carpeta temporal para subir nuevos certificados
 │   └── config/
 │       └── site.ts                  <-- Datos del emisor o issuer (GDGoC UHU)
 └── scripts/
@@ -174,6 +178,22 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
    - **Pega el contenido del `.csv`**: Abre el archivo con cualquier bloc de notas para copiar y pegar todo el texto
 
 ***Este método publica automáticamente los certificados (punto 5) y permite mandar correos personalizados en masa***
+
+---
+
+### --- Método E: Generador visual local (`generador-local.html`)
+
+> Funciona sin terminal en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o arrastrando el `.csv`, con vista previa en vivo y edición individual
+
+1. Haz doble clic sobre el archivo `generador-local.html` (situado en la raíz de la carpeta del proyecto, a la misma altura que este `README.md`) para abrirlo en tu navegador
+2. Elige arriba la modalidad:
+   - **🏅 Crear Nueva Badge (Evento)**: Rellena el nombre del evento, descripción, criterios, tags y selecciona uno de los 5 estilos (`google`, `cyber`, `piscina`, `nieve`, `caramelos`)
+   - **🎓 Crear Certificados (CSV o Manual)**:
+     - Introduce los **datos genéricos** que no vienen en el `.csv`: el `badgeId`, el `role` por defecto (`Asistente Certificado`, `Participante`, ...), la evidencia opcional y si deseas filtrar por Check-in
+     - **Arrastra y suelta el `.csv`** de Bevy (o añade personas manualmente). Aparecerá una **lista interactiva con todos los certificados que se van a crear**
+     - Haz clic sobre **cualquier persona de la lista** para ver su **diploma en vivo** (y la **vista previa de su correo electrónico**) o para modificarle un dato específico solo a esa persona (por ejemplo, cambiar su rol a `Ponente` o `1er Premio` o añadir su enlace de proyecto)
+3. Pulsa el botón de guardar para almacenar los archivos generados dentro de la carpeta `publish` correspondiente (`src/content/badges/publish/` o `src/content/assertions/publish/`) o descargar el paquete `publish.zip`
+4. Sube o arrastra el contenido de la carpeta `publish` a GitHub y haz el commit (o haz `git push` desde el punto 5): **GitHub colocará automáticamente los archivos en su carpeta definitiva y enviará los correos electrónicos a cada asistente**
 
 ---
 

@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,6 +31,22 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Procesar carpetas publish/ (mover badges y certificados nuevos)
+        run: |
+          mkdir -p src/content/badges/publish src/content/assertions/publish
+          # Mover cualquier badge nueva desde publish/ a badges/
+          find src/content/badges/publish -maxdepth 1 -type f -name "*.json" ! -name "_*" -exec mv -f {} src/content/badges/ \;
+          # Mover cualquier certificado nuevo desde publish/ a assertions/
+          find src/content/assertions/publish -maxdepth 1 -type f -name "*.json" ! -name "_*" -exec mv -f {} src/content/assertions/ \;
+          # Si hay cola de emails pendientes, guardarla en /tmp para enviarla tras el despliegue y borrarla del repo
+          if [ -f src/content/assertions/publish/_pending-emails.json ]; then
+            cp src/content/assertions/publish/_pending-emails.json /tmp/pending-emails.json
+            rm -f src/content/assertions/publish/_pending-emails.json
+          elif [ -f src/content/assertions/_pending-emails.json ]; then
+            cp src/content/assertions/_pending-emails.json /tmp/pending-emails.json
+            rm -f src/content/assertions/_pending-emails.json
+          fi
 
       - name: Build site
         env:
@@ -41,6 +59,14 @@ jobs:
         with:
           path: ./dist
 
+      - name: Subir cola temporal de emails (si existe)
+        if: hashFiles('/tmp/pending-emails.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: pending-emails-queue
+          path: /tmp/pending-emails.json
+          retention-days: 1
+
   deploy:
     environment:
       name: github-pages
@@ -52,4 +78,68 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  post-deploy-emails:
+    name: Enviar Correos Automáticos y Limpiar publish/
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enviar correos pendientes y limpiar carpeta publish/
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          SITE_URL: "https://gdguhu.es"
+        run: |
+          HAS_CHANGES=false
+          PENDING_FILE=""
+
+          if [ -f src/content/assertions/publish/_pending-emails.json ]; then
+            cp src/content/assertions/publish/_pending-emails.json /tmp/pending-emails.json
+            rm -f src/content/assertions/publish/_pending-emails.json
+            PENDING_FILE="/tmp/pending-emails.json"
+            HAS_CHANGES=true
+          elif [ -f src/content/assertions/_pending-emails.json ]; then
+            cp src/content/assertions/_pending-emails.json /tmp/pending-emails.json
+            rm -f src/content/assertions/_pending-emails.json
+            PENDING_FILE="/tmp/pending-emails.json"
+            HAS_CHANGES=true
+          fi
+
+          # Mover archivos de publish/ a sus carpetas definitivas si estaban en publish/
+          for f in src/content/badges/publish/*.json; do
+            [ -e "$f" ] || continue
+            mv -f "$f" src/content/badges/
+            HAS_CHANGES=true
+          done
+          for f in src/content/assertions/publish/*.json; do
+            [ -e "$f" ] || continue
+            mv -f "$f" src/content/assertions/
+            HAS_CHANGES=true
+          done
+
+          if [ "$HAS_CHANGES" = "true" ]; then
+            git config --global user.name "arixlariel"
+            git config --global user.email "arielbustilloleon@gmail.com"
+            git add src/content/badges/ src/content/assertions/
+            if ! git diff --staged --quiet; then
+              git commit -m "chore(publish): organizar certificados publicados y limpiar cola temporal [skip ci]"
+              git push origin main
+            fi
+          fi
+
+          if [ -n "$PENDING_FILE" ] && [ -f "$PENDING_FILE" ]; then
+            npm install nodemailer
+            node scripts/send-emails.mjs "$PENDING_FILE"
+            rm -f "$PENDING_FILE"
+          fi
 

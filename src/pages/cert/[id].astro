@@ -8,7 +8,7 @@ import { getFullUrl } from '@/config/site';
 export async function getStaticPaths() {
   const assertions = await getCollection('assertions');
   return assertions.map((assertion) => ({
-    params: { id: assertion.id.replace(/\.json$/, '') },
+    params: { id: assertion.id.replace(/^.*\/|\.json$/g, '') },
     props: { assertion },
   }));
 }
@@ -16,8 +16,11 @@ export async function getStaticPaths() {
 const { assertion } = Astro.props;
 const assertionId = Astro.params.id as string;
 
-// Fetch badge
-const badgeEntry = await getEntry('badges', assertion.data.badgeId);
+// Fetch badge (supports both root badges/ and badges/publish/)
+const allBadges = await getCollection('badges');
+const badgeEntry =
+  (await getEntry('badges', assertion.data.badgeId)) ||
+  allBadges.find((b) => b.id.replace(/^.*\/|\.json$/g, '') === assertion.data.badgeId);
 
 if (!badgeEntry) {
   throw new Error(`Badge no encontrado: ${assertion.data.badgeId}`);

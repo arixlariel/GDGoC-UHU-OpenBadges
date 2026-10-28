@@ -5,14 +5,14 @@ import { issuerConfig, getFullUrl } from '@/config/site';
 export async function getStaticPaths() {
   const badges = await getCollection('badges');
   return badges.map((badge) => ({
-    params: { id: badge.id.replace(/\.json$/, '') },
+    params: { id: badge.id.replace(/^.*\/|\.json$/g, '') },
     props: { badge },
   }));
 }
 
 export const GET: APIRoute = async ({ props }) => {
   const { badge } = props;
-  const badgeId = badge.id.replace(/\.json$/, '');
+  const badgeId = badge.id.replace(/^.*\/|\.json$/g, '');
 
   const badgePayload = {
     '@context': 'https://w3id.org/openbadges/v2',

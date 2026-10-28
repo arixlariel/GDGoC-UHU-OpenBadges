@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador Local Open Badges 2.0 · GDGoC Universidad de Huelva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --blue: #4285F4;
+      --red: #EA4335;
+      --yellow: #FBBC04;
+      --green: #34A853;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Top Google 4-color bar */
+    .google-strip {
+      height: 6px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: 100%;
+    }
+    .google-strip div:nth-child(1) { background: var(--blue); }
+    .google-strip div:nth-child(2) { background: var(--red); }
+    .google-strip div:nth-child(3) { background: var(--yellow); }
+    .google-strip div:nth-child(4) { background: var(--green); }
+
+    /* Top Header */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+    .brand-title {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .brand-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    /* Mode Switcher Tabs */
+    .mode-tabs {
+      display: flex;
+      background: var(--surface-2);
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      gap: 4px;
+    }
+    .mode-tab {
+      border: none;
+      background: transparent;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mode-tab:hover {
+      color: var(--text);
+    }
+    .mode-tab.active {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(66, 133, 244, 0.35);
+    }
+
+    .browser-compat-pill {
+      font-size: 11px;
+      font-weight: 600;
+      color: #047857;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 6px 12px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Main Workspace Layout */
+    .workspace {
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      flex: 1;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 1080px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035);
+    }
+    .panel-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .panel-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.45;
+    }
+
+    /* Form Controls */
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+    label .hint {
+      font-weight: 500;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--surface-2);
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.14);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 68px;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    /* Style Selector Grid */
+    .style-selector {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .style-btn {
+      border: 2px solid var(--border);
+      background: var(--surface-2);
+      border-radius: 10px;
+      padding: 8px 4px;
+      cursor: pointer;
+      text-align: center;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .style-btn span.icon { font-size: 16px; }
+    .style-btn:hover {
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+    .style-btn.active {
+      border-color: var(--blue);
+      background: #e8f0fe;
+      color: #1967d2;
+      box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+    }
+
+    /* Drag & Drop CSV Zone */
+    .dropzone {
+      border: 2px dashed #94a3b8;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 22px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--blue);
+      background: #eff6ff;
+    }
+    .dropzone-icon {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+    .dropzone-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .dropzone-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* Buttons */
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4285F4, #1967D2);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(66, 133, 244, 0.45);
+    }
+    .btn-success {
+      background: linear-gradient(135deg, #34A853, #15803d);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(52, 168, 83, 0.3);
+    }
+    .btn-success:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(52, 168, 83, 0.45);
+    }
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: #f8fafc;
+    }
+    .btn-danger {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      padding: 6px 10px;
+      font-size: 11.5px;
+    }
+    .btn-danger:hover {
+      background: #fee2e2;
+    }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Recipient List */
+    .cert-list-container {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    .cert-list-item {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cert-list-item:last-child { border-bottom: none; }
+    .cert-list-item:hover { background: #eff6ff; }
+    .cert-list-item.active {
+      background: #e8f0fe;
+      border-left: 4px solid var(--blue);
+    }
+    .cert-item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cert-item-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .pill-mini {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    .pill-edited {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    /* Checkboxes */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .checkbox-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+
+    /* Sub-tabs for Preview Panel */
+    .preview-tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .preview-tab {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .preview-tab.active {
+      background: #0f172a;
+      color: #fff;
+      border-color: #0f172a;
+    }
+
+    /* ==========================================================================
+       LIVE DIPLOMA PREVIEW REPLICA (Supports All 5 Themes Identically to Web)
+       ========================================================================== */
+    .diploma-preview-outer {
+      padding: 6px;
+      border-radius: 24px;
+      transition: all 0.4s ease;
+    }
+    .diploma-preview-inner {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 540px;
+      justify-content: space-between;
+      transition: all 0.4s ease;
+    }
+    .diploma-frame-1 {
+      position: absolute;
+      inset: 14px;
+      border-radius: 12px;
+      pointer-events: none;
+    }
+    .diploma-frame-2 {
+      position: absolute;
+      inset: 19px;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    /* Theme 1: Google */
+    .diploma-theme-google .diploma-preview-outer {
+      background: linear-gradient(135deg, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%);
+      box-shadow: 0 14px 40px rgba(32, 33, 36, 0.12);
+    }
+    .diploma-theme-google .diploma-preview-inner { background: #FFFFFF; color: #202124; }
+    .diploma-theme-google .diploma-frame-1 { border: 2px solid #DADCE0; }
+    .diploma-theme-google .diploma-frame-2 { border: 1.5px dashed #E8EAED; }
+    .diploma-theme-google .dp-text-primary { color: #202124; }
+    .diploma-theme-google .dp-text-secondary { color: #5F6368; }
+    .diploma-theme-google .dp-accent { color: #1967D2; }
+    .diploma-theme-google .dp-border { border-color: #DADCE0; }
+    .diploma-theme-google .dp-pill { background: #E8F0FE; border: 1px solid #D2E3FC; color: #1967D2; }
+    .diploma-theme-google .dp-meta { background: #F8F9FA; border: 2px solid #DADCE0; }
+    .diploma-theme-google .dp-verified { background: #FFFFFF; border: 1px solid #DADCE0; color: #202124; }
+
+    /* Theme 2: Cyber */
+    .diploma-theme-cyber .diploma-preview-outer {
+      background: linear-gradient(135deg, #00F0FF, #FF007F, #FFE600, #00FF66);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.3);
+    }
+    .diploma-theme-cyber .diploma-preview-inner { background: #070B19; color: #F0F9FF; }
+    .diploma-theme-cyber .diploma-frame-1 { border: 2px solid rgba(0, 240, 255, 0.45); }
+    .diploma-theme-cyber .diploma-frame-2 { border: 1.5px dashed rgba(255, 0, 127, 0.4); }
+    .diploma-theme-cyber .dp-text-primary { color: #F0F9FF; }
+    .diploma-theme-cyber .dp-text-secondary { color: #94A3B8; }
+    .diploma-theme-cyber .dp-accent { color: #00F0FF; font-family: 'Orbitron', sans-serif; }
+    .diploma-theme-cyber .dp-border { border-color: rgba(0, 240, 255, 0.3); }
+    .diploma-theme-cyber .dp-pill { background: rgba(0, 240, 255, 0.12); border: 1px solid #00F0FF; color: #00F0FF; }
+    .diploma-theme-cyber .dp-meta { background: rgba(12, 20, 44, 0.92); border: 2px solid rgba(0, 240, 255, 0.4); }
+    .diploma-theme-cyber .dp-verified { background: rgba(12, 18, 38, 0.9); border: 1px solid rgba(0, 240, 255, 0.5); color: #00F0FF; }
+
+    /* Theme 3: Piscina */
+    .diploma-theme-piscina .diploma-preview-outer {
+      background: linear-gradient(135deg, #00F2FE, #4FACFE, #00E5FF, #0284C7);
+      box-shadow: 0 16px 40px rgba(2, 132, 199, 0.3);
+    }
+    .diploma-theme-piscina .diploma-preview-inner { background: linear-gradient(180deg, #FFFFFF 0%, #E0F7FA 100%); color: #002B3D; }
+    .diploma-theme-piscina .diploma-frame-1 { border: 2px solid rgba(0, 188, 212, 0.55); }
+    .diploma-theme-piscina .diploma-frame-2 { border: 1.5px dashed rgba(2, 132, 199, 0.4); }
+    .diploma-theme-piscina .dp-text-primary { color: #002B3D; }
+    .diploma-theme-piscina .dp-text-secondary { color: #00587A; }
+    .diploma-theme-piscina .dp-accent { color: #0284C7; }
+    .diploma-theme-piscina .dp-border { border-color: rgba(0, 188, 212, 0.5); }
+    .diploma-theme-piscina .dp-pill { background: rgba(224, 247, 250, 0.92); border: 2px solid #00BCD4; color: #006064; }
+    .diploma-theme-piscina .dp-meta { background: rgba(255, 255, 255, 0.88); border: 2px solid rgba(0, 188, 212, 0.5); }
+    .diploma-theme-piscina .dp-verified { background: rgba(255, 255, 255, 0.9); border: 2px solid #00E5FF; color: #004D61; }
+
+    /* Theme 4: Nieve */
+    .diploma-theme-nieve .diploma-preview-outer {
+      background: linear-gradient(135deg, #FFFFFF, #7DD3FC, #38BDF8, #BAE6FD);
+      box-shadow: 0 16px 45px rgba(2, 132, 199, 0.4);
+    }
+    .diploma-theme-nieve .diploma-preview-inner { background: linear-gradient(180deg, #08182E 0%, #0F294A 100%); color: #F0F9FF; }
+    .diploma-theme-nieve .diploma-frame-1 { border: 2px solid rgba(224, 242, 254, 0.55); }
+    .diploma-theme-nieve .diploma-frame-2 { border: 1.5px dashed rgba(125, 211, 252, 0.4); }
+    .diploma-theme-nieve .dp-text-primary { color: #F0F9FF; }
+    .diploma-theme-nieve .dp-text-secondary { color: #BAE6FD; }
+    .diploma-theme-nieve .dp-accent { color: #7DD3FC; }
+    .diploma-theme-nieve .dp-border { border-color: rgba(186, 230, 253, 0.45); }
+    .diploma-theme-nieve .dp-pill { background: rgba(224, 242, 254, 0.18); border: 1.5px solid rgba(255, 255, 255, 0.7); color: #FFFFFF; }
+    .diploma-theme-nieve .dp-meta { background: rgba(14, 36, 66, 0.85); border: 2px solid rgba(186, 230, 253, 0.5); }
+    .diploma-theme-nieve .dp-verified { background: rgba(14, 36, 66, 0.85); border: 1.5px solid rgba(186, 230, 253, 0.6); color: #E0F2FE; }
+
+    /* Theme 5: Caramelos */
+    .diploma-theme-caramelos .diploma-preview-outer {
+      background: repeating-linear-gradient(45deg, #FF1493, #FF1493 16px, #FF85C0 16px, #FF85C0 32px, #FFF0F6 32px, #FFF0F6 48px);
+      box-shadow: 0 16px 40px rgba(255, 20, 147, 0.3);
+    }
+    .diploma-theme-caramelos .diploma-preview-inner {
+      font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #FFF9FC 0%, #FFE4F2 100%);
+      color: #880E4F;
+    }
+    .diploma-theme-caramelos .diploma-frame-1 { border: 2px dashed #FF4D94; }
+    .diploma-theme-caramelos .diploma-frame-2 { border: 1.5px dotted #FF85C0; }
+    .diploma-theme-caramelos .dp-text-primary { color: #880E4F; }
+    .diploma-theme-caramelos .dp-text-secondary { color: #C2185B; }
+    .diploma-theme-caramelos .dp-accent { color: #D81B60; }
+    .diploma-theme-caramelos .dp-border { border-color: #FF85C0; }
+    .diploma-theme-caramelos .dp-pill { background: #FFE0F0; border: 2px solid #FF1493; color: #AD1457; }
+    .diploma-theme-caramelos .dp-meta { background: rgba(255, 224, 240, 0.85); border: 2px solid #FF69B4; }
+    .diploma-theme-caramelos .dp-verified { background: #FFF5FA; border: 2px solid #FF69B4; color: #AD1457; }
+
+    .json-code-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 18px;
+      border-radius: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .toast.show { display: flex; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="google-strip"><div></div><div></div><div></div><div></div></div>
+
+  <header class="app-header">
+    <div class="brand">
+      <img src="./public/images/gdgoc-uhu-logo.jpg" onerror="this.style.display='none'" alt="GDGoC UHU" class="brand-logo" />
+      <div>
+        <div class="brand-title">GDG on Campus Universidad de Huelva</div>
+        <div class="brand-sub">Generador Local de Badges y Certificados (Método E)</div>
+      </div>
+    </div>
+
+    <div class="mode-tabs" role="tablist">
+      <button type="button" class="mode-tab active" id="tab-mode-certs" onclick="switchMainMode('certs')">
+        <span>🎓</span>
+        <span>Crear Certificados (CSV o Manual)</span>
+      </button>
+      <button type="button" class="mode-tab" id="tab-mode-badge" onclick="switchMainMode('badge')">
+        <span>🏅</span>
+        <span>Crear Nueva Badge (Evento)</span>
+      </button>
+    </div>
+
+    <div class="browser-compat-pill" title="Funciona 100% offline en Chrome, Brave, Opera, Firefox y Safari">
+      <span>✓</span>
+      <span>Chrome · Brave · Opera · Firefox · Safari</span>
+    </div>
+  </header>
+
+  <main class="workspace">
+
+    <!-- ======================================================================
+         MODO 1: CREAR CERTIFICADOS (ASSERTIONS) — CSV DRAG & DROP O MANUAL
+         ====================================================================== -->
+    <div id="view-mode-certs" class="grid-2col">
+      <!-- Columna Izquierda: Configuración Genérica + CSV + Lista de Certificados -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- Paso 1: Datos Genéricos -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>1. Datos Genéricos de la Emisión</span>
+            <span class="pill-mini">Valores por defecto</span>
+          </div>
+          <p class="panel-desc">
+            Estos valores se aplicarán a todos los certificados que cargues desde el <code>.csv</code> o añadas manualmente (luego podrás editar a cualquier persona individualmente).
+          </p>
+
+          <div class="form-group">
+            <label>
+              ID de la Badge (<code>badgeId</code>)
+              <span class="hint">— Nombre del archivo en <code>src/content/badges/</code> sin <code>.json</code></span>
+            </label>
+            <div style="display: flex; gap: 8px;">
+              <input
+                type="text"
+                id="gen-badge-id"
+                list="preset-badges-list"
+                value="workshop-ai-cloud"
+                placeholder="ej: capture-the-flag-reversing-de-binarios"
+                oninput="onGenericConfigChange()"
+              />
+              <datalist id="preset-badges-list">
+                <option value="workshop-ai-cloud">Taller IA & Google Cloud (google)</option>
+                <option value="hackathon-2026">Hackathon GDGoC UHU 2026 (cyber)</option>
+                <option value="summer-code-camp">Summer Pool Code Camp (piscina)</option>
+                <option value="winter-cloud-freeze">Winter Cloud Freeze Summit (nieve)</option>
+                <option value="creative-ui-jam">Sweet Candy UI/UX Jam (caramelos)</option>
+              </datalist>
+              <label class="btn btn-secondary btn-sm" style="margin:0; white-space: nowrap; cursor: pointer;" title="Cargar archivo .json de una badge de tu ordenador para previsualizar sus textos reales">
+                📂 Cargar badge.json
+                <input type="file" accept=".json" style="display:none" onchange="loadBadgeJsonFile(event)" />
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rol por defecto (<code>role</code>)</label>
+              <input
+                type="text"
+                id="gen-default-role"
+                value="Asistente Certificado"
+                placeholder="ej: Asistente Certificado, Ponente..."
+                oninput="onGenericRoleChange(this.value)"
+              />
+            </div>
+            <div class="form-group">
+              <label>Evidencia genérica <span class="hint">(opcional)</span></label>
+              <input
+                type="url"
+                id="gen-default-evidence"
+                value=""
+                placeholder="https://github.com/..."
+                oninput="onGenericEvidenceChange(this.value)"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Estilo visual del diploma (para la vista previa)</label>
+            <div class="style-selector" id="certs-style-selector">
+              <button type="button" class="style-btn active" data-style="google" onclick="setCertPreviewStyle('google')">
+                <span class="icon">🔵</span><span>Google</span>
+              </button>
+              <button type="button" class="style-btn" data-style="cyber" onclick="setCertPreviewStyle('cyber')">
+                <span class="icon">⚡</span><span>Cyber</span>
+              </button>
+              <button type="button" class="style-btn" data-style="piscina" onclick="setCertPreviewStyle('piscina')">
+                <span class="icon">🌊</span><span>Piscina</span>
+              </button>
+              <button type="button" class="style-btn" data-style="nieve" onclick="setCertPreviewStyle('nieve')">
+                <span class="icon">❄️</span><span>Nieve</span>
+              </button>
+              <button type="button" class="style-btn" data-style="caramelos" onclick="setCertPreviewStyle('caramelos')">
+                <span class="icon">🍬</span><span>Caramelos</span>
+              </button>
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="gen-only-checkedin" onchange="reparseLastCsvIfAny()" />
+            <span>Filtrar solo asistentes con Check-in confirmado (en CSV de Bevy)</span>
+          </label>
+
+          <label class="checkbox-row" style="margin-bottom:0;">
+            <input type="checkbox" id="gen-send-emails" checked onchange="renderCurrentSelection()" />
+            <span>Enviar correos automáticos al hacer commit en GitHub (incluye cola <code>_pending-emails.json</code>)</span>
+          </label>
+        </div>
+
+        <!-- Paso 2: Arrastrar CSV o Añadir Manualmente -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>2. Cargar Asistentes (CSV o Individual)</span>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addManualRecipient()">
+              + Añadir persona manualmente
+            </button>
+          </div>
+          <p class="panel-desc">
+            Arrastra aquí el archivo <code>.csv</code> exportado de <strong>Bevy (GDG Community)</strong> o cualquier CSV con columnas <code>nombre, email</code>.
+          </p>
+
+          <div
+            id="csv-dropzone"
+            class="dropzone"
+            onclick="document.getElementById('csv-file-input').click()"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDropCsv(event)"
+          >
+            <div class="dropzone-icon">📄</div>
+            <div class="dropzone-title" id="dropzone-title-text">Arrastra y suelta tu archivo .CSV aquí o haz clic para seleccionarlo</div>
+            <div class="dropzone-sub">Detecta automáticamente First Name, Last Name, Email y Checkin Date (UTC)</div>
+            <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFileSelect(event)" />
+          </div>
+
+          <!-- Lista de todos los certificados que se van a crear -->
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 8px; gap: 8px;">
+            <label style="margin:0;">
+              Lista de Certificados a Generar (<span id="cert-count-badge">1</span>)
+            </label>
+            <div style="display:flex; gap:6px;">
+              <input
+                type="text"
+                id="cert-list-search"
+                placeholder="Buscar en la lista..."
+                style="padding: 5px 10px; font-size: 12px; width: 165px;"
+                oninput="renderRecipientList()"
+              />
+              <button type="button" class="btn btn-danger" onclick="clearAllRecipients()" title="Vaciar lista">
+                Vaciar
+              </button>
+            </div>
+          </div>
+
+          <div id="cert-list-box" class="cert-list-container"></div>
+
+          <!-- Botones de Guardado en carpeta publish/ -->
+          <div class="action-bar" style="flex-direction: column;">
+            <button type="button" class="btn btn-success" style="width:100%; padding: 12px;" onclick="saveAssertionsToPublishFolder()">
+              📂 Guardar en carpeta src/content/assertions/publish
+            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%;">
+              <button type="button" class="btn btn-primary" onclick="downloadAssertionsZip()">
+                📦 Descargar publish.zip
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="downloadSingleAssertionJson()">
+                ⬇️ Descargar este .json
+              </button>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.4;">
+              En <strong>Chrome, Brave y Opera</strong> el botón verde escribe directamente en la carpeta <code>publish</code>. En <strong>Firefox y Safari</strong> descarga el paquete <code>publish.zip</code> listo para descomprimir y arrastrar a GitHub.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Edición Individual del Seleccionado + Vista Previa (Diploma / Email / JSON) -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- Editor Individual para el Certificado Seleccionado -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>✏️ Editar Certificado Seleccionado (<span id="selected-index-label">#1</span>)</span>
+            <button type="button" class="btn btn-danger" onclick="deleteSelectedRecipient()">
+              Eliminar este certificado
+            </button>
+          </div>
+          <p class="panel-desc">
+            Si a esta persona en concreto quieres cambiarle el rol (ej. ponerle <em>"Ponente"</em> o <em>"1er Premio"</em>), corregir su nombre o añadirle un enlace de proyecto, edítalo aquí:
+          </p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre completo del destinatario</label>
+              <input type="text" id="indiv-name" oninput="updateSelectedRecipientFromInputs()" />
+            </div>
+            <div class="form-group">
+              <label>Correo electrónico (se cifra con SHA-256 + salt)</label>
+              <input type="email" id="indiv-email" oninput="updateSelectedRecipientFromInputs()" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rol o reconocimiento de esta persona</label>
+              <input type="text" id="indiv-role" oninput="updateSelectedRecipientFromInputs()" />
+            </div>
+            <div class="form-group">
+              <label>Enlace a Evidencia / Proyecto <span class="hint">(si está vacío no sale el botón)</span></label>
+              <input type="url" id="indiv-evidence" placeholder="https://github.com/..." oninput="updateSelectedRecipientFromInputs()" />
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-bottom:0;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label>ID único del Certificado (24 caracteres hex)</label>
+              <div style="display:flex; gap:6px;">
+                <input type="text" id="indiv-id" class="mono" oninput="updateSelectedRecipientFromInputs()" />
+                <button type="button" class="btn btn-secondary btn-sm" onclick="regenerateSelectedId()" title="Generar nuevo ID aleatorio">
+                  🎲
+                </button>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Hash SHA-256 calculado (<code>recipient.identity</code>)</label>
+              <input type="text" id="indiv-hash" class="mono" readonly style="background:#f1f5f9; color:#475569;" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de Vista Previa Interactiva (Diploma / Email / JSON) -->
+        <div class="panel">
+          <div class="preview-tabs">
+            <button type="button" class="preview-tab active" id="subtab-diploma" onclick="switchPreviewSubtab('diploma')">
+              🎓 Vista Previa del Diploma
+            </button>
+            <button type="button" class="preview-tab" id="subtab-email" onclick="switchPreviewSubtab('email')">
+              📧 Vista Previa del Correo (Prueba de Email)
+            </button>
+            <button type="button" class="preview-tab" id="subtab-json" onclick="switchPreviewSubtab('json')">
+              {} Archivo .json Generado
+            </button>
+          </div>
+
+          <!-- Subvista 1: Diploma -->
+          <div id="preview-pane-diploma">
+            <div id="diploma-theme-wrapper" class="diploma-theme-google">
+              <div class="diploma-preview-outer">
+                <div class="diploma-preview-inner">
+                  <div class="diploma-frame-1"></div>
+                  <div class="diploma-frame-2"></div>
+
+                  <!-- Cabecera del Diploma -->
+                  <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; width:100%;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:18px; margin-bottom:14px;">
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <img
+                          src="./public/images/gdgoc-uhu-logo.jpg"
+                          onerror="this.style.display='none'"
+                          alt="GDG on Campus UHU"
+                          style="width:46px; height:46px; border-radius:10px; object-fit:cover; border:1px solid #dadce0; background:#fff;"
+                        />
+                        <div style="text-align:left;">
+                          <div class="dp-text-primary" style="font-weight:800; font-size:14px; line-height:1.2;">GDG on Campus</div>
+                          <div class="dp-accent" style="font-weight:700; font-size:11.5px;">Universidad de Huelva</div>
+                        </div>
+                      </div>
+                      <div class="dp-border" style="height:34px; border-left:2px solid;"></div>
+                      <img
+                        id="dp-badge-img"
+                        src="./public/images/badges/workshop-ai-cloud.svg"
+                        onerror="this.style.display='none'"
+                        alt="Badge"
+                        style="width:46px; height:46px; object-fit:contain;"
+                      />
+                    </div>
+
+                    <div id="dp-role-pill" class="dp-pill" style="display:inline-flex; align-items:center; justify-content:center; padding:5px 14px; border-radius:999px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
+                      ASISTENTE CERTIFICADO
+                    </div>
+
+                    <h2 id="dp-badge-title" class="dp-text-primary" style="font-size:24px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">
+                      Taller de IA Generativa & Google Cloud
+                    </h2>
+                    <div id="dp-issue-date" class="dp-text-secondary" style="font-size:12.5px; font-weight:600; margin-top:4px;">
+                      28 de octubre de 2026
+                    </div>
+                  </div>
+
+                  <!-- Cuerpo Central del Diploma -->
+                  <div style="position:relative; z-index:2; margin: 18px 0; width:100%; display:flex; flex-direction:column; align-items:center;">
+                    <p class="dp-text-secondary" style="font-size:13.5px; font-style:italic; margin-bottom:8px;">
+                      Este certificado digital se otorga a
+                    </p>
+                    <div class="dp-border" style="position:relative; display:inline-block; padding: 0 28px 10px 28px; margin-bottom:14px; border-bottom:2px solid; min-width:300px;">
+                      <div id="dp-recipient-name" class="dp-text-primary" style="font-size:34px; font-weight:800; letter-spacing:-0.02em; line-height:1.15;">
+                        Nombre del Alumno
+                      </div>
+                      <svg style="position:absolute; bottom:-3px; left:0; right:0; margin:0 auto; width:110px; height:4px; border-radius:99px;" viewBox="0 0 128 4" preserveAspectRatio="none">
+                        <rect x="0" y="0" width="32" height="4" fill="#4285F4" />
+                        <rect x="32" y="0" width="32" height="4" fill="#EA4335" />
+                        <rect x="64" y="0" width="32" height="4" fill="#FBBC04" />
+                        <rect x="96" y="0" width="32" height="4" fill="#34A853" />
+                      </svg>
+                    </div>
+
+                    <p id="dp-badge-desc" class="dp-text-primary" style="font-size:13.5px; max-width:560px; line-height:1.5;">
+                      Certificado oficial otorgado por GDG on Campus Universidad de Huelva.
+                    </p>
+                    <p id="dp-badge-narrative" class="dp-text-secondary" style="font-size:12px; max-width:500px; line-height:1.45; margin-top:6px;">
+                      Otorgado por completar satisfactoriamente las actividades prácticas del evento.
+                    </p>
+
+                    <div class="dp-meta" style="margin-top:16px; width:100%; max-width:560px; border-radius:14px; padding:12px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; text-align:center;">
+                      <div>
+                        <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Rol Acreditado</div>
+                        <div id="dp-meta-role" class="dp-text-primary" style="font-size:12.5px; font-weight:800; margin-top:2px;">Asistente Certificado</div>
+                      </div>
+                      <div class="dp-border" style="border-left:2px solid; border-right:2px solid; padding:0 8px;">
+                        <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Entidad Emisora</div>
+                        <div class="dp-text-primary" style="font-size:12.5px; font-weight:800; margin-top:2px;">GDG on Campus UHU</div>
+                      </div>
+                      <div>
+                        <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Estándar</div>
+                        <div style="font-size:12.5px; font-weight:800; color:#34A853; margin-top:2px;">✓ Open Badges 2.0</div>
+                      </div>
+                    </div>
+
+                    <div id="dp-tags-row" style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:6px;"></div>
+                  </div>
+
+                  <!-- Pie del Diploma con QR + VERIFIED + ID Completo -->
+                  <div class="dp-border" style="position:relative; z-index:2; width:100%; padding-top:14px; border-top:2px solid; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
+                      <div class="dp-accent" style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">GDG on Campus UHU</div>
+                      <div class="dp-border" style="width:140px; border-top:2px solid; margin-bottom:4px;"></div>
+                      <div class="dp-text-primary" style="font-size:11px; font-weight:700;">Universidad de Huelva</div>
+                      <div class="dp-text-secondary" style="font-size:10px;">Comunidad Oficial de Desarrolladores</div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <div class="dp-border" style="padding:4px; border-radius:10px; border:2px solid; background:#fff;">
+                        <svg id="dp-qr-svg" style="width:44px; height:44px; display:block;" viewBox="0 0 31 31" shape-rendering="crispEdges"></svg>
+                      </div>
+                      <div class="dp-verified" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; font-family:'JetBrains Mono', monospace; font-size:10.5px; font-weight:800;">
+                        <span style="color:#4285F4;">●</span><span style="color:#EA4335;">●</span><span style="color:#FBBC04;">●</span><span style="color:#34A853;">●</span>
+                        <span>VERIFIED</span>
+                      </div>
+                    </div>
+
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
+                      <div id="dp-full-id" class="dp-text-secondary mono" style="font-size:10.5px; font-weight:700; margin-bottom:4px;">69679d9fa12d24f4a673b54b</div>
+                      <div class="dp-border" style="width:140px; border-top:2px solid; margin-bottom:4px;"></div>
+                      <div class="dp-text-primary" style="font-size:11px; font-weight:700;">Credencial Criptográfica</div>
+                      <div class="dp-text-secondary" style="font-size:10px;">Verificación Alojada SHA-256</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Barra de botones inferior de vista previa (muestra si aparece o no el botón de Evidencia) -->
+              <div style="margin-top:14px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
+                <span class="btn btn-primary btn-sm" style="pointer-events:none;">+ Añadir a tu cartera</span>
+                <span class="btn btn-secondary btn-sm" style="pointer-events:none;">in Añadir a LinkedIn</span>
+                <span class="btn btn-secondary btn-sm" style="pointer-events:none;">🖨️ Imprimir / PDF</span>
+                <span id="dp-evidence-btn" class="btn btn-secondary btn-sm hidden" style="pointer-events:none; border-color:#4285F4; color:#1967D2;">
+                  Ver Evidencia / Proyecto ↗
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subvista 2: Vista Previa del Correo Electrónico -->
+          <div id="preview-pane-email" class="hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+              <div style="font-size:12.5px; color:var(--text-muted);">
+                Asunto: <strong id="email-preview-subject" style="color:var(--text);">🎓 Tu certificado oficial — GDG on Campus UHU</strong>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="downloadEmailPreviewHtml()">
+                ⬇️ Descargar prueba de correo (.html)
+              </button>
+            </div>
+            <iframe
+              id="email-preview-iframe"
+              title="Vista Previa del Email"
+              style="width:100%; height:560px; border:1px solid var(--border); border-radius:14px; background:#f8fafc;"
+            ></iframe>
+          </div>
+
+          <!-- Subvista 3: Código JSON -->
+          <div id="preview-pane-json" class="hidden">
+            <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="copyCurrentAssertionJson()">
+                📋 Copiar JSON
+              </button>
+            </div>
+            <pre id="assertion-json-output" class="json-code-box"></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         MODO 2: CREAR NUEVA BADGE (BADGECLASS)
+         ====================================================================== -->
+    <div id="view-mode-badge" class="grid-2col hidden">
+      <div class="panel">
+        <div class="panel-title">
+          <span>🏅 Definir Nueva Badge (<code>BadgeClass</code>)</span>
+          <span class="pill-mini">Evento / Taller</span>
+        </div>
+        <p class="panel-desc">
+          Rellena los datos del evento o taller. Se guardará en <code>src/content/badges/publish/</code> lista para arrastrar a GitHub.
+        </p>
+
+        <div class="form-group">
+          <label>Nombre del Evento / Insignia (<code>name</code>)</label>
+          <input
+            type="text"
+            id="badge-name"
+            value="Capture The Flag - Reversing de Binarios"
+            oninput="onBadgeNameInput(this.value)"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>
+            Nombre del archivo JSON (<code>badgeId</code>)
+            <span class="hint">— Se guardará como <code>&lt;id&gt;.json</code></span>
+          </label>
+          <input
+            type="text"
+            id="badge-slug"
+            class="mono"
+            value="capture-the-flag-reversing-de-binarios"
+            oninput="updateBadgePreview()"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Estilo visual asignado a esta Badge (<code>style</code>)</label>
+          <div class="style-selector" id="badge-creator-style-selector">
+            <button type="button" class="style-btn active" data-style="google" onclick="setBadgeCreatorStyle('google')">
+              <span class="icon">🔵</span><span>Google</span>
+            </button>
+            <button type="button" class="style-btn" data-style="cyber" onclick="setBadgeCreatorStyle('cyber')">
+              <span class="icon">⚡</span><span>Cyber</span>
+            </button>
+            <button type="button" class="style-btn" data-style="piscina" onclick="setBadgeCreatorStyle('piscina')">
+              <span class="icon">🌊</span><span>Piscina</span>
+            </button>
+            <button type="button" class="style-btn" data-style="nieve" onclick="setBadgeCreatorStyle('nieve')">
+              <span class="icon">❄️</span><span>Nieve</span>
+            </button>
+            <button type="button" class="style-btn" data-style="caramelos" onclick="setBadgeCreatorStyle('caramelos')">
+              <span class="icon">🍬</span><span>Caramelos</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            Ruta del logo en el repositorio (<code>image</code>)
+            <span class="hint">— Guardar imagen en <code>public/images/badges/</code></span>
+          </label>
+          <div style="display:flex; gap:8px;">
+            <input
+              type="text"
+              id="badge-image"
+              class="mono"
+              value="/images/badges/capture-the-flag-reversing-de-binarios.svg"
+              oninput="updateBadgePreview()"
+            />
+            <label class="btn btn-secondary btn-sm" style="margin:0; white-space:nowrap; cursor:pointer;">
+              🖼️ Probar logo local
+              <input type="file" accept="image/*" style="display:none" onchange="previewLocalBadgeLogo(event)" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción del certificado (<code>description</code>)</label>
+          <textarea id="badge-desc" oninput="updateBadgePreview()">Certificado oficial de asistencia al taller organizado por GDGoC Universidad de Huelva</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Criterios de obtención (<code>criteria.narrative</code>)</label>
+          <textarea id="badge-narrative" oninput="updateBadgePreview()">Otorgado por asistir presencialmente al 100% del taller y participar en las actividades</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Tags / Competencias separadas por comas (<code>tags</code>)</label>
+          <input
+            type="text"
+            id="badge-tags"
+            value="CTF, Reversing, Binarios, Ghidra"
+            oninput="updateBadgePreview()"
+          />
+        </div>
+
+        <div class="action-bar" style="flex-direction:column;">
+          <button type="button" class="btn btn-success" style="width:100%; padding:12px;" onclick="saveBadgeToPublishFolder()">
+            📂 Guardar en carpeta src/content/badges/publish
+          </button>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%;">
+            <button type="button" class="btn btn-primary" onclick="downloadBadgeJsonFile()">
+              ⬇️ Descargar <span id="btn-badge-filename">badge.json</span>
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="useCreatedBadgeForCerts()">
+              🎓 Usar esta Badge para emitir certificados →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista previa del JSON de la Badge -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>Vista Previa del archivo <code>src/content/badges/publish/<span id="preview-badge-filename">capture-the-flag-reversing-de-binarios.json</span></code></span>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="copyBadgeJson()">
+            📋 Copiar JSON
+          </button>
+        </div>
+        <p class="panel-desc">
+          Recuerda guardar también el icono <code>.svg</code> o <code>.png</code> en <code>public/images/badges/</code>.
+        </p>
+        <pre id="badge-json-output" class="json-code-box"></pre>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    /* ========================================================================
+       1. IMPLEMENTACIÓN PURA DE SHA-256 (Funciona en file:// en todos los navegadores)
+       ======================================================================== */
+    function sha256Hex(ascii) {
+      function rightRotate(value, amount) {
+        return (value >>> amount) | (value << (32 - amount));
+      }
+      const utf8 = unescape(encodeURIComponent(ascii));
+      const mathPow = Math.pow;
+      const maxWord = mathPow(2, 32);
+      const lengthProperty = 'length';
+      let i, j;
+      let result = '';
+      const words = [];
+      const asciiBitLength = utf8[lengthProperty] * 8;
+      let hash = (sha256Hex.h = sha256Hex.h || []);
+      const k = (sha256Hex.k = sha256Hex.k || []);
+      let primeCounter = k[lengthProperty];
+      const isComposite = {};
+      for (let candidate = 2; primeCounter < 64; candidate++) {
+        if (!isComposite[candidate]) {
+          for (i = 0; i < 313; i += candidate) {
+            isComposite[i] = candidate;
+          }
+          hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+          k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+        }
+      }
+      let str = utf8 + '\x80';
+      while ((str[lengthProperty] % 64) - 56) str += '\x00';
+      for (i = 0; i < str[lengthProperty]; i++) {
+        j = str.charCodeAt(i);
+        words[i >> 2] |= j << (((3 - i) % 4) * 8);
+      }
+      words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+      words[words[lengthProperty]] = asciiBitLength;
+      let h = hash.slice(0, 8);
+      for (j = 0; j < words[lengthProperty]; ) {
+        const w = words.slice(j, (j += 16));
+        const oldHash = h.slice(0);
+        for (i = 0; i < 64; i++) {
+          const i2 = i + j;
+          const w15 = w[i - 15], w2 = w[i - 2];
+          const a = h[0], e = h[4];
+          const temp1 =
+            h[7] +
+            (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) +
+            ((e & h[5]) ^ (~e & h[6])) +
+            k[i] +
+            (w[i] =
+              i < 16
+                ? w[i]
+                : (w[i - 16] +
+                    (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) +
+                    w[i - 7] +
+                    (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) |
+                  0);
+          const temp2 =
+            (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) +
+            ((a & h[1]) ^ (a & h[2]) ^ (h[1] & h[2]));
+          h = [(temp1 + temp2) | 0].concat(h);
+          h[4] = (h[4] + temp1) | 0;
+          h.pop();
+        }
+        for (i = 0; i < 8; i++) h[i] = (h[i] + oldHash[i]) | 0;
+      }
+      for (i = 0; i < 8; i++) {
+        for (j = 3; j + 1; j--) {
+          const b = (h[i] >> (j * 8)) & 255;
+          result += (b < 16 ? 0 : '') + b.toString(16);
+        }
+      }
+      return result;
+    }
+
+    function computeOpenBadgeIdentity(email, salt) {
+      const clean = (email || '').toLowerCase().trim();
+      return 'sha256$' + sha256Hex(clean + salt);
+    }
+
+    function generateHexId24() {
+      const bytes = new Uint8Array(12);
+      if (window.crypto && window.crypto.getRandomValues) {
+        window.crypto.getRandomValues(bytes);
+      } else {
+        for (let i = 0; i < 12; i++) bytes[i] = Math.floor(Math.random() * 256);
+      }
+      return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    /* ========================================================================
+       2. GENERADOR LIGERO DE QR VECTORIAL (ISO/IEC 18004)
+       ======================================================================== */
+    const QR_VERSIONS = [
+      { version: 1, total: 26, data: 19, ec: 7, align: [] },
+      { version: 2, total: 44, data: 34, ec: 10, align: [6, 18] },
+      { version: 3, total: 70, data: 55, ec: 15, align: [6, 22] },
+      { version: 4, total: 100, data: 80, ec: 20, align: [6, 26] },
+      { version: 5, total: 134, data: 108, ec: 26, align: [6, 30] },
+    ];
+    const GF_EXP = new Uint8Array(512);
+    const GF_LOG = new Uint8Array(256);
+    (function initGf() {
+      let x = 1;
+      for (let i = 0; i < 255; i++) {
+        GF_EXP[i] = x;
+        GF_LOG[x] = i;
+        x <<= 1;
+        if (x & 0x100) x ^= 0x11d;
+      }
+      for (let i = 255; i < 512; i++) GF_EXP[i] = GF_EXP[i - 255];
+    })();
+    function gfMul(a, b) {
+      return a === 0 || b === 0 ? 0 : GF_EXP[GF_LOG[a] + GF_LOG[b]];
+    }
+    function getQrsvg(text) {
+      const utf8 = unescape(encodeURIComponent(text));
+      const bytes = new Uint8Array(utf8.length);
+      for (let i = 0; i < utf8.length; i++) bytes[i] = utf8.charCodeAt(i);
+      const spec = QR_VERSIONS.find((v) => v.data - 2 >= bytes.length) || QR_VERSIONS[QR_VERSIONS.length - 1];
+      const bits = [];
+      const pushBits = (val, len) => {
+        for (let i = len - 1; i >= 0; i--) bits.push((val >> i) & 1);
+      };
+      pushBits(0b0100, 4);
+      pushBits(bytes.length, 8);
+      for (let i = 0; i < bytes.length; i++) pushBits(bytes[i], 8);
+      for (let i = 0; i < 4 && bits.length < spec.data * 8; i++) bits.push(0);
+      while (bits.length % 8 !== 0) bits.push(0);
+      const dataBytes = new Uint8Array(spec.data);
+      const byteLen = bits.length / 8;
+      for (let i = 0; i < byteLen; i++) {
+        let b = 0;
+        for (let j = 0; j < 8; j++) b = (b << 1) | bits[i * 8 + j];
+        dataBytes[i] = b;
+      }
+      const pads = [0xec, 0x11];
+      for (let i = byteLen; i < spec.data; i++) dataBytes[i] = pads[(i - byteLen) % 2];
+      let poly = new Uint8Array([1]);
+      for (let i = 0; i < spec.ec; i++) {
+        const next = new Uint8Array(poly.length + 1);
+        for (let j = 0; j < poly.length; j++) {
+          next[j] ^= poly[j];
+          next[j + 1] ^= gfMul(poly[j], GF_EXP[i]);
+        }
+        poly = next;
+      }
+      const msg = new Uint8Array(spec.data + spec.ec);
+      msg.set(dataBytes, 0);
+      for (let i = 0; i < spec.data; i++) {
+        const coef = msg[i];
+        if (coef !== 0) {
+          for (let j = 0; j < poly.length; j++) msg[i + j] ^= gfMul(poly[j], coef);
+        }
+      }
+      const codewords = new Uint8Array(spec.total);
+      codewords.set(dataBytes, 0);
+      codewords.set(msg.slice(spec.data), spec.data);
+      const size = 17 + spec.version * 4;
+      const modules = Array.from({ length: size }, () => Array(size).fill(false));
+      const isFunc = Array.from({ length: size }, () => Array(size).fill(false));
+      const setF = (r, c, d) => {
+        if (r >= 0 && r < size && c >= 0 && c < size) {
+          modules[r][c] = d;
+          isFunc[r][c] = true;
+        }
+      };
+      const drawFinder = (row, col) => {
+        for (let dr = -1; dr <= 7; dr++) {
+          for (let dc = -1; dc <= 7; dc++) {
+            const r = row + dr, c = col + dc;
+            if (r < 0 || r >= size || c < 0 || c >= size) continue;
+            const d =
+              (dr >= 0 && dr <= 6 && (dc === 0 || dc === 6)) ||
+              (dc >= 0 && dc <= 6 && (dr === 0 || dr === 6)) ||
+              (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4);
+            setF(r, c, d);
+          }
+        }
+      };
+      drawFinder(0, 0);
+      drawFinder(0, size - 7);
+      drawFinder(size - 7, 0);
+      if (spec.align.length > 1) {
+        const center = spec.align[spec.align.length - 1];
+        for (let dr = -2; dr <= 2; dr++) {
+          for (let dc = -2; dc <= 2; dc++) {
+            setF(center + dr, center + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1);
+          }
+        }
+      }
+      for (let i = 8; i < size - 8; i++) {
+        setF(6, i, i % 2 === 0);
+        setF(i, 6, i % 2 === 0);
+      }
+      for (let i = 0; i < 9; i++) {
+        if (i !== 6) {
+          isFunc[8][i] = true;
+          isFunc[i][8] = true;
+        }
+      }
+      for (let i = 0; i < 8; i++) {
+        isFunc[8][size - 1 - i] = true;
+        isFunc[size - 1 - i][8] = true;
+      }
+      setF(4 * spec.version + 9, 8, true);
+      let bitIdx = 0, upward = true;
+      for (let right = size - 1; right >= 1; right -= 2) {
+        if (right === 6) right = 5;
+        for (let vert = 0; vert < size; vert++) {
+          const r = upward ? size - 1 - vert : vert;
+          for (let j = 0; j < 2; j++) {
+            const c = right - j;
+            if (!isFunc[r][c]) {
+              let dark = false;
+              if (bitIdx < codewords.length * 8) {
+                dark = ((codewords[bitIdx >> 3] >> (7 - (bitIdx & 7))) & 1) === 1;
+                bitIdx++;
+              }
+              if ((r + c) % 2 === 0) dark = !dark;
+              modules[r][c] = dark;
+            }
+          }
+        }
+        upward = !upward;
+      }
+      const dataBits = 0b01000;
+      let rem = dataBits << 10;
+      for (let i = 14; i >= 10; i--) if ((rem >> i) & 1) rem ^= 0x537 << (i - 10);
+      const formatBits = ((dataBits << 10) | rem) ^ 0x5412;
+      const getBit = (i) => ((formatBits >> i) & 1) === 1;
+      for (let i = 0; i <= 5; i++) modules[8][i] = getBit(14 - i);
+      modules[8][7] = getBit(8);
+      modules[8][8] = getBit(7);
+      modules[7][8] = getBit(6);
+      for (let i = 0; i <= 5; i++) modules[5 - i][8] = getBit(5 - i);
+      for (let i = 0; i <= 6; i++) modules[size - 1 - i][8] = getBit(14 - i);
+      for (let i = 0; i <= 7; i++) modules[8][size - 8 + i] = getBit(7 - i);
+      let path = '';
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (modules[r][c]) path += `M${c},${r}h1v1h-1z`;
+        }
+      }
+      return { size, path };
+    }
+
+    /* ========================================================================
+       3. GENERADOR ZIP PURO EN JAVASCRIPT (Para Firefox, Safari y descarga rápida)
+       ======================================================================== */
+    const CRC_TABLE = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+      CRC_TABLE[n] = c >>> 0;
+    }
+    function crc32(bytes) {
+      let c = 0xffffffff;
+      for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
+      return (c ^ 0xffffffff) >>> 0;
+    }
+    function createZipBlob(files) {
+      // files: [{ name: 'publish/xxx.json', content: '...' }]
+      const encoder = new TextEncoder();
+      const localParts = [];
+      const centralParts = [];
+      let offset = 0;
+
+      for (const f of files) {
+        const nameBytes = encoder.encode(f.name);
+        const dataBytes = encoder.encode(f.content);
+        const crc = crc32(dataBytes);
+
+        const localHeader = new Uint8Array(30 + nameBytes.length);
+        const lv = new DataView(localHeader.buffer);
+        lv.setUint32(0, 0x04034b50, true);
+        lv.setUint16(4, 20, true);
+        lv.setUint16(6, 0, true);
+        lv.setUint16(8, 0, true);
+        lv.setUint16(10, 0, true);
+        lv.setUint16(12, 0, true);
+        lv.setUint32(14, crc, true);
+        lv.setUint32(18, dataBytes.length, true);
+        lv.setUint32(22, dataBytes.length, true);
+        lv.setUint16(26, nameBytes.length, true);
+        lv.setUint16(28, 0, true);
+        localHeader.set(nameBytes, 30);
+
+        const centralHeader = new Uint8Array(46 + nameBytes.length);
+        const cv = new DataView(centralHeader.buffer);
+        cv.setUint32(0, 0x02014b50, true);
+        cv.setUint16(4, 20, true);
+        cv.setUint16(6, 20, true);
+        cv.setUint16(8, 0, true);
+        cv.setUint16(10, 0, true);
+        cv.setUint16(12, 0, true);
+        cv.setUint16(14, 0, true);
+        cv.setUint32(16, crc, true);
+        cv.setUint32(20, dataBytes.length, true);
+        cv.setUint32(24, dataBytes.length, true);
+        cv.setUint16(28, nameBytes.length, true);
+        cv.setUint16(30, 0, true);
+        cv.setUint16(32, 0, true);
+        cv.setUint16(34, 0, true);
+        cv.setUint16(36, 0, true);
+        cv.setUint32(38, 0, true);
+        cv.setUint32(42, offset, true);
+        centralHeader.set(nameBytes, 46);
+
+        localParts.push(localHeader, dataBytes);
+        centralParts.push(centralHeader);
+        offset += localHeader.length + dataBytes.length;
+      }
+
+      let centralSize = 0;
+      for (const p of centralParts) centralSize += p.length;
+
+      const eocd = new Uint8Array(22);
+      const ev = new DataView(eocd.buffer);
+      ev.setUint32(0, 0x06054b50, true);
+      ev.setUint16(4, 0, true);
+      ev.setUint16(6, 0, true);
+      ev.setUint16(8, files.length, true);
+      ev.setUint16(10, files.length, true);
+      ev.setUint32(12, centralSize, true);
+      ev.setUint32(16, offset, true);
+      ev.setUint16(20, 0, true);
+
+      return new Blob([...localParts, ...centralParts, eocd], { type: 'application/zip' });
+    }
+
+    /* ========================================================================
+       4. ESTADO DE LA APLICACIÓN Y CATÁLOGO DE BADGES CONOCIDAS
+       ======================================================================== */
+    const KNOWN_BADGES = {
+      'workshop-ai-cloud': {
+        name: 'Taller de IA Generativa & Google Cloud',
+        description: 'Certificado oficial por completar el taller práctico de Inteligencia Artificial Generativa con Gemini y despliegue en Google Cloud Platform organizado por GDG on Campus UHU.',
+        image: './public/images/badges/workshop-ai-cloud.svg',
+        criteria: { narrative: 'El estudiante asistió a la sesión formativa y completó los laboratorios prácticos.' },
+        tags: ['Google Cloud', 'Gemini AI', 'Vertex AI', 'Workshop'],
+        style: 'google',
+      },
+      'hackathon-2026': {
+        name: 'Hackathon GDGoC UHU 2026',
+        description: 'Otorgado por la participación activa en el Hackathon Tecnológico 2026 organizado por GDG on Campus en la Universidad de Huelva, habiendo ideado, programado y defendido una solución técnica innovadora.',
+        image: './public/images/badges/hackathon-2026.svg',
+        criteria: { narrative: 'El portador de esta insignia completó 24 horas ininterrumpidas de desarrollo de software colaborativo.' },
+        tags: ['Hackathon', 'Google Cloud', 'AI', 'Open Source', 'Teamwork'],
+        style: 'cyber',
+      },
+      'summer-code-camp': {
+        name: 'Summer Pool Code Camp 2026',
+        description: 'Acreditación oficial por superar el Bootcamp intensivo de verano de desarrollo web y tecnologías cloud organizado por el Google Developer Group on Campus de la Universidad de Huelva.',
+        image: './public/images/badges/summer-code-camp.svg',
+        criteria: { narrative: 'El participante completó los retos prácticos del campamento tecnológico de verano.' },
+        tags: ['Summer Camp', 'Web Dev', 'Flutter', 'Firebase'],
+        style: 'piscina',
+      },
+      'winter-cloud-freeze': {
+        name: 'Winter Cloud Freeze Summit',
+        description: 'Certificado oficial de participación en las jornadas de invierno sobre arquitectura en la nube, ciberseguridad y sistemas distribuidos de GDG on Campus Universidad de Huelva.',
+        image: './public/images/badges/winter-cloud-freeze.svg',
+        criteria: { narrative: 'Asistencia completa y resolución de los laboratorios técnicos del encuentro invernal.' },
+        tags: ['Cloud', 'Kubernetes', 'Security', 'Winter Summit'],
+        style: 'nieve',
+      },
+      'creative-ui-jam': {
+        name: 'Sweet Candy UI/UX Creative Jam',
+        description: 'Reconocimiento oficial por participar en la Creative Jam de diseño de interfaces, accesibilidad y sistemas de diseño interactivos de GDG on Campus Universidad de Huelva.',
+        image: './public/images/badges/creative-ui-jam.svg',
+        criteria: { narrative: 'Diseño y presentación de un prototipo interactivo completo evaluado por el jurado.' },
+        tags: ['UI/UX', 'Design Systems', 'CSS', 'Creative Jam'],
+        style: 'caramelos',
+      },
+    };
+
+    const currentYearSalt = 'gdgoc-uhu-salt-' + new Date().getFullYear();
+    let activeCertPreviewStyle = 'google';
+    let activeBadgeCreatorStyle = 'google';
+    let lastRawCsvContent = '';
+    let selectedIndex = 0;
+
+    let recipients = [
+      {
+        id: generateHexId24(),
+        name: 'Laura Benítez Romero',
+        email: 'laura.benitez@alu.uhu.es',
+        role: 'Asistente Certificado',
+        evidence: '',
+        issuedOn: new Date().toISOString(),
+        customRole: false,
+        customEvidence: false,
+      },
+    ];
+
+    /* ========================================================================
+       5. UTILIDADES DE NOMBRES Y PARSER CSV (Compatible con Bevy y Genérico)
+       ======================================================================== */
+    function toTitleCase(str) {
+      if (!str) return '';
+      const lowerWords = ['de', 'del', 'la', 'las', 'los', 'y', 'e', 'el', 'da', 'do', 'dos', 'das', 'von', 'van'];
+      return str
+        .toLowerCase()
+        .trim()
+        .split(/\s+/)
+        .map((word, index) => (index > 0 && lowerWords.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+        .join(' ');
+    }
+
+    function cleanFullName(firstName, lastName) {
+      const f = (firstName || '').trim();
+      const l = (lastName || '').trim();
+      if (!l) return toTitleCase(f);
+      if (!f) return toTitleCase(l);
+      if (f.toLowerCase() === l.toLowerCase() || f.toLowerCase().endsWith(l.toLowerCase())) {
+        return toTitleCase(f);
+      }
+      return toTitleCase(f + ' ' + l);
+    }
+
+    function parseCSV(content) {
+      const lines = content.trim().split(/\r?\n/);
+      if (lines.length < 2) return [];
+      function splitLine(line) {
+        const values = [];
+        let current = '', inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
+          } else if (char === ',' && !inQuotes) {
+            values.push(current.trim());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        values.push(current.trim());
+        return values;
+      }
+      const header = splitLine(lines[0]).map((h) => h.trim().toLowerCase());
+      const rows = [];
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const vals = splitLine(lines[i]);
+        const obj = {};
+        for (let j = 0; j < header.length; j++) obj[header[j]] = vals[j] !== undefined ? vals[j] : '';
+        rows.push(obj);
+      }
+      return { header, rows };
+    }
+
+    function importFromCsvText(csvText) {
+      const parsed = parseCSV(csvText);
+      if (!parsed || !parsed.rows || parsed.rows.length === 0) {
+        showToast('⚠️ El archivo CSV está vacío o no tiene filas válidas.');
+        return;
+      }
+      const { header, rows } = parsed;
+      const isBevy = header.includes('first name') && header.includes('email');
+      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado';
+      const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
+      const onlyCheckedIn = document.getElementById('gen-only-checkedin').checked;
+
+      const seenEmails = new Set();
+      const loaded = [];
+      const nowIso = new Date().toISOString();
+
+      for (const r of rows) {
+        let name = '', email = '', role = defaultRole, evidence = defaultEvidence, checkedIn = true;
+        let hasCustomRole = false, hasCustomEvidence = false;
+
+        if (isBevy) {
+          name = cleanFullName(r['first name'], r['last name']);
+          email = (r['email'] || '').trim();
+          const checkinCol = r['checkin date (utc)'] || r['checkin date'] || '';
+          checkedIn = Boolean(checkinCol && checkinCol.trim().length > 0);
+        } else {
+          name = toTitleCase(r['nombre'] || r['name'] || r['alumno'] || r['estudiante'] || '');
+          email = (r['email'] || r['correo'] || r['mail'] || '').trim();
+          if (r['role'] || r['rol']) {
+            role = (r['role'] || r['rol']).trim();
+            hasCustomRole = true;
+          }
+          if (r['evidence'] || r['evidencia'] || r['proyecto']) {
+            evidence = (r['evidence'] || r['evidencia'] || r['proyecto']).trim();
+            hasCustomEvidence = true;
+          }
+        }
+
+        if (!name || !email) continue;
+        if (onlyCheckedIn && !checkedIn) continue;
+
+        const emailKey = email.toLowerCase();
+        if (seenEmails.has(emailKey)) continue;
+        seenEmails.add(emailKey);
+
+        loaded.push({
+          id: generateHexId24(),
+          name,
+          email,
+          role,
+          evidence,
+          issuedOn: nowIso,
+          customRole: hasCustomRole,
+          customEvidence: hasCustomEvidence,
+        });
+      }
+
+      if (loaded.length === 0) {
+        showToast('⚠️ Ningún asistente cumple los criterios (revisa el filtro de Check-in).');
+        return;
+      }
+
+      recipients = loaded;
+      selectedIndex = 0;
+      renderRecipientList();
+      renderCurrentSelection();
+      showToast(`✅ ${loaded.length} certificados cargados desde el CSV (sin duplicados).`);
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('csv-dropzone').classList.add('dragover');
+    }
+    function handleDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('csv-dropzone').classList.remove('dragover');
+    }
+    function handleDropCsv(e) {
+      e.preventDefault();
+      document.getElementById('csv-dropzone').classList.remove('dragover');
+      const file = e.dataTransfer?.files?.[0];
+      if (file) readCsvFile(file);
+    }
+    function handleCsvFileSelect(e) {
+      const file = e.target.files?.[0];
+      if (file) readCsvFile(file);
+    }
+    function readCsvFile(file) {
+      document.getElementById('dropzone-title-text').textContent = `Archivo cargado: ${file.name}`;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        lastRawCsvContent = String(ev.target.result || '');
+        importFromCsvText(lastRawCsvContent);
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+    function reparseLastCsvIfAny() {
+      if (lastRawCsvContent) importFromCsvText(lastRawCsvContent);
+    }
+
+    /* ========================================================================
+       6. GESTIÓN DE LA LISTA DE CERTIFICADOS Y EDICIÓN INDIVIDUAL
+       ======================================================================== */
+    function renderRecipientList() {
+      const box = document.getElementById('cert-list-box');
+      const query = (document.getElementById('cert-list-search').value || '').toLowerCase().trim();
+      document.getElementById('cert-count-badge').textContent = String(recipients.length);
+
+      if (recipients.length === 0) {
+        box.innerHTML = `<div style="padding:20px; text-align:center; font-size:12.5px; color:#64748b;">No hay certificados en la lista. Arrastra un CSV o pulsa "+ Añadir persona".</div>`;
+        return;
+      }
+
+      let html = '';
+      recipients.forEach((item, idx) => {
+        if (
+          query &&
+          !item.name.toLowerCase().includes(query) &&
+          !item.email.toLowerCase().includes(query) &&
+          !item.role.toLowerCase().includes(query)
+        ) {
+          return;
+        }
+        const isActive = idx === selectedIndex;
+        const isEdited = item.customRole || item.customEvidence;
+        html += `
+          <div class="cert-list-item ${isActive ? 'active' : ''}" onclick="selectRecipient(${idx})">
+            <div style="min-width:0; flex:1;">
+              <div class="cert-item-name">
+                <span style="color:#64748b; font-size:11.5px;">#${idx + 1}</span>
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(item.name)}</span>
+                ${isEdited ? '<span class="pill-mini pill-edited">Personalizado</span>' : ''}
+              </div>
+              <div class="cert-item-meta" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                ${escapeHtml(item.role)} · <span class="mono">${escapeHtml(item.email)}</span>
+              </div>
+            </div>
+            <span class="pill-mini mono">${item.id.slice(0, 6)}</span>
+          </div>
+        `;
+      });
+      box.innerHTML = html || `<div style="padding:16px; text-align:center; font-size:12px; color:#64748b;">Sin coincidencias para "${escapeHtml(query)}"</div>`;
+    }
+
+    function selectRecipient(idx) {
+      if (idx < 0 || idx >= recipients.length) return;
+      selectedIndex = idx;
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function addManualRecipient() {
+      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado';
+      const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
+      recipients.push({
+        id: generateHexId24(),
+        name: 'Nuevo Asistente ' + (recipients.length + 1),
+        email: `asistente${recipients.length + 1}@alu.uhu.es`,
+        role: defaultRole,
+        evidence: defaultEvidence,
+        issuedOn: new Date().toISOString(),
+        customRole: false,
+        customEvidence: false,
+      });
+      selectedIndex = recipients.length - 1;
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function deleteSelectedRecipient() {
+      if (recipients.length <= 1) {
+        showToast('ℹ️ Debe haber al menos 1 certificado en la vista previa.');
+        return;
+      }
+      recipients.splice(selectedIndex, 1);
+      if (selectedIndex >= recipients.length) selectedIndex = recipients.length - 1;
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function clearAllRecipients() {
+      recipients = [
+        {
+          id: generateHexId24(),
+          name: 'Nombre del Asistente',
+          email: 'alumno@alu.uhu.es',
+          role: document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado',
+          evidence: document.getElementById('gen-default-evidence').value.trim(),
+          issuedOn: new Date().toISOString(),
+          customRole: false,
+          customEvidence: false,
+        },
+      ];
+      selectedIndex = 0;
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function regenerateSelectedId() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+      current.id = generateHexId24();
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function updateSelectedRecipientFromInputs() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+      const newName = document.getElementById('indiv-name').value;
+      const newEmail = document.getElementById('indiv-email').value;
+      const newRole = document.getElementById('indiv-role').value;
+      const newEvidence = document.getElementById('indiv-evidence').value;
+      const newId = document.getElementById('indiv-id').value.trim();
+
+      const defaultRole = document.getElementById('gen-default-role').value.trim();
+      const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
+
+      current.name = newName;
+      current.email = newEmail;
+      current.role = newRole;
+      current.evidence = newEvidence;
+      if (newId) current.id = newId;
+      current.customRole = newRole.trim() !== defaultRole;
+      current.customEvidence = newEvidence.trim() !== defaultEvidence;
+
+      renderRecipientList();
+      renderLivePreviewsOnly();
+    }
+
+    function onGenericConfigChange() {
+      const badgeId = document.getElementById('gen-badge-id').value.trim();
+      if (KNOWN_BADGES[badgeId]) {
+        setCertPreviewStyle(KNOWN_BADGES[badgeId].style || 'google');
+      }
+      renderCurrentSelection();
+    }
+
+    function onGenericRoleChange(newRole) {
+      recipients.forEach((r) => {
+        if (!r.customRole) r.role = newRole;
+      });
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function onGenericEvidenceChange(newEv) {
+      recipients.forEach((r) => {
+        if (!r.customEvidence) r.evidence = newEv;
+      });
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function loadBadgeJsonFile(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const slug = file.name.replace(/\.json$/i, '');
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(String(ev.target.result || '{}'));
+          KNOWN_BADGES[slug] = {
+            name: data.name || slug,
+            description: data.description || '',
+            image: data.image ? './public' + data.image : '',
+            criteria: data.criteria || { narrative: '' },
+            tags: data.tags || [],
+            style: data.style || 'google',
+          };
+          document.getElementById('gen-badge-id').value = slug;
+          setCertPreviewStyle(KNOWN_BADGES[slug].style);
+          renderCurrentSelection();
+          showToast(`✅ Insignia "${slug}" cargada en la vista previa.`);
+        } catch {
+          showToast('❌ El archivo seleccionado no es un JSON válido.');
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    function setCertPreviewStyle(style) {
+      activeCertPreviewStyle = style;
+      document.querySelectorAll('#certs-style-selector .style-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-style') === style);
+      });
+      const wrapper = document.getElementById('diploma-theme-wrapper');
+      wrapper.className = 'diploma-theme-' + style;
+    }
+
+    function buildAssertionObject(item) {
+      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'workshop-ai-cloud';
+      const identity = computeOpenBadgeIdentity(item.email, currentYearSalt);
+      const obj = {
+        recipient: {
+          name: item.name.trim(),
+          identity,
+          hashed: true,
+          type: 'email',
+          salt: currentYearSalt,
+        },
+        badgeId,
+        role: (item.role || 'Asistente Certificado').trim(),
+        issuedOn: item.issuedOn || new Date().toISOString(),
+      };
+      if (item.evidence && item.evidence.trim().length > 0) {
+        obj.evidence = item.evidence.trim();
+      }
+      return obj;
+    }
+
+    function renderCurrentSelection() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+
+      document.getElementById('selected-index-label').textContent = `#${selectedIndex + 1} de ${recipients.length}`;
+      document.getElementById('indiv-name').value = current.name;
+      document.getElementById('indiv-email').value = current.email;
+      document.getElementById('indiv-role').value = current.role;
+      document.getElementById('indiv-evidence').value = current.evidence || '';
+      document.getElementById('indiv-id').value = current.id;
+
+      renderLivePreviewsOnly();
+    }
+
+    function renderLivePreviewsOnly() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+
+      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'workshop-ai-cloud';
+      const badgeInfo = KNOWN_BADGES[badgeId] || {
+        name: badgeId.replace(/-/g, ' ').toUpperCase(),
+        description: 'Certificado digital oficial emitido por GDG on Campus Universidad de Huelva.',
+        image: './public/images/gdgoc-uhu-logo.jpg',
+        criteria: { narrative: 'Por completar satisfactoriamente las actividades del evento.' },
+        tags: ['GDGoC UHU', 'Open Badges 2.0'],
+        style: activeCertPreviewStyle,
+      };
+
+      const assertionObj = buildAssertionObject(current);
+      document.getElementById('indiv-hash').value = assertionObj.recipient.identity;
+
+      // Actualizar vista previa del Diploma
+      document.getElementById('dp-role-pill').textContent = assertionObj.role;
+      document.getElementById('dp-meta-role').textContent = assertionObj.role;
+      document.getElementById('dp-badge-title').textContent = badgeInfo.name;
+      document.getElementById('dp-recipient-name').textContent = assertionObj.recipient.name || 'Nombre del Alumno';
+      document.getElementById('dp-badge-desc').textContent = badgeInfo.description;
+      document.getElementById('dp-badge-narrative').textContent = badgeInfo.criteria?.narrative || '';
+      document.getElementById('dp-full-id').textContent = current.id;
+
+      const badgeImgEl = document.getElementById('dp-badge-img');
+      if (badgeInfo.image) {
+        badgeImgEl.style.display = '';
+        badgeImgEl.src = badgeInfo.image;
+      }
+
+      // Tags
+      const tagsContainer = document.getElementById('dp-tags-row');
+      tagsContainer.innerHTML = (badgeInfo.tags || [])
+        .map((t) => `<span class="dp-pill" style="font-size:10.5px; font-weight:700; padding:4px 11px; border-radius:999px;">#${escapeHtml(t)}</span>`)
+        .join('');
+
+      // Botón de Evidencia condicional
+      const evBtn = document.getElementById('dp-evidence-btn');
+      if (assertionObj.evidence) {
+        evBtn.classList.remove('hidden');
+      } else {
+        evBtn.classList.add('hidden');
+      }
+
+      // QR Vectorial
+      const certUrl = `https://gdguhu.es/cert/${current.id}`;
+      const qr = getQrsvg(certUrl);
+      const qrSvgEl = document.getElementById('dp-qr-svg');
+      qrSvgEl.setAttribute('viewBox', `-1 -1 ${qr.size + 2} ${qr.size + 2}`);
+      qrSvgEl.innerHTML = `<rect x="-1" y="-1" width="${qr.size + 2}" height="${qr.size + 2}" fill="#FFFFFF"/><path d="${qr.path}" fill="#111827"/>`;
+
+      // JSON Output
+      document.getElementById('assertion-json-output').textContent = JSON.stringify(assertionObj, null, 2);
+
+      // Email Preview
+      const emailHtml = generateOfficialEmailHtml(
+        assertionObj.recipient.name,
+        badgeInfo,
+        certUrl,
+        `https://gdguhu.es/api/badges/assertion/${current.id}.json`,
+        assertionObj.role,
+        current.id
+      );
+      document.getElementById('email-preview-subject').textContent = `🎓 Tu certificado oficial: ${badgeInfo.name} — GDG on Campus UHU`;
+      const iframe = document.getElementById('email-preview-iframe');
+      if (iframe) iframe.srcdoc = emailHtml;
+    }
+
+    function generateOfficialEmailHtml(name, badge, certUrl, assertionJsonUrl, role, assertionId) {
+      const badgeName = badge.name || 'Certificado Oficial GDGoC UHU';
+      const badgeDesc = badge.description || '';
+      return `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>${escapeHtml(badgeName)}</title></head>
+<body style="margin:0;padding:0;background-color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1e293b;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td width="25%" height="5" style="background-color:#4285F4;"></td>
+      <td width="25%" height="5" style="background-color:#EA4335;"></td>
+      <td width="25%" height="5" style="background-color:#FBBC04;"></td>
+      <td width="25%" height="5" style="background-color:#34A853;"></td>
+    </tr>
+  </table>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f8fafc;padding:30px 15px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width:580px;background-color:#ffffff;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.05);overflow:hidden;border:1px solid #e2e8f0;" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td style="padding:28px 30px 18px 30px;text-align:center;border-bottom:1px solid #f1f5f9;">
+              <h2 style="margin:0;font-size:20px;color:#1e293b;font-weight:800;letter-spacing:-0.5px;">GDG on Campus</h2>
+              <div style="font-size:13px;color:#1967D2;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Universidad de Huelva</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px 30px 24px 30px;text-align:center;">
+              <div style="display:inline-block;padding:6px 14px;background-color:#ecfdf5;border:1px solid #a7f3d0;border-radius:50px;font-size:12px;font-weight:700;color:#047857;margin-bottom:18px;">
+                ✓ Credencial Digital Oficial Emitida
+              </div>
+              <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:6px;">
+                Este certificado digital se otorga a:
+              </div>
+              <h1 style="margin:0 0 12px 0;font-size:25px;color:#0f172a;font-weight:800;">${escapeHtml(name)}</h1>
+              <div style="display:inline-block;padding:4px 12px;background-color:#e8f0fe;border:1px solid #d2e3fc;border-radius:50px;font-size:11px;font-weight:700;color:#1967D2;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;">
+                ${escapeHtml(role)}
+              </div>
+              <div style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:20px;margin:14px 0 20px 0;text-align:center;">
+                <div style="font-size:11px;color:#4285F4;text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px;">Insignia Acreditada</div>
+                <h3 style="margin:0 0 8px 0;font-size:19px;color:#1e293b;font-weight:800;">${escapeHtml(badgeName)}</h3>
+                <p style="margin:0;font-size:13px;color:#475569;line-height:1.5;">${escapeHtml(badgeDesc)}</p>
+                <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #cbd5e1;font-size:11px;color:#64748b;font-family:monospace;">
+                  ID del Certificado: <strong style="color:#0f172a;">${escapeHtml(assertionId)}</strong>
+                </div>
+              </div>
+              <div style="margin:24px 0 14px 0;">
+                <a href="${certUrl}" target="_blank" style="display:inline-block;background-color:#4285F4;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:700;">
+                  🎓 Abrir Mi Certificado Oficial →
+                </a>
+              </div>
+              <p style="font-size:12px;color:#64748b;margin:12px 0 0 0;line-height:1.5;">
+                Haz clic en el botón para ver tu certificado en línea, descargarlo en <strong>PDF (1 página horizontal)</strong> listo para imprimir o añadirlo directamente a <strong>LinkedIn</strong> o a tu cartera preferida (OpenBadge Passport, Parchment o Credly).
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 30px;background-color:#f8fafc;border-top:1px solid #e2e8f0;text-align:center;">
+              <p style="margin:0;font-size:11px;color:#64748b;line-height:1.4;">
+                Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> (IMS Global).<br>
+                Alojado oficialmente en <a href="https://gdguhu.es" style="color:#4285F4;text-decoration:none;font-weight:600;">https://gdguhu.es</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+    }
+
+    /* ========================================================================
+       7. GUARDADO Y EXPORTACIÓN A CARPETA PUBLISH (Todos los navegadores)
+       ======================================================================== */
+    function getAllAssertionFilesForPublish() {
+      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'workshop-ai-cloud';
+      const includeEmails = document.getElementById('gen-send-emails').checked;
+      const files = [];
+      const emailQueue = [];
+
+      for (const r of recipients) {
+        const obj = buildAssertionObject(r);
+        files.push({
+          filename: `${r.id}.json`,
+          zipPath: `publish/${r.id}.json`,
+          content: JSON.stringify(obj, null, 2),
+        });
+        if (includeEmails && r.email && r.email.includes('@')) {
+          emailQueue.push({
+            nombre: obj.recipient.name,
+            email: r.email.trim(),
+            assertionId: r.id,
+            badgeId,
+            role: obj.role,
+            url: `https://gdguhu.es/cert/${r.id}`,
+          });
+        }
+      }
+
+      if (includeEmails && emailQueue.length > 0) {
+        files.push({
+          filename: `_pending-emails.json`,
+          zipPath: `publish/_pending-emails.json`,
+          content: JSON.stringify(emailQueue, null, 2),
+        });
+      }
+      return files;
+    }
+
+    async function saveAssertionsToPublishFolder() {
+      const files = getAllAssertionFilesForPublish();
+      if (window.showDirectoryPicker) {
+        try {
+          const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+          for (const f of files) {
+            const fileHandle = await dirHandle.getFileHandle(f.filename, { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(f.content);
+            await writable.close();
+          }
+          showToast(`🎉 ¡${files.length} archivos guardados directamente en la carpeta seleccionada!`);
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+      // Fallback automático para Firefox y Safari
+      downloadAssertionsZip();
+    }
+
+    function downloadAssertionsZip() {
+      const files = getAllAssertionFilesForPublish().map((f) => ({
+        name: f.zipPath,
+        content: f.content,
+      }));
+      const blob = createZipBlob(files);
+      triggerDownload(blob, 'publish-assertions.zip');
+      showToast(`📦 Descargado publish-assertions.zip con ${files.length} archivos dentro de publish/`);
+    }
+
+    function downloadSingleAssertionJson() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+      const obj = buildAssertionObject(current);
+      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+      triggerDownload(blob, `${current.id}.json`);
+      showToast(`⬇️ Descargado ${current.id}.json`);
+    }
+
+    function downloadEmailPreviewHtml() {
+      const iframe = document.getElementById('email-preview-iframe');
+      const blob = new Blob([iframe.srcdoc || ''], { type: 'text/html' });
+      triggerDownload(blob, 'prueba-email-certificado.html');
+      showToast('⬇️ Descargada vista previa del correo (prueba-email-certificado.html)');
+    }
+
+    /* ========================================================================
+       8. MODO CREAR NUEVA BADGE (BADGECLASS)
+       ======================================================================== */
+    function slugify(text) {
+      return text
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    function onBadgeNameInput(val) {
+      const slug = slugify(val) || 'nueva-badge';
+      document.getElementById('badge-slug').value = slug;
+      document.getElementById('badge-image').value = `/images/badges/${slug}.svg`;
+      updateBadgePreview();
+    }
+
+    function setBadgeCreatorStyle(style) {
+      activeBadgeCreatorStyle = style;
+      document.querySelectorAll('#badge-creator-style-selector .style-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-style') === style);
+      });
+      updateBadgePreview();
+    }
+
+    function buildNewBadgeObject() {
+      const name = document.getElementById('badge-name').value.trim();
+      const description = document.getElementById('badge-desc').value.trim();
+      const image = document.getElementById('badge-image').value.trim();
+      const narrative = document.getElementById('badge-narrative').value.trim();
+      const tagsRaw = document.getElementById('badge-tags').value;
+      const tags = tagsRaw
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      return {
+        name,
+        description,
+        image,
+        criteria: { narrative },
+        tags,
+        style: activeBadgeCreatorStyle,
+        issuerId: 'gdgoc-uhu',
+      };
+    }
+
+    function updateBadgePreview() {
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const obj = buildNewBadgeObject();
+      document.getElementById('preview-badge-filename').textContent = `${slug}.json`;
+      document.getElementById('btn-badge-filename').textContent = `${slug}.json`;
+      document.getElementById('badge-json-output').textContent = JSON.stringify(obj, null, 2);
+    }
+
+    function previewLocalBadgeLogo(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const dataUrl = String(ev.target.result || '');
+        const obj = buildNewBadgeObject();
+        KNOWN_BADGES[slug] = {
+          ...obj,
+          image: dataUrl,
+        };
+        document.getElementById('dp-badge-img').src = dataUrl;
+        showToast('✅ Logo cargado en memoria para la vista previa.');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function saveBadgeToPublishFolder() {
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const content = JSON.stringify(buildNewBadgeObject(), null, 2);
+      if (window.showDirectoryPicker) {
+        try {
+          const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+          const fileHandle = await dirHandle.getFileHandle(`${slug}.json`, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(content);
+          await writable.close();
+          showToast(`🎉 Guardado ${slug}.json directamente en la carpeta seleccionada.`);
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+      downloadBadgeJsonFile();
+    }
+
+    function downloadBadgeJsonFile() {
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const content = JSON.stringify(buildNewBadgeObject(), null, 2);
+      const blob = new Blob([content], { type: 'application/json' });
+      triggerDownload(blob, `${slug}.json`);
+      showToast(`⬇️ Descargado ${slug}.json`);
+    }
+
+    function useCreatedBadgeForCerts() {
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const obj = buildNewBadgeObject();
+      KNOWN_BADGES[slug] = {
+        ...obj,
+        image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
+      };
+      document.getElementById('gen-badge-id').value = slug;
+      setCertPreviewStyle(obj.style);
+      switchMainMode('certs');
+      renderCurrentSelection();
+      showToast(`🎓 Badge "${slug}" seleccionada para emitir certificados.`);
+    }
+
+    /* ========================================================================
+       9. NAVEGACIÓN DE PESTAÑAS Y UTILIDADES UI
+       ======================================================================== */
+    function switchMainMode(mode) {
+      const isCerts = mode === 'certs';
+      document.getElementById('view-mode-certs').classList.toggle('hidden', !isCerts);
+      document.getElementById('view-mode-badge').classList.toggle('hidden', isCerts);
+      document.getElementById('tab-mode-certs').classList.toggle('active', isCerts);
+      document.getElementById('tab-mode-badge').classList.toggle('active', !isCerts);
+      if (!isCerts) updateBadgePreview();
+    }
+
+    function switchPreviewSubtab(tab) {
+      ['diploma', 'email', 'json'].forEach((t) => {
+        document.getElementById(`preview-pane-${t}`).classList.toggle('hidden', t !== tab);
+        document.getElementById(`subtab-${t}`).classList.toggle('active', t === tab);
+      });
+    }
+
+    function copyCurrentAssertionJson() {
+      const text = document.getElementById('assertion-json-output').textContent;
+      navigator.clipboard.writeText(text);
+      showToast('📋 JSON del certificado copiado al portapapeles.');
+    }
+
+    function copyBadgeJson() {
+      const text = document.getElementById('badge-json-output').textContent;
+      navigator.clipboard.writeText(text);
+      showToast('📋 JSON de la Badge copiado al portapapeles.');
+    }
+
+    function triggerDownload(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 4000);
+    }
+
+    // Inicializar al abrir
+    renderRecipientList();
+    renderCurrentSelection();
+    updateBadgePreview();
+  </script>
+</body>
+</html>

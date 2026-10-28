@@ -37,15 +37,23 @@ const gmailUser = process.env.GMAIL_USER;
 const gmailPassword = process.env.GMAIL_APP_PASSWORD;
 
 function loadBadge(badgeId) {
-  try {
-    const badgePath = path.join(badgesDir, `${badgeId}.json`);
-    return JSON.parse(fs.readFileSync(badgePath, 'utf-8'));
-  } catch {
-    return { name: badgeId, description: '' };
+  const candidates = [
+    path.join(badgesDir, `${badgeId}.json`),
+    path.join(badgesDir, 'publish', `${badgeId}.json`),
+  ];
+  for (const badgePath of candidates) {
+    if (fs.existsSync(badgePath)) {
+      try {
+        return JSON.parse(fs.readFileSync(badgePath, 'utf-8'));
+      } catch {
+        // continuar
+      }
+    }
   }
+  return { name: badgeId, description: '' };
 }
 
-function buildEmailHTML(name, badge, certUrl, assertionJsonUrl) {
+export function buildEmailHTML(name, badge, certUrl, assertionJsonUrl, role = 'Asistente Certificado', assertionId = '') {
   const badgeName = badge.name || 'Certificado Oficial GDGoC UHU';
   const badgeDesc = badge.description || '';
 
@@ -79,9 +87,9 @@ function buildEmailHTML(name, badge, certUrl, assertionJsonUrl) {
           <tr>
             <td style="padding: 35px 35px 20px 35px; text-align: center; border-bottom: 1px solid #f1f5f9;">
               <h2 style="margin: 0; font-size: 20px; color: #1e293b; font-weight: 800; letter-spacing: -0.5px;">
-                GDG <span style="font-weight: 400; color: #64748b;">on Campus</span>
+                GDG on Campus
               </h2>
-              <div style="font-size: 13px; color: #003366; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px;">
+              <div style="font-size: 13px; color: #1967D2; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
                 Universidad de Huelva
               </div>
             </td>
@@ -96,13 +104,15 @@ function buildEmailHTML(name, badge, certUrl, assertionJsonUrl) {
               </div>
 
               <div style="font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">
-                Otorgado con orgullo a:
+                Este certificado digital se otorga a:
               </div>
-              <h1 style="margin: 0 0 16px 0; font-size: 26px; color: #0f172a; font-weight: 800; letter-spacing: -0.5px;">
+              <h1 style="margin: 0 0 12px 0; font-size: 26px; color: #0f172a; font-weight: 800; letter-spacing: -0.5px;">
                 ${name}
               </h1>
 
-              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; margin: 20px 0; text-align: center;">
+              ${role ? `<div style="display: inline-block; padding: 4px 12px; background-color: #e8f0fe; border: 1px solid #d2e3fc; border-radius: 50px; font-size: 11px; font-weight: 700; color: #1967D2; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px;">${role}</div>` : ''}
+
+              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; margin: 16px 0 20px 0; text-align: center;">
                 <div style="font-size: 11px; color: #4285F4; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;">
                   Insignia Acreditada
                 </div>
@@ -110,6 +120,7 @@ function buildEmailHTML(name, badge, certUrl, assertionJsonUrl) {
                   ${badgeName}
                 </h3>
                 ${badgeDesc ? `<p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">${badgeDesc}</p>` : ''}
+                ${assertionId ? `<div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #cbd5e1; font-size: 11px; color: #64748b; font-family: monospace;">ID del Certificado: <strong style="color: #0f172a;">${assertionId}</strong></div>` : ''}
               </div>
 
               <!-- Botón Principal -->
@@ -117,14 +128,14 @@ function buildEmailHTML(name, badge, certUrl, assertionJsonUrl) {
                 <tr>
                   <td align="center">
                     <a href="${certUrl}" target="_blank" style="display: inline-block; background-color: #4285F4; color: #ffffff; text-decoration: none; padding: 15px 32px; border-radius: 12px; font-size: 15px; font-weight: 700; box-shadow: 0 4px 14px rgba(66, 133, 244, 0.35); text-align: center;">
-                      🎓 Ver y Descargar Mi Certificado →
+                      🎓 Abrir Mi Certificado Oficial →
                     </a>
                   </td>
                 </tr>
               </table>
 
-              <p style="font-size: 12px; color: #94a3b8; margin: 15px 0 0 0; line-height: 1.5;">
-                Haz clic en el botón para ver tu certificado en línea, añadirlo directamente a tu perfil de <strong>LinkedIn</strong> o exportarlo a carteras digitales (OpenBadge Passport, Badgr o Credly).
+              <p style="font-size: 12px; color: #64748b; margin: 15px 0 0 0; line-height: 1.5;">
+                Haz clic en el botón para ver tu certificado en línea, descargarlo en <strong>PDF (1 página horizontal)</strong> listo para imprimir o añadirlo directamente a <strong>LinkedIn</strong> o a tu cartera preferida (OpenBadge Passport, Parchment o Credly).
               </p>
 
             </td>
@@ -134,7 +145,7 @@ function buildEmailHTML(name, badge, certUrl, assertionJsonUrl) {
           <tr>
             <td style="padding: 25px 35px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; text-align: center;">
               <p style="margin: 0 0 8px 0; font-size: 11px; color: #64748b; line-height: 1.4;">
-                Certificado verificado bajo el estándar internacional <strong>Open Badges v2.0</strong> (1EdTech).<br>
+                Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> (IMS Global).<br>
                 Alojado oficialmente en <a href="${siteUrl}" style="color: #4285F4; text-decoration: none; font-weight: 600;">${siteUrl}</a>
               </p>
               <div style="font-size: 10px; color: #94a3b8; font-family: monospace; word-break: break-all; margin-top: 6px;">
@@ -149,7 +160,7 @@ function buildEmailHTML(name, badge, certUrl, assertionJsonUrl) {
         <table role="presentation" width="100%" style="max-width: 600px; margin-top: 20px;" cellspacing="0" cellpadding="0" border="0">
           <tr>
             <td align="center" style="font-size: 11px; color: #94a3b8;">
-              Google Developer Groups on Campus · Universidad de Huelva (UHU)
+              Google Developer Group on Campus · Universidad de Huelva (UHU)
             </td>
           </tr>
         </table>
@@ -226,7 +237,14 @@ async function main() {
       from: `"GDG on Campus Universidad de Huelva" <${gmailUser}>`,
       to: item.email,
       subject,
-      html: buildEmailHTML(item.nombre, badge, certUrl, assertionJsonUrl),
+      html: buildEmailHTML(
+        item.nombre,
+        badge,
+        certUrl,
+        assertionJsonUrl,
+        item.role || 'Asistente Certificado',
+        item.assertionId || ''
+      ),
     };
 
     try {
