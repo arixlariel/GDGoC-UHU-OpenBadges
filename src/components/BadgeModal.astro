@@ -29,13 +29,13 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
         </button>
       </div>
 
-      <!-- Importación manual (URL + Descarga JSON) -->
+      <!-- Importación manual -->
       <div class="mt-5">
         <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200">
-          Enlace de tu insignia (Assertion URL)
+          Importación manual
         </h4>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
-          Al pulsar en cualquiera de las carteras inferiores, este enlace se copiará automáticamente a tu portapapeles para que puedas pegarlo en la opción <span class="font-medium text-gray-700 dark:text-gray-300">'Importar insignia desde URL'</span>.
+          Para añadir este certificado a tu cartera digital, copia el siguiente enlace y usa la opción <span class="font-medium text-gray-700 dark:text-gray-300">'Importar desde URL'</span> en tu servicio preferido.
         </p>
 
         <div class="mt-3 flex items-center gap-2 bg-gray-50 dark:bg-slate-800/80 border border-gray-200 dark:border-gray-700 rounded-xl p-2.5">
@@ -60,10 +60,10 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
         </div>
       </div>
 
-      <!-- Carteras Digitales Open Badges Verificadas -->
+      <!-- Carteras Digitales Open Badges -->
       <div class="mt-6">
         <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">
-          Carteras de Insignias Compatibles
+          Servicios de Insignias
         </h4>
         <div class="flex flex-col gap-2.5">
           <!-- OpenBadge Passport -->
@@ -71,33 +71,25 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
             href="https://openbadgepassport.com/app/profile/login"
             target="_blank"
             rel="noopener noreferrer"
-            data-wallet-link
-            class="flex items-center justify-between px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
           >
-            <span class="flex items-center gap-3">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              <span>OpenBadge Passport</span>
-            </span>
-            <span class="text-[11px] font-normal opacity-75">Copia URL y abre ↗</span>
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>OpenBadge Passport</span>
           </a>
 
-          <!-- Canvas Badges / Badgr (ahora Parchment Digital Badges) -->
+          <!-- Parchment -->
           <a
             href="https://badges.parchment.com/"
             target="_blank"
             rel="noopener noreferrer"
-            data-wallet-link
-            class="flex items-center justify-between px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
           >
-            <span class="flex items-center gap-3">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              <span>Canvas Badges / Badgr (Parchment)</span>
-            </span>
-            <span class="text-[11px] font-normal opacity-75">Copia URL y abre ↗</span>
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>Parchment</span>
           </a>
 
           <!-- Credly -->
@@ -105,16 +97,12 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
             href="https://www.credly.com/users/sign_in"
             target="_blank"
             rel="noopener noreferrer"
-            data-wallet-link
-            class="flex items-center justify-between px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-50/80 hover:bg-sky-100/90 dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 font-semibold text-sm transition-colors border border-sky-100 dark:border-sky-900/50"
           >
-            <span class="flex items-center gap-3">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              <span>Credly</span>
-            </span>
-            <span class="text-[11px] font-normal opacity-75">Copia URL y abre ↗</span>
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>Credly</span>
           </a>
 
           <!-- Validar Insignia (IMS Global Open Badges Validator) -->
@@ -122,16 +110,12 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
             href={validatorUrl}
             target="_blank"
             rel="noopener noreferrer"
-            data-wallet-link
-            class="flex items-center justify-between px-4 py-3 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 font-semibold text-sm transition-colors border border-purple-200 dark:border-purple-800 mt-1"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 font-semibold text-sm transition-colors border border-purple-200 dark:border-purple-800 mt-1"
           >
-            <span class="flex items-center gap-3">
-              <svg class="w-4 h-4 shrink-0 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>Validador Oficial IMS Global</span>
-            </span>
-            <span class="text-[11px] font-normal opacity-75">Copia URL y valida ↗</span>
+            <svg class="w-4 h-4 shrink-0 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Validador Oficial IMS Global</span>
           </a>
         </div>
       </div>
@@ -180,7 +164,7 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
         }
       });
 
-      const copyAssertionUrl = async () => {
+      this.copyBtn?.addEventListener('click', async () => {
         const url = this.getAttribute('data-assertion-url') || this.urlInput?.value || '';
         try {
           await navigator.clipboard.writeText(url);
@@ -191,19 +175,10 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
           setTimeout(() => {
             icon?.classList.remove('hidden');
             tooltip?.classList.add('hidden');
-          }, 2200);
+          }, 2000);
         } catch (err) {
           console.error('Error al copiar:', err);
         }
-      };
-
-      this.copyBtn?.addEventListener('click', copyAssertionUrl);
-
-      // Al hacer clic en cualquier cartera, copia automáticamente la URL para que el usuario solo tenga que pegarla
-      this.querySelectorAll('[data-wallet-link]').forEach((link) => {
-        link.addEventListener('click', () => {
-          copyAssertionUrl();
-        });
       });
     }
 
