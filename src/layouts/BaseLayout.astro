@@ -709,11 +709,11 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
 
       /* ==========================================================================
-         PRINT / PDF EXPORT RULES (Ensures all bars, logos, and separators print!)
+         PRINT / PDF EXPORT RULES (100% Guaranteed Single-Page Landscape A4)
          ========================================================================== */
       @page {
         size: A4 landscape;
-        margin: 8mm;
+        margin: 6mm;
       }
       @media print {
         * {
@@ -724,31 +724,68 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         header, footer, .no-print, #theme-fx-container {
           display: none !important;
         }
-        body {
+        html, body {
           background: #ffffff !important;
+          width: 100% !important;
+          height: 196mm !important;
+          max-height: 196mm !important;
+          overflow: hidden !important;
           margin: 0 !important;
           padding: 0 !important;
         }
         main {
           padding: 0 !important;
           margin: 0 !important;
+          height: 196mm !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
         }
         .print-container {
           padding: 0 !important;
-          margin: 0 !important;
-          max-width: 100% !important;
+          margin: 0 auto !important;
+          width: 100% !important;
+          max-width: 280mm !important;
         }
         .print-diploma-wrapper {
           box-shadow: none !important;
           transform: none !important;
           width: 100% !important;
           max-width: none !important;
+          max-height: 192mm !important;
           page-break-inside: avoid !important;
+          page-break-after: avoid !important;
+          page-break-before: avoid !important;
           break-inside: avoid !important;
         }
         .diploma-inner {
           min-height: 0 !important;
-          padding: 28px 40px !important;
+          height: 184mm !important;
+          max-height: 184mm !important;
+          padding: 20px 36px !important;
+          justify-content: space-between !important;
+        }
+        .print-body-block {
+          margin-top: 8px !important;
+          margin-bottom: 8px !important;
+        }
+        .print-recipient-box {
+          padding-bottom: 8px !important;
+          margin-bottom: 10px !important;
+        }
+        .diploma-recipient-name {
+          font-size: 32px !important;
+        }
+        .diploma-meta-box {
+          margin-top: 12px !important;
+          padding: 10px 14px !important;
+        }
+        .print-tags {
+          margin-top: 8px !important;
+        }
+        .print-footer-block {
+          padding-top: 12px !important;
+          margin-top: 4px !important;
         }
         /* Ensure gradient text prints solid & crisp in all PDF engines */
         .diploma-recipient-name,
