@@ -167,7 +167,7 @@ function processSingleJsonFile(filePath) {
         collectedEmails.push({
           ...mail,
           assertionId: finalId,
-          url: `https://gdguhu.es/cert/${finalId}`,
+          url: `https://gdguhu.es/cert/${finalId}/`,
         });
       }
       console.log(`📧 Cola de ${parsed.pendingEmails.length} correos extraída de ${baseName}`);

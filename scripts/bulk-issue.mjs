@@ -365,7 +365,7 @@ async function main() {
       assertionId,
       badgeId: a.badgeId,
       role: a.role,
-      url: `https://gdguhu.es/cert/${assertionId}`,
+      url: `https://gdguhu.es/cert/${assertionId}/`,
     });
 
     console.log(`  ✅ ${a.nombre} → https://gdguhu.es/cert/${assertionId}`);

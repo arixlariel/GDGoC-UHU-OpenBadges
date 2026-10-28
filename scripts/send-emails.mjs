@@ -268,11 +268,21 @@ export function buildEmailHTML(
                 ${assertionId ? `<div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed ${t.cardBorder}; font-size: 11px; color: ${t.textMuted}; font-family: monospace;">ID del certificado: <strong style="color: ${t.textPrimary};">${assertionId}</strong></div>` : ''}
               </div>
 
-              <!-- Botón Principal -->
-              <div style="margin: 24px 0 14px 0;">
-                <a href="${certUrl}" target="_blank" style="display: inline-block; background-color: ${t.btnBg}; color: ${t.btnText}; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-size: 14px; font-weight: 800; text-align: center;">
-                  Abrir mi certificado oficial
-                </a>
+              <!-- Botón Principal Bulletproof para Móviles y Clientes de Correo -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 22px auto 10px auto;">
+                <tr>
+                  <td align="center" bgcolor="${t.btnBg}" style="border-radius: 12px; background-color: ${t.btnBg};">
+                    <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 14px 28px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 800; color: ${t.btnText}; text-decoration: none; border-radius: 12px; -webkit-text-size-adjust: none; mso-padding-alt: 0; cursor: pointer; text-align: center;">
+                      Abrir mi certificado oficial
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Enlace alternativo directo en caso de clientes móviles restrictivos -->
+              <div style="margin: 8px 0 16px 0; font-size: 11px; color: ${t.textMuted}; word-break: break-all; line-height: 1.4; text-align: center;">
+                Si el botón no abre, accede directamente desde este enlace:<br>
+                <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="color: ${t.accent}; text-decoration: underline; font-weight: 600;">${certUrl}</a>
               </div>
 
               ${evidence ? `<div style="margin: 10px 0 14px 0;"><a href="${evidence}" target="_blank" style="display: inline-block; color: ${t.accent}; font-size: 12.5px; font-weight: 700; text-decoration: underline;">Ver Evidencia / Proyecto ↗</a></div>` : ''}
@@ -364,7 +374,8 @@ async function main() {
     const resolvedStyle = item.style || assertionData?.styleOverride || badge.style || 'google';
     const resolvedEvidence = item.evidence || assertionData?.evidence || '';
     const resolvedRole = item.role || assertionData?.role || 'Asistente Certificado';
-    const certUrl = item.url || `${siteUrl}/cert/${item.assertionId}`;
+    const rawCertUrl = item.url || `${siteUrl}/cert/${item.assertionId}`;
+    const certUrl = rawCertUrl.endsWith('/') ? rawCertUrl : `${rawCertUrl}/`;
     const assertionJsonUrl = `${siteUrl}/api/badges/assertion/${item.assertionId}.json`;
     const subject = `Certificado: ${badge.name || item.badgeId}`;
 
