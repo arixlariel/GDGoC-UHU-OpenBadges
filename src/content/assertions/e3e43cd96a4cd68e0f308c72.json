@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Ariel Bstillo",
+    "identity": "sha256$5c472b6a7e73f99aae9d8d9423ff3ace906898ce2e14f50849998ca2080b0c09",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "winter-cloud-freeze",
+  "role": "Asistente Certificado",
+  "issuedOn": "2026-10-28T19:07:16.693Z",
+  "styleOverride": "nieve"
+}

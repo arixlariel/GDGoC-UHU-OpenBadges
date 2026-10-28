@@ -76,6 +76,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -92,11 +93,13 @@ jobs:
 
           git config --global user.name "GDGoC UHU Bot"
           git config --global user.email "gdgoc.huelva@gmail.com"
-          git add -A src/content/badges/ src/content/assertions/ publish/ publish*.json 2>/dev/null || true
+          git rm -f publish.json 2>/dev/null || true
+          git rm -rf publish/ 2>/dev/null || true
+          git add -A src/content/badges/ src/content/assertions/
           if ! git diff --staged --quiet; then
             git commit -m "chore(publish): organizar certificados publicados y limpiar cola temporal [skip ci]"
             git pull --rebase origin main || true
-            git push origin main
+            git push origin main || true
           fi
 
           if [ -f /tmp/pending-emails.json ]; then
