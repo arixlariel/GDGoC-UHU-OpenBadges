@@ -167,7 +167,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 
 > No requiere tener instalado el proyecto. Esta es la opción más completa y que conlleva menos riesgo
 
-1. Entra arriba en la pestaña **Actions**
+1. Entra arriba en la pestaña `Actions`
 2. En la lista de flujos de trabajo, corre el workflow `Emitir certificados y emails`
 3. Rellena los campos:
    - **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `capture-the-flag-reversing-de-binarios`)
@@ -182,7 +182,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 
 ### --- Método E: Generador visual local (`generador-local.html`)
 
-> Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vista previa en tiempo real del certificado, el correo, el `.json` y demás
+> Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vista previas en tiempo real y demás
 
 1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este enlace al **[generador local](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html)**
 2. Configura las badges, certificados y correos a generar
