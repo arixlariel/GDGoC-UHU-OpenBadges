@@ -10,10 +10,10 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 2. [Estructura de Archivos](#2-estructura-de-archivos)
 3. [Cómo crear una nueva badge (`BadgeClass`)](#3-cómo-crear-una-nueva-badge-badgeclass)
 4. [Cómo crear certificados para los miembros (`Assertion`)](#4-cómo-crear-certificados-para-los-miembros-assertion)
-   - [Método A: Asistente Interactivo en Terminal (Recomendado)](#método-a-asistente-interactivo-en-terminal-recomendado)
-   - [Método B: Creación Manual con archivo JSON](#método-b-creación-manual-con-archivo-json)
-   - [Método C: Emisión masiva desde el navegador web (Para todo el equipo, sin instalar nada)](#método-c-emisión-masiva-desde-el-navegador-web)
-   - [Método D: Emisión masiva desde terminal con CSV de Bevy](#método-d-emisión-masiva-desde-terminal-con-csv-de-bevy)
+   - [Método A: Asistente automático](#método-a-asistente-automático)
+   - [Método B: Creación manual](#método-b-creación-manual)
+   - [Método C: Emisión masiva con `.csv`](#método-c-emisión-masiva-con-.csv)
+   - [Método D: Emisión masiva con GitHub Actions](#método-d-emisión-masiva-con-github-actions)
 5. [Cómo PUBLICAR los Certificados en Internet (`git push`)](#5-cómo-publicar-los-certificados-en-internet-git-push)
 6. [Cómo Compartir el Certificado con el Alumno](#6-cómo-compartir-el-certificado-con-el-alumno)
 7. [Privacidad y Protección de Datos (RGPD)](#7-privacidad-y-protección-de-datos-rgpd)
@@ -100,9 +100,9 @@ El asistente te pedirá:
 2. **Email de contacto** (solo se usa para calcular el hash `SHA-256`)
 3. **`name` de la badge**
 4. **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
-5. **Enlace a proyecto o evidencia (opcional)**
+5. **Enlace a proyecto o evidencia** (opcional)
 
-El script generará automáticamente un archivo con un nombre único de 24 caracteres en `src/content/assertions/`
+El script generará automáticamente un archivo con un nombre único de 24 caracteres hexadecimales en `src/content/assertions/`
 
 ---
 
@@ -110,13 +110,13 @@ El script generará automáticamente un archivo con un nombre único de 24 carac
 
 > Si no tienes el proyecto instalado. De uno en uno
 
-Crea un `.json` con un ID aleatorio de 24 caracteres hexadecimales en `src/content/assertions/` usando la siguiente plantilla:
+Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/content/assertions/` usando la siguiente plantilla:
 
 ```json
 {
   "recipient": {
     "name": "Laura Benítez Romero",
-    "identity": "sha256$a8b2c4...",        <-- Correo cifrado (hash)
+    "identity": "sha256$a8b2c4...",        <-- Correo cifrado (SHA-256)
     "hashed": true,
     "type": "email",
     "salt": "gdgoc-uhu-salt-2026"
@@ -137,30 +137,21 @@ Crea un `.json` con un ID aleatorio de 24 caracteres hexadecimales en `src/conte
 Esta opción está diseñada para funcionar con los `.csv` de Bevy (GDG Community). Detecta las columnas `First Name`, `Last Name`, `Email`, `Checkin Date (UTC)` y procesa correctamente los nombres. Abre un terminal, navega a `Open Badges` y ejecuta:
 
 ```bash
-npm run bulk -- asistentes.csv --badge workshop-ai-cloud --role "Asistente Certificado"
+npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 ```
 
-- Si añades `--only-checked-in`, solo emitirá certificado a quienes tengan confirmada la asistencia presencial.
-
-Luego simplemente publicas los certificados:
-```bash
-git add .
-git commit -m "feat(cert): emitir certificados para el evento"
-git push origin main
-```
-
+- Si añades `--only-checked-in`, solo emitirá certificado a quienes tengan asistencia registrada
 
 ---
 
 
-### --- Método C: Emisión masiva con GitHub Actions
+### --- Método D: Emisión masiva con GitHub Actions
 
-> Si no tienes el proyecto instalado. Va por tandas
+> Si no tienes el proyecto instalado. Va por tandas y permite mandar correos automáticamente
 
-1. Entra a la pestaña **Actions** de tu repositorio:  
-   👉 `https://github.com/arixlariel/GDGoC-UHU-OpenBadges/actions`
+1. Entra arriba en la pestaña **Actions**
 2. En la lista de flujos de trabajo de la izquierda, selecciona:  
-   **"🎓 Emitir Certificados y Enviar Emails (Web / Bevy CSV)"**
+   **"Emitir certificados y emails"**
 3. Haz clic en el botón **"Run workflow"** (a la derecha).
 4. Rellena los campos:
    - **ID de la insignia**: el identificador del evento (ej: `workshop-ai-cloud`, `hackathon-2026` o `capture-the-flag-reversing-de-binarios`).
