@@ -16,7 +16,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
    - [Método D: Emisión masiva con GitHub Actions](#método-d-emisión-masiva-con-github-actions)
 5. [Cómo publicar los certificados (`git push`)](#5-cómo-publicar-los-certificados-git-push)
 6. [Cómo compartir los certificados con los miembros](#6-cómo-compartir-los-certificados-con-los-miembros)
-7. [Privacidad y Protección de Datos (RGPD)](#7-privacidad-y-protección-de-datos-rgpd)
+7. [Privacidad y Protección de Datos (RGPD/LOPD)](#7-privacidad-y-protección-de-datos-rgpd/lopd)
 
 ---
 
@@ -160,7 +160,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 
 ---
 
-## 5. Cómo publicar los certificados
+## 5. Cómo publicar los certificados (`git push`)
 
 ```bash
 git add .
@@ -178,7 +178,7 @@ Una vez publicado, el certificado del alumno tiene su propia `URL`, única e int
 
 ---
 
-## 7. Privacidad y Protección de Datos (RGPD / LOPD)
+## 7. Privacidad y Protección de Datos (RGPD/LOPD)
 
 El sistema está diseñado respetando escrupulosamente la normativa europea de protección de datos:
 
