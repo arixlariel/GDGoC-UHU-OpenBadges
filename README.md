@@ -184,7 +184,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 
 > Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vista previas en tiempo real y demás
 
-1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este **[enlace](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/d1beb2137a134964264dd5de84bbcaf080a1875a/generador-local.html)**
+1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este **[enlace](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/ec238cb797c0513afa94975ba8ed7c4ce6c67810/generador-local.html)**
 2. Configura las badges, certificados y correos a generar
 3. Pulsa **Descargar carpeta publish** para guardar directamente la carpeta `publish` sin comprimir con los `.json`
 4. Arrastra la carpeta `publish` directamente a la raíz del repositorio en GitHub y haz el commit (o haz `git push` desde el punto 5): **GitHub detectará automáticamente si cada archivo es una badge o un certificado, lo colocará en su carpeta definitiva y enviará los correos electrónicos con su estilo visual correspondiente a cada asistente**
