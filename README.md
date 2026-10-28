@@ -22,7 +22,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 
 ## 1. Arquitectura del Sistema
 
-- **Registrador del dominio**: Ariel via DonDominio `https://www.dondominio.com/es/`
+- **Registrador del dominio**: Ariel Bustillo via DonDominio `https://www.dondominio.com/es/`
 - **Web de verificación**: `https://gdguhu.es`
 - **Hosting**: GitHub Pages
 - **Estándar**: Open Badges 2.0 firmado por GDGoC UHU con hash SHA-256
@@ -77,11 +77,11 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 ```
 
 #### Opciones de estilo (`style`):
-- `google`: Clásico Google institucional, blanco con los 4 colores oficiales (por defecto)
+- `google`: Clásico Google institucional, blanco
 - `cyber`: Modo oscuro, neón y estética matrix/glitch
-- `piscina`: Verano refrescante, agua turquesa con olas y burbujas
-- `nieve`: Invierno polar, ventisca helada, nieve y granizo
-- `caramelos`: Dulce y rosa, golosinas, pasteles y toppings
+- `piscina`: Verano refrescante lleno de oleaje y burbujas
+- `nieve`: Invierno polar en medio de una ventisca helada con nieve y granizo
+- `caramelos`: Dulces empalagosos con toppings rosas y unicornios arcoíris
 
 ---
 
@@ -91,7 +91,6 @@ La primera vez es recomendable crear una carpeta para el proyecto y sus herramie
 
 ```bash
 git clone https://github.com/arixlariel/GDGoC-UHU-OpenBadges.git
-cd GDGoC-UHU-OpenBadges
 npm install
 ```
 
@@ -111,7 +110,7 @@ npm run issue
 El asistente te pedirá:
 1. **Nombre completo**
 2. **Email de contacto** (solo se usa para calcular el hash `SHA-256`)
-3. **ID de la badge** (nombre del archivo `.json` en `src/content/badges/` sin el `.json`, ej: `workshop-ai-cloud`)
+3. **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `capture-the-flag-reversing-de-binarios`)
 4. **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
 5. **Enlace a proyecto o evidencia** (opcional)
 
@@ -121,7 +120,7 @@ El script generará automáticamente un archivo con un nombre único de 24 carac
 
 ### --- Método B: Creación manual
 
-> Puede usarse sin tener el proyecto instalado. Puede ser útil en casos puntuales
+> Puede usarse sin tener el proyecto instalado. Es útil en casos puntuales
 
 Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/content/assertions/` usando la siguiente plantilla:
 
@@ -145,7 +144,7 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
 
 ### --- Método C: Emisión masiva desde `.csv`
 
-> Requiere tener instalado el proyecto. Esta opción está diseñada para emitir por tandas con los `.csv` de Bevy (GDG Community) y emitir correos
+> Requiere tener instalado el proyecto. Esta opción está diseñada para emitir por tandas con los `.csv` de Bevy (GDG Community)
 
 Detecta automáticamente las columnas `First Name`, `Last Name`, `Email`, `Checkin Date (UTC)` y procesa correctamente los nombres. Abre una terminal, navega a la ruta donde guardes el proyecto y ejecuta:
 
@@ -154,8 +153,8 @@ git pull
 npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 ```
 
-- Si añades `--only-checked-in`, solo emitirá certificado a quienes tengan asistencia registrada
-- Usando este método se mandarán correos automáticos a la hora de publicar los certificados
+- Si añades `--only-checked-in`, solo se emitirán certificados a quienes tengan asistencia registrada
+- Usando este método se mandarán correos automáticos a la hora de publicar los certificados (punto 5)
 
 ---
 
@@ -168,13 +167,13 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 2. En la lista de flujos de trabajo, corre el siguiente workflow:  
    > **Emitir certificados y emails**
 3. Rellena los campos:
-   - **ID de la badge** (nombre del archivo `.json` en `src/content/badges/` sin el `.json`, ej: `workshop-ai-cloud`)
+   - **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `capture-the-flag-reversing-de-binarios`)
    - **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
    - **¿Solo emitir a check-ins?**
    - **¿Enviar `gmail` automático con la `URL` del certificado?**
    - **Pega el contenido del `.csv`**: Abre el archivo con cualquier bloc de notas para copiar y pegar todo el texto
 
-***Este método publica automáticamente los certificados (paso 5) y permite mandar correos personalizados automáticamente***
+***Este método publica automáticamente los certificados (punto 5) y permite mandar correos personalizados en masa***
 
 ---
 
