@@ -168,7 +168,7 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 > No requiere tener instalado el proyecto. Esta es la opción más completa y que conlleva menos riesgo
 
 1. Entra arriba en la pestaña **Actions**
-2. En la lista de flujos de trabajo, corre el workflow: `Emitir certificados y emails`
+2. En la lista de flujos de trabajo, corre el workflow `Emitir certificados y emails`
 3. Rellena los campos:
    - **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `capture-the-flag-reversing-de-binarios`)
    - **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
