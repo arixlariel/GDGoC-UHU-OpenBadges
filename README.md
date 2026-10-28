@@ -35,7 +35,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 Open Badges/
 ├── public/
 │   └── images/
-│       └── badges/                  <-- Aquí se guardan los logo.svg de las badges
+│       └── badges/                  <-- Aquí se guardan los logo.png de las badges
 ├── src/
 │   ├── content/
 │   │   ├── badges/                  <-- Aquí se definen los badge.json
@@ -53,7 +53,7 @@ Open Badges/
 ## 3. Cómo crear una nueva badge (`BadgeClass`)
 
 ### --- 1: Crear el logo
-Formato `.svg` o `.png` con fondo transparente
+Formato `.png` con fondo transparente
 
 ### --- 2: Guardar el logo
 Almacenar en `public/images/badges/`
@@ -66,7 +66,7 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 {
   "name": "Capture The Flag - Reversing de Binarios",
   "description": "Certificado oficial de asistencia al taller organizado por GDGoC Universidad de Huelva",
-  "image": "/images/badges/capture-the-flag-reversing-de-binarios.svg",
+  "image": "/images/badges/capture-the-flag-reversing-de-binarios.png",
   "criteria": {
     "narrative": "Otorgado por asistir presencialmente al 100% del taller y participar en las actividades"
   },
