@@ -90,17 +90,18 @@ jobs:
         run: |
           node scripts/process-publish.mjs
 
-          git config --global user.name "arixlariel"
-          git config --global user.email "arielbustilloleon@gmail.com"
+          git config --global user.name "GDGoC UHU Bot"
+          git config --global user.email "gdgoc.huelva@gmail.com"
           git add -A src/content/badges/ src/content/assertions/ publish/ publish*.json 2>/dev/null || true
           if ! git diff --staged --quiet; then
             git commit -m "chore(publish): organizar certificados publicados y limpiar cola temporal [skip ci]"
+            git pull --rebase origin main || true
             git push origin main
           fi
 
           if [ -f /tmp/pending-emails.json ]; then
             npm install nodemailer
-            node scripts/send-emails.mjs /tmp/pending-emails.json
+            node scripts/send-emails.mjs /tmp/pending-emails.json || echo "⚠️ Advertencia al enviar correos (comprueba GMAIL_APP_PASSWORD en Secrets)"
             rm -f /tmp/pending-emails.json
           fi
 
