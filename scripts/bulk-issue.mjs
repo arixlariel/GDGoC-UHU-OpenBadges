@@ -372,8 +372,8 @@ async function main() {
     emitted++;
   }
 
-  // Guardar lista temporal para envío automático de emails al hacer commit/push
-  if (results.length > 0) {
+  // Guardar lista temporal para envío automático de emails al hacer commit/push (solo si no se pasó --output-list)
+  if (results.length > 0 && !outputList) {
     const publishDir = path.join(assertionsDir, 'publish');
     if (!fs.existsSync(publishDir)) {
       fs.mkdirSync(publishDir, { recursive: true });

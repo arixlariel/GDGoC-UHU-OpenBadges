@@ -838,10 +838,10 @@
 
           <div id="cert-list-box" class="cert-list-container"></div>
 
-          <!-- Botón Único de Descarga de Carpeta Publish -->
+          <!-- Botón Único de Descarga de Archivo Publish -->
           <div class="action-bar">
             <button type="button" class="btn btn-success" style="width:100%; padding: 12px;" onclick="downloadPublishFolderUncompressed()">
-              Descargar carpeta publish
+              Descargar publish.json
             </button>
           </div>
         </div>
@@ -1202,7 +1202,7 @@
 
         <div class="action-bar" style="flex-direction:column;">
           <button type="button" class="btn btn-success" style="width:100%; padding:12px;" onclick="downloadBadgePublishFolderUncompressed()">
-            Descargar carpeta publish
+            Descargar publish.json
           </button>
           <button type="button" class="btn btn-secondary" style="width:100%;" onclick="useCreatedBadgeForCerts()">
             Usar esta badge en Crear certificados →
@@ -1498,55 +1498,17 @@
     }
 
     /* ========================================================================
-       3. GUARDADO DE CARPETA PUBLISH SIN COMPRIMIR
+       3. DESCARGA DIRECTA DE PUBLICACIÓN SIN COMPRIMIR (publish.json)
        ======================================================================== */
-    let lastPublishDirHandle = null;
-
-    async function saveFilesToPublishFolderUncompressed(files) {
-      // En navegadores con soporte de File System Access API (Chrome, Brave, Opera, Edge)
-      // crea directamente la carpeta "publish" sin comprimir en la ubicación elegida.
-      if (window.showDirectoryPicker) {
-        try {
-          const pickerOpts = {
-            id: 'gdgoc_publish_dir',
-            mode: 'readwrite',
-          };
-          if (lastPublishDirHandle) {
-            pickerOpts.startIn = lastPublishDirHandle;
-          } else {
-            pickerOpts.startIn = 'downloads';
-          }
-          const pickedDir = await window.showDirectoryPicker(pickerOpts);
-          lastPublishDirHandle = pickedDir;
-
-          // Si el usuario ya seleccionó una carpeta llamada "publish", escribir dentro de ella;
-          // si seleccionó otra carpeta (ej. Descargas, Escritorio o la raíz del repo), crear la subcarpeta "publish" sin comprimir.
-          const targetPublishDir =
-            pickedDir.name === 'publish'
-              ? pickedDir
-              : await pickedDir.getDirectoryHandle('publish', { create: true });
-
-          for (const f of files) {
-            const cleanFileName = f.name.replace(/^publish\//, '');
-            const fileHandle = await targetPublishDir.getFileHandle(cleanFileName, { create: true });
-            const writable = await fileHandle.createWritable();
-            await writable.write(f.content);
-            await writable.close();
-          }
-          showToast(`Carpeta publish guardada sin comprimir (${files.length} ${files.length === 1 ? 'archivo' : 'archivos'}).`);
-          return;
-        } catch (err) {
-          if (err && err.name === 'AbortError') return;
-        }
-      }
-
-      // Alternativa directa sin comprimir para Firefox / Safari: descarga cada archivo .json directamente sin .zip
+    function saveFilesToPublishFolderUncompressed(files) {
+      if (!files || files.length === 0) return;
+      // Descarga directa a través del navegador sin ventanas de permisos ni compresión .zip
       files.forEach((f, idx) => {
         const cleanFileName = f.name.replace(/^publish\//, '');
         setTimeout(() => {
           const blob = new Blob([f.content], { type: 'application/json' });
           triggerDownload(blob, cleanFileName);
-        }, idx * 180);
+        }, idx * 120);
       });
       showToast(`Descargados ${files.length} ${files.length === 1 ? 'archivo' : 'archivos'} .json sin comprimir.`);
     }
@@ -2568,14 +2530,14 @@
                   : ''
               }
               <p style="font-size:12px;color:${t.textMuted};margin:12px 0 0 0;line-height:1.5;">
-                Haz clic en el botón para ver tu certificado en línea, descargarlo en PDF o añadirlo directamente a tu LinkedIn o cartera favorita
+                Haz clic en el botón para ver tu certificado en línea, descargarlo como PDF o añadirlo a tu LinkedIn o cartera favorita
               </p>
             </td>
           </tr>
           <tr>
             <td style="padding:20px 30px;background-color:${t.footerBg};border-top:1px solid ${t.headerBorder};text-align:center;">
               <p style="margin:0;font-size:11px;color:${t.textMuted};line-height:1.4;">
-                Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> (IMS Global).<br>
+                Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> de 1EdTech.<br>
                 Alojado oficialmente en <a href="https://gdguhu.es" style="color:${t.accent};text-decoration:none;font-weight:700;">https://gdguhu.es</a>
               </p>
             </td>
@@ -2589,25 +2551,30 @@
     }
 
     /* ========================================================================
-       9. DESCARGA AUTOMÁTICA DE LA CARPETA PUBLISH
+       9. DESCARGA AUTOMÁTICA DE PUBLISH.JSON (SIN COMPRIMIR NI PERMISOS)
        ======================================================================== */
-    function getAllAssertionFilesForPublish() {
+    function downloadPublishFolderUncompressed() {
       const badgeId = document.getElementById('gen-badge-id').value.trim();
       if (!badgeId) {
         showToast('⚠️ Selecciona o escribe primero un "ID de la badge" en Datos genéricos.');
         openBadgeDropdownMenu();
         document.getElementById('gen-badge-id')?.focus();
-        return null;
+        return;
       }
+      if (!recipients || recipients.length === 0) {
+        showToast('⚠️ No hay certificados en la lista.');
+        return;
+      }
+
       const includeEmails = document.getElementById('gen-send-emails').checked;
-      const files = [];
+      const assertionsList = [];
       const emailQueue = [];
 
       for (const r of recipients) {
         const obj = buildAssertionObject(r);
-        files.push({
-          name: `publish/${r.id}.json`,
-          content: JSON.stringify(obj, null, 2),
+        assertionsList.push({
+          id: r.id,
+          data: obj,
         });
         if (includeEmails && r.email && r.email.includes('@')) {
           emailQueue.push({
@@ -2623,19 +2590,27 @@
         }
       }
 
-      if (includeEmails && emailQueue.length > 0) {
-        files.push({
-          name: `publish/_pending-emails.json`,
-          content: JSON.stringify(emailQueue, null, 2),
+      const badgesList = [];
+      // Incluir la definición de la badge en el paquete si es personalizada
+      if (KNOWN_BADGES[badgeId]) {
+        badgesList.push({
+          id: badgeId,
+          data: KNOWN_BADGES[badgeId],
         });
       }
-      return files;
-    }
 
-    async function downloadPublishFolderUncompressed() {
-      const files = getAllAssertionFilesForPublish();
-      if (!files) return;
-      await saveFilesToPublishFolderUncompressed(files);
+      const bundle = {
+        version: 2,
+        generatedAt: new Date().toISOString(),
+        badges: badgesList,
+        assertions: assertionsList,
+        pendingEmails: emailQueue,
+      };
+
+      const jsonStr = JSON.stringify(bundle, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      triggerDownload(blob, 'publish.json');
+      showToast(`Descargado publish.json (${recipients.length} ${recipients.length === 1 ? 'certificado' : 'certificados'}) sin comprimir.`);
     }
 
     function downloadSingleAssertionJson() {
@@ -2718,15 +2693,24 @@
       reader.readAsDataURL(file);
     }
 
-    async function downloadBadgePublishFolderUncompressed() {
+    function downloadBadgePublishFolderUncompressed() {
       const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
       const obj = buildNewBadgeObject();
       saveCustomBadgeToMemory(slug, {
         ...obj,
         image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
       });
-      const content = JSON.stringify(obj, null, 2);
-      await saveFilesToPublishFolderUncompressed([{ name: `publish/${slug}.json`, content }]);
+      const bundle = {
+        version: 2,
+        generatedAt: new Date().toISOString(),
+        badges: [{ id: slug, data: obj }],
+        assertions: [],
+        pendingEmails: [],
+      };
+      const jsonStr = JSON.stringify(bundle, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      triggerDownload(blob, 'publish.json');
+      showToast(`Descargado publish.json con la badge "${slug}".`);
     }
 
     function downloadBadgeJsonFile() {

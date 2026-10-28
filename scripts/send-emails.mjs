@@ -278,7 +278,7 @@ export function buildEmailHTML(
               ${evidence ? `<div style="margin: 10px 0 14px 0;"><a href="${evidence}" target="_blank" style="display: inline-block; color: ${t.accent}; font-size: 12.5px; font-weight: 700; text-decoration: underline;">Ver Evidencia / Proyecto ↗</a></div>` : ''}
 
               <p style="font-size: 12px; color: ${t.textMuted}; margin: 12px 0 0 0; line-height: 1.5;">
-                Haz clic en el botón para ver tu certificado en línea, descargarlo en PDF o añadirlo directamente a tu LinkedIn o cartera favorita
+                Haz clic en el botón para ver tu certificado en línea, descargarlo como PDF o añadirlo a tu LinkedIn o cartera favorita
               </p>
 
             </td>
@@ -288,7 +288,7 @@ export function buildEmailHTML(
           <tr>
             <td style="padding: 20px 30px; background-color: ${t.footerBg}; border-top: 1px solid ${t.headerBorder}; text-align: center;">
               <p style="margin: 0; font-size: 11px; color: ${t.textMuted}; line-height: 1.4;">
-                Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> (IMS Global).<br>
+                Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> de 1EdTech.<br>
                 Alojado oficialmente en <a href="${siteUrl}" style="color: ${t.accent}; text-decoration: none; font-weight: 700;">${siteUrl}</a>
               </p>
             </td>

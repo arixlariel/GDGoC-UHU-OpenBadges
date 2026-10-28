@@ -54,9 +54,7 @@ jobs:
           ROLE: ${{ inputs.role }}
           ONLY_CHECKED_IN: ${{ inputs.only_checked_in }}
         run: |
-          cat << 'EOF' > /tmp/asistentes.csv
-          ${{ inputs.csv_content }}
-          EOF
+          printf '%s\n' "$CSV_INPUT" > /tmp/asistentes.csv
 
           CHECK_FLAG=""
           if [ "$ONLY_CHECKED_IN" = "true" ]; then
