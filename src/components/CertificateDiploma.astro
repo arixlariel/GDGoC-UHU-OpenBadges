@@ -217,12 +217,12 @@ linkedinUrl.searchParams.set('certId', assertionId);
         </div>
 
         <!-- Pie del Diploma: Bloques de Sello y Firma Institucional -->
-        <div class="print-footer-block w-full pt-5 mt-2 flex flex-row items-center justify-around gap-4 border-t-2 theme-border">
-          <div class="flex flex-col items-center min-w-[160px] sm:min-w-[200px]">
+        <div class="print-footer-block w-full pt-5 mt-2 flex flex-row items-center justify-between gap-4 border-t-2 theme-border">
+          <div class="flex-1 flex flex-col items-center">
             <div class="text-xs font-bold theme-accent-text tracking-widest uppercase mb-1.5">
               GDG on Campus UHU
             </div>
-            <div class="w-36 sm:w-44 border-t-2 theme-border mb-1.5"></div>
+            <div class="w-40 sm:w-48 border-t-2 theme-border mb-1.5"></div>
             <div class="text-xs font-bold theme-text-primary">Universidad de Huelva</div>
             <div class="text-[11px] theme-text-secondary">Comunidad Oficial de Desarrolladores</div>
           </div>
@@ -238,11 +238,11 @@ linkedinUrl.searchParams.set('certId', assertionId);
             <span class="text-[11px] leading-none font-mono font-bold theme-text-primary">VERIFIED</span>
           </div>
 
-          <div class="flex flex-col items-center min-w-[160px] sm:min-w-[200px]">
-            <div class="font-mono text-xs font-semibold theme-text-secondary mb-1.5">
-              {assertionId.slice(0, 16)}...
+          <div class="flex-1 flex flex-col items-center">
+            <div class="font-mono text-[11px] sm:text-xs font-semibold theme-text-secondary mb-1.5 select-all whitespace-nowrap">
+              {assertionId}
             </div>
-            <div class="w-36 sm:w-44 border-t-2 theme-border mb-1.5"></div>
+            <div class="w-40 sm:w-48 border-t-2 theme-border mb-1.5"></div>
             <div class="text-xs font-bold theme-text-primary">Credencial Criptográfica</div>
             <div class="text-[11px] theme-text-secondary">Verificación Alojada SHA-256</div>
           </div>
@@ -298,16 +298,6 @@ linkedinUrl.searchParams.set('certId', assertionId);
         <span>Ver Evidencia / Proyecto ↗</span>
       </a>
     )}
-  </div>
-
-  <!-- Caja inferior de ID de Verificación -->
-  <div class="no-print theme-card mt-6 rounded-2xl p-4 text-center">
-    <p class="text-xs sm:text-sm theme-text-secondary">
-      Este certificado digital está verificado por <strong class="theme-text-primary font-semibold">GDG on Campus Universidad de Huelva</strong> bajo la especificación Open Badges 2.0.
-    </p>
-    <div class="font-mono text-xs theme-text-secondary mt-1.5">
-      Certificate ID: <span class="theme-text-primary font-bold select-all">{assertionId}</span>
-    </div>
   </div>
 </div>
 
