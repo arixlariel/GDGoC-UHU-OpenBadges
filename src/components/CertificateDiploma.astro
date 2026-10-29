@@ -1,5 +1,5 @@
 ---
-import { getFullUrl } from '@/config/site';
+import { getFullUrl, getAssetUrl } from '@/config/site';
 import { generateQrSvgPath } from '@/utils/qrcode';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   initialStyle: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
 }
 
-const { assertion, badge, assertionId } = Astro.props;
+const { assertion, badge, assertionId, initialStyle } = Astro.props;
 
 const issueDate = new Date(assertion.data.issuedOn).toLocaleDateString('es-ES', {
   year: 'numeric',
@@ -18,8 +18,27 @@ const issueDate = new Date(assertion.data.issuedOn).toLocaleDateString('es-ES', 
 });
 
 const certUrl = getFullUrl(`/cert/${assertionId}`);
+const logoUrl = getAssetUrl('/images/gdgoc-uhu-logo.jpg');
+const badgeImageUrl = getAssetUrl(badge.data.image);
 const qr = generateQrSvgPath(certUrl);
 const hasEvidence = Boolean(assertion.data.evidence && assertion.data.evidence.trim().length > 0);
+
+const pdfPayload = {
+  assertionId,
+  recipientName: assertion.data.recipient.name,
+  role: assertion.data.role.trim(),
+  badgeName: badge.data.name,
+  description: badge.data.description,
+  narrative: badge.data.criteria?.narrative || '',
+  issueDate,
+  tags: Array.isArray(badge.data.tags) ? badge.data.tags.map((t: string) => t.trim()) : [],
+  badgeImageUrl,
+  logoUrl,
+  certUrl,
+  qrPath: qr.path,
+  qrSize: qr.size,
+  style: initialStyle || 'google',
+};
 
 // LinkedIn Add to Profile URL
 const linkedinUrl = new URL('https://www.linkedin.com/profile/add');
@@ -43,9 +62,9 @@ linkedinUrl.searchParams.set('certId', assertionId);
       <div class="diploma-frame-1 absolute inset-3 sm:inset-5 rounded-xl pointer-events-none transition-all duration-500"></div>
       <div class="diploma-frame-2 absolute inset-4 sm:inset-6 rounded-lg pointer-events-none transition-all duration-500"></div>
 
-      <!-- Decoraciones de esquina específicas por estilo -->
+      <!-- Decoraciones de esquina específicas por estilo (posicionadas de forma absoluta para no alterar el flujo flex) -->
       <!-- 1. Google Ornaments -->
-      <div class="fx-layer fx-google">
+      <div class="fx-layer fx-google absolute inset-0 pointer-events-none overflow-hidden">
         <svg class="absolute -top-12 -left-12 w-52 h-52 opacity-12 pointer-events-none" viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="80" stroke="#4285F4" stroke-width="4" />
           <circle cx="100" cy="100" r="55" stroke="#EA4335" stroke-width="3" stroke-dasharray="8 8" />
@@ -57,7 +76,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
       </div>
 
       <!-- 2. Cyber Ornaments -->
-      <div class="fx-layer fx-cyber">
+      <div class="fx-layer fx-cyber absolute inset-0 pointer-events-none overflow-hidden">
         <svg class="absolute -top-16 -left-16 w-72 h-72 opacity-25 pointer-events-none" viewBox="0 0 300 300" fill="none">
           <circle cx="120" cy="120" r="85" stroke="#00F0FF" stroke-width="2.5" stroke-dasharray="10 6" />
           <polygon points="20,200 200,20 260,260" stroke="#FF007F" stroke-width="1.5" opacity="0.5" />
@@ -69,7 +88,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
       </div>
 
       <!-- 3. Piscina Ornaments -->
-      <div class="fx-layer fx-piscina">
+      <div class="fx-layer fx-piscina absolute inset-0 pointer-events-none overflow-hidden">
         <span class="absolute top-6 left-8 text-3xl opacity-85 select-none" style="animation: poolWaveBob 3.8s ease-in-out infinite;">🌊</span>
         <span class="absolute top-6 right-8 text-3xl opacity-85 select-none" style="animation: poolWaveBob 4.2s ease-in-out infinite 0.4s;">💦</span>
         <span class="absolute bottom-6 left-8 text-3xl opacity-85 select-none" style="animation: poolWaveBob 4s ease-in-out infinite 0.8s;">🫧</span>
@@ -77,7 +96,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
       </div>
 
       <!-- 4. Nieve Ornaments -->
-      <div class="fx-layer fx-nieve">
+      <div class="fx-layer fx-nieve absolute inset-0 pointer-events-none overflow-hidden">
         <span class="absolute top-6 left-8 text-3xl opacity-85 select-none" style="animation: floatSlow 4.5s ease-in-out infinite;">❄️</span>
         <span class="absolute top-6 right-8 text-3xl opacity-85 select-none" style="animation: floatReverse 5s ease-in-out infinite;">🌬️</span>
         <span class="absolute bottom-6 left-8 text-3xl opacity-85 select-none" style="animation: floatReverse 4.2s ease-in-out infinite;">❆</span>
@@ -85,7 +104,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
       </div>
 
       <!-- 5. Caramelos Ornaments -->
-      <div class="fx-layer fx-caramelos">
+      <div class="fx-layer fx-caramelos absolute inset-0 pointer-events-none overflow-hidden">
         <span class="absolute top-6 left-8 text-3xl opacity-90 select-none" style="animation: candyBounce 4s ease-in-out infinite;">🧁</span>
         <span class="absolute top-6 right-8 text-3xl opacity-90 select-none" style="animation: candyBounce 4.5s ease-in-out infinite 0.4s;">🍬</span>
         <span class="absolute bottom-6 left-8 text-3xl opacity-90 select-none" style="animation: candyBounce 4.2s ease-in-out infinite 0.8s;">🍩</span>
@@ -96,7 +115,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
       <div class="diploma-watermark absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.055]">
         <div class="w-80 h-80 sm:w-96 sm:h-96 rounded-full overflow-hidden border-4 border-current p-2">
           <img
-            src={getFullUrl('/images/gdgoc-uhu-logo.jpg')}
+            src={logoUrl}
             alt=""
             loading="eager"
             decoding="sync"
@@ -110,10 +129,10 @@ linkedinUrl.searchParams.set('certId', assertionId);
         
         <!-- Cabecera de Logos (GDG on Campus UHU + Insignia del Evento) -->
         <div class="print-header-block flex flex-col items-center w-full">
-          <div class="flex items-center justify-center gap-4 sm:gap-6 mb-4">
+          <div class="print-logos-row flex items-center justify-center gap-4 sm:gap-6 mb-4">
             <div class="flex items-center gap-3">
               <img
-                src={getFullUrl('/images/gdgoc-uhu-logo.jpg')}
+                src={logoUrl}
                 alt="GDG on Campus Universidad de Huelva"
                 loading="eager"
                 decoding="sync"
@@ -133,7 +152,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
             <div class="h-10 border-l-2 theme-border"></div>
 
             <img
-              src={badge.data.image}
+              src={badgeImageUrl}
               alt={badge.data.name}
               loading="eager"
               decoding="sync"
@@ -220,25 +239,25 @@ linkedinUrl.searchParams.set('certId', assertionId);
 
         <!-- Pie del Diploma: Bloques de Sello y Firma Institucional -->
         <div class="print-footer-block w-full pt-4 sm:pt-5 mt-2 flex flex-row items-center justify-between gap-2 sm:gap-4 border-t-2 theme-border">
-          <div class="flex-1 flex flex-col items-center text-center min-w-0">
-            <div class="text-[10px] sm:text-xs font-bold theme-accent-text tracking-wider uppercase mb-1 whitespace-nowrap">
-              <span class="block sm:inline">GDG on</span> <span class="text-theme-accent">Campus UHU</span>
+          <div class="print-footer-left flex-1 flex flex-col items-center text-center min-w-0">
+            <div class="print-footer-org text-[10px] sm:text-xs font-bold theme-accent-text tracking-wider uppercase mb-1 whitespace-nowrap">
+              <span class="print-inline block sm:inline">GDG on</span> <span class="text-theme-accent">Campus UHU</span>
             </div>
-            <div class="w-16 sm:w-44 border-t-2 theme-border mb-1.5 mx-auto"></div>
-            <div class="text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">Universidad de Huelva</div>
-            <div class="text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">
+            <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border mb-1.5 mx-auto"></div>
+            <div class="print-footer-title text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">Universidad de Huelva</div>
+            <div class="print-footer-subtitle text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">
               <span class="footer-lbl-mobile">Desarrolladores</span><span class="footer-lbl-desktop">Comunidad Oficial de Desarrolladores</span>
             </div>
           </div>
 
-          <!-- Sello Central: Código QR Vectorial de Verificación (ampliado en móvil, sin pastilla de puntos) -->
+          <!-- Sello Central: Código QR Vectorial de Verificación -->
           <div class="flex items-center justify-center shrink-0 px-1 sm:px-4">
             <div
-              class="p-1 sm:p-1.5 rounded-xl border-2 theme-border bg-white shrink-0 shadow-xs"
+              class="print-qr-container p-1 sm:p-1.5 rounded-xl border-2 theme-border bg-white shrink-0 shadow-xs"
               title={`Escanea para verificar: ${certUrl}`}
             >
               <svg
-                class="w-[54px] h-[54px] sm:w-[64px] sm:h-[64px] block"
+                class="print-qr-svg w-[54px] h-[54px] sm:w-[64px] sm:h-[64px] block"
                 viewBox={`-1 -1 ${qr.size + 2} ${qr.size + 2}`}
                 shape-rendering="crispEdges"
                 aria-label="Código QR de verificación del certificado"
@@ -249,15 +268,15 @@ linkedinUrl.searchParams.set('certId', assertionId);
             </div>
           </div>
 
-          <div class="flex-1 flex flex-col items-center text-center min-w-0">
-            <div class="font-mono text-[9px] sm:text-xs font-semibold theme-text-secondary select-all max-w-[85px] sm:max-w-none truncate sm:whitespace-nowrap mb-1">
+          <div class="print-footer-right flex-1 flex flex-col items-center text-center min-w-0">
+            <div class="print-assertion-id font-mono text-[9px] sm:text-xs font-semibold theme-text-secondary select-all max-w-[85px] sm:max-w-none truncate sm:whitespace-nowrap mb-1">
               {assertionId}
             </div>
-            <div class="w-16 sm:w-44 border-t-2 theme-border mb-1.5 mx-auto"></div>
-            <div class="text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">
+            <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border mb-1.5 mx-auto"></div>
+            <div class="print-footer-title text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">
               <span class="footer-lbl-mobile">ID Criptográfico</span><span class="footer-lbl-desktop">Credencial Criptográfica</span>
             </div>
-            <div class="text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">Verificación SHA-256</div>
+            <div class="print-footer-subtitle text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">Verificación SHA-256</div>
           </div>
         </div>
 
@@ -290,15 +309,30 @@ linkedinUrl.searchParams.set('certId', assertionId);
       <span>Añadir a LinkedIn</span>
     </a>
 
+    <!-- Descarga directa en PDF A4 Horizontal (fiel al estilo activo) -->
     <button
       type="button"
+      id="download-pdf-btn"
+      data-pdf-payload={JSON.stringify(pdfPayload)}
+      class="theme-pill-btn px-4 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+    >
+      <svg id="download-pdf-icon" class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <span id="download-pdf-label">Descargar PDF</span>
+    </button>
+
+    <!-- Impresión directa optimizada para A4 Horizontal -->
+    <button
+      type="button"
+      id="print-cert-btn"
       onclick="window.print()"
       class="theme-pill-btn px-4 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer"
     >
-      <svg class="w-4 h-4 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
       </svg>
-      <span>Imprimir / PDF</span>
+      <span>Imprimir</span>
     </button>
 
     {hasEvidence && (
@@ -313,6 +347,50 @@ linkedinUrl.searchParams.set('certId', assertionId);
     )}
   </div>
 </div>
+
+<script>
+  import {
+    downloadCertificatePdf,
+    preloadCertificateAssets,
+    type CertificatePdfData,
+  } from '@/utils/pdfDownload';
+
+  const downloadBtn = document.getElementById('download-pdf-btn') as HTMLButtonElement | null;
+  const labelEl = document.getElementById('download-pdf-label');
+
+  if (downloadBtn) {
+    const rawPayload = downloadBtn.getAttribute('data-pdf-payload');
+    if (rawPayload) {
+      try {
+        preloadCertificateAssets(JSON.parse(rawPayload));
+      } catch {
+        // Ignore preload parse error
+      }
+    }
+
+    downloadBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const raw = downloadBtn.getAttribute('data-pdf-payload');
+      if (!raw) return;
+
+      const originalLabel = labelEl?.textContent || 'Descargar PDF';
+      downloadBtn.disabled = true;
+      if (labelEl) labelEl.textContent = 'Generando PDF...';
+
+      try {
+        const payload: CertificatePdfData = JSON.parse(raw);
+        const activeTheme =
+          document.documentElement.getAttribute('data-theme') || payload.style || 'google';
+        await downloadCertificatePdf(payload, activeTheme);
+      } catch (err) {
+        console.error('Error al generar el PDF del certificado:', err);
+      } finally {
+        downloadBtn.disabled = false;
+        if (labelEl) labelEl.textContent = originalLabel;
+      }
+    });
+  }
+</script>
 
 <style is:global>
   /* ==========================================================================

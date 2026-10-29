@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getFullUrl } from '@/config/site';
+import { getAssetUrl } from '@/config/site';
 
 const badges = await getCollection('badges');
 const assertions = await getCollection('assertions');
@@ -86,7 +86,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           <!-- Search / Verify ID Box -->
           <div class="mt-7 max-w-lg mx-auto lg:mx-0">
             <form
-              onsubmit={`event.preventDefault(); const val = document.getElementById("search-cert-id").value.trim(); if(val) window.location.href = "${getFullUrl("/cert/")}" + encodeURIComponent(val);`}
+              onsubmit={`event.preventDefault(); const val = document.getElementById("search-cert-id").value.trim(); if(val) window.location.href = "${getAssetUrl("/cert/")}" + encodeURIComponent(val);`}
               class="theme-search-box flex items-center gap-2 p-2 rounded-full transition-all duration-300"
             >
               <svg class="w-5 h-5 theme-text-secondary ml-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,7 +126,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           <div class="theme-card relative mx-auto max-w-sm lg:max-w-none rounded-3xl overflow-hidden p-3">
             <div class="overflow-hidden rounded-2xl border theme-border">
               <img
-                src={getFullUrl('/images/gdgoc-uhu-logo.jpg')}
+                src={getAssetUrl('/images/gdgoc-uhu-logo.jpg')}
                 alt="Escuela Técnica Superior de Ingeniería - GDG on Campus Universidad de Huelva"
                 class="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
               />
@@ -166,7 +166,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
 
         return (
           <a
-            href={getFullUrl(`/cert/${id}`)}
+            href={getAssetUrl(`/cert/${id}`)}
             class="cert-card-item theme-card group relative overflow-hidden rounded-2xl p-5 block"
           >
             <!-- Top accent bar per certificate style -->
@@ -194,7 +194,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
             <div class="flex items-center gap-4 pt-1">
               <div class="w-16 h-16 shrink-0 p-2 rounded-2xl border theme-border bg-white/80 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-xs">
                 {badge && (
-                  <img src={badge.data.image} alt={badge.data.name} class="w-full h-full object-contain" />
+                  <img src={getAssetUrl(badge.data.image)} alt={badge.data.name} class="w-full h-full object-contain" />
                 )}
               </div>
               <div class="flex-1 min-w-0">

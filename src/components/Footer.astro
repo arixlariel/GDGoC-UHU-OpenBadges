@@ -1,12 +1,12 @@
 ---
-import { siteConfig } from '@/config/site';
+import { siteConfig, getAssetUrl } from '@/config/site';
 ---
 
 <footer class="theme-footer relative z-10 mt-20 border-t theme-border py-10 text-xs theme-text-secondary backdrop-blur-xl transition-all duration-500">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
     <div class="flex items-center gap-3.5">
       <img
-        src="/images/gdgoc-uhu-logo.jpg"
+        src={getAssetUrl('/images/gdgoc-uhu-logo.jpg')}
         alt="GDG on Campus UHU"
         class="w-10 h-10 rounded-lg object-cover border theme-border bg-white shadow-xs"
       />

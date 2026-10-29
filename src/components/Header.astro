@@ -1,5 +1,5 @@
 ---
-import { siteConfig, getFullUrl } from '@/config/site';
+import { siteConfig, getAssetUrl } from '@/config/site';
 
 interface Props {
   lockedStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
@@ -28,11 +28,11 @@ const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) 
   </div>
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
-    <a href={getFullUrl('/')} class="flex items-center gap-3 group min-w-0">
+    <a href={getAssetUrl('/')} class="flex items-center gap-3 group min-w-0">
       <!-- Official GDGoC UHU Logo -->
       <div class="w-11 h-11 rounded-xl overflow-hidden border theme-border shadow-sm shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 bg-white">
         <img
-          src={getFullUrl('/images/gdgoc-uhu-logo.jpg')}
+          src={getAssetUrl('/images/gdgoc-uhu-logo.jpg')}
           alt="GDG on Campus Universidad de Huelva"
           class="w-full h-full object-cover"
         />

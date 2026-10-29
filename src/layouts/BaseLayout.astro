@@ -1,7 +1,7 @@
 ---
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import { siteConfig, getFullUrl } from '@/config/site';
+import { siteConfig, getFullUrl, getAssetUrl } from '@/config/site';
 
 interface Props {
   title?: string;
@@ -33,7 +33,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/jpeg" href={getFullUrl('/images/gdgoc-uhu-logo.jpg')} />
+    <link rel="icon" type="image/jpeg" href={getAssetUrl('/images/gdgoc-uhu-logo.jpg')} />
     <meta name="generator" content={Astro.generator} />
 
     <!-- SEO Meta Tags -->
@@ -766,21 +766,23 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           padding: 0 !important;
           margin: 0 !important;
           height: 196mm !important;
+          max-height: 196mm !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
+          overflow: hidden !important;
         }
         .print-container {
           padding: 0 !important;
           margin: 0 auto !important;
           width: 100% !important;
-          max-width: 280mm !important;
+          max-width: 282mm !important;
         }
         .print-diploma-wrapper {
           transform: none !important;
           width: 100% !important;
           max-width: none !important;
-          max-height: 192mm !important;
+          max-height: 194mm !important;
           page-break-inside: avoid !important;
           page-break-after: avoid !important;
           page-break-before: avoid !important;
@@ -790,10 +792,11 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           min-height: 0 !important;
           height: 184mm !important;
           max-height: 184mm !important;
-          padding: 36px 48px !important;
+          padding: 26px 42px !important;
           justify-content: space-between !important;
+          box-sizing: border-box !important;
         }
-        /* Solid backgrounds in print to prevent PDF transparency-flattening pink squares */
+        /* Solid backgrounds in print to prevent PDF transparency-flattening bounding boxes */
         html[data-theme="google"] .diploma-inner { background: #FFFFFF !important; }
         html[data-theme="cyber"] .diploma-inner { background: #070B19 !important; }
         html[data-theme="piscina"] .diploma-inner { background: #F2FCFF !important; }
@@ -813,47 +816,98 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .diploma-frame-2 {
           inset: 16px !important;
         }
+        /* Show ONLY the active theme's corner ornaments in print */
+        .diploma-inner .fx-layer {
+          display: none !important;
+          position: absolute !important;
+          inset: 0 !important;
+          pointer-events: none !important;
+          overflow: hidden !important;
+          opacity: 1 !important;
+        }
+        html[data-theme="google"] .diploma-inner .fx-google { display: block !important; }
+        html[data-theme="cyber"] .diploma-inner .fx-cyber { display: block !important; }
+        html[data-theme="piscina"] .diploma-inner .fx-piscina { display: block !important; }
+        html[data-theme="nieve"] .diploma-inner .fx-nieve { display: block !important; }
+        html[data-theme="caramelos"] .diploma-inner .fx-caramelos { display: block !important; }
+
         /* Remove opacity < 1 on text/ornaments in print so PDF engine doesn't draw bounding boxes */
         .print-desc,
-        .fx-layer,
         .fx-layer span,
-        .fx-layer svg {
+        .fx-layer svg,
+        .fx-layer svg * {
           opacity: 1 !important;
           transform: none !important;
         }
+        /* Pre-blended subtle stroke colors for Google & Cyber corner SVGs so opacity: 1 stays subtle */
+        .fx-google svg:first-child circle:first-child { stroke: #D8E6FD !important; }
+        .fx-google svg:first-child circle:last-child { stroke: #FADAD7 !important; }
+        .fx-google svg:last-child circle:first-child { stroke: #D6EFE0 !important; }
+        .fx-google svg:last-child circle:last-child { stroke: #FEF0C7 !important; }
+        .fx-cyber svg:first-child circle { stroke: #064352 !important; }
+        .fx-cyber svg:first-child polygon { stroke: #380A2D !important; }
+        .fx-cyber svg:last-child circle { stroke: #06472B !important; }
+        .fx-cyber svg:last-child polygon { stroke: #064352 !important; }
+
         .fx-layer span.top-6 {
-          top: 26px !important;
+          top: 22px !important;
         }
         .fx-layer span.bottom-6 {
-          bottom: 26px !important;
+          bottom: 22px !important;
         }
-        .print-header-block > div:first-child {
-          margin-bottom: 10px !important;
+        .print-logos-row {
+          margin-bottom: 8px !important;
+          gap: 18px !important;
+        }
+        .print-logos-row img {
+          width: 48px !important;
+          height: 48px !important;
+        }
+        .print-badge-title {
+          font-size: 25px !important;
+          line-height: 1.15 !important;
+          margin-top: 3px !important;
         }
         .print-body-block {
           margin-top: 4px !important;
           margin-bottom: 4px !important;
         }
         .print-recipient-box {
-          padding-bottom: 8px !important;
-          margin-bottom: 8px !important;
+          padding-left: 32px !important;
+          padding-right: 32px !important;
+          padding-bottom: 7px !important;
+          margin-bottom: 7px !important;
+          min-width: 380px !important;
         }
         .diploma-recipient-name {
-          font-size: 30px !important;
+          font-size: 35px !important;
+          line-height: 1.15 !important;
+        }
+        .print-desc {
+          font-size: 13.5px !important;
+          line-height: 1.42 !important;
+          max-width: 680px !important;
+        }
+        .print-narrative {
+          font-size: 12px !important;
+          line-height: 1.38 !important;
+          max-width: 620px !important;
+          margin-top: 3px !important;
         }
         .diploma-meta-box {
-          margin-top: 10px !important;
-          padding: 9px 14px !important;
+          margin-top: 9px !important;
+          padding: 8px 18px !important;
+          max-width: 640px !important;
         }
         .print-tags {
-          margin-top: 12px !important;
+          margin-top: 9px !important;
           margin-bottom: 2px !important;
           width: 100% !important;
           display: flex !important;
           flex-wrap: wrap !important;
           align-items: center !important;
           justify-content: center !important;
-          gap: 8px !important;
+          gap: 7px !important;
         }
         .print-tags .theme-badge-pill,
         .print-header-block .theme-badge-pill {
@@ -866,8 +920,37 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           letter-spacing: 0.01em !important;
         }
         .print-footer-block {
-          padding-top: 12px !important;
+          padding-top: 10px !important;
           margin-top: 2px !important;
+        }
+        .print-inline {
+          display: inline !important;
+        }
+        .print-footer-org {
+          font-size: 11.5px !important;
+        }
+        .print-footer-line {
+          width: 176px !important;
+        }
+        .print-footer-title {
+          font-size: 11.5px !important;
+        }
+        .print-footer-subtitle {
+          font-size: 10.5px !important;
+        }
+        .print-assertion-id {
+          font-size: 11.5px !important;
+          max-width: none !important;
+          overflow: visible !important;
+          text-overflow: clip !important;
+          white-space: nowrap !important;
+        }
+        .print-qr-container {
+          padding: 5px !important;
+        }
+        .print-qr-svg {
+          width: 62px !important;
+          height: 62px !important;
         }
         /* Ensure gradient text prints solid & crisp in all PDF engines */
         .diploma-recipient-name,

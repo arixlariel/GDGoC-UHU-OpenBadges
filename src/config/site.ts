@@ -28,6 +28,14 @@ export function getFullUrl(path: string): string {
   return `${siteConfig.url}${base}${cleanPath}`;
 }
 
+export function getAssetUrl(path: string): string {
+  const base = (siteConfig.base && siteConfig.base !== '/')
+    ? (siteConfig.base.startsWith('/') ? siteConfig.base : `/${siteConfig.base}`).replace(/\/$/, '')
+    : '';
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${cleanPath}`;
+}
+
 export const issuerConfig: IssuerConfig = {
   id: getFullUrl('/api/badges/issuer.json'),
   name: 'GDG on Campus Universidad de Huelva',
