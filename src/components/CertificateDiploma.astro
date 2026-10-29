@@ -110,7 +110,8 @@ linkedinUrl.searchParams.set('certId', assertionId);
         
         <!-- Cabecera de Logos (GDG on Campus UHU + Insignia del Evento) -->
         <div class="print-header-block flex flex-col items-center w-full">
-          <div class="flex items-center justify-center gap-4 sm:gap-6 mb-4">
+          <!-- En la parte superior únicamente los logos, con mayor separación respecto al borde superior -->
+          <div class="print-logos-row flex items-center justify-center gap-4 sm:gap-6 mt-1 sm:mt-3 mb-4 sm:mb-5">
             <div class="flex items-center gap-3">
               <img
                 src={getFullUrl('/images/gdgoc-uhu-logo.jpg')}
@@ -141,26 +142,26 @@ linkedinUrl.searchParams.set('certId', assertionId);
             />
           </div>
 
-          <!-- Rol o Reconocimiento -->
-          <div class="theme-badge-pill inline-flex items-center justify-center text-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider leading-none mb-2">{assertion.data.role.trim()}</div>
+          <!-- Rol pegado y cercano al nombre de la badge -->
+          <div class="theme-badge-pill inline-flex items-center justify-center text-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider leading-none mb-1 sm:mb-1.5">{assertion.data.role.trim()}</div>
 
-          <h1 class="print-badge-title font-display text-xl sm:text-3xl font-bold theme-text-primary uppercase tracking-[0.06em] mt-1">
+          <h1 class="print-badge-title font-display text-xl sm:text-3xl font-bold theme-text-primary uppercase tracking-[0.06em] mt-0 mb-1">
             {badge.data.name}
           </h1>
 
-          <div class="text-xs sm:text-sm font-medium theme-text-secondary mt-1 tracking-wide">
+          <div class="text-xs sm:text-sm font-medium theme-text-secondary mt-0.5 tracking-wide">
             {issueDate}
           </div>
         </div>
 
         <!-- Bloque Central: Destinatario y Mérito -->
-        <div class="print-body-block my-5 sm:my-7 w-full flex flex-col items-center">
-          <p class="text-sm sm:text-base theme-text-secondary italic mb-2.5">
+        <div class="print-body-block my-4 sm:my-6 w-full flex flex-col items-center">
+          <p class="text-sm sm:text-base theme-text-secondary italic mb-2">
             Este certificado digital se otorga a
           </p>
 
-          <!-- Nombre del Alumno con línea y barra de 4 colores en SVG (impresión garantizada) -->
-          <div class="print-recipient-box relative inline-block px-4 sm:px-10 pb-3 mb-4 border-b-2 theme-border min-w-[260px] sm:min-w-[420px]">
+          <!-- Nombre del Alumno con mayor separación respecto al separador -->
+          <div class="print-recipient-box relative inline-block px-4 sm:px-10 pb-4 sm:pb-5 mb-5 sm:mb-6 border-b-2 theme-border min-w-[260px] sm:min-w-[420px]">
             <h2 class="diploma-recipient-name font-display text-3xl sm:text-5xl font-bold tracking-tight leading-tight">
               {assertion.data.recipient.name}
             </h2>
@@ -177,18 +178,18 @@ linkedinUrl.searchParams.set('certId', assertionId);
             </svg>
           </div>
 
-          <!-- Descripción y Criterios -->
+          <!-- Descripción y Criterios con mayor separación -->
           <p class="print-desc text-sm sm:text-[15px] theme-text-primary opacity-90 max-w-2xl leading-relaxed">
             {badge.data.description}
           </p>
           {badge.data.criteria?.narrative && (
-            <p class="print-narrative text-xs sm:text-sm theme-text-secondary max-w-xl leading-relaxed mt-1.5">
+            <p class="print-narrative text-xs sm:text-sm theme-text-secondary max-w-xl leading-relaxed mt-3 sm:mt-4">
               {badge.data.criteria.narrative}
             </p>
           )}
 
           <!-- Caja de Metadatos -->
-          <div class="diploma-meta-box mt-5 w-full max-w-2xl rounded-2xl p-3.5 sm:p-4 grid grid-cols-3 gap-3 sm:gap-4 text-center transition-all duration-500">
+          <div class="diploma-meta-box mt-5 sm:mt-6 w-full max-w-2xl rounded-2xl p-3.5 sm:p-4 grid grid-cols-3 gap-3 sm:gap-4 text-center transition-all duration-500">
             <div class="flex flex-col gap-0.5">
               <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider theme-text-secondary">Rol Acreditado</span>
               <span class="text-xs sm:text-sm font-bold theme-text-primary">{assertion.data.role}</span>
@@ -208,9 +209,9 @@ linkedinUrl.searchParams.set('certId', assertionId);
             </div>
           </div>
 
-          <!-- Tags de Competencias -->
+          <!-- Tags de Competencias (separadas de la tabla de metadatos) -->
           {badge.data.tags && badge.data.tags.length > 0 && (
-            <div class="print-tags mt-4 w-full flex flex-wrap items-center justify-center gap-2">
+            <div class="print-tags mt-5 sm:mt-6 w-full flex flex-wrap items-center justify-center gap-2">
               {badge.data.tags.map((tag: string) => (
                 <span class="theme-badge-pill inline-flex items-center justify-center text-center text-[11px] leading-none px-3.5 py-1.5 rounded-full font-semibold">{`#${tag.trim()}`}</span>
               ))}
@@ -228,7 +229,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
             <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border my-1.5 sm:my-2 mx-auto"></div>
             <div class="text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">Universidad de Huelva</div>
             <div class="text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap truncate max-w-full">
-              <span class="sm:hidden print:!hidden">Desarrolladores</span><span class="hidden sm:inline print:!inline">Comunidad de Desarrolladores</span>
+              <span class="footer-lbl-short">Desarrolladores</span><span class="footer-lbl-full">Comunidad de Desarrolladores</span>
             </div>
           </div>
 
@@ -257,7 +258,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
             </div>
             <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border my-1.5 sm:my-2 mx-auto"></div>
             <div class="text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">
-              <span class="sm:hidden print:!hidden">ID Criptográfico</span><span class="hidden sm:inline print:!inline">Credencial Criptográfica</span>
+              <span class="footer-lbl-short">ID Criptográfico</span><span class="footer-lbl-full">Credencial Criptográfica</span>
             </div>
             <div class="text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">Verificación SHA-256</div>
           </div>
@@ -322,6 +323,29 @@ linkedinUrl.searchParams.set('certId', assertionId);
      ========================================================================== */
   .diploma-outer {
     padding: 6px !important;
+  }
+
+  .footer-lbl-short {
+    display: inline;
+  }
+  .footer-lbl-full {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .footer-lbl-short {
+      display: none;
+    }
+    .footer-lbl-full {
+      display: inline;
+    }
+  }
+  @media print {
+    .footer-lbl-short {
+      display: none !important;
+    }
+    .footer-lbl-full {
+      display: inline !important;
+    }
   }
 
   /* 1. Google Diploma */

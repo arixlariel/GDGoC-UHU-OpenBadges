@@ -170,8 +170,23 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         50% { transform: translateX(8%) skewX(8deg) scaleY(1.25); opacity: 0.8; }
       }
 
-      /* Toggle visibility of theme-specific FX layers */
-      .fx-layer { display: none; pointer-events: none; }
+      /* ==========================================================================
+         GPU HARDWARE ACCELERATION (Proposal 2: Smooth 60/120fps on mobile)
+         Promotes background animated layers to independent GPU compositor layers
+         without altering aesthetics, shapes, colors or timing.
+         ========================================================================== */
+      .fx-layer {
+        display: none;
+        pointer-events: none;
+        will-change: transform;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+      }
+      #theme-fx-container * {
+        will-change: transform;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+      }
       html[data-theme="google"] .fx-google { display: block; }
       html[data-theme="cyber"] .fx-cyber { display: block; }
       html[data-theme="piscina"] .fx-piscina { display: block; }
@@ -744,16 +759,29 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           transition: none !important;
           font-variant-ligatures: none !important;
         }
-        header, footer, .no-print, #theme-fx-container, .diploma-watermark, .sm\:hidden {
+        header, footer, .no-print, #theme-fx-container, .diploma-watermark, badge-modal, dialog {
           display: none !important;
+          visibility: hidden !important;
+          height: 0 !important;
+          width: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: none !important;
+          overflow: hidden !important;
+        }
+        .footer-lbl-short {
+          display: none !important;
+        }
+        .footer-lbl-full {
+          display: inline !important;
         }
         html, body {
           background: #ffffff !important;
           font-family: 'Google Sans', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-          width: 297mm !important;
-          height: 210mm !important;
-          max-width: 297mm !important;
-          max-height: 210mm !important;
+          width: 100% !important;
+          height: 100% !important;
+          max-width: 100% !important;
+          max-height: 100% !important;
           overflow: hidden !important;
           margin: 0 !important;
           padding: 0 !important;
@@ -767,23 +795,28 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         main {
           padding: 0 !important;
           margin: 0 !important;
-          width: 297mm !important;
-          height: 210mm !important;
-          max-width: 297mm !important;
-          max-height: 210mm !important;
+          width: 100% !important;
+          height: 100% !important;
+          max-width: 100% !important;
+          max-height: 100% !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
           overflow: hidden !important;
           page-break-inside: avoid !important;
+          page-break-after: avoid !important;
+          page-break-before: avoid !important;
           break-inside: avoid !important;
+          break-after: avoid !important;
+          break-before: avoid !important;
         }
+        /* Contenedor de impresión: rellena la página A4 apaisada eliminando bordes blancos excesivos */
         .print-container {
-          padding: 12mm 14mm !important;
+          padding: 5mm 6mm !important;
           margin: 0 auto !important;
           width: 297mm !important;
           max-width: 297mm !important;
-          height: 210mm !important;
+          height: 100% !important;
           max-height: 210mm !important;
           box-sizing: border-box !important;
           display: flex !important;
@@ -791,27 +824,31 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           justify-content: center !important;
           overflow: hidden !important;
           page-break-inside: avoid !important;
+          page-break-after: avoid !important;
           break-inside: avoid !important;
+          break-after: avoid !important;
         }
         .print-diploma-wrapper {
           transform: none !important;
           width: 100% !important;
-          max-width: 264mm !important;
+          max-width: 285mm !important;
           height: auto !important;
-          max-height: 168mm !important;
+          max-height: 196mm !important;
           padding: 6px !important;
           box-sizing: border-box !important;
           page-break-inside: avoid !important;
           page-break-after: avoid !important;
           page-break-before: avoid !important;
           break-inside: avoid !important;
+          break-after: avoid !important;
+          break-before: avoid !important;
           overflow: hidden !important;
         }
         .diploma-inner {
           min-height: 0 !important;
           width: 100% !important;
-          height: 154mm !important;
-          max-height: 154mm !important;
+          height: 184mm !important;
+          max-height: 184mm !important;
           box-sizing: border-box !important;
           padding: 22px 38px 18px 38px !important;
           display: flex !important;
@@ -819,6 +856,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           justify-content: space-between !important;
           align-items: center !important;
           overflow: hidden !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
         }
         /* Solid backgrounds in print to prevent PDF transparency-flattening pink squares */
         html[data-theme="google"] .diploma-inner { background: #FFFFFF !important; }
@@ -857,28 +896,52 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .print-header-block {
           margin-top: 0 !important;
           margin-bottom: 2px !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
         }
-        .print-header-block > div:first-child {
-          margin-bottom: 6px !important;
+        /* En la parte superior únicamente los logos, separados más del borde superior */
+        .print-logos-row {
+          margin-top: 8px !important;
+          margin-bottom: 12px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
         }
-        .print-header-block img {
+        .print-logos-row img {
           width: 44px !important;
           height: 44px !important;
         }
+        /* Rol pegado al nombre de la badge */
+        .print-header-block .theme-badge-pill {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-align: center !important;
+          line-height: 1 !important;
+          padding: 3px 10px !important;
+          letter-spacing: 0.02em !important;
+          font-size: 10px !important;
+          margin-bottom: 3px !important;
+        }
         .print-badge-title {
-          font-size: 20.5px !important;
+          font-size: 21px !important;
           letter-spacing: 0.05em !important;
-          margin-top: 3px !important;
-          margin-bottom: 1px !important;
+          margin-top: 0 !important;
+          margin-bottom: 2px !important;
         }
         .print-body-block {
           margin: 4px 0 !important;
           width: 100% !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
         }
+        /* Nombre separado del separador y separador de la descripción */
         .print-recipient-box {
-          min-width: 360px !important;
-          padding: 0 32px 4px 32px !important;
-          margin-bottom: 6px !important;
+          min-width: 380px !important;
+          padding: 0 36px 12px 36px !important;
+          margin-bottom: 14px !important;
         }
         .diploma-recipient-name {
           font-size: 30px !important;
@@ -886,22 +949,23 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         }
         .print-desc {
           font-size: 12.5px !important;
-          max-width: 580px !important;
+          max-width: 600px !important;
           line-height: 1.4 !important;
         }
+        /* Separar descripción del criteria */
         .print-narrative {
           font-size: 11px !important;
-          max-width: 520px !important;
-          line-height: 1.35 !important;
-          margin-top: 2px !important;
+          max-width: 540px !important;
+          line-height: 1.4 !important;
+          margin-top: 8px !important;
         }
         .diploma-meta-box {
-          margin-top: 6px !important;
-          padding: 6px 14px !important;
-          max-width: 560px !important;
+          margin-top: 10px !important;
+          padding: 7px 16px !important;
+          max-width: 580px !important;
           display: grid !important;
           grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-          gap: 10px !important;
+          gap: 12px !important;
         }
         .diploma-meta-box span.text-\[10px\],
         .diploma-meta-box span.sm\:text-\[11px\] {
@@ -911,18 +975,18 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .diploma-meta-box span.sm\:text-sm {
           font-size: 11.5px !important;
         }
+        /* Separar tags de la tabla de metadatos */
         .print-tags {
-          margin-top: 6px !important;
+          margin-top: 12px !important;
           margin-bottom: 0 !important;
           width: 100% !important;
           display: flex !important;
           flex-wrap: wrap !important;
           align-items: center !important;
           justify-content: center !important;
-          gap: 5px !important;
+          gap: 6px !important;
         }
-        .print-tags .theme-badge-pill,
-        .print-header-block .theme-badge-pill {
+        .print-tags .theme-badge-pill {
           display: inline-flex !important;
           align-items: center !important;
           justify-content: center !important;
@@ -957,7 +1021,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           overflow: visible !important;
           max-width: none !important;
         }
-        .print-footer-left span {
+        .print-footer-left > div:first-child span {
           display: inline !important;
         }
         .print-footer-left > div:first-child,
