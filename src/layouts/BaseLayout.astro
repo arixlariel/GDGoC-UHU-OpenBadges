@@ -776,7 +776,27 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           padding: 0 !important;
           margin: 0 auto !important;
           width: 100% !important;
-          max-width: 282mm !important;
+          max-width: 285mm !important;
+        }
+        html.has-print-sheet .print-diploma-wrapper {
+          display: none !important;
+        }
+        html.has-print-sheet .print-canvas-mount {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 285mm !important;
+          height: 196mm !important;
+          max-height: 196mm !important;
+          margin: 0 auto !important;
+          padding: 0 !important;
+          overflow: hidden !important;
+        }
+        html.has-print-sheet .print-diploma-img {
+          display: block !important;
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: contain !important;
         }
         .print-diploma-wrapper {
           transform: none !important;

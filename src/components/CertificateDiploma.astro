@@ -326,13 +326,12 @@ linkedinUrl.searchParams.set('certId', assertionId);
     <button
       type="button"
       id="print-cert-btn"
-      onclick="window.print()"
       class="theme-pill-btn px-4 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer"
     >
       <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
       </svg>
-      <span>Imprimir</span>
+      <span id="print-cert-label">Imprimir</span>
     </button>
 
     {hasEvidence && (
@@ -346,27 +345,69 @@ linkedinUrl.searchParams.set('certId', assertionId);
       </a>
     )}
   </div>
+
+  <!-- Lienzo de alta resolución exclusivo para Impresión A4 Horizontal (idéntico al PDF descargado) -->
+  <div id="print-canvas-mount" class="print-canvas-mount hidden" aria-hidden="true">
+    <img id="print-diploma-img" class="print-diploma-img" alt="Certificado Oficial GDGoC UHU" />
+  </div>
 </div>
 
 <script>
   import {
     downloadCertificatePdf,
     preloadCertificateAssets,
+    renderCertificateCanvas,
     type CertificatePdfData,
   } from '@/utils/pdfDownload';
 
   const downloadBtn = document.getElementById('download-pdf-btn') as HTMLButtonElement | null;
   const labelEl = document.getElementById('download-pdf-label');
+  const printBtn = document.getElementById('print-cert-btn') as HTMLButtonElement | null;
+  const printLabelEl = document.getElementById('print-cert-label');
+  const printImg = document.getElementById('print-diploma-img') as HTMLImageElement | null;
+
+  let cachedTheme = '';
+  let cachedDataUrl = '';
+
+  async function ensurePrintSheetReady(payload: CertificatePdfData): Promise<void> {
+    if (!printImg) return;
+    const activeTheme =
+      document.documentElement.getAttribute('data-theme') || payload.style || 'google';
+    if (cachedTheme === activeTheme && cachedDataUrl) {
+      printImg.src = cachedDataUrl;
+      document.documentElement.classList.add('has-print-sheet');
+      return;
+    }
+    const canvas = await renderCertificateCanvas(payload, activeTheme);
+    cachedDataUrl = canvas.toDataURL('image/jpeg', 0.96);
+    cachedTheme = activeTheme;
+    printImg.src = cachedDataUrl;
+    document.documentElement.classList.add('has-print-sheet');
+  }
 
   if (downloadBtn) {
     const rawPayload = downloadBtn.getAttribute('data-pdf-payload');
+    let parsedPayload: CertificatePdfData | null = null;
     if (rawPayload) {
       try {
-        preloadCertificateAssets(JSON.parse(rawPayload));
+        parsedPayload = JSON.parse(rawPayload);
+        if (parsedPayload) {
+          preloadCertificateAssets(parsedPayload);
+          // Pre-renderizar la hoja de impresión en segundo plano para que Imprimir sea instantáneo
+          setTimeout(() => {
+            if (parsedPayload) void ensurePrintSheetReady(parsedPayload);
+          }, 250);
+        }
       } catch {
         // Ignore preload parse error
       }
     }
+
+    window.addEventListener('gdgoc-theme-change', () => {
+      if (parsedPayload) {
+        void ensurePrintSheetReady(parsedPayload);
+      }
+    });
 
     downloadBtn.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -389,6 +430,30 @@ linkedinUrl.searchParams.set('certId', assertionId);
         if (labelEl) labelEl.textContent = originalLabel;
       }
     });
+
+    if (printBtn) {
+      printBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const raw = downloadBtn.getAttribute('data-pdf-payload');
+        if (!raw) {
+          window.print();
+          return;
+        }
+        const origText = printLabelEl?.textContent || 'Imprimir';
+        printBtn.disabled = true;
+        if (printLabelEl) printLabelEl.textContent = 'Preparando...';
+        try {
+          const payload: CertificatePdfData = JSON.parse(raw);
+          await ensurePrintSheetReady(payload);
+        } catch {
+          // Fallback to CSS print if canvas fails
+        } finally {
+          printBtn.disabled = false;
+          if (printLabelEl) printLabelEl.textContent = origText;
+          window.print();
+        }
+      });
+    }
   }
 </script>
 
