@@ -33,7 +33,11 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/jpeg" href={getAssetUrl('/images/gdgoc-uhu-logo.jpg')} />
+    <link rel="icon" type="image/png" sizes="32x32" href={getAssetUrl('/favicon-32x32.png')} />
+    <link rel="icon" type="image/png" sizes="192x192" href={getAssetUrl('/favicon-192x192.png')} />
+    <link rel="icon" type="image/png" href={getAssetUrl('/favicon.png')} />
+    <link rel="icon" type="image/svg+xml" href={getAssetUrl('/favicon.svg')} />
+    <link rel="apple-touch-icon" href={getAssetUrl('/apple-touch-icon.png')} />
     <meta name="generator" content={Astro.generator} />
 
     <!-- SEO Meta Tags -->
