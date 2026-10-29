@@ -555,7 +555,6 @@
     .diploma-theme-google .dp-border { border-color: #DADCE0; }
     .diploma-theme-google .dp-pill { background: #E8F0FE; border: 1px solid #D2E3FC; color: #1967D2; }
     .diploma-theme-google .dp-meta { background: #F8F9FA; border: 2px solid #DADCE0; }
-    .diploma-theme-google .dp-verified { background: #FFFFFF; border: 1px solid #DADCE0; color: #202124; }
 
     /* 2. Cyber */
     .diploma-theme-cyber .diploma-preview-outer {
@@ -571,7 +570,6 @@
     .diploma-theme-cyber .dp-border { border-color: rgba(0, 240, 255, 0.3); }
     .diploma-theme-cyber .dp-pill { background: rgba(0, 240, 255, 0.12); border: 1px solid #00F0FF; color: #00F0FF; }
     .diploma-theme-cyber .dp-meta { background: rgba(12, 20, 44, 0.92); border: 2px solid rgba(0, 240, 255, 0.4); }
-    .diploma-theme-cyber .dp-verified { background: rgba(12, 18, 38, 0.9); border: 1px solid rgba(0, 240, 255, 0.5); color: #00F0FF; }
 
     /* 3. Piscina */
     .diploma-theme-piscina .diploma-preview-outer {
@@ -603,7 +601,6 @@
     .diploma-theme-nieve .dp-border { border-color: rgba(186, 230, 253, 0.45); }
     .diploma-theme-nieve .dp-pill { background: rgba(224, 242, 254, 0.18); border: 1.5px solid rgba(255, 255, 255, 0.7); color: #FFFFFF; }
     .diploma-theme-nieve .dp-meta { background: rgba(14, 36, 66, 0.85); border: 2px solid rgba(186, 230, 253, 0.5); }
-    .diploma-theme-nieve .dp-verified { background: rgba(14, 36, 66, 0.85); border: 1.5px solid rgba(186, 230, 253, 0.6); color: #E0F2FE; }
 
     /* 5. Caramelos */
     .diploma-theme-caramelos .diploma-preview-outer {
@@ -623,10 +620,6 @@
     .diploma-theme-caramelos .dp-border { border-color: #FF85C0; }
     .diploma-theme-caramelos .dp-pill { background: #FFE0F0; border: 2px solid #FF1493; color: #AD1457; }
     .diploma-theme-caramelos .dp-meta { background: rgba(255, 224, 240, 0.85); border: 2px solid #FF69B4; }
-    .diploma-theme-caramelos .dp-verified { background: #FFF5FA; border: 2px solid #FF69B4; color: #AD1457; }
-    @media (max-width: 640px) {
-      .dp-verified { display: none !important; }
-    }
 
     .json-code-box {
       background: #0f172a;
@@ -1046,30 +1039,26 @@
                     <div id="dp-tags-row" style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:6px;"></div>
                   </div>
 
-                  <!-- Pie del Diploma con QR + VERIFIED + ID Completo -->
-                  <div class="dp-border" style="position:relative; z-index:2; width:100%; padding-top:14px; border-top:2px solid; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
-                      <div class="dp-accent" style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">GDG on Campus UHU</div>
-                      <div class="dp-border" style="width:140px; border-top:2px solid; margin-bottom:4px;"></div>
-                      <div class="dp-text-primary" style="font-size:11px; font-weight:700;">Universidad de Huelva</div>
-                      <div class="dp-text-secondary" style="font-size:10px;">Comunidad Oficial de Desarrolladores</div>
+                  <!-- Pie del Diploma con QR + ID Completo -->
+                  <div class="dp-border" style="position:relative; z-index:2; width:100%; padding-top:14px; border-top:2px solid; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:flex-start; text-align:left;">
+                      <div class="dp-accent" style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; line-height:1.2;">GDG on Campus<br>UHU</div>
+                      <div class="dp-border" style="width:120px; border-top:2px solid; margin-bottom:4px;"></div>
+                      <div class="dp-text-primary" style="font-size:10px; font-weight:700;">Universidad de Huelva</div>
+                      <div class="dp-text-secondary" style="font-size:9.5px;">Comunidad de Desarrolladores</div>
                     </div>
 
-                    <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="display:flex; align-items:center; justify-content:center; padding:0 8px;">
                       <div class="dp-border" style="padding:4px; border-radius:10px; border:2px solid; background:#fff;">
-                        <svg id="dp-qr-svg" style="width:50px; height:50px; display:block;" viewBox="0 0 31 31" shape-rendering="crispEdges"></svg>
-                      </div>
-                      <div class="dp-verified" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; font-family:'JetBrains Mono', monospace; font-size:10.5px; font-weight:800;">
-                        <span style="color:#4285F4;">●</span><span style="color:#EA4335;">●</span><span style="color:#FBBC04;">●</span><span style="color:#34A853;">●</span>
-                        <span>VERIFIED</span>
+                        <svg id="dp-qr-svg" style="width:62px; height:62px; display:block;" viewBox="0 0 31 31" shape-rendering="crispEdges"></svg>
                       </div>
                     </div>
 
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
-                      <div id="dp-full-id" class="dp-text-secondary mono" style="font-size:10.5px; font-weight:700; margin-bottom:4px;">69679d9fa12d24f4a673b54b</div>
-                      <div class="dp-border" style="width:140px; border-top:2px solid; margin-bottom:4px;"></div>
-                      <div class="dp-text-primary" style="font-size:11px; font-weight:700;">Credencial Criptográfica</div>
-                      <div class="dp-text-secondary" style="font-size:10px;">Verificación Alojada SHA-256</div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:flex-end; text-align:right;">
+                      <div id="dp-full-id" class="dp-text-secondary mono" style="font-size:9.5px; font-weight:700; margin-bottom:4px; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">69679d9fa12d24f4a673b54b</div>
+                      <div class="dp-border" style="width:120px; border-top:2px solid; margin-bottom:4px;"></div>
+                      <div class="dp-text-primary" style="font-size:10px; font-weight:700;">Credencial Criptográfica</div>
+                      <div class="dp-text-secondary" style="font-size:9.5px;">Verificación SHA-256</div>
                     </div>
                   </div>
                 </div>
