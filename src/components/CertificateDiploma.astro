@@ -167,7 +167,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
             {badge.data.name}
           </h1>
 
-          <div class="text-xs sm:text-sm font-semibold theme-accent-text mt-1 tracking-wider">
+          <div class="diploma-issue-date text-xs sm:text-sm font-semibold theme-accent-text mt-1 tracking-wider">
             {issueDate}
           </div>
         </div>
@@ -450,6 +450,13 @@ linkedinUrl.searchParams.set('certId', assertionId);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 14px rgba(0, 240, 255, 0.4));
+  }
+  html[data-theme="cyber"] .diploma-issue-date {
+    color: #00F0FF !important;
+    -webkit-text-fill-color: #00F0FF !important;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.75), 0 0 20px rgba(0, 240, 255, 0.35) !important;
+    font-family: 'Orbitron', 'Google Sans', monospace, sans-serif !important;
+    letter-spacing: 0.08em !important;
   }
   html[data-theme="cyber"] .diploma-meta-box {
     background: rgba(12, 20, 44, 0.9);

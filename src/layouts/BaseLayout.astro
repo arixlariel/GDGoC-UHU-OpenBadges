@@ -608,13 +608,24 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       /* ==========================================================================
          5. THEME: CARAMELOS (Súper Rosa · Golosinas · Pasteles · Toppings)
          ========================================================================== */
+      html[data-theme="caramelos"] {
+        background-color: #FFD1E8;
+        min-height: 100%;
+      }
       html[data-theme="caramelos"] body {
         font-family: 'Fredoka', 'Google Sans', sans-serif;
-        background: radial-gradient(circle at 20% 20%, rgba(255, 105, 180, 0.25), transparent 40%),
-                    radial-gradient(circle at 80% 70%, rgba(255, 20, 147, 0.2), transparent 40%),
-                    linear-gradient(135deg, #FFD1E8 0%, #FFC2E2 30%, #FFE4F2 60%, #FFB8DE 100%);
+        background-color: #FFD1E8;
+        background-image: radial-gradient(circle at 20% 20%, rgba(255, 105, 180, 0.25), transparent 40%),
+                          radial-gradient(circle at 80% 70%, rgba(255, 20, 147, 0.2), transparent 40%),
+                          linear-gradient(135deg, #FFD1E8 0%, #FFC2E2 30%, #FFE4F2 60%, #FFB8DE 100%);
         background-attachment: fixed;
+        background-size: cover;
         color: #7A0045;
+      }
+      @media (max-width: 768px) {
+        html[data-theme="caramelos"] body {
+          background-attachment: scroll !important;
+        }
       }
       html[data-theme="caramelos"] .theme-top-strip {
         height: 9px;

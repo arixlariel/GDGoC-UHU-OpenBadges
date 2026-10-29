@@ -1172,8 +1172,9 @@ export async function renderCertificateCanvas(
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   if (themeKey === 'cyber') {
-    ctx.shadowColor = 'rgba(0, 240, 255, 0.45)';
-    ctx.shadowBlur = 12;
+    ctx.fillStyle = '#00F0FF';
+    ctx.shadowColor = 'rgba(0, 240, 255, 0.85)';
+    ctx.shadowBlur = 18;
   } else if (themeKey === 'nieve') {
     ctx.shadowColor = 'rgba(125, 211, 252, 0.4)';
     ctx.shadowBlur = 10;
