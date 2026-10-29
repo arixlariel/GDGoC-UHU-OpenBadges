@@ -845,8 +845,17 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           letter-spacing: 0.01em !important;
         }
         .print-footer-block {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          gap: 16px !important;
           padding-top: 12px !important;
           margin-top: 2px !important;
+          width: 100% !important;
+        }
+        .diploma-verified-badge {
+          display: inline-flex !important;
         }
         /* Ensure gradient text prints solid & crisp in all PDF engines */
         .diploma-recipient-name,

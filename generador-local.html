@@ -624,6 +624,9 @@
     .diploma-theme-caramelos .dp-pill { background: #FFE0F0; border: 2px solid #FF1493; color: #AD1457; }
     .diploma-theme-caramelos .dp-meta { background: rgba(255, 224, 240, 0.85); border: 2px solid #FF69B4; }
     .diploma-theme-caramelos .dp-verified { background: #FFF5FA; border: 2px solid #FF69B4; color: #AD1457; }
+    @media (max-width: 640px) {
+      .dp-verified { display: none !important; }
+    }
 
     .json-code-box {
       background: #0f172a;
@@ -1054,7 +1057,7 @@
 
                     <div style="display:flex; align-items:center; gap:8px;">
                       <div class="dp-border" style="padding:4px; border-radius:10px; border:2px solid; background:#fff;">
-                        <svg id="dp-qr-svg" style="width:44px; height:44px; display:block;" viewBox="0 0 31 31" shape-rendering="crispEdges"></svg>
+                        <svg id="dp-qr-svg" style="width:50px; height:50px; display:block;" viewBox="0 0 31 31" shape-rendering="crispEdges"></svg>
                       </div>
                       <div class="dp-verified" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; font-family:'JetBrains Mono', monospace; font-size:10.5px; font-weight:800;">
                         <span style="color:#4285F4;">●</span><span style="color:#EA4335;">●</span><span style="color:#FBBC04;">●</span><span style="color:#34A853;">●</span>
