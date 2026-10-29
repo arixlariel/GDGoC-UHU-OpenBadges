@@ -725,26 +725,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
          PRINT / PDF EXPORT RULES (100% Guaranteed Single-Page Landscape A4)
          ========================================================================== */
       @page {
-        size: landscape;
-        margin: 0;
-      }
-      @page :first {
-        size: landscape;
-        margin: 0;
-      }
-      @page :left {
-        size: landscape;
-        margin: 0;
-      }
-      @page :right {
-        size: landscape;
-        margin: 0;
+        size: A4 landscape;
+        margin: 6mm;
       }
       @media print {
-        @page {
-          size: landscape;
-          margin: 0;
-        }
         *, *::before, *::after {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
@@ -759,17 +743,12 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         }
         header, footer, .no-print, #theme-fx-container, .diploma-watermark, badge-modal, dialog {
           display: none !important;
-          visibility: hidden !important;
-          height: 0 !important;
-          width: 0 !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          border: none !important;
-          overflow: hidden !important;
         }
+        .footer-lbl-mobile,
         .footer-lbl-short {
           display: none !important;
         }
+        .footer-lbl-desktop,
         .footer-lbl-full {
           display: inline !important;
         }
@@ -777,85 +756,42 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           background: #ffffff !important;
           font-family: 'Google Sans', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
           width: 100% !important;
-          height: 100% !important;
-          max-width: 100% !important;
-          max-height: 100% !important;
+          height: 196mm !important;
+          max-height: 196mm !important;
           overflow: hidden !important;
           margin: 0 !important;
           padding: 0 !important;
-          page-break-after: avoid !important;
-          page-break-before: avoid !important;
-          page-break-inside: avoid !important;
-          break-after: avoid !important;
-          break-before: avoid !important;
-          break-inside: avoid !important;
         }
         main {
           padding: 0 !important;
           margin: 0 !important;
-          width: 100% !important;
-          height: 100% !important;
-          max-width: 100% !important;
-          max-height: 100% !important;
+          height: 196mm !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
-          overflow: hidden !important;
-          page-break-inside: avoid !important;
-          page-break-after: avoid !important;
-          page-break-before: avoid !important;
-          break-inside: avoid !important;
-          break-after: avoid !important;
-          break-before: avoid !important;
         }
-        /* Contenedor de impresión: rellena la página A4 apaisada eliminando bordes blancos excesivos */
         .print-container {
-          padding: 4mm 5mm !important;
+          padding: 0 !important;
           margin: 0 auto !important;
-          width: 297mm !important;
-          max-width: 297mm !important;
-          height: 100% !important;
-          max-height: 210mm !important;
-          box-sizing: border-box !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          overflow: hidden !important;
-          page-break-inside: avoid !important;
-          page-break-after: avoid !important;
-          break-inside: avoid !important;
-          break-after: avoid !important;
+          width: 100% !important;
+          max-width: 280mm !important;
         }
         .print-diploma-wrapper {
           transform: none !important;
           width: 100% !important;
-          max-width: 286mm !important;
-          height: auto !important;
-          max-height: 198mm !important;
-          padding: 6px !important;
-          box-sizing: border-box !important;
+          max-width: none !important;
+          max-height: 192mm !important;
           page-break-inside: avoid !important;
           page-break-after: avoid !important;
           page-break-before: avoid !important;
           break-inside: avoid !important;
-          break-after: avoid !important;
-          break-before: avoid !important;
-          overflow: hidden !important;
         }
         .diploma-inner {
           min-height: 0 !important;
-          width: 100% !important;
-          height: 186mm !important;
-          max-height: 186mm !important;
-          box-sizing: border-box !important;
-          padding: 20px 36px 18px 36px !important;
-          display: flex !important;
-          flex-direction: column !important;
+          height: 184mm !important;
+          max-height: 184mm !important;
+          padding: 36px 48px !important;
           justify-content: space-between !important;
-          align-items: center !important;
-          overflow: hidden !important;
-          page-break-inside: avoid !important;
-          break-inside: avoid !important;
         }
         /* Solid backgrounds in print to prevent PDF transparency-flattening pink squares */
         html[data-theme="google"] .diploma-inner { background: #FFFFFF !important; }
@@ -872,164 +808,46 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
 
         /* Keep inner frames comfortably near the edges so top/bottom blocks never collide with them */
         .diploma-frame-1 {
-          inset: 10px !important;
+          inset: 12px !important;
         }
         .diploma-frame-2 {
-          inset: 14px !important;
+          inset: 16px !important;
         }
-        /* Posicionamiento exacto de ornamentos en las 4 esquinas del diploma */
-        .diploma-inner .fx-layer {
-          position: absolute !important;
-          inset: 0 !important;
-          width: 100% !important;
-          height: 100% !important;
-          pointer-events: none !important;
-          display: block !important;
-        }
-        .diploma-inner .fx-layer span,
-        .diploma-inner .fx-layer svg {
+        /* Remove opacity < 1 on text/ornaments in print so PDF engine doesn't draw bounding boxes */
+        .print-desc,
+        .fx-layer,
+        .fx-layer span,
+        .fx-layer svg {
           opacity: 1 !important;
           transform: none !important;
         }
-        .diploma-inner .fx-layer span.top-6 {
-          top: 24px !important;
+        .fx-layer span.top-6 {
+          top: 26px !important;
         }
-        .diploma-inner .fx-layer span.bottom-6 {
-          bottom: 24px !important;
+        .fx-layer span.bottom-6 {
+          bottom: 26px !important;
         }
-        .diploma-inner .fx-layer span.left-8 {
-          left: 28px !important;
-        }
-        .diploma-inner .fx-layer span.right-8 {
-          right: 28px !important;
-        }
-        .diploma-inner .fx-layer svg.-top-12,
-        .diploma-inner .fx-layer svg.-top-16 {
-          top: -16px !important;
-          left: -16px !important;
-        }
-        .diploma-inner .fx-layer svg.-bottom-12,
-        .diploma-inner .fx-layer svg.-bottom-16 {
-          bottom: -16px !important;
-          right: -16px !important;
-        }
-        .print-header-block {
-          margin-top: 0 !important;
-          margin-bottom: 2px !important;
-          display: flex !important;
-          flex-direction: column !important;
-          align-items: center !important;
-        }
-        /* Fila de logos ampliada con presencia institucional */
-        .print-logos-row {
-          margin-top: 6px !important;
-          margin-bottom: 12px !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 20px !important;
-        }
-        .print-logos-row img {
-          width: 52px !important;
-          height: 52px !important;
-        }
-        .print-logos-row .text-left > div:first-child {
-          font-size: 15px !important;
-          line-height: 1.15 !important;
-        }
-        .print-logos-row .text-left > div:last-child {
-          font-size: 12.5px !important;
-          line-height: 1.15 !important;
-        }
-        .print-logos-row .border-l-2 {
-          height: 38px !important;
-        }
-        /* Rol pegado al nombre de la badge y escalado */
-        .print-header-block .theme-badge-pill {
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          text-align: center !important;
-          line-height: 1 !important;
-          padding: 4px 14px !important;
-          letter-spacing: 0.03em !important;
-          font-size: 11px !important;
-          margin-bottom: 4px !important;
-        }
-        .print-badge-title {
-          font-size: 26px !important;
-          letter-spacing: 0.05em !important;
-          margin-top: 0 !important;
-          margin-bottom: 3px !important;
-          line-height: 1.2 !important;
-        }
-        .print-header-block > div:last-child {
-          font-size: 13px !important;
-          margin-top: 2px !important;
+        .print-header-block > div:first-child {
+          margin-bottom: 10px !important;
         }
         .print-body-block {
-          margin: 6px 0 !important;
-          width: 100% !important;
-          display: flex !important;
-          flex-direction: column !important;
-          align-items: center !important;
+          margin-top: 4px !important;
+          margin-bottom: 4px !important;
         }
-        .print-body-block > p:first-child {
-          font-size: 15px !important;
-          margin-bottom: 6px !important;
-        }
-        /* Destinatario ampliado con separación adecuada */
         .print-recipient-box {
-          min-width: 440px !important;
-          padding: 0 40px 12px 40px !important;
-          margin-bottom: 16px !important;
+          padding-bottom: 8px !important;
+          margin-bottom: 8px !important;
         }
         .diploma-recipient-name {
-          font-size: 38px !important;
-          line-height: 1.15 !important;
+          font-size: 30px !important;
         }
-        .diploma-underline-accent {
-          width: 160px !important;
-          height: 5px !important;
-        }
-        /* Descripción y criterios ampliados para llenar armónicamente el espacio */
-        .print-desc {
-          font-size: 14px !important;
-          max-width: 720px !important;
-          line-height: 1.45 !important;
-          opacity: 1 !important;
-        }
-        .print-narrative {
-          font-size: 12px !important;
-          max-width: 660px !important;
-          line-height: 1.4 !important;
-          margin-top: 8px !important;
-        }
-        /* Caja de metadatos ampliada */
         .diploma-meta-box {
-          margin-top: 14px !important;
-          padding: 8px 20px !important;
-          max-width: 660px !important;
-          display: grid !important;
-          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-          gap: 16px !important;
+          margin-top: 10px !important;
+          padding: 9px 14px !important;
         }
-        .diploma-meta-box span.text-\[10px\],
-        .diploma-meta-box span.sm\:text-\[11px\] {
-          font-size: 11px !important;
-        }
-        .diploma-meta-box span.text-xs,
-        .diploma-meta-box span.sm\:text-sm {
-          font-size: 13.5px !important;
-        }
-        .diploma-meta-box svg {
-          width: 16px !important;
-          height: 16px !important;
-        }
-        /* Tags de competencias ampliadas */
         .print-tags {
-          margin-top: 14px !important;
-          margin-bottom: 0 !important;
+          margin-top: 12px !important;
+          margin-bottom: 2px !important;
           width: 100% !important;
           display: flex !important;
           flex-wrap: wrap !important;
@@ -1037,87 +855,19 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           justify-content: center !important;
           gap: 8px !important;
         }
-        .print-tags .theme-badge-pill {
+        .print-tags .theme-badge-pill,
+        .print-header-block .theme-badge-pill {
           display: inline-flex !important;
           align-items: center !important;
           justify-content: center !important;
           text-align: center !important;
           line-height: 1 !important;
-          padding: 4px 12px !important;
+          padding: 5px 13px !important;
           letter-spacing: 0.01em !important;
-          font-size: 11px !important;
-          font-weight: 600 !important;
         }
         .print-footer-block {
-          display: flex !important;
-          flex-direction: row !important;
-          align-items: center !important;
-          justify-content: space-between !important;
-          width: 100% !important;
-          padding-top: 10px !important;
-          margin-top: 4px !important;
-          margin-bottom: 0 !important;
-        }
-        .print-footer-left,
-        .print-footer-right {
-          display: flex !important;
-          flex-direction: column !important;
-          align-items: center !important;
-          text-align: center !important;
-          flex: 1 !important;
-          padding: 0 !important;
-        }
-        .print-footer-left div,
-        .print-footer-right div {
-          white-space: nowrap !important;
-          overflow: visible !important;
-          max-width: none !important;
-        }
-        .print-footer-left > div:first-child span {
-          display: inline !important;
-          font-size: 11.5px !important;
-        }
-        .print-footer-left > div:first-child,
-        .print-footer-right > div:first-child {
-          margin: 0 !important;
-          padding: 0 !important;
-          line-height: 1.2 !important;
-        }
-        .print-footer-line {
-          width: 180px !important;
-          border-top-width: 2px !important;
-          margin: 4px auto !important;
-        }
-        .print-footer-left > div:nth-child(3),
-        .print-footer-right > div:nth-child(3) {
-          margin: 0 !important;
-          padding: 0 !important;
-          line-height: 1.2 !important;
-          font-size: 12px !important;
-        }
-        .print-footer-left > div:nth-child(4),
-        .print-footer-right > div:nth-child(4) {
-          margin: 0 !important;
-          padding: 0 !important;
-          line-height: 1.2 !important;
-          font-size: 11px !important;
-        }
-        .print-assertion-id {
-          font-size: 11.5px !important;
-          max-width: none !important;
-          overflow: visible !important;
-          white-space: nowrap !important;
-        }
-        .print-qr-container {
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          margin: 0 16px !important;
-          padding: 0 !important;
-        }
-        .print-qr-svg {
-          width: 68px !important;
-          height: 68px !important;
+          padding-top: 12px !important;
+          margin-top: 2px !important;
         }
         /* Ensure gradient text prints solid & crisp in all PDF engines */
         .diploma-recipient-name,
