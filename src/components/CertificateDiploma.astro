@@ -219,25 +219,27 @@ linkedinUrl.searchParams.set('certId', assertionId);
         </div>
 
         <!-- Pie del Diploma: Bloques de Sello y Firma Institucional -->
-        <div class="print-footer-block w-full pt-4 sm:pt-5 mt-2 flex flex-row items-center justify-between gap-1 sm:gap-4 border-t-2 theme-border">
+        <div class="print-footer-block w-full pt-3 sm:pt-4 mt-2 flex flex-row items-center justify-between gap-1 sm:gap-4 border-t-2 theme-border">
           <!-- Bloque Izquierdo: Firma Institucional -->
-          <div class="print-footer-left flex-1 flex flex-col items-start sm:items-center min-w-0 pr-1 sm:pr-0">
-            <div class="text-[9.5px] sm:text-xs font-bold theme-accent-text tracking-wider uppercase mb-1 sm:mb-1.5 leading-tight">
-              <span class="block sm:inline">GDG on Campus</span> <span class="text-theme-accent">UHU</span>
+          <div class="print-footer-left flex-1 flex flex-col items-center text-center min-w-0">
+            <div class="text-[9px] sm:text-xs font-bold theme-accent-text tracking-wider uppercase leading-tight">
+              <span class="block sm:inline">GDG on</span> <span class="text-theme-accent">Campus UHU</span>
             </div>
-            <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border mb-1 sm:mb-1.5"></div>
-            <div class="text-[9.5px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">Universidad de Huelva</div>
-            <div class="text-[8.5px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap truncate max-w-full">Comunidad de Desarrolladores</div>
+            <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border my-1.5 sm:my-2 mx-auto"></div>
+            <div class="text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">Universidad de Huelva</div>
+            <div class="text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap truncate max-w-full">
+              <span class="sm:hidden">Desarrolladores</span><span class="hidden sm:inline print:!inline">Comunidad de Desarrolladores</span>
+            </div>
           </div>
 
           <!-- Código QR Vectorial Central de Verificación -->
-          <div class="print-qr-container flex items-center justify-center shrink-0 px-2 sm:px-4">
+          <div class="print-qr-container flex items-center justify-center shrink-0 px-1 sm:px-4">
             <div
               class="p-1 sm:p-1.5 rounded-xl border-2 theme-border bg-white shrink-0 shadow-xs"
               title={`Escanea para verificar: ${certUrl}`}
             >
               <svg
-                class="print-qr-svg w-14 h-14 sm:w-[68px] sm:h-[68px] block"
+                class="print-qr-svg w-[52px] h-[52px] sm:w-[68px] sm:h-[68px] block"
                 viewBox={`-1 -1 ${qr.size + 2} ${qr.size + 2}`}
                 shape-rendering="crispEdges"
                 aria-label="Código QR de verificación del certificado"
@@ -249,13 +251,15 @@ linkedinUrl.searchParams.set('certId', assertionId);
           </div>
 
           <!-- Bloque Derecho: Credencial Criptográfica -->
-          <div class="print-footer-right flex-1 flex flex-col items-end sm:items-center min-w-0 pl-1 sm:pl-0">
-            <div class="print-assertion-id font-mono text-[9px] sm:text-xs font-semibold theme-text-secondary mb-1 sm:mb-1.5 select-all max-w-[85px] sm:max-w-none truncate sm:whitespace-nowrap leading-tight">
+          <div class="print-footer-right flex-1 flex flex-col items-center text-center min-w-0">
+            <div class="print-assertion-id font-mono text-[8.5px] sm:text-xs font-semibold theme-text-secondary select-all max-w-[80px] sm:max-w-none truncate sm:whitespace-nowrap leading-tight">
               {assertionId}
             </div>
-            <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border mb-1 sm:mb-1.5"></div>
-            <div class="text-[9.5px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">Credencial Criptográfica</div>
-            <div class="text-[8.5px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">Verificación SHA-256</div>
+            <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border my-1.5 sm:my-2 mx-auto"></div>
+            <div class="text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">
+              <span class="sm:hidden">ID Criptográfico</span><span class="hidden sm:inline print:!inline">Credencial Criptográfica</span>
+            </div>
+            <div class="text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">Verificación SHA-256</div>
           </div>
         </div>
 

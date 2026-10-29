@@ -719,7 +719,19 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         size: A4 landscape;
         margin: 0 !important;
       }
+      @page :left {
+        size: A4 landscape;
+        margin: 0 !important;
+      }
+      @page :right {
+        size: A4 landscape;
+        margin: 0 !important;
+      }
       @media print {
+        @page {
+          size: A4 landscape;
+          margin: 0 !important;
+        }
         *, *::before, *::after {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
@@ -784,9 +796,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .print-diploma-wrapper {
           transform: none !important;
           width: 100% !important;
-          max-width: 275mm !important;
-          height: 196mm !important;
-          max-height: 196mm !important;
+          max-width: 274mm !important;
+          height: auto !important;
+          max-height: 194mm !important;
+          padding: 6px !important;
           box-sizing: border-box !important;
           page-break-inside: avoid !important;
           page-break-after: avoid !important;
@@ -797,10 +810,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .diploma-inner {
           min-height: 0 !important;
           width: 100% !important;
-          height: 184mm !important;
-          max-height: 184mm !important;
+          height: 182mm !important;
+          max-height: 182mm !important;
           box-sizing: border-box !important;
-          padding: 24px 38px !important;
+          padding: 36px 46px 28px 46px !important;
           display: flex !important;
           flex-direction: column !important;
           justify-content: space-between !important;
@@ -841,6 +854,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .fx-layer span.bottom-6 {
           bottom: 26px !important;
         }
+        .print-header-block {
+          margin-top: 4px !important;
+          margin-bottom: 0 !important;
+        }
         .print-header-block > div:first-child {
           margin-bottom: 8px !important;
         }
@@ -849,13 +866,13 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           height: 48px !important;
         }
         .print-badge-title {
-          font-size: 24px !important;
+          font-size: 23px !important;
           letter-spacing: 0.05em !important;
           margin-top: 4px !important;
+          margin-bottom: 2px !important;
         }
         .print-body-block {
-          margin-top: 2px !important;
-          margin-bottom: 2px !important;
+          margin: auto 0 !important;
           width: 100% !important;
         }
         .print-recipient-box {
@@ -864,7 +881,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           margin-bottom: 8px !important;
         }
         .diploma-recipient-name {
-          font-size: 34px !important;
+          font-size: 33px !important;
           line-height: 1.15 !important;
         }
         .print-desc {
@@ -920,10 +937,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           flex-direction: row !important;
           align-items: center !important;
           justify-content: space-between !important;
-          gap: 16px !important;
-          padding-top: 10px !important;
-          margin-top: 4px !important;
           width: 100% !important;
+          padding-top: 10px !important;
+          margin-top: 0 !important;
+          margin-bottom: 2px !important;
         }
         .print-footer-left,
         .print-footer-right {
@@ -943,10 +960,28 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .print-footer-left span {
           display: inline !important;
         }
+        .print-footer-left > div:first-child,
+        .print-footer-right > div:first-child {
+          margin: 0 !important;
+          padding: 0 !important;
+          line-height: 1.2 !important;
+        }
         .print-footer-line {
           width: 160px !important;
           border-top-width: 2px !important;
-          margin: 3px 0 !important;
+          margin: 5px auto !important;
+        }
+        .print-footer-left > div:nth-child(3),
+        .print-footer-right > div:nth-child(3) {
+          margin: 0 !important;
+          padding: 0 !important;
+          line-height: 1.2 !important;
+        }
+        .print-footer-left > div:nth-child(4),
+        .print-footer-right > div:nth-child(4) {
+          margin: 0 !important;
+          padding: 0 !important;
+          line-height: 1.2 !important;
         }
         .print-assertion-id {
           font-size: 11px !important;
