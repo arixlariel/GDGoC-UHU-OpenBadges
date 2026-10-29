@@ -1050,9 +1050,9 @@ export async function renderCertificateCanvas(
   drawDiplomaticFraming(ctx, theme, ix, iy, iw, ih);
 
   // =========================================================================
-  // 9. HEADER BLOCK (Tipografía y logos más grandes para llenar el formato A4)
+  // 9. HEADER BLOCK (Separado del borde superior y desplazado hacia abajo)
   // =========================================================================
-  let headerY = iy + 76;
+  let headerY = iy + 165;
 
   // Logos Row: [GDG Logo] [GDG on Campus / Universidad de Huelva] | [Badge Image con Halo]
   const logoBoxSize = 164;
@@ -1220,7 +1220,7 @@ export async function renderCertificateCanvas(
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = theme.accentText;
   ctx.font = `700 36px ${theme.fontMain}`;
-  ctx.fillText('GDG ON CAMPUS UHU', leftColCx, footerContentCy - 38);
+  ctx.fillText('GDG ON CAMPUS', leftColCx, footerContentCy - 38);
 
   ctx.save();
   ctx.strokeStyle = theme.borderColor;
@@ -1307,9 +1307,20 @@ export async function renderCertificateCanvas(
     gapTags +
     tagsRowH;
 
-  const availableSpace = footerTopY - headerY;
-  if (totalBodyH > availableSpace - 20) {
-    const compress = Math.max(0.5, (availableSpace - 20) / totalBodyH);
+  // Referencia de posición del cuerpo base (evita empujar hacia abajo el resto de componentes)
+  const baselineHeaderEnd =
+    iy +
+    76 +
+    logoBoxSize +
+    30 +
+    rolePillH +
+    46 +
+    titleLines.length * titleFontSize * 1.15 +
+    8 +
+    52;
+  const baselineAvailableSpace = footerTopY - baselineHeaderEnd;
+  if (totalBodyH > baselineAvailableSpace - 20) {
+    const compress = Math.max(0.5, (baselineAvailableSpace - 20) / totalBodyH);
     gapIntroName = Math.round(gapIntroName * compress);
     gapNameDesc = Math.round(gapNameDesc * compress);
     gapMeta = Math.round(gapMeta * compress);
@@ -1327,7 +1338,9 @@ export async function renderCertificateCanvas(
       tagsRowH;
   }
 
-  let bodyY = headerY + Math.max(10, (availableSpace - totalBodyH) / 2);
+  // El cuerpo mantiene su cota vertical previa para no ser empujado hacia abajo
+  const baselineBodyY = baselineHeaderEnd + Math.max(10, (baselineAvailableSpace - totalBodyH) / 2);
+  let bodyY = Math.max(headerY + 36, baselineBodyY);
 
   // Intro line
   ctx.fillStyle = theme.textSecondary;
