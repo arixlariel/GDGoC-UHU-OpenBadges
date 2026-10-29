@@ -1049,9 +1049,6 @@ export async function renderCertificateCanvas(
 
   drawDiplomaticFraming(ctx, theme, ix, iy, iw, ih);
 
-  // 8. Sello Rosetón Oficial de Verificación en la parte superior derecha
-  drawOfficialVerificationSeal(ctx, theme, ix + iw - 255, iy + 235, 108);
-
   // =========================================================================
   // 9. HEADER BLOCK (Tipografía y logos más grandes para llenar el formato A4)
   // =========================================================================
@@ -1146,7 +1143,8 @@ export async function renderCertificateCanvas(
   ctx.fillText(roleText, cx, headerY + rolePillH / 2 + 2);
   ctx.restore();
 
-  headerY += rolePillH + 22;
+  // Mayor separación entre el rol acreditado y el nombre de la badge
+  headerY += rolePillH + 46;
 
   // Badge Title (H1)
   const titleUpper = (data.badgeName || '').toUpperCase();
@@ -1239,7 +1237,7 @@ export async function renderCertificateCanvas(
 
   ctx.fillStyle = theme.textSecondary;
   ctx.font = `500 32px ${theme.fontMain}`;
-  ctx.fillText('Comunidad Oficial de Desarrolladores', leftColCx, footerContentCy + 78);
+  ctx.fillText('Comunidad de Desarrolladores', leftColCx, footerContentCy + 78);
 
   // Right Footer Column (Cryptographic ID)
   const rightColCx = qrCardX + qrCardSize + (ix + iw - 110 - (qrCardX + qrCardSize)) / 2;
@@ -1262,7 +1260,7 @@ export async function renderCertificateCanvas(
 
   ctx.fillStyle = theme.textSecondary;
   ctx.font = `500 32px ${theme.fontMain}`;
-  ctx.fillText('Verificación SHA-256 · Open Badges 2.0', rightColCx, footerContentCy + 78);
+  ctx.fillText('Verificación SHA-256', rightColCx, footerContentCy + 78);
 
   // =========================================================================
   // 11. CENTRAL BODY BLOCK (Letras más grandes y llenado equilibrado del A4)
