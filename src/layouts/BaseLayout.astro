@@ -712,25 +712,25 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
          PRINT / PDF EXPORT RULES (100% Guaranteed Single-Page Landscape A4)
          ========================================================================== */
       @page {
-        size: A4 landscape;
-        margin: 0 !important;
+        size: landscape;
+        margin: 0;
       }
       @page :first {
-        size: A4 landscape;
-        margin: 0 !important;
+        size: landscape;
+        margin: 0;
       }
       @page :left {
-        size: A4 landscape;
-        margin: 0 !important;
+        size: landscape;
+        margin: 0;
       }
       @page :right {
-        size: A4 landscape;
-        margin: 0 !important;
+        size: landscape;
+        margin: 0;
       }
       @media print {
         @page {
-          size: A4 landscape;
-          margin: 0 !important;
+          size: landscape;
+          margin: 0;
         }
         *, *::before, *::after {
           -webkit-print-color-adjust: exact !important;
@@ -744,7 +744,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           transition: none !important;
           font-variant-ligatures: none !important;
         }
-        header, footer, .no-print, #theme-fx-container, .diploma-watermark {
+        header, footer, .no-print, #theme-fx-container, .diploma-watermark, .sm\:hidden {
           display: none !important;
         }
         html, body {
@@ -779,7 +779,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           break-inside: avoid !important;
         }
         .print-container {
-          padding: 6mm 10mm !important;
+          padding: 12mm 14mm !important;
           margin: 0 auto !important;
           width: 297mm !important;
           max-width: 297mm !important;
@@ -796,9 +796,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .print-diploma-wrapper {
           transform: none !important;
           width: 100% !important;
-          max-width: 274mm !important;
+          max-width: 264mm !important;
           height: auto !important;
-          max-height: 194mm !important;
+          max-height: 168mm !important;
           padding: 6px !important;
           box-sizing: border-box !important;
           page-break-inside: avoid !important;
@@ -810,10 +810,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         .diploma-inner {
           min-height: 0 !important;
           width: 100% !important;
-          height: 182mm !important;
-          max-height: 182mm !important;
+          height: 154mm !important;
+          max-height: 154mm !important;
           box-sizing: border-box !important;
-          padding: 36px 46px 28px 46px !important;
+          padding: 22px 38px 18px 38px !important;
           display: flex !important;
           flex-direction: column !important;
           justify-content: space-between !important;
@@ -835,10 +835,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
 
         /* Keep inner frames comfortably near the edges so top/bottom blocks never collide with them */
         .diploma-frame-1 {
-          inset: 12px !important;
+          inset: 10px !important;
         }
         .diploma-frame-2 {
-          inset: 16px !important;
+          inset: 14px !important;
         }
         /* Remove opacity < 1 on text/ornaments in print so PDF engine doesn't draw bounding boxes */
         .print-desc,
@@ -849,77 +849,77 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           transform: none !important;
         }
         .fx-layer span.top-6 {
-          top: 26px !important;
+          top: 20px !important;
         }
         .fx-layer span.bottom-6 {
-          bottom: 26px !important;
+          bottom: 20px !important;
         }
         .print-header-block {
-          margin-top: 4px !important;
-          margin-bottom: 0 !important;
-        }
-        .print-header-block > div:first-child {
-          margin-bottom: 8px !important;
-        }
-        .print-header-block img {
-          width: 48px !important;
-          height: 48px !important;
-        }
-        .print-badge-title {
-          font-size: 23px !important;
-          letter-spacing: 0.05em !important;
-          margin-top: 4px !important;
+          margin-top: 0 !important;
           margin-bottom: 2px !important;
         }
+        .print-header-block > div:first-child {
+          margin-bottom: 6px !important;
+        }
+        .print-header-block img {
+          width: 44px !important;
+          height: 44px !important;
+        }
+        .print-badge-title {
+          font-size: 20.5px !important;
+          letter-spacing: 0.05em !important;
+          margin-top: 3px !important;
+          margin-bottom: 1px !important;
+        }
         .print-body-block {
-          margin: auto 0 !important;
+          margin: 4px 0 !important;
           width: 100% !important;
         }
         .print-recipient-box {
-          min-width: 420px !important;
-          padding: 0 40px 8px 40px !important;
-          margin-bottom: 8px !important;
+          min-width: 360px !important;
+          padding: 0 32px 4px 32px !important;
+          margin-bottom: 6px !important;
         }
         .diploma-recipient-name {
-          font-size: 33px !important;
+          font-size: 30px !important;
           line-height: 1.15 !important;
         }
         .print-desc {
-          font-size: 13.5px !important;
-          max-width: 620px !important;
-          line-height: 1.45 !important;
+          font-size: 12.5px !important;
+          max-width: 580px !important;
+          line-height: 1.4 !important;
         }
         .print-narrative {
-          font-size: 11.5px !important;
-          max-width: 560px !important;
-          line-height: 1.4 !important;
-          margin-top: 4px !important;
+          font-size: 11px !important;
+          max-width: 520px !important;
+          line-height: 1.35 !important;
+          margin-top: 2px !important;
         }
         .diploma-meta-box {
-          margin-top: 8px !important;
-          padding: 8px 16px !important;
-          max-width: 600px !important;
+          margin-top: 6px !important;
+          padding: 6px 14px !important;
+          max-width: 560px !important;
           display: grid !important;
           grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-          gap: 12px !important;
+          gap: 10px !important;
         }
         .diploma-meta-box span.text-\[10px\],
         .diploma-meta-box span.sm\:text-\[11px\] {
-          font-size: 10px !important;
+          font-size: 9.5px !important;
         }
         .diploma-meta-box span.text-xs,
         .diploma-meta-box span.sm\:text-sm {
-          font-size: 12.5px !important;
+          font-size: 11.5px !important;
         }
         .print-tags {
-          margin-top: 8px !important;
-          margin-bottom: 2px !important;
+          margin-top: 6px !important;
+          margin-bottom: 0 !important;
           width: 100% !important;
           display: flex !important;
           flex-wrap: wrap !important;
           align-items: center !important;
           justify-content: center !important;
-          gap: 6px !important;
+          gap: 5px !important;
         }
         .print-tags .theme-badge-pill,
         .print-header-block .theme-badge-pill {
@@ -928,9 +928,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           justify-content: center !important;
           text-align: center !important;
           line-height: 1 !important;
-          padding: 4px 11px !important;
+          padding: 3px 9px !important;
           letter-spacing: 0.01em !important;
-          font-size: 10.5px !important;
+          font-size: 10px !important;
         }
         .print-footer-block {
           display: flex !important;
@@ -938,9 +938,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           align-items: center !important;
           justify-content: space-between !important;
           width: 100% !important;
-          padding-top: 10px !important;
-          margin-top: 0 !important;
-          margin-bottom: 2px !important;
+          padding-top: 8px !important;
+          margin-top: 2px !important;
+          margin-bottom: 0 !important;
         }
         .print-footer-left,
         .print-footer-right {
@@ -967,9 +967,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           line-height: 1.2 !important;
         }
         .print-footer-line {
-          width: 160px !important;
+          width: 150px !important;
           border-top-width: 2px !important;
-          margin: 5px auto !important;
+          margin: 4px auto !important;
         }
         .print-footer-left > div:nth-child(3),
         .print-footer-right > div:nth-child(3) {
@@ -984,7 +984,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           line-height: 1.2 !important;
         }
         .print-assertion-id {
-          font-size: 11px !important;
+          font-size: 10.5px !important;
           max-width: none !important;
           overflow: visible !important;
           white-space: nowrap !important;
@@ -993,12 +993,12 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
-          margin: 0 16px !important;
+          margin: 0 14px !important;
           padding: 0 !important;
         }
         .print-qr-svg {
-          width: 68px !important;
-          height: 68px !important;
+          width: 62px !important;
+          height: 62px !important;
         }
         /* Ensure gradient text prints solid & crisp in all PDF engines */
         .diploma-recipient-name,
