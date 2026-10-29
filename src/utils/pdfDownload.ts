@@ -1165,12 +1165,21 @@ export async function renderCertificateCanvas(
 
   headerY += 8;
 
-  // Issue Date
-  ctx.fillStyle = theme.textSecondary;
-  ctx.font = `500 42px ${theme.fontMain}`;
+  // Issue Date (Estilo distintivo con acento del tema y glow para diferenciarse de la fórmula inferior)
+  ctx.save();
+  ctx.fillStyle = theme.accentText;
+  ctx.font = `600 38px ${theme.fontMain}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
+  if (themeKey === 'cyber') {
+    ctx.shadowColor = 'rgba(0, 240, 255, 0.45)';
+    ctx.shadowBlur = 12;
+  } else if (themeKey === 'nieve') {
+    ctx.shadowColor = 'rgba(125, 211, 252, 0.4)';
+    ctx.shadowBlur = 10;
+  }
   ctx.fillText(`Emitido el ${data.issueDate || ''}`, cx, headerY);
+  ctx.restore();
   headerY += 52;
 
   // =========================================================================
@@ -1512,9 +1521,9 @@ export async function renderCertificateCanvas(
 
   bodyY += metaBoxH;
 
-  // Competency Tags
+  // Competency Tags (desplazadas hacia abajo para mayor separación visual con la tabla de metadatos)
   if (hasTags) {
-    bodyY += gapTags;
+    bodyY += gapTags + 36;
     ctx.font = `600 34px ${theme.fontMain}`;
     const tagGap = 22;
     const tagPadX = 44;
