@@ -269,7 +269,7 @@ export function buildEmailHTML(
               </div>
 
               <!-- Botón Principal Bulletproof para Móviles y Clientes de Correo -->
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 22px auto 10px auto;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 22px auto 14px auto;">
                 <tr>
                   <td align="center" bgcolor="${t.btnBg}" style="border-radius: 12px; background-color: ${t.btnBg};">
                     <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 14px 28px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 800; color: ${t.btnText}; text-decoration: none; border-radius: 12px; -webkit-text-size-adjust: none; mso-padding-alt: 0; cursor: pointer; text-align: center;">
@@ -278,12 +278,6 @@ export function buildEmailHTML(
                   </td>
                 </tr>
               </table>
-
-              <!-- Enlace alternativo directo en caso de clientes móviles restrictivos -->
-              <div style="margin: 8px 0 16px 0; font-size: 11px; color: ${t.textMuted}; word-break: break-all; line-height: 1.4; text-align: center;">
-                Si el botón no abre, accede directamente desde este enlace:<br>
-                <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="color: ${t.accent}; text-decoration: underline; font-weight: 600;">${certUrl}</a>
-              </div>
 
               ${evidence ? `<div style="margin: 10px 0 14px 0;"><a href="${evidence}" target="_blank" style="display: inline-block; color: ${t.accent}; font-size: 12.5px; font-weight: 700; text-decoration: underline;">Ver Evidencia / Proyecto ↗</a></div>` : ''}
 

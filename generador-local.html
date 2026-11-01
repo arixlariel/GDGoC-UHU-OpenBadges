@@ -621,6 +621,66 @@
     .diploma-theme-caramelos .dp-pill { background: #FFE0F0; border: 2px solid #FF1493; color: #AD1457; }
     .diploma-theme-caramelos .dp-meta { background: rgba(255, 224, 240, 0.85); border: 2px solid #FF69B4; }
 
+    /* Recipient Name Gradient Treatments (Fiel a CertificateDiploma.astro) */
+    .diploma-theme-cyber .dp-recipient-name {
+      background: linear-gradient(90deg, #00F0FF, #FF007F, #00FF66);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 14px rgba(0, 240, 255, 0.4));
+    }
+    .diploma-theme-piscina .dp-recipient-name {
+      background: linear-gradient(90deg, #0284C7, #00B4DB, #00897B);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-nieve .dp-recipient-name {
+      background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #BAE6FD);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 14px rgba(125, 211, 252, 0.4));
+    }
+    .diploma-theme-caramelos .dp-recipient-name {
+      background: linear-gradient(90deg, #D81B60, #FF1493, #FF69B4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Date Treatments per Theme (Fiel a CertificateDiploma.astro) */
+    .dp-issue-date {
+      font-size: 12.5px;
+      font-weight: 700;
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+    .diploma-theme-google .dp-issue-date {
+      color: #1967D2;
+    }
+    .diploma-theme-cyber .dp-issue-date {
+      color: #00F0FF !important;
+      -webkit-text-fill-color: #00F0FF !important;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.75), 0 0 20px rgba(0, 240, 255, 0.35);
+      font-family: 'Orbitron', monospace, sans-serif !important;
+      letter-spacing: 0.08em !important;
+    }
+    .diploma-theme-piscina .dp-issue-date {
+      color: #0284C7;
+    }
+    .diploma-theme-nieve .dp-issue-date {
+      color: #7DD3FC;
+      text-shadow: 0 0 8px rgba(125, 211, 252, 0.4);
+    }
+    .diploma-theme-caramelos .dp-issue-date {
+      color: #D81B60;
+    }
+
+    /* Corner Ornaments Visibility */
+    .dp-ornament { display: none; }
+    .diploma-theme-google .dp-ornament-google { display: block; }
+    .diploma-theme-cyber .dp-ornament-cyber { display: block; }
+    .diploma-theme-piscina .dp-ornament-piscina { display: block; }
+    .diploma-theme-nieve .dp-ornament-nieve { display: block; }
+    .diploma-theme-caramelos .dp-ornament-caramelos { display: block; }
+
     .json-code-box {
       background: #0f172a;
       color: #e2e8f0;
@@ -960,15 +1020,64 @@
                   <div class="diploma-frame-1"></div>
                   <div class="diploma-frame-2"></div>
 
+                  <!-- Decoraciones de esquina por estilo (Fiel a la versión web) -->
+                  <!-- 1. Google -->
+                  <div class="dp-ornament dp-ornament-google" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:-24px; left:-24px; width:120px; height:120px; opacity:0.12;" viewBox="0 0 200 200" fill="none">
+                      <circle cx="100" cy="100" r="80" stroke="#4285F4" stroke-width="4" />
+                      <circle cx="100" cy="100" r="55" stroke="#EA4335" stroke-width="3" stroke-dasharray="8 8" />
+                    </svg>
+                    <svg style="position:absolute; bottom:-24px; right:-24px; width:120px; height:120px; opacity:0.12;" viewBox="0 0 200 200" fill="none">
+                      <circle cx="100" cy="100" r="80" stroke="#34A853" stroke-width="4" />
+                      <circle cx="100" cy="100" r="55" stroke="#FBBC04" stroke-width="3" stroke-dasharray="8 8" />
+                    </svg>
+                  </div>
+
+                  <!-- 2. Cyber -->
+                  <div class="dp-ornament dp-ornament-cyber" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:-30px; left:-30px; width:150px; height:150px; opacity:0.25;" viewBox="0 0 300 300" fill="none">
+                      <circle cx="120" cy="120" r="85" stroke="#00F0FF" stroke-width="2.5" stroke-dasharray="10 6" />
+                      <polygon points="20,200 200,20 260,260" stroke="#FF007F" stroke-width="1.5" opacity="0.5" />
+                    </svg>
+                    <svg style="position:absolute; bottom:-30px; right:-30px; width:150px; height:150px; opacity:0.25;" viewBox="0 0 300 300" fill="none">
+                      <circle cx="180" cy="180" r="85" stroke="#00FF66" stroke-width="2.5" stroke-dasharray="10 6" />
+                      <polygon points="80,80 280,140 160,280" stroke="#00F0FF" stroke-width="1.5" opacity="0.5" />
+                    </svg>
+                  </div>
+
+                  <!-- 3. Piscina -->
+                  <div class="dp-ornament dp-ornament-piscina" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <span style="position:absolute; top:18px; left:22px; font-size:22px; opacity:0.85; user-select:none;">🌊</span>
+                    <span style="position:absolute; top:18px; right:22px; font-size:22px; opacity:0.85; user-select:none;">💦</span>
+                    <span style="position:absolute; bottom:18px; left:22px; font-size:22px; opacity:0.85; user-select:none;">🫧</span>
+                    <span style="position:absolute; bottom:18px; right:22px; font-size:22px; opacity:0.85; user-select:none;">🌊</span>
+                  </div>
+
+                  <!-- 4. Nieve -->
+                  <div class="dp-ornament dp-ornament-nieve" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <span style="position:absolute; top:18px; left:22px; font-size:22px; opacity:0.85; user-select:none;">❄️</span>
+                    <span style="position:absolute; top:18px; right:22px; font-size:22px; opacity:0.85; user-select:none;">🌬️</span>
+                    <span style="position:absolute; bottom:18px; left:22px; font-size:22px; opacity:0.85; user-select:none;">❆</span>
+                    <span style="position:absolute; bottom:18px; right:22px; font-size:22px; opacity:0.85; user-select:none;">❄️</span>
+                  </div>
+
+                  <!-- 5. Caramelos -->
+                  <div class="dp-ornament dp-ornament-caramelos" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <span style="position:absolute; top:18px; left:22px; font-size:22px; opacity:0.9; user-select:none;">🧁</span>
+                    <span style="position:absolute; top:18px; right:22px; font-size:22px; opacity:0.9; user-select:none;">🍬</span>
+                    <span style="position:absolute; bottom:18px; left:22px; font-size:22px; opacity:0.9; user-select:none;">🍩</span>
+                    <span style="position:absolute; bottom:18px; right:22px; font-size:22px; opacity:0.9; user-select:none;">🍰</span>
+                  </div>
+
                   <!-- Cabecera del Diploma -->
                   <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; width:100%;">
                     <div style="display:flex; align-items:center; justify-content:center; gap:18px; margin-bottom:14px;">
                       <div style="display:flex; align-items:center; gap:10px;">
                         <img
-                          src="./public/images/gdgoc-uhu-logo.jpg"
-                          onerror="this.style.display='none'"
+                          src="./public/images/gdgoc-uhu-logo-rounded.png"
+                          onerror="this.src='https://gdguhu.es/images/gdgoc-uhu-logo.jpg'; this.onerror=null;"
                           alt="GDG on Campus UHU"
-                          style="width:46px; height:46px; border-radius:10px; object-fit:cover; border:1px solid #dadce0; background:#fff;"
+                          style="width:46px; height:46px; border-radius:12px; object-fit:cover; border:1px solid #dadce0; background:#fff;"
                         />
                         <div style="text-align:left;">
                           <div class="dp-text-primary" style="font-weight:800; font-size:14px; line-height:1.2;">GDG on Campus</div>
@@ -992,7 +1101,7 @@
                     <h2 id="dp-badge-title" class="dp-text-primary" style="font-size:24px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">
                       Selecciona una badge
                     </h2>
-                    <div id="dp-issue-date" class="dp-text-secondary" style="font-size:12.5px; font-weight:600; margin-top:4px;">
+                    <div id="dp-issue-date" class="dp-issue-date dp-accent">
                       28 de octubre de 2026
                     </div>
                   </div>
@@ -1003,7 +1112,7 @@
                       Este certificado digital se otorga a
                     </p>
                     <div class="dp-border" style="position:relative; display:inline-block; padding: 0 28px 10px 28px; margin-bottom:14px; border-bottom:2px solid; min-width:300px;">
-                      <div id="dp-recipient-name" class="dp-text-primary" style="font-size:34px; font-weight:800; letter-spacing:-0.02em; line-height:1.15;">
+                      <div id="dp-recipient-name" class="dp-recipient-name dp-text-primary" style="font-size:34px; font-weight:800; letter-spacing:-0.02em; line-height:1.15;">
                         Nombre del Alumno
                       </div>
                       <svg style="position:absolute; bottom:-3px; left:0; right:0; margin:0 auto; width:110px; height:4px; border-radius:99px;" viewBox="0 0 128 4" preserveAspectRatio="none">
@@ -1032,7 +1141,12 @@
                       </div>
                       <div>
                         <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Estándar</div>
-                        <div style="font-size:12.5px; font-weight:800; color:#34A853; margin-top:2px;">✓ Open Badges 2.0</div>
+                        <div style="font-size:12.5px; font-weight:800; color:#34A853; margin-top:2px; display:flex; align-items:center; justify-content:center; gap:5px;">
+                          <svg style="width:16px; height:16px; flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                          </svg>
+                          <span>Open Badges 2.0</span>
+                        </div>
                       </div>
                     </div>
 
@@ -1042,10 +1156,10 @@
                   <!-- Pie del Diploma con QR + ID Completo -->
                   <div class="dp-border" style="position:relative; z-index:2; width:100%; padding-top:14px; border-top:2px solid; display:flex; align-items:center; justify-content:space-between; gap:8px;">
                     <div style="flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;">
-                      <div class="dp-accent" style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; line-height:1.2;">GDG on<br>Campus UHU</div>
+                      <div class="dp-accent" style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; line-height:1.2;">GDG on Campus</div>
                       <div class="dp-border" style="width:120px; border-top:2px solid; margin:6px auto;"></div>
                       <div class="dp-text-primary" style="font-size:10px; font-weight:700;">Universidad de Huelva</div>
-                      <div class="dp-text-secondary" style="font-size:9px;">Desarrolladores</div>
+                      <div class="dp-text-secondary" style="font-size:9px;">Comunidad de Desarrolladores</div>
                     </div>
 
                     <div style="display:flex; align-items:center; justify-content:center; padding:0 8px;">
@@ -1057,7 +1171,7 @@
                     <div style="flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;">
                       <div id="dp-full-id" class="dp-text-secondary mono" style="font-size:9px; font-weight:700; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">69679d9fa12d24f4a673b54b</div>
                       <div class="dp-border" style="width:120px; border-top:2px solid; margin:6px auto;"></div>
-                      <div class="dp-text-primary" style="font-size:10px; font-weight:700;">ID Criptográfico</div>
+                      <div class="dp-text-primary" style="font-size:10px; font-weight:700;">Credencial Criptográfica</div>
                       <div class="dp-text-secondary" style="font-size:9px;">Verificación SHA-256</div>
                     </div>
                   </div>
@@ -2303,6 +2417,15 @@
       document.getElementById('dp-badge-narrative').textContent = badgeInfo.criteria?.narrative || '';
       document.getElementById('dp-full-id').textContent = current.id;
 
+      const dateRaw = assertionObj.issuedOn || current.issuedOn || Date.now();
+      const formattedDate = new Date(dateRaw).toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+      const issueDateEl = document.getElementById('dp-issue-date');
+      if (issueDateEl) issueDateEl.textContent = formattedDate;
+
       const badgeImgEl = document.getElementById('dp-badge-img');
       if (badgeInfo.image) {
         badgeImgEl.style.display = '';
@@ -2512,7 +2635,7 @@
                 </div>
               </div>
               <!-- Botón Principal Bulletproof para Móviles y Clientes de Correo -->
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:22px auto 10px auto;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:22px auto 14px auto;">
                 <tr>
                   <td align="center" bgcolor="${t.btnBg}" style="border-radius:12px;background-color:${t.btnBg};">
                     <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;font-weight:800;color:${t.btnText};text-decoration:none;border-radius:12px;-webkit-text-size-adjust:none;mso-padding-alt:0;cursor:pointer;text-align:center;">
@@ -2521,12 +2644,6 @@
                   </td>
                 </tr>
               </table>
-
-              <!-- Enlace alternativo directo en caso de clientes móviles restrictivos -->
-              <div style="margin:8px 0 16px 0;font-size:11px;color:${t.textMuted};word-break:break-all;line-height:1.4;text-align:center;">
-                Si el botón no abre, accede directamente desde este enlace:<br>
-                <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="color:${t.accent};text-decoration:underline;font-weight:600;">${certUrl}</a>
-              </div>
               ${
                 evidenceUrl
                   ? `<div style="margin:10px 0 14px 0;"><a href="${escapeHtml(evidenceUrl)}" target="_blank" style="display:inline-block;color:${t.accent};font-size:12.5px;font-weight:700;text-decoration:underline;">Ver Evidencia / Proyecto ↗</a></div>`
