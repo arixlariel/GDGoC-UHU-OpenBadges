@@ -81,11 +81,20 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 ```
 
 #### Opciones de estilo (`style`):
-- `google`: Clásico Google institucional, blanco
-- `cyber`: Modo oscuro, neón y estética matrix/glitch
-- `piscina`: Verano refrescante lleno de oleaje y burbujas
-- `nieve`: Invierno polar en medio de una ventisca helada con nieve y granizo
-- `caramelos`: Dulces empalagosos con toppings rosas y unicornios arcoíris
+- `google`: Clásico Google Material Mesh, limpio e institucional con malla de gradientes dinámica
+- `hardware` *(o `cyber`)*: Placa base PCB de ingeniería en máscara verde esmeralda, pistas de cobre/oro de 45° y microchips
+- `cyberpunk`: Estética Edgerunner de alto voltaje en amarillo ácido `#FCEE0A`, magenta `#FF0055` y cian eléctrico `#00F0FF`
+- `piscina`: Verano oceánico con oleaje multicapa animado, splashes vectoriales y cáusticas submarinas
+- `nieve`: Tormenta invernal con ventisca, nubes de tormenta, relámpagos y cristales de escarcha
+- `caramelos`: Fantasía dulce con arcoíris vectorial, unicornios, calderos de oro y dulces pastel
+- `aurora`: Espacio profundo, constelaciones y cortinas de Aurora Boreal en movimiento
+- `blueprint`: Plano técnico de ingeniería CAD en cianotipo `#07193E`, cuadrícula milimétrica, cotas y cajetín ISO 7200
+- `antiguo`: Mundo antiguo combinando grecas de mosaico y columnas dóricas griegas con pirámides y jeroglíficos egipcios en papiro, oro y lapislázuli
+- `japon`: Japón tradicional en papel Washi, puertas Torii bermellón, pétalos de Sakura y pictogramas Naxi Dongba
+- `voynich`: Manuscrito Voynich y vitrales góticos emplomados con medallones astrológicos y botánicos en glassmorphism
+- `mixteca`: Amazonia precolombina y códice Mixteca con grecas escalonadas (`Xicalcoliuhqui`), jade, turquesa y oro solar
+
+> **Comparación Directa (`ui_rework`)**: La web cuenta con la versión paralela de nueva generación en **`https://gdguhu.es/ui_rework/`** (y certificados en **`https://gdguhu.es/ui_rework/cert/<ID>`**), manteniendo intacta la versión original en `https://gdguhu.es/` para comparación directa en un clic.
 
 ---
 

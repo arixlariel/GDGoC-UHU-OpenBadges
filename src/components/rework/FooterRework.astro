@@ -1,0 +1,69 @@
+---
+import { siteConfig, getAssetUrl } from '@/config/site';
+
+interface Props {
+  originalUrl?: string;
+}
+
+const { originalUrl = getAssetUrl('/') } = Astro.props;
+---
+
+<footer class="theme-footer relative z-10 mt-20 border-t theme-border py-12 text-xs theme-text-secondary backdrop-blur-2xl transition-all duration-500 no-print">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+    <!-- Left Institutional Identity -->
+    <div class="flex items-center gap-3.5">
+      <div class="relative w-11 h-11 rounded-xl overflow-hidden border theme-border bg-white shadow-sm shrink-0">
+        <img
+          src={getAssetUrl('/images/gdgoc-uhu-logo.jpg')}
+          alt="GDG on Campus UHU"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <div class="flex flex-col items-start gap-0.5">
+        <div class="font-display font-bold text-sm theme-text-primary flex items-center gap-2">
+          <span>GDG on Campus · Universidad de Huelva</span>
+        </div>
+        <div class="text-xs theme-text-secondary">
+          Certificados Digitales verificados
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Links + Quick Version Comparison -->
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-5 text-xs font-medium">
+      <a
+        href={originalUrl}
+        class="theme-pill-btn px-3 py-1.5 rounded-full text-[11px] font-semibold inline-flex items-center gap-1.5 transition-all"
+      >
+        <span>⇄ Versión Original</span>
+      </a>
+      <span class="opacity-40">·</span>
+      <a
+        href={siteConfig.communityUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="theme-link hover:underline transition-colors"
+      >
+        Comunidad
+      </a>
+      <span class="opacity-40">·</span>
+      <a
+        href={siteConfig.linkedinUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="theme-link hover:underline transition-colors"
+      >
+        LinkedIn
+      </a>
+      <span class="opacity-40">·</span>
+      <a
+        href="https://openbadges.org"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="theme-link hover:underline transition-colors"
+      >
+        OpenBadges
+      </a>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,270 @@
+---
+import HeaderRework from '@/components/rework/HeaderRework.astro';
+import FooterRework from '@/components/rework/FooterRework.astro';
+import BackgroundFxRework from '@/components/rework/BackgroundFxRework.astro';
+import { siteConfig, getFullUrl, getAssetUrl } from '@/config/site';
+import { normalizeReworkStyle, REWORK_THEMES } from '@/utils/reworkThemes';
+import '@/styles/reworkThemes.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  certStyle?: string;
+  jsonLdUrl?: string;
+  originalUrl?: string;
+}
+
+const {
+  title = siteConfig.name,
+  description = siteConfig.description,
+  image = getFullUrl('/images/gdgoc-uhu-logo.jpg'),
+  certStyle,
+  jsonLdUrl,
+  originalUrl = getAssetUrl('/'),
+} = Astro.props;
+
+const initialTheme = certStyle ? normalizeReworkStyle(certStyle) : 'google';
+const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
+const clientThemeMap = Object.fromEntries(
+  Object.entries(REWORK_THEMES).map(([k, v]) => [
+    k,
+    { label: v.shortLabel, fullLabel: v.label, svgIcon: v.svgIcon },
+  ])
+);
+---
+
+<!doctype html>
+<html
+  lang="es"
+  data-theme={initialTheme}
+  data-cert-style={certStyle ? normalizeReworkStyle(certStyle) : ''}
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" sizes="32x32" href={getAssetUrl('/favicon-32x32.png')} />
+    <link rel="icon" type="image/png" sizes="192x192" href={getAssetUrl('/favicon-192x192.png')} />
+    <link rel="icon" type="image/png" href={getAssetUrl('/favicon.png')} />
+    <link rel="icon" type="image/svg+xml" href={getAssetUrl('/favicon.svg')} />
+    <link rel="apple-touch-icon" href={getAssetUrl('/apple-touch-icon.png')} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+
+    <!-- Twitter / X -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalUrl} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={image} />
+
+    {jsonLdUrl && (
+      <link rel="alternate" type="application/ld+json" href={jsonLdUrl} title="Open Badges Assertion" />
+    )}
+
+    <!-- Google Fonts for all 12 Visual Universes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Fredoka:wght@500;600;700&family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Share+Tech+Mono&family=Shippori+Mincho:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Pre-Init Theme Script (Supports 12 Styles + URL ?style= override + cyber -> hardware normalization) -->
+    <script is:inline>
+      (function () {
+        const validThemes = [
+          'google',
+          'hardware',
+          'cyberpunk',
+          'piscina',
+          'nieve',
+          'caramelos',
+          'aurora',
+          'blueprint',
+          'antiguo',
+          'japon',
+          'voynich',
+          'mixteca',
+        ];
+        const normalize = (val) => {
+          if (!val) return '';
+          const clean = val.trim().toLowerCase();
+          if (clean === 'cyber') return 'hardware';
+          return validThemes.includes(clean) ? clean : '';
+        };
+
+        const html = document.documentElement;
+        const params = new URLSearchParams(window.location.search);
+        const urlStyle = normalize(params.get('style'));
+        const forcedCertStyle = normalize(html.getAttribute('data-cert-style'));
+
+        if (urlStyle) {
+          html.setAttribute('data-theme', urlStyle);
+        } else if (forcedCertStyle) {
+          html.setAttribute('data-theme', forcedCertStyle);
+        } else {
+          const saved = normalize(localStorage.getItem('gdgoc-uhu-rework-theme') || localStorage.getItem('gdgoc-uhu-theme'));
+          html.setAttribute('data-theme', saved || 'google');
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="min-h-screen flex flex-col antialiased relative" data-theme-map={JSON.stringify(clientThemeMap)}>
+    <!-- 12-Theme Animated Background FX -->
+    <BackgroundFxRework />
+
+    <HeaderRework lockedStyle={certStyle} originalUrl={originalUrl} />
+
+    <main class="flex-1 relative z-10">
+      <slot />
+    </main>
+
+    <FooterRework originalUrl={originalUrl} />
+
+    <!-- Master Interactive Engine: Theme Switcher, Cursor Spotlight, 3D Tilt & Scroll Reveal -->
+    <script>
+      const rawMap = document.body.getAttribute('data-theme-map');
+      const THEME_MAP: Record<string, { label: string; fullLabel: string; svgIcon: string }> = rawMap
+        ? JSON.parse(rawMap)
+        : {};
+
+      function normalizeTheme(raw: string | null): string {
+        if (!raw) return 'google';
+        const clean = raw.trim().toLowerCase();
+        if (clean === 'cyber') return 'hardware';
+        return THEME_MAP[clean] ? clean : 'google';
+      }
+
+      function updateThemeUI(theme: string) {
+        const normalized = normalizeTheme(theme);
+        const meta = THEME_MAP[normalized] || THEME_MAP.google;
+        const iconEl = document.getElementById('current-theme-icon');
+        const labelEl = document.getElementById('current-theme-label');
+        if (iconEl && meta) iconEl.innerHTML = meta.svgIcon;
+        if (labelEl && meta) labelEl.textContent = meta.label;
+
+        document.querySelectorAll('[data-set-theme]').forEach((btn) => {
+          const t = normalizeTheme(btn.getAttribute('data-set-theme'));
+          if (t === normalized) {
+            btn.classList.add('ring-2', 'ring-current', 'bg-current/10');
+          } else {
+            btn.classList.remove('ring-2', 'ring-current', 'bg-current/10');
+          }
+        });
+      }
+
+      function applyTheme(theme: string, persist = true) {
+        const normalized = normalizeTheme(theme);
+        document.documentElement.setAttribute('data-theme', normalized);
+        if (persist) {
+          localStorage.setItem('gdgoc-uhu-rework-theme', normalized);
+        }
+        updateThemeUI(normalized);
+        window.dispatchEvent(new CustomEvent('gdgoc-theme-change', { detail: { theme: normalized } }));
+      }
+
+      // Initialize UI
+      const currentTheme = normalizeTheme(document.documentElement.getAttribute('data-theme'));
+      updateThemeUI(currentTheme);
+
+      // Header Mega-Dropdown Toggle
+      const menuBtn = document.getElementById('theme-menu-button');
+      const dropdown = document.getElementById('theme-dropdown-menu');
+      const chevron = document.getElementById('theme-chevron');
+
+      menuBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = dropdown?.classList.contains('hidden');
+        if (isHidden) {
+          dropdown?.classList.remove('hidden');
+          chevron?.classList.add('rotate-180');
+        } else {
+          dropdown?.classList.add('hidden');
+          chevron?.classList.remove('rotate-180');
+        }
+      });
+
+      dropdown?.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      document.querySelectorAll('[data-set-theme]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const selected = btn.getAttribute('data-set-theme') || 'google';
+          applyTheme(selected, true);
+          dropdown?.classList.add('hidden');
+          chevron?.classList.remove('rotate-180');
+        });
+      });
+
+      document.addEventListener('click', () => {
+        dropdown?.classList.add('hidden');
+        chevron?.classList.remove('rotate-180');
+      });
+
+      // Interactive Cursor Spotlight Tracking
+      let rafPending = false;
+      window.addEventListener(
+        'pointermove',
+        (e) => {
+          if (rafPending) return;
+          rafPending = true;
+          requestAnimationFrame(() => {
+            document.documentElement.style.setProperty('--mx', `${e.clientX}px`);
+            document.documentElement.style.setProperty('--my', `${e.clientY}px`);
+            rafPending = false;
+          });
+        },
+        { passive: true }
+      );
+
+      // Interactive 3D Tilt Cards (.tilt-card)
+      function initTiltCards() {
+        const cards = document.querySelectorAll<HTMLElement>('.tilt-card');
+        cards.forEach((card) => {
+          const maxTilt = Number(card.dataset.tiltMax || '5');
+          card.addEventListener('pointermove', (e) => {
+            if (window.innerWidth < 768 || card.dataset.tiltDisabled === 'true') return;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const pctX = x / rect.width;
+            const pctY = y / rect.height;
+            const rotateY = (pctX - 0.5) * maxTilt * 2;
+            const rotateX = (0.5 - pctY) * maxTilt * 2;
+            card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
+            card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
+            card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
+          });
+          card.addEventListener('pointerleave', () => {
+            card.style.transform = '';
+          });
+        });
+      }
+      initTiltCards();
+
+      // Scroll-Triggered Reveal Animations (.reveal-on-scroll)
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      document.querySelectorAll('.reveal-on-scroll').forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>

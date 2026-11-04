@@ -1,0 +1,805 @@
+---
+import { getFullUrl, getAssetUrl } from '@/config/site';
+import { generateQrSvgPath } from '@/utils/qrcode';
+import { REWORK_THEMES, REWORK_STYLE_ORDER, normalizeReworkStyle } from '@/utils/reworkThemes';
+
+interface Props {
+  assertion: any;
+  badge: any;
+  assertionId: string;
+  initialStyle: string;
+}
+
+const { assertion, badge, assertionId, initialStyle } = Astro.props;
+const normalizedStyle = normalizeReworkStyle(initialStyle);
+
+const issueDate = new Date(assertion.data.issuedOn).toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const certUrl = getFullUrl(`/cert/${assertionId}`);
+const logoUrl = getAssetUrl('/images/gdgoc-uhu-logo.jpg');
+const badgeImageUrl = getAssetUrl(badge.data.image);
+const qr = generateQrSvgPath(certUrl);
+const hasEvidence = Boolean(assertion.data.evidence && assertion.data.evidence.trim().length > 0);
+
+const pdfPayload = {
+  assertionId,
+  recipientName: assertion.data.recipient.name,
+  role: assertion.data.role.trim(),
+  badgeName: badge.data.name,
+  description: badge.data.description,
+  narrative: badge.data.criteria?.narrative || '',
+  issueDate,
+  tags: Array.isArray(badge.data.tags) ? badge.data.tags.map((t: string) => t.trim()) : [],
+  badgeImageUrl,
+  logoUrl,
+  certUrl,
+  qrPath: qr.path,
+  qrSize: qr.size,
+  style: normalizedStyle,
+};
+
+// LinkedIn Add to Profile URL
+const linkedinUrl = new URL('https://www.linkedin.com/profile/add');
+linkedinUrl.searchParams.set('startTask', 'CERTIFICATION_NAME');
+linkedinUrl.searchParams.set('name', badge.data.name);
+linkedinUrl.searchParams.set('organizationName', 'GDG on Campus Universidad de Huelva');
+linkedinUrl.searchParams.set('issueYear', new Date(assertion.data.issuedOn).getFullYear().toString());
+linkedinUrl.searchParams.set('issueMonth', (new Date(assertion.data.issuedOn).getMonth() + 1).toString());
+linkedinUrl.searchParams.set('certUrl', certUrl);
+linkedinUrl.searchParams.set('certId', assertionId);
+---
+
+<div class="print-container max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 relative z-10">
+  <!-- Interactive 12-Style Live Switcher Bar & 3D Tilt Toggle (No Print) -->
+  <div class="no-print mb-5 theme-card rounded-2xl p-2.5 sm:p-3 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+    <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-1 sm:pb-0 no-scrollbar">
+      <span class="text-[11px] font-extrabold uppercase tracking-wider theme-text-secondary px-2 shrink-0">
+        Probar Estilo:
+      </span>
+      {REWORK_STYLE_ORDER.map((key) => {
+        const item = REWORK_THEMES[key];
+        return (
+          <button
+            type="button"
+            data-set-theme={key}
+            class="theme-pill-btn px-2.5 py-1.5 rounded-xl text-[11px] font-bold inline-flex items-center gap-1.5 shrink-0 cursor-pointer transition-all"
+            title={item.subtitle}
+          >
+            <span class="w-3.5 h-3.5 flex items-center justify-center shrink-0" set:html={item.svgIcon}></span>
+            <span>{item.shortLabel}</span>
+          </button>
+        );
+      })}
+    </div>
+
+    <button
+      type="button"
+      id="toggle-3d-tilt-btn"
+      class="theme-badge-pill px-3 py-1.5 rounded-xl text-[11px] font-bold inline-flex items-center gap-1.5 shrink-0 cursor-pointer transition-transform hover:scale-105"
+      title="Activar o desactivar efecto 3D interactivo al mover el cursor"
+    >
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+      </svg>
+      <span id="toggle-3d-tilt-label">3D Interactivo: ON</span>
+    </button>
+  </div>
+
+  <!-- Contenedor Exterior del Diploma con soporte 3D Tilt -->
+  <div
+    id="diploma-tilt-card"
+    data-tilt-max="3.2"
+    class="tilt-card print-diploma-wrapper diploma-outer rounded-3xl transition-all duration-300 relative"
+  >
+    <!-- Interactive Specular Glare Layer -->
+    <div class="tilt-glare absolute inset-0 rounded-3xl pointer-events-none z-20 no-print"></div>
+
+    <!-- Tarjeta Principal del Diploma -->
+    <div class="diploma-inner relative rounded-[18px] overflow-hidden p-6 sm:p-12 md:p-14 flex flex-col items-center text-center min-h-[630px] justify-between transition-all duration-500">
+      <!-- Marcos interiores del diploma -->
+      <div class="diploma-frame-1 absolute inset-3 sm:inset-5 rounded-xl pointer-events-none transition-all duration-500"></div>
+      <div class="diploma-frame-2 absolute inset-4 sm:inset-6 rounded-lg pointer-events-none transition-all duration-500"></div>
+
+      <!-- ==================================================================
+           BESPOKE VECTOR CORNER ORNAMENTS FOR ALL 12 STYLES (Zero Emoji Spam!)
+           ================================================================== -->
+      <!-- 1. Google Mesh Ornaments -->
+      <div class="fx-layer fx-google absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute -top-12 -left-12 w-56 h-56 opacity-20" viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="82" stroke="#4285F4" stroke-width="4" />
+          <circle cx="100" cy="100" r="56" stroke="#EA4335" stroke-width="3" stroke-dasharray="10 8" />
+        </svg>
+        <svg class="absolute -bottom-12 -right-12 w-56 h-56 opacity-20" viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="82" stroke="#34A853" stroke-width="4" />
+          <circle cx="100" cy="100" r="56" stroke="#FBBC04" stroke-width="3" stroke-dasharray="10 8" />
+        </svg>
+      </div>
+
+      <!-- 2. Hardware PCB Ornaments -->
+      <div class="fx-layer fx-hardware absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute top-0 left-0 w-64 h-64 opacity-40" viewBox="0 0 220 220" fill="none">
+          <path d="M0 45 H75 L110 80 H165" stroke="#D4AF37" stroke-width="2.5" />
+          <path d="M0 70 H60 L95 105 H140" stroke="#00E676" stroke-width="2" />
+          <circle cx="165" cy="80" r="5" fill="#04160E" stroke="#FFD54F" stroke-width="2.5" />
+          <circle cx="140" cy="105" r="5" fill="#04160E" stroke="#00E676" stroke-width="2.5" />
+          <rect x="28" y="28" width="28" height="28" rx="4" fill="#06291A" stroke="#D4AF37" stroke-width="2" />
+        </svg>
+        <svg class="absolute bottom-0 right-0 w-64 h-64 opacity-40" viewBox="0 0 220 220" fill="none">
+          <path d="M220 175 H145 L110 140 H55" stroke="#D4AF37" stroke-width="2.5" />
+          <path d="M220 150 H160 L125 115 H80" stroke="#00E676" stroke-width="2" />
+          <circle cx="55" cy="140" r="5" fill="#04160E" stroke="#FFD54F" stroke-width="2.5" />
+          <circle cx="80" cy="115" r="5" fill="#04160E" stroke="#00E676" stroke-width="2.5" />
+        </svg>
+      </div>
+
+      <!-- 3. Cyberpunk Ornaments -->
+      <div class="fx-layer fx-cyberpunk absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute top-5 left-6 w-52 h-24 opacity-65" viewBox="0 0 220 90" fill="none">
+          <path d="M0 0 H170 L150 22 H0 Z" fill="#FCEE0A" fill-opacity="0.2" stroke="#FCEE0A" stroke-width="1.5" />
+          <text x="10" y="15" fill="#FCEE0A" font-family="monospace" font-size="10" font-weight="bold">NC_NET // VERIFIED</text>
+        </svg>
+        <svg class="absolute bottom-5 right-6 w-56 h-56 opacity-40" viewBox="0 0 200 200" fill="none">
+          <circle cx="130" cy="130" r="58" stroke="#00F0FF" stroke-width="2.5" stroke-dasharray="18 8 4 8" />
+          <circle cx="130" cy="130" r="40" stroke="#FF0055" stroke-width="2" />
+        </svg>
+      </div>
+
+      <!-- 4. Piscina / Verano Ornaments (Vector Waves & Splashes) -->
+      <div class="fx-layer fx-piscina absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute bottom-0 left-0 w-full h-28 opacity-35" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,50 C200,110 400,-10 600,50 C800,110 1000,-10 1200,50 L1200,120 L0,120 Z" fill="#00E5FF" />
+          <path d="M0,75 C250,20 450,115 700,65 C950,15 1100,90 1200,70 L1200,120 L0,120 Z" fill="#0284C7" fill-opacity="0.45" />
+        </svg>
+      </div>
+
+      <!-- 5. Nieve / Invierno Ornaments (Lightning & Ice Fractals) -->
+      <div class="fx-layer fx-nieve absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute top-6 left-6 w-28 h-28 opacity-45" viewBox="0 0 120 120" fill="none" stroke="#BAE6FD" stroke-width="2">
+          <path d="M60 10 V110 M16 35 L104 85 M16 85 L104 35" />
+          <polygon points="60,32 84,46 84,74 60,88 36,74 36,46" stroke="#FFFFFF" stroke-width="1.5" />
+        </svg>
+        <svg class="absolute bottom-6 right-6 w-28 h-28 opacity-45" viewBox="0 0 120 120" fill="none" stroke="#BAE6FD" stroke-width="2">
+          <path d="M60 10 V110 M16 35 L104 85 M16 85 L104 35" />
+          <polygon points="60,32 84,46 84,74 60,88 36,74 36,46" stroke="#FFFFFF" stroke-width="1.5" />
+        </svg>
+      </div>
+
+      <!-- 6. Caramelos Ornaments (Rainbow Arc & Pot of Gold) -->
+      <div class="fx-layer fx-caramelos absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute -top-10 -left-10 w-56 h-56 opacity-35" viewBox="0 0 200 200" fill="none">
+          <circle cx="60" cy="60" r="110" stroke="#FF1493" stroke-width="8" />
+          <circle cx="60" cy="60" r="100" stroke="#F59E0B" stroke-width="8" />
+          <circle cx="60" cy="60" r="90" stroke="#00E5FF" stroke-width="8" />
+          <circle cx="60" cy="60" r="80" stroke="#8B5CF6" stroke-width="8" />
+        </svg>
+        <svg class="absolute bottom-5 right-6 w-24 h-24 opacity-80" viewBox="0 0 100 100" fill="none">
+          <circle cx="38" cy="36" r="9" fill="#FACC15" stroke="#B45309" stroke-width="2" />
+          <circle cx="52" cy="32" r="10" fill="#FDE047" stroke="#B45309" stroke-width="2" />
+          <circle cx="64" cy="37" r="9" fill="#FACC15" stroke="#B45309" stroke-width="2" />
+          <path d="M22 42 H78 C86 64, 78 88, 50 90 C22 88, 14 64, 22 42 Z" fill="#311042" stroke="#F59E0B" stroke-width="3" />
+        </svg>
+      </div>
+
+      <!-- 7. Aurora & Cosmos Ornaments -->
+      <div class="fx-layer fx-aurora absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute top-6 right-6 w-44 h-44 opacity-45" viewBox="0 0 160 160" fill="none">
+          <ellipse cx="80" cy="80" rx="68" ry="26" transform="rotate(-30 80 80)" stroke="#00FFAA" stroke-width="1.5" />
+          <ellipse cx="80" cy="80" rx="68" ry="26" transform="rotate(30 80 80)" stroke="#A855F7" stroke-width="1.5" stroke-dasharray="6 4" />
+          <circle cx="80" cy="80" r="8" fill="#00FFAA" />
+        </svg>
+      </div>
+
+      <!-- 8. Blueprint CAD Ornaments -->
+      <div class="fx-layer fx-blueprint absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-6 left-8 font-mono text-[10px] text-[#93C5FD]/75 tracking-widest">
+          CAD-REF: {assertionId.substring(0, 10).toUpperCase()} // ISO-A4
+        </div>
+        <div class="absolute top-6 right-8 font-mono text-[10px] text-[#93C5FD]/75 tracking-widest">
+          TOL: ±0.01mm // SCALE 1:1
+        </div>
+      </div>
+
+      <!-- 9. Antiguo (Greece & Egypt) Ornaments -->
+      <div class="fx-layer fx-antiguo absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute bottom-6 left-7 w-28 h-24 opacity-45" viewBox="0 0 120 100" fill="none">
+          <polygon points="10,90 60,15 110,90" fill="#D4AF37" fill-opacity="0.3" stroke="#92400E" stroke-width="2.5" />
+          <circle cx="60" cy="58" r="10" stroke="#1B365D" stroke-width="2" />
+        </svg>
+        <svg class="absolute bottom-6 right-7 w-28 h-24 opacity-45" viewBox="0 0 120 100" fill="none">
+          <polygon points="10,90 60,15 110,90" fill="#D4AF37" fill-opacity="0.3" stroke="#92400E" stroke-width="2.5" />
+          <circle cx="60" cy="58" r="10" stroke="#1B365D" stroke-width="2" />
+        </svg>
+      </div>
+
+      <!-- 10. Japón Tradicional & Dongba Ornaments -->
+      <div class="fx-layer fx-japon absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute top-6 left-7 w-24 h-24 opacity-50" viewBox="0 0 100 100" fill="none">
+          <path d="M10 24 Q50 14 90 24 L86 32 Q50 24 14 32 Z" fill="#C82829" />
+          <rect x="20" y="42" width="60" height="6" fill="#C82829" />
+          <rect x="28" y="28" width="7" height="64" fill="#C82829" />
+          <rect x="65" y="28" width="7" height="64" fill="#C82829" />
+        </svg>
+        <svg class="absolute top-6 right-7 w-20 h-20 opacity-45" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="36" fill="#C82829" fill-opacity="0.25" stroke="#C82829" stroke-width="2" />
+        </svg>
+      </div>
+
+      <!-- 11. Voynich & Stained Glass Ornaments -->
+      <div class="fx-layer fx-voynich absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute top-5 left-6 w-28 h-28 opacity-45" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="48" stroke="#F59E0B" stroke-width="2" />
+          <circle cx="60" cy="60" r="32" stroke="#F43F5E" stroke-width="1.5" stroke-dasharray="6 4" />
+          <path d="M60 12 V108 M12 60 H108" stroke="#F59E0B" stroke-width="1.5" />
+        </svg>
+        <svg class="absolute top-5 right-6 w-28 h-28 opacity-45" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="48" stroke="#F59E0B" stroke-width="2" />
+          <circle cx="60" cy="60" r="32" stroke="#34D399" stroke-width="1.5" stroke-dasharray="6 4" />
+          <path d="M60 12 V108 M12 60 H108" stroke="#F59E0B" stroke-width="1.5" />
+        </svg>
+      </div>
+
+      <!-- 12. Mixteca / Amazonia Ornaments -->
+      <div class="fx-layer fx-mixteca absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute top-6 left-7 w-28 h-28 opacity-55" viewBox="0 0 120 120" fill="none">
+          <path d="M10 60 H40 V25 H85 V50 H60" stroke="#F59E0B" stroke-width="4" />
+          <rect x="18" y="18" width="14" height="14" fill="#00A86B" />
+        </svg>
+        <svg class="absolute top-6 right-7 w-28 h-28 opacity-55" viewBox="0 0 120 120" fill="none">
+          <path d="M110 60 H80 V25 H35 V50 H60" stroke="#F59E0B" stroke-width="4" />
+          <rect x="88" y="18" width="14" height="14" fill="#00A86B" />
+        </svg>
+      </div>
+
+      <!-- Marca de agua central institucional con el logo de la ETSI UHU -->
+      <div class="diploma-watermark absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.05]">
+        <div class="w-80 h-80 sm:w-96 sm:h-96 rounded-full overflow-hidden border-4 border-current p-2">
+          <img
+            src={logoUrl}
+            alt=""
+            loading="eager"
+            decoding="sync"
+            class="w-full h-full object-cover rounded-full grayscale contrast-125"
+          />
+        </div>
+      </div>
+
+      <!-- CAPA DE CONTENIDO DEL DIPLOMA -->
+      <div class="relative z-10 w-full flex flex-col items-center flex-1 justify-between">
+        <!-- Cabecera de Logos (GDG on Campus UHU + Insignia del Evento) -->
+        <div class="print-header-block flex flex-col items-center w-full">
+          <div class="print-logos-row flex items-center justify-center gap-4 sm:gap-6 mb-4">
+            <div class="flex items-center gap-3">
+              <img
+                src={logoUrl}
+                alt="GDG on Campus Universidad de Huelva"
+                loading="eager"
+                decoding="sync"
+                class="h-12 w-12 sm:h-14 sm:w-14 rounded-xl object-cover border theme-border bg-white shadow-sm"
+              />
+              <div class="text-left">
+                <div class="font-bold text-sm sm:text-base theme-text-primary leading-tight">
+                  GDG on Campus
+                </div>
+                <div class="text-xs font-semibold theme-accent-text">
+                  Universidad de Huelva
+                </div>
+              </div>
+            </div>
+
+            <div class="h-10 border-l-2 theme-border"></div>
+
+            <img
+              src={badgeImageUrl}
+              alt={badge.data.name}
+              loading="eager"
+              decoding="sync"
+              class="h-12 w-12 sm:h-14 sm:w-14 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300"
+            />
+          </div>
+
+          <!-- Rol o Reconocimiento -->
+          <div class="theme-badge-pill inline-flex items-center justify-center text-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider leading-none mb-2">
+            {assertion.data.role.trim()}
+          </div>
+
+          <h1 class="print-badge-title font-display text-xl sm:text-3xl font-bold theme-text-primary uppercase tracking-[0.06em] mt-1">
+            {badge.data.name}
+          </h1>
+
+          <div class="diploma-issue-date text-xs sm:text-sm font-semibold theme-accent-text mt-1.5 tracking-wider">
+            Emitido el {issueDate}
+          </div>
+        </div>
+
+        <!-- Bloque Central: Destinatario y Mérito -->
+        <div class="print-body-block my-5 sm:my-7 w-full flex flex-col items-center">
+          <p class="text-sm sm:text-base theme-text-secondary italic mb-2.5">
+            Este certificado digital se otorga a
+          </p>
+
+          <div class="print-recipient-box relative inline-block px-4 sm:px-10 pb-3 mb-4 border-b-2 theme-border min-w-[260px] sm:min-w-[420px]">
+            <h2 class="diploma-recipient-name font-display text-3xl sm:text-5xl font-bold tracking-tight leading-tight">
+              {assertion.data.recipient.name}
+            </h2>
+            <svg
+              class="diploma-underline-accent absolute -bottom-[3px] left-0 right-0 mx-auto w-36 h-1.5 rounded-full overflow-hidden"
+              viewBox="0 0 128 4"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <rect x="0" y="0" width="32" height="4" fill="#4285F4" />
+              <rect x="32" y="0" width="32" height="4" fill="#EA4335" />
+              <rect x="64" y="0" width="32" height="4" fill="#FBBC04" />
+              <rect x="96" y="0" width="32" height="4" fill="#34A853" />
+            </svg>
+          </div>
+
+          <!-- Descripción y Criterios -->
+          <p class="print-desc text-sm sm:text-[15px] theme-text-primary opacity-95 max-w-2xl leading-relaxed">
+            {badge.data.description}
+          </p>
+          {badge.data.criteria?.narrative && (
+            <p class="print-narrative text-xs sm:text-sm theme-text-secondary max-w-xl leading-relaxed mt-1.5">
+              {badge.data.criteria.narrative}
+            </p>
+          )}
+
+          <!-- Caja de Metadatos -->
+          <div class="diploma-meta-box mt-5 w-full max-w-2xl rounded-2xl p-3.5 sm:p-4 grid grid-cols-3 gap-3 sm:gap-4 text-center transition-all duration-500">
+            <div class="flex flex-col gap-0.5">
+              <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider theme-text-secondary">Rol Acreditado</span>
+              <span class="text-xs sm:text-sm font-bold theme-text-primary">{assertion.data.role}</span>
+            </div>
+            <div class="flex flex-col gap-0.5 border-x-2 theme-border px-2">
+              <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider theme-text-secondary">Entidad Emisora</span>
+              <span class="text-xs sm:text-sm font-bold theme-text-primary">GDG on Campus UHU</span>
+            </div>
+            <div class="flex flex-col gap-0.5">
+              <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider theme-text-secondary">Estándar</span>
+              <span class="text-xs sm:text-sm font-bold text-[#34A853] flex items-center justify-center gap-1">
+                <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span>Open Badges 2.0</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Tags de Competencias -->
+          {badge.data.tags && badge.data.tags.length > 0 && (
+            <div class="print-tags mt-4 w-full flex flex-wrap items-center justify-center gap-2">
+              {badge.data.tags.map((tag: string) => (
+                <span class="theme-badge-pill inline-flex items-center justify-center text-center text-[11px] leading-none px-3.5 py-1.5 rounded-full font-semibold">
+                  {`#${tag.trim()}`}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- Pie del Diploma: Bloques de Sello y Firma Institucional -->
+        <div class="print-footer-block w-full pt-4 sm:pt-5 mt-2 flex flex-row items-center justify-between gap-2 sm:gap-4 border-t-2 theme-border">
+          <div class="print-footer-left flex-1 flex flex-col items-center text-center min-w-0">
+            <div class="print-footer-org text-[10px] sm:text-xs font-bold theme-accent-text tracking-wider uppercase mb-1 whitespace-nowrap">
+              <span class="print-inline block sm:inline">GDG on</span> <span class="text-theme-accent">Campus</span>
+            </div>
+            <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border mb-1.5 mx-auto"></div>
+            <div class="print-footer-title text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">Universidad de Huelva</div>
+            <div class="print-footer-subtitle text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">
+              <span class="footer-lbl-mobile">Desarrolladores</span><span class="footer-lbl-desktop">Comunidad de Desarrolladores</span>
+            </div>
+          </div>
+
+          <!-- Sello Central: Código QR Vectorial de Verificación -->
+          <div class="flex items-center justify-center shrink-0 px-1 sm:px-4">
+            <div
+              class="print-qr-container p-1 sm:p-1.5 rounded-xl border-2 theme-border bg-white shrink-0 shadow-sm"
+              title={`Escanea para verificar: ${certUrl}`}
+            >
+              <svg
+                class="print-qr-svg w-[54px] h-[54px] sm:w-[64px] sm:h-[64px] block"
+                viewBox={`-1 -1 ${qr.size + 2} ${qr.size + 2}`}
+                shape-rendering="crispEdges"
+                aria-label="Código QR de verificación del certificado"
+              >
+                <rect x="-1" y="-1" width={qr.size + 2} height={qr.size + 2} fill="#FFFFFF" />
+                <path d={qr.path} fill="#111827" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="print-footer-right flex-1 flex flex-col items-center text-center min-w-0">
+            <div class="print-assertion-id font-mono text-[9px] sm:text-xs font-semibold theme-text-secondary select-all max-w-[85px] sm:max-w-none truncate sm:whitespace-nowrap mb-1">
+              {assertionId}
+            </div>
+            <div class="print-footer-line w-16 sm:w-44 border-t-2 theme-border mb-1.5 mx-auto"></div>
+            <div class="print-footer-title text-[9px] sm:text-xs font-bold theme-text-primary leading-tight whitespace-nowrap">
+              <span class="footer-lbl-mobile">ID Criptográfico</span><span class="footer-lbl-desktop">Credencial Criptográfica</span>
+            </div>
+            <div class="print-footer-subtitle text-[8px] sm:text-[11px] theme-text-secondary leading-tight whitespace-nowrap">Verificación SHA-256</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de Acciones Inferior (Preserves 100% of Original Buttons) -->
+  <div class="no-print mt-7 flex flex-wrap items-center justify-center gap-3">
+    <button
+      type="button"
+      onclick="window.dispatchEvent(new CustomEvent('open-badge-modal'))"
+      class="theme-primary-btn px-5 py-2.5 rounded-full text-white font-bold text-sm transition-all flex items-center gap-2 cursor-pointer"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      <span>Añadir a tu cartera</span>
+    </button>
+
+    <a
+      href={linkedinUrl.toString()}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="theme-pill-btn px-5 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-2"
+    >
+      <svg class="w-4 h-4 text-[#0A66C2] fill-current" viewBox="0 0 24 24">
+        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45c-.9 0-1.63.73-1.63 1.63 0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63 0-.9-.73-1.63-1.63-1.63Z" />
+      </svg>
+      <span>Añadir a LinkedIn</span>
+    </a>
+
+    <!-- Descarga directa en PDF A4 Horizontal (en cualquiera de los 12 estilos activos) -->
+    <button
+      type="button"
+      id="download-pdf-rework-btn"
+      data-pdf-payload={JSON.stringify(pdfPayload)}
+      class="theme-pill-btn px-5 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+    >
+      <svg class="w-4 h-4 opacity-85" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <span id="download-pdf-rework-label">Descargar PDF</span>
+    </button>
+
+    {hasEvidence && (
+      <a
+        href={assertion.data.evidence.trim()}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="theme-pill-btn px-5 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-1.5"
+      >
+        <span>Ver Evidencia / Proyecto ↗</span>
+      </a>
+    )}
+  </div>
+</div>
+
+<script>
+  import {
+    downloadCertificatePdfRework,
+    preloadCertificateAssets,
+    type CertificatePdfData,
+  } from '@/utils/pdfDownloadRework';
+
+  const downloadBtn = document.getElementById('download-pdf-rework-btn') as HTMLButtonElement | null;
+  const labelEl = document.getElementById('download-pdf-rework-label');
+  const tiltBtn = document.getElementById('toggle-3d-tilt-btn');
+  const tiltLabel = document.getElementById('toggle-3d-tilt-label');
+  const diplomaCard = document.getElementById('diploma-tilt-card');
+
+  tiltBtn?.addEventListener('click', () => {
+    if (!diplomaCard) return;
+    const isDisabled = diplomaCard.dataset.tiltDisabled === 'true';
+    if (isDisabled) {
+      diplomaCard.dataset.tiltDisabled = 'false';
+      if (tiltLabel) tiltLabel.textContent = '3D Interactivo: ON';
+    } else {
+      diplomaCard.dataset.tiltDisabled = 'true';
+      diplomaCard.style.transform = '';
+      if (tiltLabel) tiltLabel.textContent = '3D Interactivo: OFF';
+    }
+  });
+
+  if (downloadBtn) {
+    const rawPayload = downloadBtn.getAttribute('data-pdf-payload');
+    if (rawPayload) {
+      try {
+        const parsedPayload: CertificatePdfData = JSON.parse(rawPayload);
+        if (parsedPayload) preloadCertificateAssets(parsedPayload);
+      } catch {
+        // Ignore
+      }
+    }
+
+    downloadBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const raw = downloadBtn.getAttribute('data-pdf-payload');
+      if (!raw) return;
+
+      const originalLabel = labelEl?.textContent || 'Descargar PDF';
+      downloadBtn.disabled = true;
+      if (labelEl) labelEl.textContent = 'Generando PDF...';
+
+      try {
+        const payload: CertificatePdfData = JSON.parse(raw);
+        const activeTheme =
+          document.documentElement.getAttribute('data-theme') || payload.style || 'google';
+        await downloadCertificatePdfRework(payload, activeTheme);
+      } catch (err) {
+        console.error('Error al generar el PDF del certificado:', err);
+      } finally {
+        downloadBtn.disabled = false;
+        if (labelEl) labelEl.textContent = originalLabel;
+      }
+    });
+  }
+</script>
+
+<style is:global>
+  .diploma-outer {
+    padding: 6px !important;
+  }
+  .footer-lbl-mobile { display: inline; }
+  .footer-lbl-desktop { display: none; }
+  @media (min-width: 640px) {
+    .footer-lbl-mobile { display: none; }
+    .footer-lbl-desktop { display: inline; }
+  }
+
+  /* 1. Google Mesh Diploma */
+  html[data-theme="google"] .diploma-outer {
+    background: linear-gradient(135deg, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%);
+    box-shadow: 0 20px 55px rgba(66, 133, 244, 0.18);
+  }
+  html[data-theme="google"] .diploma-inner { background: #FFFFFF; }
+  html[data-theme="google"] .diploma-frame-1 { border: 2px solid #DADCE0; }
+  html[data-theme="google"] .diploma-frame-2 { border: 1.5px dashed #AECBFA; }
+  html[data-theme="google"] .diploma-recipient-name { color: #202124; }
+  html[data-theme="google"] .diploma-meta-box { background: #F8F9FA; border: 2px solid #DADCE0; }
+
+  /* 2. Hardware PCB Diploma */
+  html[data-theme="hardware"] .diploma-outer,
+  html[data-theme="cyber"] .diploma-outer {
+    background: linear-gradient(135deg, #00E676, #D4AF37, #00BFA5, #FFD54F);
+    box-shadow: 0 0 50px rgba(0, 230, 118, 0.3), 0 0 80px rgba(212, 175, 55, 0.2);
+  }
+  html[data-theme="hardware"] .diploma-inner,
+  html[data-theme="cyber"] .diploma-inner {
+    background: linear-gradient(180deg, #04160E 0%, #072316 100%);
+  }
+  html[data-theme="hardware"] .diploma-frame-1,
+  html[data-theme="cyber"] .diploma-frame-1 { border: 2px solid rgba(212, 175, 55, 0.55); }
+  html[data-theme="hardware"] .diploma-frame-2,
+  html[data-theme="cyber"] .diploma-frame-2 { border: 1.5px dashed rgba(0, 230, 118, 0.45); }
+  html[data-theme="hardware"] .diploma-recipient-name,
+  html[data-theme="cyber"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #00E676, #FFD54F, #00BFA5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="hardware"] .diploma-issue-date,
+  html[data-theme="cyber"] .diploma-issue-date {
+    color: #FFD54F !important;
+    -webkit-text-fill-color: #FFD54F !important;
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.65);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  html[data-theme="hardware"] .diploma-meta-box,
+  html[data-theme="cyber"] .diploma-meta-box {
+    background: rgba(6, 36, 22, 0.9);
+    border: 2px solid rgba(212, 175, 55, 0.5);
+  }
+
+  /* 3. Cyberpunk Edgerunners Diploma */
+  html[data-theme="cyberpunk"] .diploma-outer {
+    background: linear-gradient(135deg, #FCEE0A 0%, #FF0055 50%, #00F0FF 100%);
+    box-shadow: 8px 8px 0px #FF0055, -6px -6px 0px #00F0FF, 0 0 50px rgba(252, 238, 10, 0.35);
+  }
+  html[data-theme="cyberpunk"] .diploma-inner {
+    background: linear-gradient(180deg, #07040E 0%, #120824 100%);
+  }
+  html[data-theme="cyberpunk"] .diploma-frame-1 { border: 2px solid #FCEE0A; }
+  html[data-theme="cyberpunk"] .diploma-frame-2 { border: 1.5px dashed #FF0055; }
+  html[data-theme="cyberpunk"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #FCEE0A, #FF0055, #00F0FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(3px 0 rgba(255, 0, 85, 0.45));
+  }
+  html[data-theme="cyberpunk"] .diploma-issue-date {
+    color: #FCEE0A !important;
+    -webkit-text-fill-color: #FCEE0A !important;
+    text-shadow: 2px 0 #FF0055, -2px 0 #00F0FF;
+    font-family: 'Orbitron', monospace;
+  }
+  html[data-theme="cyberpunk"] .diploma-meta-box {
+    background: rgba(18, 9, 34, 0.92);
+    border: 2px solid #FF0055;
+    box-shadow: 4px 4px 0px #FCEE0A;
+  }
+
+  /* 4. Piscina / Verano Diploma */
+  html[data-theme="piscina"] .diploma-outer {
+    background: linear-gradient(135deg, #00F2FE, #4FACFE, #00E5FF, #0284C7);
+    box-shadow: 0 22px 55px rgba(2, 132, 199, 0.4);
+  }
+  html[data-theme="piscina"] .diploma-inner {
+    background: linear-gradient(180deg, #FFFFFF 0%, #E0F7FA 100%);
+  }
+  html[data-theme="piscina"] .diploma-frame-1 { border: 2px solid rgba(0, 188, 212, 0.55); }
+  html[data-theme="piscina"] .diploma-frame-2 { border: 1.5px dashed rgba(2, 132, 199, 0.4); }
+  html[data-theme="piscina"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #0284C7, #00B4DB, #0D9488);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="piscina"] .diploma-meta-box {
+    background: rgba(255, 255, 255, 0.88);
+    border: 2px solid rgba(0, 188, 212, 0.5);
+  }
+
+  /* 5. Nieve / Invierno Diploma */
+  html[data-theme="nieve"] .diploma-outer {
+    background: linear-gradient(135deg, #FFFFFF, #7DD3FC, #38BDF8, #818CF8);
+    box-shadow: 0 20px 60px rgba(2, 132, 199, 0.5), 0 0 38px rgba(224, 242, 254, 0.45);
+  }
+  html[data-theme="nieve"] .diploma-inner {
+    background: linear-gradient(180deg, #061326 0%, #0E2749 100%);
+  }
+  html[data-theme="nieve"] .diploma-frame-1 { border: 2px solid rgba(224, 242, 254, 0.55); }
+  html[data-theme="nieve"] .diploma-frame-2 { border: 1.5px dashed rgba(125, 211, 252, 0.45); }
+  html[data-theme="nieve"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #E0F2FE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="nieve"] .diploma-meta-box {
+    background: rgba(12, 34, 62, 0.85);
+    border: 2px solid rgba(186, 230, 253, 0.5);
+  }
+
+  /* 6. Caramelos Diploma */
+  html[data-theme="caramelos"] .diploma-outer {
+    background: linear-gradient(135deg, #FF1493, #FF8C00, #FFD700, #00E676, #00E5FF, #8B5CF6);
+    box-shadow: 0 20px 50px rgba(236, 72, 153, 0.35);
+  }
+  html[data-theme="caramelos"] .diploma-inner {
+    background: linear-gradient(180deg, #FFFDF9 0%, #FFE4F2 100%);
+  }
+  html[data-theme="caramelos"] .diploma-frame-1 { border: 2px dashed #EC4899; }
+  html[data-theme="caramelos"] .diploma-frame-2 { border: 2px dotted #F59E0B; }
+  html[data-theme="caramelos"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #EC4899, #D97706, #8B5CF6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="caramelos"] .diploma-meta-box {
+    background: rgba(255, 240, 248, 0.88);
+    border: 2px solid #F472B6;
+  }
+
+  /* 7. Aurora & Cosmos Diploma */
+  html[data-theme="aurora"] .diploma-outer {
+    background: linear-gradient(135deg, #00FFAA, #38BDF8, #A855F7, #EC4899);
+    box-shadow: 0 0 55px rgba(0, 255, 170, 0.32), 0 0 85px rgba(168, 85, 247, 0.28);
+  }
+  html[data-theme="aurora"] .diploma-inner {
+    background: linear-gradient(180deg, #030614 0%, #09102C 100%);
+  }
+  html[data-theme="aurora"] .diploma-frame-1 { border: 2px solid rgba(0, 255, 170, 0.5); }
+  html[data-theme="aurora"] .diploma-frame-2 { border: 1.5px dashed rgba(168, 85, 247, 0.5); }
+  html[data-theme="aurora"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #00FFAA, #38BDF8, #C084FC);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="aurora"] .diploma-meta-box {
+    background: rgba(10, 16, 44, 0.88);
+    border: 2px solid rgba(0, 255, 170, 0.45);
+  }
+
+  /* 8. Blueprint CAD Diploma */
+  html[data-theme="blueprint"] .diploma-outer {
+    background: linear-gradient(135deg, #60A5FA, #EFF6FF, #2563EB);
+    box-shadow: 0 20px 55px rgba(7, 25, 62, 0.65);
+  }
+  html[data-theme="blueprint"] .diploma-inner {
+    background-color: #081E4A;
+    background-image:
+      linear-gradient(rgba(147, 197, 253, 0.14) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(147, 197, 253, 0.14) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  html[data-theme="blueprint"] .diploma-frame-1 { border: 2px solid #93C5FD; }
+  html[data-theme="blueprint"] .diploma-frame-2 { border: 1.5px dashed #60A5FA; }
+  html[data-theme="blueprint"] .diploma-recipient-name { color: #FFFFFF; }
+  html[data-theme="blueprint"] .diploma-meta-box {
+    background: rgba(7, 25, 62, 0.9);
+    border: 2px solid #60A5FA;
+  }
+
+  /* 9. Antiguo (Greece & Egypt) Diploma */
+  html[data-theme="antiguo"] .diploma-outer {
+    background: linear-gradient(135deg, #1B365D 0%, #D4AF37 35%, #9A3412 70%, #D4AF37 100%);
+    box-shadow: 0 20px 55px rgba(120, 72, 20, 0.28);
+  }
+  html[data-theme="antiguo"] .diploma-inner {
+    background: linear-gradient(180deg, #FAF5E8 0%, #EFE2C6 100%);
+  }
+  html[data-theme="antiguo"] .diploma-frame-1 { border: 2.5px solid #B45309; }
+  html[data-theme="antiguo"] .diploma-frame-2 { border: 1.5px dashed #1B365D; }
+  html[data-theme="antiguo"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #1B365D, #B45309, #78350F);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="antiguo"] .diploma-meta-box {
+    background: rgba(253, 248, 235, 0.9);
+    border: 2px solid #D4AF37;
+  }
+
+  /* 10. Japón Tradicional & Dongba Diploma */
+  html[data-theme="japon"] .diploma-outer {
+    background: linear-gradient(135deg, #C82829 0%, #D4AF37 50%, #1C1917 100%);
+    box-shadow: 0 20px 55px rgba(200, 40, 41, 0.22);
+  }
+  html[data-theme="japon"] .diploma-inner {
+    background: linear-gradient(180deg, #FDFBF7 0%, #F5ECE0 100%);
+  }
+  html[data-theme="japon"] .diploma-frame-1 { border: 2px solid #C82829; }
+  html[data-theme="japon"] .diploma-frame-2 { border: 1.5px dashed #D4AF37; }
+  html[data-theme="japon"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #1C1917, #C82829, #78350F);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="japon"] .diploma-meta-box {
+    background: rgba(255, 252, 247, 0.92);
+    border: 2px solid rgba(200, 40, 41, 0.45);
+  }
+
+  /* 11. Voynich & Vidrieras Glassmorphism Diploma */
+  html[data-theme="voynich"] .diploma-outer {
+    background: linear-gradient(135deg, #E11D48, #F59E0B, #10B981, #2563EB, #9333EA);
+    box-shadow: 0 20px 60px rgba(245, 158, 11, 0.3);
+  }
+  html[data-theme="voynich"] .diploma-inner {
+    background: linear-gradient(135deg, rgba(24, 13, 44, 0.92) 0%, rgba(15, 8, 28, 0.95) 100%);
+    backdrop-filter: blur(24px);
+  }
+  html[data-theme="voynich"] .diploma-frame-1 { border: 2px solid rgba(245, 158, 11, 0.65); }
+  html[data-theme="voynich"] .diploma-frame-2 { border: 1.5px dashed rgba(244, 63, 94, 0.5); }
+  html[data-theme="voynich"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #FBBF24, #F43F5E, #34D399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="voynich"] .diploma-meta-box {
+    background: rgba(30, 16, 53, 0.85);
+    border: 2px solid rgba(245, 158, 11, 0.55);
+  }
+
+  /* 12. Mixteca / Amazonia Precolombina Diploma */
+  html[data-theme="mixteca"] .diploma-outer {
+    background: linear-gradient(135deg, #00A86B, #F59E0B, #C41E3A, #2DD4BF);
+    box-shadow: 0 20px 55px rgba(0, 168, 107, 0.35);
+  }
+  html[data-theme="mixteca"] .diploma-inner {
+    background: linear-gradient(180deg, #061912 0%, #0D2E22 100%);
+  }
+  html[data-theme="mixteca"] .diploma-frame-1 { border: 2.5px solid #F59E0B; }
+  html[data-theme="mixteca"] .diploma-frame-2 { border: 1.5px dashed #00A86B; }
+  html[data-theme="mixteca"] .diploma-recipient-name {
+    background: linear-gradient(90deg, #34D399, #FBBF24, #2DD4BF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="mixteca"] .diploma-meta-box {
+    background: rgba(8, 32, 23, 0.9);
+    border: 2px solid #F59E0B;
+  }
+</style>

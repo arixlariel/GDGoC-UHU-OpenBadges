@@ -3,9 +3,17 @@ import { defineCollection, z } from 'astro:content';
 const styleEnum = z.enum([
   'google',
   'cyber',
+  'hardware',
+  'cyberpunk',
   'piscina',
   'nieve',
   'caramelos',
+  'aurora',
+  'blueprint',
+  'antiguo',
+  'japon',
+  'voynich',
+  'mixteca',
 ]);
 
 const badgesCollection = defineCollection({

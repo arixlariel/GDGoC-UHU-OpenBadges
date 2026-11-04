@@ -1,0 +1,388 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayoutRework from '@/layouts/BaseLayoutRework.astro';
+import { getAssetUrl } from '@/config/site';
+import { REWORK_THEMES, REWORK_STYLE_ORDER, normalizeReworkStyle } from '@/utils/reworkThemes';
+
+const badges = await getCollection('badges');
+const assertions = await getCollection('assertions');
+
+const styleRank: Record<string, number> = Object.fromEntries(
+  REWORK_STYLE_ORDER.map((k, idx) => [k, idx + 1])
+);
+
+const sortedAssertions = [...assertions].sort((a, b) => {
+  const badgeA = badges.find((bg) => bg.id.replace(/^.*\/|\.json$/g, '') === a.data.badgeId);
+  const badgeB = badges.find((bg) => bg.id.replace(/^.*\/|\.json$/g, '') === b.data.badgeId);
+  const styleA = normalizeReworkStyle(a.data.styleOverride || badgeA?.data.style || 'google');
+  const styleB = normalizeReworkStyle(b.data.styleOverride || badgeB?.data.style || 'google');
+  return (styleRank[styleA] || 99) - (styleRank[styleB] || 99);
+});
+---
+
+<BaseLayoutRework
+  title="Certificados Digitales · UI Rework | GDG on Campus Universidad de Huelva"
+  description="Acreditaciones oficiales en relación a los eventos tecnológicos que organiza el Google Developer Group on Campus de la Universidad de Huelva."
+  originalUrl={getAssetUrl('/')}
+>
+  <!-- Hero Section -->
+  <section class="theme-hero-section relative overflow-hidden pt-10 pb-14 sm:pt-16 sm:pb-20 backdrop-blur-xl transition-all duration-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <!-- Left Column: Title, Copy & Verification Search -->
+        <div class="lg:col-span-7 text-center lg:text-left">
+          <div class="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-5">
+            <div class="theme-badge-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-300">
+              <span class="flex gap-1">
+                <span class="w-2 h-2 rounded-full bg-[#4285F4] animate-pulse"></span>
+                <span class="w-2 h-2 rounded-full bg-[#EA4335] animate-pulse" style="animation-delay: 0.2s"></span>
+                <span class="w-2 h-2 rounded-full bg-[#FBBC04] animate-pulse" style="animation-delay: 0.4s"></span>
+                <span class="w-2 h-2 rounded-full bg-[#34A853] animate-pulse" style="animation-delay: 0.6s"></span>
+              </span>
+              <span>Open Badges 2.0</span>
+            </div>
+
+            <span class="theme-pill-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+              <span>Edición UI Rework · 12 Estilos</span>
+            </span>
+          </div>
+
+          <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold theme-text-primary tracking-tight leading-[1.08]">
+            Certificados Digitales
+          </h1>
+          <p class="mt-2.5 font-display text-lg sm:text-2xl font-bold theme-accent-text">
+            GDG on Campus Universidad de Huelva
+          </p>
+
+          <p class="mt-4 text-sm sm:text-base theme-text-secondary max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Acreditaciones oficiales en relación a los eventos tecnológicos que organiza el Google Developer Group on Campus de la Universidad de Huelva
+          </p>
+
+          <!-- Search / Verify ID Box -->
+          <div class="mt-7 max-w-lg mx-auto lg:mx-0">
+            <form
+              onsubmit={`event.preventDefault(); const val = document.getElementById("search-cert-id").value.trim(); if(val) window.location.href = "${getAssetUrl("/ui_rework/cert/")}" + encodeURIComponent(val);`}
+              class="theme-search-box flex items-center gap-2 p-2 rounded-full transition-all duration-300"
+            >
+              <svg class="w-5 h-5 theme-text-secondary ml-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                id="search-cert-id"
+                placeholder="Introduce el ID del certificado"
+                class="flex-1 bg-transparent text-xs sm:text-sm theme-text-primary placeholder:opacity-60 outline-none px-2 font-mono"
+                required
+              />
+              <button
+                type="submit"
+                class="theme-primary-btn px-5 py-2.5 rounded-full text-white font-bold text-xs sm:text-sm transition-all duration-300 shrink-0 cursor-pointer"
+              >
+                Verificar
+              </button>
+            </form>
+          </div>
+
+          <!-- Action Links: IMS Validator + Compare with Original -->
+          <div class="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs">
+            <a
+              href="https://openbadgesvalidator.imsglobal.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="theme-pill-btn inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all duration-300"
+            >
+              <svg class="w-4 h-4 text-[#34A853]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Validador IMS Global</span>
+            </a>
+
+            <a
+              href={getAssetUrl('/')}
+              class="theme-pill-btn inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all duration-300"
+            >
+              <span>⇄ Comparar con Versión Original</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive 3D Campus ETSI UHU Card -->
+        <div class="lg:col-span-5">
+          <div
+            data-tilt-max="6"
+            class="tilt-card theme-card relative mx-auto max-w-sm lg:max-w-none rounded-3xl overflow-hidden p-3.5 group"
+          >
+            <div class="tilt-glare absolute inset-0 pointer-events-none z-20"></div>
+            <div class="overflow-hidden rounded-2xl border theme-border relative">
+              <img
+                src={getAssetUrl('/images/gdgoc-uhu-logo.jpg')}
+                alt="Escuela Técnica Superior de Ingeniería - GDG on Campus Universidad de Huelva"
+                class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-black/65 backdrop-blur-md text-white text-[11px] font-bold flex items-center gap-1.5 border border-white/20">
+                <span class="w-2 h-2 rounded-full bg-[#34A853] animate-ping"></span>
+                <span>Sede Oficial</span>
+              </div>
+            </div>
+            <div class="pt-3.5 px-2 pb-1 flex items-center justify-between text-xs theme-text-secondary">
+              <span class="font-bold theme-text-primary">ETSI · Universidad de Huelva</span>
+              <span class="font-mono text-[11px] opacity-80">SHA-256 · JSON-LD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive 12-Universe Showcase Strip -->
+      <div class="mt-12 pt-8 border-t theme-border">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider theme-text-primary">
+              Explora los 12 Universos Estéticos
+            </span>
+            <span class="text-[11px] theme-text-secondary hidden sm:inline">
+              · Haz clic en cualquiera para transformar toda la interfaz en vivo
+            </span>
+          </div>
+          <span class="text-[11px] font-mono theme-accent-text font-bold">
+            12 / 12 Temas Activos
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
+          {REWORK_STYLE_ORDER.map((key) => {
+            const item = REWORK_THEMES[key];
+            return (
+              <button
+                type="button"
+                data-set-theme={key}
+                class="theme-card p-2.5 rounded-2xl flex items-center gap-2.5 text-left cursor-pointer group/u transition-all hover:-translate-y-1"
+              >
+                <div
+                  class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-xs border border-white/20"
+                  style={`background: ${item.bgPreview};`}
+                >
+                  <div class="w-5 h-5 rounded-md bg-slate-950/75 flex items-center justify-center text-white" set:html={item.svgIcon}></div>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="text-xs font-bold truncate theme-text-primary">{item.shortLabel}</div>
+                  <div class="text-[10px] truncate theme-text-secondary opacity-80">{item.label}</div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certificados Emitidos Recientes -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-14 relative z-10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <h2 class="font-display text-2xl sm:text-3xl font-extrabold theme-text-primary">
+          Certificados Digitales Emitidos
+        </h2>
+        <p class="text-sm theme-text-secondary mt-1">
+          Explora algunos de los certificados digitales que hemos emitido o fíltralos en tiempo real
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5">
+        <!-- Quick Filter Input -->
+        <div class="theme-search-box flex items-center gap-1.5 px-3 py-1.5 rounded-full">
+          <svg class="w-3.5 h-3.5 theme-text-secondary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            id="live-filter-certs"
+            placeholder="Filtrar por nombre o evento..."
+            class="bg-transparent text-xs theme-text-primary placeholder:opacity-60 outline-none w-40 sm:w-48"
+          />
+        </div>
+
+        <button
+          type="button"
+          id="shuffle-certs-btn"
+          class="theme-pill-btn inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-full cursor-pointer"
+          title="Mostrar otra selección aleatoria de certificados"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Barajar</span>
+        </button>
+
+        <span class="theme-badge-pill inline-flex items-center gap-2 text-xs font-bold px-3.5 py-2 rounded-full">
+          <span class="w-2 h-2 rounded-full bg-[#34A853] animate-ping"></span>
+          {sortedAssertions.length} {sortedAssertions.length === 1 ? 'credencial activa' : 'credenciales activas'}
+        </span>
+      </div>
+    </div>
+
+    <div id="cert-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {sortedAssertions.map((assertion) => {
+        const id = assertion.id.replace(/^.*\/|\.json$/g, '');
+        const badge = badges.find((b) => b.id.replace(/^.*\/|\.json$/g, '') === assertion.data.badgeId);
+        const rawStyle = assertion.data.styleOverride || badge?.data.style || 'google';
+        const styleKey = normalizeReworkStyle(rawStyle);
+        const meta = REWORK_THEMES[styleKey] || REWORK_THEMES.google;
+        const searchIndex = `${assertion.data.recipient.name} ${badge?.data.name || ''} ${id} ${meta.label}`.toLowerCase();
+
+        return (
+          <a
+            href={getAssetUrl(`/ui_rework/cert/${id}`)}
+            data-search={searchIndex}
+            data-tilt-max="4"
+            class="cert-card-item tilt-card theme-card group relative overflow-hidden rounded-2xl p-5 block"
+          >
+            <div class="tilt-glare absolute inset-0 pointer-events-none z-20"></div>
+            <!-- Top accent bar per certificate style -->
+            <div
+              class="absolute top-0 left-0 right-0 h-1.5"
+              style={`background: ${meta.topBarGradient};`}
+            ></div>
+
+            <div class="flex items-center gap-4 pt-1 relative z-10">
+              <div class="w-16 h-16 shrink-0 p-2 rounded-2xl border theme-border bg-white/90 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-sm">
+                {badge && (
+                  <img src={getAssetUrl(badge.data.image)} alt={badge.data.name} class="w-full h-full object-contain" />
+                )}
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span class={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5 ${meta.pillClass}`}>
+                    <span class="w-3.5 h-3.5 flex items-center justify-center shrink-0" set:html={meta.svgIcon}></span>
+                    <span>{meta.shortLabel}</span>
+                  </span>
+                  <span class="text-[11px] theme-text-secondary font-mono truncate opacity-75">
+                    #{id.substring(0, 8)}
+                  </span>
+                </div>
+                <h3 class="font-display text-base font-bold truncate theme-text-primary">
+                  {badge?.data.name}
+                </h3>
+                <p class="text-xs mt-1 truncate theme-text-secondary">
+                  Otorgado a <strong class="theme-text-primary font-semibold">{assertion.data.recipient.name}</strong>
+                </p>
+                <div class="mt-2.5 text-xs font-bold theme-accent-text inline-flex items-center gap-1 group-hover:translate-x-1.5 transition-transform">
+                  <span>Abrir certificado</span>
+                  <span>→</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+    <script is:inline>
+      (function () {
+        const grid = document.getElementById('cert-cards-grid');
+        const filterInput = document.getElementById('live-filter-certs');
+        const shuffleBtn = document.getElementById('shuffle-certs-btn');
+        if (!grid) return;
+        const cards = Array.from(grid.querySelectorAll('.cert-card-item'));
+        if (cards.length === 0) return;
+
+        function shuffleAndShow() {
+          for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = cards[i];
+            cards[i] = cards[j];
+            cards[j] = temp;
+          }
+          const maxVisible = 6;
+          cards.forEach((card, index) => {
+            if (index < maxVisible) {
+              card.style.display = '';
+              grid.appendChild(card);
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+
+        shuffleAndShow();
+
+        shuffleBtn?.addEventListener('click', () => {
+          if (filterInput) filterInput.value = '';
+          shuffleAndShow();
+        });
+
+        filterInput?.addEventListener('input', (e) => {
+          const q = (e.target.value || '').trim().toLowerCase();
+          if (!q) {
+            shuffleAndShow();
+            return;
+          }
+          let shown = 0;
+          cards.forEach((card) => {
+            const hay = card.getAttribute('data-search') || '';
+            if (hay.includes(q) && shown < 12) {
+              card.style.display = '';
+              shown++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      })();
+    </script>
+  </section>
+
+  <!-- Características del Sistema -->
+  <section class="theme-hero-section border-t theme-border py-16 relative z-10 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-xl mx-auto mb-12 reveal-on-scroll">
+        <h2 class="font-display text-2xl sm:text-3xl font-extrabold theme-text-primary">
+          Estándar Open Badges 2.0
+        </h2>
+        <p class="text-sm theme-text-secondary mt-2">
+          Credenciales verificables con garantía criptográfica y portabilidad internacional
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-3xl reveal-on-scroll">
+          <div class="w-12 h-12 rounded-2xl bg-[#4285F4]/15 text-[#4285F4] flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="font-display text-base font-bold theme-text-primary mb-2">Autenticidad Verificable</h3>
+          <p class="text-xs theme-text-secondary leading-relaxed">
+            Cada certificado está respaldado por metadatos JSON-LD oficiales de GDG on Campus Universidad de Huelva, siguiendo la especificación de IMS Global
+          </p>
+        </div>
+
+        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-3xl reveal-on-scroll">
+          <div class="w-12 h-12 rounded-2xl bg-[#34A853]/15 text-[#34A853] flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 class="font-display text-base font-bold theme-text-primary mb-2">Privacidad Protegida</h3>
+          <p class="text-xs theme-text-secondary leading-relaxed">
+            El correo electrónico del titular se protege mediante un hash criptográfico SHA-256 con salt único, permitiendo validar la titularidad sin exponer datos personales
+          </p>
+        </div>
+
+        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-3xl reveal-on-scroll">
+          <div class="w-12 h-12 rounded-2xl bg-[#FBBC04]/20 text-[#F29900] flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 class="font-display text-base font-bold theme-text-primary mb-2">Integración con LinkedIn y PDF</h3>
+          <p class="text-xs theme-text-secondary leading-relaxed">
+            Descarga tu diploma en formato horizontal listo para imprimir en cualquiera de los 12 estilos o añádelo directamente a tu LinkedIn u otras carteras
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayoutRework>

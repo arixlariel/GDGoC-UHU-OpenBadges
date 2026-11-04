@@ -1,0 +1,3454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI Rework Studio · Generador Local de Badges y Certificados · GDGoC UHU</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Cinzel:wght@600;700;800&family=Shippori+Mincho:wght@600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-2: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --blue: #4285F4;
+      --red: #EA4335;
+      --yellow: #FBBC04;
+      --green: #34A853;
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(66, 133, 244, 0.10), transparent 36%),
+        radial-gradient(circle at 88% 12%, rgba(234, 67, 53, 0.08), transparent 36%),
+        radial-gradient(circle at 50% 90%, rgba(52, 168, 83, 0.08), transparent 40%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .google-strip {
+      height: 5px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: 100%;
+    }
+    .google-strip div:nth-child(1) { background: var(--blue); }
+    .google-strip div:nth-child(2) { background: var(--red); }
+    .google-strip div:nth-child(3) { background: var(--yellow); }
+    .google-strip div:nth-child(4) { background: var(--green); }
+
+    .app-header {
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+    .brand-title {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .brand-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    .mode-tabs {
+      display: flex;
+      background: var(--surface-2);
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      gap: 4px;
+    }
+    .mode-tab {
+      border: none;
+      background: transparent;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .mode-tab:hover { color: var(--text); }
+    .mode-tab.active {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(66, 133, 244, 0.35);
+    }
+
+    .history-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .history-btn {
+      border: 1.5px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .history-btn:hover:not(:disabled) {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: #fff;
+    }
+    .history-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .workspace {
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      flex: 1;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 1080px) {
+      .grid-2col { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035);
+    }
+    .panel-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .form-group { margin-bottom: 14px; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--surface-2);
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    input:focus:not([readonly]), select:focus, textarea:focus {
+      border-color: var(--blue);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.14);
+    }
+    input[readonly] {
+      background: #f1f5f9;
+      color: #475569;
+      cursor: default;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 68px;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    .combobox-wrap {
+      position: relative;
+      flex: 1;
+    }
+    .combobox-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .combobox-input-wrap input {
+      padding-right: 32px;
+    }
+    .combobox-toggle {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 6px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+    .combobox-toggle:hover {
+      color: var(--blue);
+      background: #eff6ff;
+    }
+    .combobox-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14);
+      max-height: 230px;
+      overflow-y: auto;
+      z-index: 80;
+      display: none;
+    }
+    .combobox-menu.open {
+      display: block;
+    }
+    .combobox-option {
+      padding: 9px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: background 0.12s;
+    }
+    .combobox-option:last-child { border-bottom: none; }
+    .combobox-option:hover, .combobox-option.active {
+      background: #eff6ff;
+    }
+    .combobox-option-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .combobox-option-name {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .style-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+    @media (max-width: 560px) {
+      .style-selector {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .style-btn {
+      border: 1.5px solid var(--border);
+      background: var(--surface-2);
+      border-radius: 12px;
+      padding: 8px 6px;
+      cursor: pointer;
+      text-align: center;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    .style-btn-swatch {
+      width: 24px;
+      height: 5px;
+      border-radius: 99px;
+      margin-bottom: 1px;
+    }
+    .style-btn:hover {
+      border-color: #94a3b8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+    .style-btn.active {
+      border-color: var(--blue);
+      background: #e8f0fe;
+      color: #1967d2;
+      box-shadow: 0 4px 14px rgba(66, 133, 244, 0.22);
+    }
+
+    .dropzone {
+      border: 2px dashed #94a3b8;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--blue);
+      background: #eff6ff;
+    }
+    .dropzone-icon { font-size: 26px; margin-bottom: 4px; }
+    .dropzone-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4285F4, #1967D2);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(66, 133, 244, 0.45);
+    }
+    .btn-success {
+      background: linear-gradient(135deg, #34A853, #15803d);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(52, 168, 83, 0.3);
+    }
+    .btn-success:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(52, 168, 83, 0.45);
+    }
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: #f8fafc;
+    }
+    .btn-danger {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      padding: 6px 10px;
+      font-size: 11.5px;
+    }
+    .btn-danger:hover { background: #fee2e2; }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .cert-list-container {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    .cert-list-item {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cert-list-item:last-child { border-bottom: none; }
+    .cert-list-item:hover { background: #eff6ff; }
+    .cert-list-item.active {
+      background: #e8f0fe;
+      border-left: 4px solid var(--blue);
+    }
+    .cert-item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cert-item-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .pill-mini {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    .pill-edited {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .checkbox-row.disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
+    .checkbox-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--blue);
+      cursor: inherit;
+    }
+
+    .preview-tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .preview-tab {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .preview-tab.active {
+      background: #0f172a;
+      color: #fff;
+      border-color: #0f172a;
+    }
+
+    /* ==========================================================================
+       LIVE DIPLOMA PREVIEW REPLICA (12 Visual Styles · UI Rework v2.0)
+       ========================================================================== */
+    .diploma-preview-outer {
+      padding: 6px;
+      border-radius: 24px;
+      transition: all 0.35s ease;
+    }
+    .diploma-preview-inner {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 540px;
+      justify-content: space-between;
+      transition: all 0.35s ease;
+    }
+    .diploma-frame-1 {
+      position: absolute;
+      inset: 14px;
+      border-radius: 12px;
+      pointer-events: none;
+    }
+    .diploma-frame-2 {
+      position: absolute;
+      inset: 19px;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    /* 1. Google Material Mesh */
+    .diploma-theme-google .diploma-preview-outer {
+      background: linear-gradient(135deg, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%);
+      box-shadow: 0 14px 40px rgba(32, 33, 36, 0.12);
+    }
+    .diploma-theme-google .diploma-preview-inner { background: #FFFFFF; color: #202124; }
+    .diploma-theme-google .diploma-frame-1 { border: 2px solid #DADCE0; }
+    .diploma-theme-google .diploma-frame-2 { border: 1.5px dashed #E8EAED; }
+    .diploma-theme-google .dp-text-primary { color: #202124; }
+    .diploma-theme-google .dp-text-secondary { color: #5F6368; }
+    .diploma-theme-google .dp-accent { color: #1967D2; }
+    .diploma-theme-google .dp-border { border-color: #DADCE0; }
+    .diploma-theme-google .dp-pill { background: #E8F0FE; border: 1px solid #D2E3FC; color: #1967D2; }
+    .diploma-theme-google .dp-meta { background: #F8F9FA; border: 2px solid #DADCE0; }
+
+    /* 2. Hardware PCB (replaces cyber) */
+    .diploma-theme-hardware .diploma-preview-outer,
+    .diploma-theme-cyber .diploma-preview-outer {
+      background: linear-gradient(135deg, #00FF88, #FFB800, #10B981, #D97706);
+      box-shadow: 0 0 35px rgba(0, 255, 136, 0.28);
+    }
+    .diploma-theme-hardware .diploma-preview-inner,
+    .diploma-theme-cyber .diploma-preview-inner { background: #051611; color: #ECFDF5; font-family: 'Space Grotesk', sans-serif; }
+    .diploma-theme-hardware .diploma-frame-1,
+    .diploma-theme-cyber .diploma-frame-1 { border: 2px solid rgba(0, 255, 136, 0.5); }
+    .diploma-theme-hardware .diploma-frame-2,
+    .diploma-theme-cyber .diploma-frame-2 { border: 1.5px dashed rgba(255, 184, 0, 0.45); }
+    .diploma-theme-hardware .dp-text-primary,
+    .diploma-theme-cyber .dp-text-primary { color: #ECFDF5; }
+    .diploma-theme-hardware .dp-text-secondary,
+    .diploma-theme-cyber .dp-text-secondary { color: #6EE7B7; }
+    .diploma-theme-hardware .dp-accent,
+    .diploma-theme-cyber .dp-accent { color: #00FF88; font-family: 'JetBrains Mono', monospace; }
+    .diploma-theme-hardware .dp-border,
+    .diploma-theme-cyber .dp-border { border-color: rgba(0, 255, 136, 0.35); }
+    .diploma-theme-hardware .dp-pill,
+    .diploma-theme-cyber .dp-pill { background: rgba(0, 255, 136, 0.14); border: 1px solid #00FF88; color: #00FF88; }
+    .diploma-theme-hardware .dp-meta,
+    .diploma-theme-cyber .dp-meta { background: rgba(8, 28, 21, 0.92); border: 2px solid rgba(255, 184, 0, 0.45); }
+
+    /* 3. Cyberpunk Edgerunner */
+    .diploma-theme-cyberpunk .diploma-preview-outer {
+      background: linear-gradient(135deg, #FCEE0A, #FF0055, #00F0FF, #FCEE0A);
+      box-shadow: 0 0 40px rgba(255, 0, 85, 0.35);
+    }
+    .diploma-theme-cyberpunk .diploma-preview-inner { background: #070510; color: #FFFFFF; font-family: 'Orbitron', sans-serif; }
+    .diploma-theme-cyberpunk .diploma-frame-1 { border: 2px solid #FCEE0A; }
+    .diploma-theme-cyberpunk .diploma-frame-2 { border: 1.5px dashed #FF0055; }
+    .diploma-theme-cyberpunk .dp-text-primary { color: #FFFFFF; }
+    .diploma-theme-cyberpunk .dp-text-secondary { color: #00F0FF; }
+    .diploma-theme-cyberpunk .dp-accent { color: #FCEE0A; font-family: 'Orbitron', sans-serif; }
+    .diploma-theme-cyberpunk .dp-border { border-color: rgba(252, 238, 10, 0.45); }
+    .diploma-theme-cyberpunk .dp-pill { background: rgba(255, 0, 85, 0.2); border: 1.5px solid #FF0055; color: #FCEE0A; }
+    .diploma-theme-cyberpunk .dp-meta { background: rgba(14, 10, 28, 0.94); border: 2px solid #00F0FF; }
+
+    /* 4. Piscina / Ocean Swell */
+    .diploma-theme-piscina .diploma-preview-outer {
+      background: linear-gradient(135deg, #00F2FE, #4FACFE, #00E5FF, #0284C7);
+      box-shadow: 0 16px 40px rgba(2, 132, 199, 0.3);
+    }
+    .diploma-theme-piscina .diploma-preview-inner { background: linear-gradient(180deg, #FFFFFF 0%, #E0F7FA 100%); color: #002B3D; }
+    .diploma-theme-piscina .diploma-frame-1 { border: 2px solid rgba(0, 188, 212, 0.55); }
+    .diploma-theme-piscina .diploma-frame-2 { border: 1.5px dashed rgba(2, 132, 199, 0.4); }
+    .diploma-theme-piscina .dp-text-primary { color: #002B3D; }
+    .diploma-theme-piscina .dp-text-secondary { color: #00587A; }
+    .diploma-theme-piscina .dp-accent { color: #0284C7; }
+    .diploma-theme-piscina .dp-border { border-color: rgba(0, 188, 212, 0.5); }
+    .diploma-theme-piscina .dp-pill { background: rgba(224, 247, 250, 0.92); border: 2px solid #00BCD4; color: #006064; }
+    .diploma-theme-piscina .dp-meta { background: rgba(255, 255, 255, 0.88); border: 2px solid rgba(0, 188, 212, 0.5); }
+
+    /* 5. Nieve / Tormenta Invernal */
+    .diploma-theme-nieve .diploma-preview-outer {
+      background: linear-gradient(135deg, #FFFFFF, #7DD3FC, #38BDF8, #BAE6FD);
+      box-shadow: 0 16px 45px rgba(2, 132, 199, 0.4);
+    }
+    .diploma-theme-nieve .diploma-preview-inner { background: linear-gradient(180deg, #06101F 0%, #0D223D 100%); color: #F0F9FF; }
+    .diploma-theme-nieve .diploma-frame-1 { border: 2px solid rgba(224, 242, 254, 0.55); }
+    .diploma-theme-nieve .diploma-frame-2 { border: 1.5px dashed rgba(125, 211, 252, 0.4); }
+    .diploma-theme-nieve .dp-text-primary { color: #F0F9FF; }
+    .diploma-theme-nieve .dp-text-secondary { color: #BAE6FD; }
+    .diploma-theme-nieve .dp-accent { color: #7DD3FC; }
+    .diploma-theme-nieve .dp-border { border-color: rgba(186, 230, 253, 0.45); }
+    .diploma-theme-nieve .dp-pill { background: rgba(224, 242, 254, 0.18); border: 1.5px solid rgba(255, 255, 255, 0.7); color: #FFFFFF; }
+    .diploma-theme-nieve .dp-meta { background: rgba(14, 36, 66, 0.85); border: 2px solid rgba(186, 230, 253, 0.5); }
+
+    /* 6. Caramelos / Unicornio & Caldero de Oro */
+    .diploma-theme-caramelos .diploma-preview-outer {
+      background: linear-gradient(135deg, #FF1493, #FFB800, #38BDF8, #A855F7, #FF69B4);
+      box-shadow: 0 16px 40px rgba(255, 20, 147, 0.3);
+    }
+    .diploma-theme-caramelos .diploma-preview-inner {
+      font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #FFF9FC 0%, #FFE4F2 100%);
+      color: #880E4F;
+    }
+    .diploma-theme-caramelos .diploma-frame-1 { border: 2px dashed #FF4D94; }
+    .diploma-theme-caramelos .diploma-frame-2 { border: 1.5px dotted #FFB800; }
+    .diploma-theme-caramelos .dp-text-primary { color: #880E4F; }
+    .diploma-theme-caramelos .dp-text-secondary { color: #C2185B; }
+    .diploma-theme-caramelos .dp-accent { color: #D81B60; }
+    .diploma-theme-caramelos .dp-border { border-color: #FF85C0; }
+    .diploma-theme-caramelos .dp-pill { background: #FFE0F0; border: 2px solid #FF1493; color: #AD1457; }
+    .diploma-theme-caramelos .dp-meta { background: rgba(255, 224, 240, 0.85); border: 2px solid #FFB800; }
+
+    /* 7. Aurora Boreal & Espacio Profundo */
+    .diploma-theme-aurora .diploma-preview-outer {
+      background: linear-gradient(135deg, #2DD4BF, #A855F7, #38BDF8, #10B981);
+      box-shadow: 0 16px 45px rgba(45, 212, 191, 0.3);
+    }
+    .diploma-theme-aurora .diploma-preview-inner { background: linear-gradient(180deg, #030712 0%, #0B132B 100%); color: #F8FAFC; }
+    .diploma-theme-aurora .diploma-frame-1 { border: 2px solid rgba(45, 212, 191, 0.55); }
+    .diploma-theme-aurora .diploma-frame-2 { border: 1.5px dashed rgba(168, 85, 247, 0.45); }
+    .diploma-theme-aurora .dp-text-primary { color: #F8FAFC; }
+    .diploma-theme-aurora .dp-text-secondary { color: #99F6E4; }
+    .diploma-theme-aurora .dp-accent { color: #2DD4BF; }
+    .diploma-theme-aurora .dp-border { border-color: rgba(45, 212, 191, 0.4); }
+    .diploma-theme-aurora .dp-pill { background: rgba(45, 212, 191, 0.14); border: 1px solid #2DD4BF; color: #5EEAD4; }
+    .diploma-theme-aurora .dp-meta { background: rgba(9, 16, 36, 0.9); border: 2px solid rgba(168, 85, 247, 0.5); }
+
+    /* 8. Ingeniería & Blueprint CAD */
+    .diploma-theme-blueprint .diploma-preview-outer {
+      background: linear-gradient(135deg, #38BDF8, #FFFFFF, #0284C7, #F59E0B);
+      box-shadow: 0 16px 45px rgba(56, 189, 248, 0.3);
+    }
+    .diploma-theme-blueprint .diploma-preview-inner {
+      background-color: #07193E;
+      background-image:
+        linear-gradient(rgba(56, 189, 248, 0.14) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.14) 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: #F0F9FF;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .diploma-theme-blueprint .diploma-frame-1 { border: 2px solid rgba(255, 255, 255, 0.75); border-radius: 4px; }
+    .diploma-theme-blueprint .diploma-frame-2 { border: 1px dashed rgba(56, 189, 248, 0.65); border-radius: 2px; }
+    .diploma-theme-blueprint .dp-text-primary { color: #FFFFFF; }
+    .diploma-theme-blueprint .dp-text-secondary { color: #BAE6FD; }
+    .diploma-theme-blueprint .dp-accent { color: #38BDF8; }
+    .diploma-theme-blueprint .dp-border { border-color: rgba(255, 255, 255, 0.45); }
+    .diploma-theme-blueprint .dp-pill { background: rgba(56, 189, 248, 0.18); border: 1.5px solid #FFFFFF; color: #FFFFFF; }
+    .diploma-theme-blueprint .dp-meta { background: rgba(5, 18, 46, 0.92); border: 2px solid #38BDF8; border-radius: 6px; }
+
+    /* 9. Grecia & Egipto Antiguo */
+    .diploma-theme-antiguo .diploma-preview-outer {
+      background: linear-gradient(135deg, #D97706, #1D4ED8, #F59E0B, #0D9488);
+      box-shadow: 0 16px 40px rgba(180, 83, 9, 0.25);
+    }
+    .diploma-theme-antiguo .diploma-preview-inner {
+      background: linear-gradient(180deg, #FDFBF4 0%, #F5EED8 100%);
+      color: #1C1917;
+      font-family: 'Cinzel', serif;
+    }
+    .diploma-theme-antiguo .diploma-frame-1 { border: 2.5px solid #D97706; }
+    .diploma-theme-antiguo .diploma-frame-2 { border: 1.5px dashed #1D4ED8; }
+    .diploma-theme-antiguo .dp-text-primary { color: #1C1917; }
+    .diploma-theme-antiguo .dp-text-secondary { color: #57534E; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-antiguo .dp-accent { color: #B45309; }
+    .diploma-theme-antiguo .dp-border { border-color: #D97706; }
+    .diploma-theme-antiguo .dp-pill { background: #FEF3C7; border: 1.5px solid #D97706; color: #92400E; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-antiguo .dp-meta { background: rgba(254, 243, 199, 0.65); border: 2px solid #D97706; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* 10. Japón Tradicional & Arte Dongba */
+    .diploma-theme-japon .diploma-preview-outer {
+      background: linear-gradient(135deg, #DC2626, #F472B6, #1E293B, #D97706);
+      box-shadow: 0 16px 40px rgba(220, 38, 38, 0.22);
+    }
+    .diploma-theme-japon .diploma-preview-inner {
+      background: linear-gradient(180deg, #FCF9F2 0%, #F6EFE2 100%);
+      color: #1E1B18;
+      font-family: 'Shippori Mincho', serif;
+    }
+    .diploma-theme-japon .diploma-frame-1 { border: 2px solid #DC2626; }
+    .diploma-theme-japon .diploma-frame-2 { border: 1.5px dashed #D97706; }
+    .diploma-theme-japon .dp-text-primary { color: #1E1B18; }
+    .diploma-theme-japon .dp-text-secondary { color: #57534E; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-japon .dp-accent { color: #DC2626; }
+    .diploma-theme-japon .dp-border { border-color: rgba(220, 38, 38, 0.45); }
+    .diploma-theme-japon .dp-pill { background: #FEE2E2; border: 1.5px solid #DC2626; color: #991B1B; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-japon .dp-meta { background: rgba(255, 251, 245, 0.9); border: 2px solid #DC2626; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* 11. Códice Voynich & Vitral Gótico */
+    .diploma-theme-voynich .diploma-preview-outer {
+      background: linear-gradient(135deg, #F59E0B, #8B5CF6, #EC4899, #10B981);
+      box-shadow: 0 16px 45px rgba(139, 92, 246, 0.35);
+    }
+    .diploma-theme-voynich .diploma-preview-inner {
+      background: radial-gradient(circle at 50% 25%, #231838 0%, #0E0B18 100%);
+      color: #FEF3C7;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .diploma-theme-voynich .diploma-frame-1 { border: 2px solid rgba(245, 158, 11, 0.65); }
+    .diploma-theme-voynich .diploma-frame-2 { border: 1.5px dashed rgba(139, 92, 246, 0.55); }
+    .diploma-theme-voynich .dp-text-primary { color: #FEF3C7; }
+    .diploma-theme-voynich .dp-text-secondary { color: #DDD6FE; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-voynich .dp-accent { color: #FBBF24; }
+    .diploma-theme-voynich .dp-border { border-color: rgba(245, 158, 11, 0.45); }
+    .diploma-theme-voynich .dp-pill { background: rgba(245, 158, 11, 0.16); border: 1px solid #F59E0B; color: #FDE68A; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-voynich .dp-meta { background: rgba(22, 16, 42, 0.88); border: 2px solid rgba(245, 158, 11, 0.55); font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* 12. Amazonia Precolombina & Códice Mixteca */
+    .diploma-theme-mixteca .diploma-preview-outer {
+      background: linear-gradient(135deg, #10B981, #F59E0B, #EF4444, #06B6D4);
+      box-shadow: 0 16px 45px rgba(16, 185, 129, 0.3);
+    }
+    .diploma-theme-mixteca .diploma-preview-inner {
+      background: linear-gradient(180deg, #061A14 0%, #0B261E 100%);
+      color: #FEF3C7;
+      font-family: 'Syne', sans-serif;
+    }
+    .diploma-theme-mixteca .diploma-frame-1 { border: 2.5px solid #F59E0B; }
+    .diploma-theme-mixteca .diploma-frame-2 { border: 1.5px dashed #10B981; }
+    .diploma-theme-mixteca .dp-text-primary { color: #FEF3C7; }
+    .diploma-theme-mixteca .dp-text-secondary { color: #6EE7B7; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-mixteca .dp-accent { color: #FBBF24; }
+    .diploma-theme-mixteca .dp-border { border-color: rgba(245, 158, 11, 0.5); }
+    .diploma-theme-mixteca .dp-pill { background: rgba(16, 185, 129, 0.2); border: 1.5px solid #10B981; color: #A7F3D0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-mixteca .dp-meta { background: rgba(9, 34, 26, 0.92); border: 2px solid #F59E0B; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* Recipient Name Gradient Treatments */
+    .diploma-theme-hardware .dp-recipient-name,
+    .diploma-theme-cyber .dp-recipient-name {
+      background: linear-gradient(90deg, #00FF88, #FFB800, #34D399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-cyberpunk .dp-recipient-name {
+      background: linear-gradient(90deg, #FCEE0A, #FF0055, #00F0FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-piscina .dp-recipient-name {
+      background: linear-gradient(90deg, #0284C7, #00B4DB, #00897B);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-nieve .dp-recipient-name {
+      background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #BAE6FD);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-caramelos .dp-recipient-name {
+      background: linear-gradient(90deg, #D81B60, #FF1493, #FFB800);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-aurora .dp-recipient-name {
+      background: linear-gradient(90deg, #2DD4BF, #A855F7, #38BDF8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-blueprint .dp-recipient-name {
+      color: #FFFFFF;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+    }
+    .diploma-theme-antiguo .dp-recipient-name {
+      background: linear-gradient(90deg, #B45309, #1D4ED8, #D97706);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-japon .dp-recipient-name {
+      background: linear-gradient(90deg, #991B1B, #DC2626, #B45309);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-voynich .dp-recipient-name {
+      background: linear-gradient(90deg, #FDE68A, #C084FC, #F472B6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .diploma-theme-mixteca .dp-recipient-name {
+      background: linear-gradient(90deg, #34D399, #FBBF24, #F87171);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Date Treatments per Theme */
+    .dp-issue-date {
+      font-size: 12.5px;
+      font-weight: 700;
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+    .diploma-theme-google .dp-issue-date { color: #1967D2; }
+    .diploma-theme-hardware .dp-issue-date,
+    .diploma-theme-cyber .dp-issue-date {
+      color: #FFB800 !important;
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+    .diploma-theme-cyberpunk .dp-issue-date {
+      color: #00F0FF !important;
+      font-family: 'Orbitron', sans-serif !important;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+    }
+    .diploma-theme-piscina .dp-issue-date { color: #0284C7; }
+    .diploma-theme-nieve .dp-issue-date { color: #7DD3FC; }
+    .diploma-theme-caramelos .dp-issue-date { color: #D81B60; }
+    .diploma-theme-aurora .dp-issue-date { color: #2DD4BF; }
+    .diploma-theme-blueprint .dp-issue-date { color: #FBBF24; }
+    .diploma-theme-antiguo .dp-issue-date { color: #1D4ED8; }
+    .diploma-theme-japon .dp-issue-date { color: #DC2626; }
+    .diploma-theme-voynich .dp-issue-date { color: #FBBF24; }
+    .diploma-theme-mixteca .dp-issue-date { color: #34D399; }
+
+    /* Corner Ornaments Visibility */
+    .dp-ornament { display: none; }
+    .diploma-theme-google .dp-ornament-google { display: block; }
+    .diploma-theme-hardware .dp-ornament-hardware,
+    .diploma-theme-cyber .dp-ornament-hardware { display: block; }
+    .diploma-theme-cyberpunk .dp-ornament-cyberpunk { display: block; }
+    .diploma-theme-piscina .dp-ornament-piscina { display: block; }
+    .diploma-theme-nieve .dp-ornament-nieve { display: block; }
+    .diploma-theme-caramelos .dp-ornament-caramelos { display: block; }
+    .diploma-theme-aurora .dp-ornament-aurora { display: block; }
+    .diploma-theme-blueprint .dp-ornament-blueprint { display: block; }
+    .diploma-theme-antiguo .dp-ornament-antiguo { display: block; }
+    .diploma-theme-japon .dp-ornament-japon { display: block; }
+    .diploma-theme-voynich .dp-ornament-voynich { display: block; }
+    .diploma-theme-mixteca .dp-ornament-mixteca { display: block; }
+
+    .json-code-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 18px;
+      border-radius: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .toast.show { display: flex; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="google-strip"><div></div><div></div><div></div><div></div></div>
+
+  <header class="app-header">
+    <div class="brand">
+      <img src="./public/images/gdgoc-uhu-logo-rounded.png" onerror="this.src='https://gdguhu.es/images/gdgoc-uhu-logo.jpg'; this.onerror=null;" alt="GDGoC UHU" class="brand-logo" />
+      <div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="brand-title">GDG on Campus Universidad de Huelva</span>
+          <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; padding:2px 8px; border-radius:999px; background:#0f172a; color:#38bdf8;">UI Rework · 12 Estilos</span>
+        </div>
+        <div class="brand-sub">Estudio Local de Badges y Certificados Digitales</div>
+      </div>
+    </div>
+
+    <div class="mode-tabs" role="tablist">
+      <button type="button" class="mode-tab active" id="tab-mode-certs" onclick="switchMainMode('certs')">
+        Crear certificados
+      </button>
+      <button type="button" class="mode-tab" id="tab-mode-badge" onclick="switchMainMode('badge')">
+        Crear nueva badge
+      </button>
+    </div>
+
+    <div class="history-controls">
+      <a href="./generador-local.html" class="history-btn" style="text-decoration:none;" title="Comparar con el Generador Local Original (5 estilos)">
+        <span>⇄</span>
+        <span>Versión Original</span>
+      </a>
+      <button type="button" id="btn-undo" class="history-btn" onclick="performUndo()" disabled title="Deshacer (Ctrl+Z / Cmd+Z)">
+        <span>↶</span>
+        <span>Deshacer</span>
+      </button>
+      <button type="button" id="btn-redo" class="history-btn" onclick="performRedo()" disabled title="Rehacer (Ctrl+Shift+Z / Cmd+Shift+Z)">
+        <span>↷</span>
+        <span>Rehacer</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="workspace">
+
+    <!-- ======================================================================
+         MODO 1: CREAR CERTIFICADOS
+         ====================================================================== -->
+    <div id="view-mode-certs" class="grid-2col">
+      <!-- Columna Izquierda: Datos genéricos + Cargar asistentes -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- Datos genéricos -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>Datos genéricos</span>
+          </div>
+
+          <div class="form-group">
+            <label>ID de la badge</label>
+            <div style="display: flex; gap: 8px; align-items: stretch;">
+              <div class="combobox-wrap" id="badge-combobox-wrap">
+                <div class="combobox-input-wrap">
+                  <input
+                    type="text"
+                    id="gen-badge-id"
+                    class="mono"
+                    value=""
+                    placeholder="Selecciona o escribe un ID..."
+                    autocomplete="off"
+                    onfocus="openBadgeDropdownMenu()"
+                    oninput="onGenericBadgeInput(this.value)"
+                  />
+                  <button type="button" class="combobox-toggle" onclick="toggleBadgeDropdownMenu(event)" title="Ver badges disponibles">
+                    ▾
+                  </button>
+                </div>
+                <div id="badge-dropdown-menu" class="combobox-menu"></div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                style="margin:0; white-space: nowrap;"
+                onclick="openBadgeJsonPicker()"
+              >
+                📂 Cargar badge.json
+              </button>
+              <input type="file" id="fallback-badge-file-input" accept=".json,application/json" style="display:none" onchange="handleBadgeFileInput(event)" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rol o reconocimiento</label>
+              <input
+                type="text"
+                id="gen-default-role"
+                value="Asistente Certificado"
+                placeholder="ej: Asistente Certificado, Ponente..."
+                onfocus="saveHistorySnapshot()"
+                oninput="onGenericRoleChange(this.value)"
+              />
+            </div>
+            <div class="form-group">
+              <label>Enlace a evidencia <span style="font-weight: 400;">(opcional)</span></label>
+              <input
+                type="url"
+                id="gen-default-evidence"
+                value=""
+                placeholder="https://github.com/..."
+                onfocus="saveHistorySnapshot()"
+                oninput="onGenericEvidenceChange(this.value)"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Estilo visual (12 temas UI Rework)</label>
+            <div class="style-selector" id="certs-generic-style-selector">
+              <button type="button" class="style-btn active" data-style="google" onclick="onGenericStyleChange('google')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#4285F4,#EA4335,#FBBC04,#34A853)"></span><span>Google Mesh</span>
+              </button>
+              <button type="button" class="style-btn" data-style="hardware" onclick="onGenericStyleChange('hardware')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#00FF88,#FFB800)"></span><span>Hardware PCB</span>
+              </button>
+              <button type="button" class="style-btn" data-style="cyberpunk" onclick="onGenericStyleChange('cyberpunk')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#FCEE0A,#FF0055,#00F0FF)"></span><span>Cyberpunk</span>
+              </button>
+              <button type="button" class="style-btn" data-style="piscina" onclick="onGenericStyleChange('piscina')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#00E5FF,#0284C7)"></span><span>Verano</span>
+              </button>
+              <button type="button" class="style-btn" data-style="nieve" onclick="onGenericStyleChange('nieve')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#7DD3FC,#F8FAFC)"></span><span>Ventisca</span>
+              </button>
+              <button type="button" class="style-btn" data-style="caramelos" onclick="onGenericStyleChange('caramelos')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#FF1493,#FFB800,#A855F7)"></span><span>Caramelos</span>
+              </button>
+              <button type="button" class="style-btn" data-style="aurora" onclick="onGenericStyleChange('aurora')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#2DD4BF,#A855F7,#38BDF8)"></span><span>Aurora</span>
+              </button>
+              <button type="button" class="style-btn" data-style="blueprint" onclick="onGenericStyleChange('blueprint')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#07193E,#38BDF8)"></span><span>Blueprint</span>
+              </button>
+              <button type="button" class="style-btn" data-style="antiguo" onclick="onGenericStyleChange('antiguo')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#D97706,#1D4ED8)"></span><span>Grecia &amp; Egipto</span>
+              </button>
+              <button type="button" class="style-btn" data-style="japon" onclick="onGenericStyleChange('japon')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#DC2626,#F472B6)"></span><span>Japón &amp; Dongba</span>
+              </button>
+              <button type="button" class="style-btn" data-style="voynich" onclick="onGenericStyleChange('voynich')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#F59E0B,#8B5CF6,#EC4899)"></span><span>Voynich</span>
+              </button>
+              <button type="button" class="style-btn" data-style="mixteca" onclick="onGenericStyleChange('mixteca')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#10B981,#F59E0B,#EF4444)"></span><span>Mixteca</span>
+              </button>
+            </div>
+          </div>
+
+          <label class="checkbox-row disabled" id="checkin-checkbox-label">
+            <input type="checkbox" id="gen-only-checkedin" disabled onchange="reparseLastCsvIfAny()" />
+            <span>¿Solo emitir a check-ins?</span>
+          </label>
+
+          <label class="checkbox-row" style="margin-bottom:0;">
+            <input type="checkbox" id="gen-send-emails" checked onchange="renderCurrentSelection()" />
+            <span>Enviar correos automáticamente al hacer commit</span>
+          </label>
+        </div>
+
+        <!-- Cargar asistentes -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>Cargar asistentes</span>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addManualRecipient()">
+              + Añadir persona manualmente
+            </button>
+          </div>
+
+          <div
+            id="csv-dropzone"
+            class="dropzone"
+            onclick="document.getElementById('csv-file-input').click()"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDropCsv(event)"
+          >
+            <div class="dropzone-icon">📄</div>
+            <div class="dropzone-title" id="dropzone-title-text">Arrastra y suelta tu .csv o haz click aquí</div>
+            <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFileSelect(event)" />
+          </div>
+
+          <!-- Lista de certificados -->
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 8px; gap: 8px;">
+            <label style="margin:0;">
+              Certificados a generar (<span id="cert-count-badge">1</span>)
+            </label>
+            <div style="display:flex; gap:6px;">
+              <input
+                type="text"
+                id="cert-list-search"
+                placeholder="Buscar nombre, ID o correo..."
+                style="padding: 5px 10px; font-size: 12px; width: 185px;"
+                oninput="renderRecipientList()"
+              />
+              <button type="button" class="btn btn-danger" onclick="clearAllRecipients()">
+                Vaciar
+              </button>
+            </div>
+          </div>
+
+          <div id="cert-list-box" class="cert-list-container"></div>
+
+          <!-- Botón Único de Descarga de Archivo Publish -->
+          <div class="action-bar">
+            <button type="button" class="btn btn-success" style="width:100%; padding: 12px;" onclick="downloadPublishFolderUncompressed()">
+              Descargar publish.json
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Personalizar certificado + Vista Previa -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- Personalizar certificado -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>Personalizar certificado</span>
+            <button type="button" class="btn btn-danger" onclick="deleteSelectedRecipient()">
+              Eliminar este certificado
+            </button>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <input
+                type="text"
+                id="indiv-name"
+                onfocus="saveHistorySnapshot()"
+                oninput="updateSelectedRecipientFromInputs(false)"
+                onblur="autocorrectSelectedName()"
+              />
+            </div>
+            <div class="form-group">
+              <label>Correo de contacto</label>
+              <input
+                type="email"
+                id="indiv-email"
+                onfocus="saveHistorySnapshot()"
+                oninput="updateSelectedRecipientFromInputs(false)"
+                onblur="autocorrectSelectedEmail()"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rol o reconocimiento</label>
+              <input
+                type="text"
+                id="indiv-role"
+                onfocus="saveHistorySnapshot()"
+                oninput="updateSelectedRecipientFromInputs(false)"
+              />
+            </div>
+            <div class="form-group">
+              <label>Enlace a evidencia <span style="font-weight: 400;">(opcional)</span></label>
+              <input
+                type="url"
+                id="indiv-evidence"
+                placeholder="https://github.com/..."
+                onfocus="saveHistorySnapshot()"
+                oninput="updateSelectedRecipientFromInputs(false)"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Estilo visual de este certificado</label>
+            <div class="style-selector" id="indiv-style-selector">
+              <button type="button" class="style-btn active" data-style="google" onclick="onIndividualStyleChange('google')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#4285F4,#EA4335,#FBBC04,#34A853)"></span><span>Google Mesh</span>
+              </button>
+              <button type="button" class="style-btn" data-style="hardware" onclick="onIndividualStyleChange('hardware')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#00FF88,#FFB800)"></span><span>Hardware PCB</span>
+              </button>
+              <button type="button" class="style-btn" data-style="cyberpunk" onclick="onIndividualStyleChange('cyberpunk')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#FCEE0A,#FF0055,#00F0FF)"></span><span>Cyberpunk</span>
+              </button>
+              <button type="button" class="style-btn" data-style="piscina" onclick="onIndividualStyleChange('piscina')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#00E5FF,#0284C7)"></span><span>Verano</span>
+              </button>
+              <button type="button" class="style-btn" data-style="nieve" onclick="onIndividualStyleChange('nieve')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#7DD3FC,#F8FAFC)"></span><span>Ventisca</span>
+              </button>
+              <button type="button" class="style-btn" data-style="caramelos" onclick="onIndividualStyleChange('caramelos')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#FF1493,#FFB800,#A855F7)"></span><span>Caramelos</span>
+              </button>
+              <button type="button" class="style-btn" data-style="aurora" onclick="onIndividualStyleChange('aurora')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#2DD4BF,#A855F7,#38BDF8)"></span><span>Aurora</span>
+              </button>
+              <button type="button" class="style-btn" data-style="blueprint" onclick="onIndividualStyleChange('blueprint')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#07193E,#38BDF8)"></span><span>Blueprint</span>
+              </button>
+              <button type="button" class="style-btn" data-style="antiguo" onclick="onIndividualStyleChange('antiguo')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#D97706,#1D4ED8)"></span><span>Grecia &amp; Egipto</span>
+              </button>
+              <button type="button" class="style-btn" data-style="japon" onclick="onIndividualStyleChange('japon')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#DC2626,#F472B6)"></span><span>Japón &amp; Dongba</span>
+              </button>
+              <button type="button" class="style-btn" data-style="voynich" onclick="onIndividualStyleChange('voynich')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#F59E0B,#8B5CF6,#EC4899)"></span><span>Voynich</span>
+              </button>
+              <button type="button" class="style-btn" data-style="mixteca" onclick="onIndividualStyleChange('mixteca')">
+                <span class="style-btn-swatch" style="background:linear-gradient(90deg,#10B981,#F59E0B,#EF4444)"></span><span>Mixteca</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-bottom:0;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label>ID único randomizado</label>
+              <div style="display:flex; gap:6px;">
+                <input type="text" id="indiv-id" class="mono" readonly />
+                <button type="button" class="btn btn-secondary btn-sm" onclick="regenerateSelectedId()" title="Generar nuevo ID único aleatorio">
+                  🎲
+                </button>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Hash SHA-256 + salt</label>
+              <input type="text" id="indiv-hash" class="mono" readonly />
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de Vista Previa (Certificado / Correo / Archivo .json) -->
+        <div class="panel">
+          <div class="preview-tabs">
+            <button type="button" class="preview-tab active" id="subtab-diploma" onclick="switchPreviewSubtab('diploma')">
+              Certificado
+            </button>
+            <button type="button" class="preview-tab" id="subtab-email" onclick="switchPreviewSubtab('email')">
+              Correo
+            </button>
+            <button type="button" class="preview-tab" id="subtab-json" onclick="switchPreviewSubtab('json')">
+              Archivo .json
+            </button>
+          </div>
+
+          <!-- Subvista 1: Certificado -->
+          <div id="preview-pane-diploma">
+            <div id="diploma-theme-wrapper" class="diploma-theme-google">
+              <div class="diploma-preview-outer">
+                <div class="diploma-preview-inner">
+                  <div class="diploma-frame-1"></div>
+                  <div class="diploma-frame-2"></div>
+
+                  <!-- Decoraciones vectoriales por estilo (12 temas UI Rework) -->
+                  <!-- 1. Google Mesh -->
+                  <div class="dp-ornament dp-ornament-google" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:-24px; left:-24px; width:130px; height:130px; opacity:0.15;" viewBox="0 0 200 200" fill="none">
+                      <circle cx="100" cy="100" r="80" stroke="#4285F4" stroke-width="4" />
+                      <circle cx="100" cy="100" r="55" stroke="#EA4335" stroke-width="3" stroke-dasharray="8 8" />
+                    </svg>
+                    <svg style="position:absolute; bottom:-24px; right:-24px; width:130px; height:130px; opacity:0.15;" viewBox="0 0 200 200" fill="none">
+                      <circle cx="100" cy="100" r="80" stroke="#34A853" stroke-width="4" />
+                      <circle cx="100" cy="100" r="55" stroke="#FBBC04" stroke-width="3" stroke-dasharray="8 8" />
+                    </svg>
+                  </div>
+
+                  <!-- 2. Hardware PCB -->
+                  <div class="dp-ornament dp-ornament-hardware" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:14px; left:14px; width:120px; height:90px; opacity:0.4;" viewBox="0 0 120 90" fill="none">
+                      <path d="M5 15 H45 L65 35 H105" stroke="#00FF88" stroke-width="2" />
+                      <path d="M5 35 H35 L55 55 H85" stroke="#FFB800" stroke-width="1.5" />
+                      <circle cx="105" cy="35" r="4" fill="#00FF88" />
+                      <circle cx="85" cy="55" r="3.5" fill="#FFB800" />
+                    </svg>
+                    <svg style="position:absolute; bottom:14px; right:14px; width:120px; height:90px; opacity:0.4;" viewBox="0 0 120 90" fill="none">
+                      <path d="M115 75 H75 L55 55 H15" stroke="#00FF88" stroke-width="2" />
+                      <rect x="75" y="18" width="28" height="28" rx="4" stroke="#FFB800" stroke-width="1.5" />
+                    </svg>
+                  </div>
+
+                  <!-- 3. Cyberpunk Edgerunner -->
+                  <div class="dp-ornament dp-ornament-cyberpunk" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:14px; left:14px; width:120px; height:80px; opacity:0.65;" viewBox="0 0 120 80" fill="none">
+                      <path d="M4 50 V10 L18 4 H95" stroke="#FCEE0A" stroke-width="2.5" />
+                      <path d="M14 22 H60" stroke="#FF0055" stroke-width="2" />
+                      <text x="16" y="36" fill="#00F0FF" font-size="8" font-family="monospace">HUD // OVERDRIVE</text>
+                    </svg>
+                    <svg style="position:absolute; bottom:14px; right:14px; width:120px; height:80px; opacity:0.65;" viewBox="0 0 120 80" fill="none">
+                      <path d="M116 30 V70 L102 76 H25" stroke="#00F0FF" stroke-width="2.5" />
+                      <path d="M45 64 H104" stroke="#FF0055" stroke-width="2" />
+                    </svg>
+                  </div>
+
+                  <!-- 4. Piscina / Ocean Swell -->
+                  <div class="dp-ornament dp-ornament-piscina" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; bottom:0; left:0; width:100%; height:70px; opacity:0.25;" viewBox="0 0 800 80" preserveAspectRatio="none">
+                      <path d="M0 40 Q 100 10 200 40 T 400 40 T 600 40 T 800 40 L 800 80 L 0 80 Z" fill="#00BCD4" />
+                      <path d="M0 55 Q 100 30 200 55 T 400 55 T 600 55 T 800 55 L 800 80 L 0 80 Z" fill="#0284C7" />
+                    </svg>
+                  </div>
+
+                  <!-- 5. Nieve / Ventisca -->
+                  <div class="dp-ornament dp-ornament-nieve" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:16px; right:24px; width:70px; height:70px; opacity:0.45;" viewBox="0 0 80 80" fill="none">
+                      <path d="M45 5 L25 38 H44 L32 72 L62 34 H41 Z" stroke="#7DD3FC" stroke-width="2" fill="rgba(125,211,252,0.18)" />
+                    </svg>
+                  </div>
+
+                  <!-- 6. Caramelos / Unicornio & Caldero -->
+                  <div class="dp-ornament dp-ornament-caramelos" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:14px; left:18px; width:90px; height:55px; opacity:0.65;" viewBox="0 0 120 70" fill="none">
+                      <path d="M10 60 A 50 50 0 0 1 110 60" stroke="#FF1493" stroke-width="4" />
+                      <path d="M18 60 A 42 42 0 0 1 102 60" stroke="#FFB800" stroke-width="4" />
+                      <path d="M26 60 A 34 34 0 0 1 94 60" stroke="#38BDF8" stroke-width="4" />
+                    </svg>
+                  </div>
+
+                  <!-- 7. Aurora Boreal & Espacio -->
+                  <div class="dp-ornament dp-ornament-aurora" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:0; left:0; width:100%; height:95px; opacity:0.35;" viewBox="0 0 800 100" preserveAspectRatio="none">
+                      <path d="M0 60 Q 200 10 400 55 T 800 35 L 800 0 L 0 0 Z" fill="url(#dp-aur-grad)" />
+                      <defs>
+                        <linearGradient id="dp-aur-grad" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stop-color="#2DD4BF" />
+                          <stop offset="50%" stop-color="#A855F7" />
+                          <stop offset="100%" stop-color="#38BDF8" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+
+                  <!-- 8. Blueprint CAD -->
+                  <div class="dp-ornament dp-ornament-blueprint" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:18px; left:18px; width:85px; height:85px; opacity:0.45;" viewBox="0 0 100 100" fill="none">
+                      <circle cx="50" cy="50" r="36" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="4 3" />
+                      <line x1="5" y1="50" x2="95" y2="50" stroke="#FFFFFF" stroke-width="1" />
+                      <line x1="50" y1="5" x2="50" y2="95" stroke="#FFFFFF" stroke-width="1" />
+                    </svg>
+                  </div>
+
+                  <!-- 9. Grecia & Egipto Antiguo -->
+                  <div class="dp-ornament dp-ornament-antiguo" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; bottom:14px; right:18px; width:110px; height:65px; opacity:0.35;" viewBox="0 0 140 80" fill="none">
+                      <polygon points="15,75 55,18 95,75" stroke="#D97706" stroke-width="2" fill="rgba(217,119,6,0.12)" />
+                      <polygon points="65,75 100,30 135,75" stroke="#1D4ED8" stroke-width="1.8" fill="rgba(29,78,216,0.08)" />
+                    </svg>
+                  </div>
+
+                  <!-- 10. Japón Tradicional & Dongba -->
+                  <div class="dp-ornament dp-ornament-japon" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:16px; left:20px; width:80px; height:70px; opacity:0.38;" viewBox="0 0 100 90" fill="none">
+                      <circle cx="50" cy="42" r="24" fill="rgba(220,38,38,0.18)" />
+                      <path d="M18 28 Q50 20 82 28 M24 40 H76 M34 28 V75 M66 28 V75" stroke="#DC2626" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                  </div>
+
+                  <!-- 11. Códice Voynich & Vitral -->
+                  <div class="dp-ornament dp-ornament-voynich" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:14px; right:18px; width:85px; height:85px; opacity:0.4;" viewBox="0 0 100 100" fill="none">
+                      <circle cx="50" cy="50" r="40" stroke="#F59E0B" stroke-width="1.8" />
+                      <circle cx="50" cy="50" r="24" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="4 3" />
+                      <polygon points="50,12 61,39 90,50 61,61 50,88 39,61 10,50 39,39" stroke="#EC4899" stroke-width="1.2" />
+                    </svg>
+                  </div>
+
+                  <!-- 12. Amazonia & Códice Mixteca -->
+                  <div class="dp-ornament dp-ornament-mixteca" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+                    <svg style="position:absolute; top:16px; left:18px; width:95px; height:55px; opacity:0.45;" viewBox="0 0 120 60" fill="none">
+                      <path d="M8 48 V16 H40 V32 H24 V24 H32" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="square" />
+                      <path d="M56 48 V16 H88 V32 H72 V24 H80" stroke="#10B981" stroke-width="2.5" stroke-linecap="square" />
+                    </svg>
+                  </div>
+
+                  <!-- Cabecera del Diploma -->
+                  <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; width:100%;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:18px; margin-bottom:14px;">
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <img
+                          src="./public/images/gdgoc-uhu-logo-rounded.png"
+                          onerror="this.src='https://gdguhu.es/images/gdgoc-uhu-logo.jpg'; this.onerror=null;"
+                          alt="GDG on Campus UHU"
+                          style="width:46px; height:46px; border-radius:12px; object-fit:cover; border:1px solid #dadce0; background:#fff;"
+                        />
+                        <div style="text-align:left;">
+                          <div class="dp-text-primary" style="font-weight:800; font-size:14px; line-height:1.2;">GDG on Campus</div>
+                          <div class="dp-accent" style="font-weight:700; font-size:11.5px;">Universidad de Huelva</div>
+                        </div>
+                      </div>
+                      <div class="dp-border" style="height:34px; border-left:2px solid;"></div>
+                      <img
+                        id="dp-badge-img"
+                        src="/images/badges/workshop-ai-cloud.svg"
+                        onerror="this.style.display='none'"
+                        alt="Badge"
+                        style="width:46px; height:46px; object-fit:contain;"
+                      />
+                    </div>
+
+                    <div id="dp-role-pill" class="dp-pill" style="display:inline-flex; align-items:center; justify-content:center; padding:5px 14px; border-radius:999px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
+                      ASISTENTE CERTIFICADO
+                    </div>
+
+                    <h2 id="dp-badge-title" class="dp-text-primary" style="font-size:24px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">
+                      Selecciona una badge
+                    </h2>
+                    <div id="dp-issue-date" class="dp-issue-date dp-accent">
+                      28 de octubre de 2026
+                    </div>
+                  </div>
+
+                  <!-- Cuerpo Central del Diploma -->
+                  <div style="position:relative; z-index:2; margin: 18px 0; width:100%; display:flex; flex-direction:column; align-items:center;">
+                    <p class="dp-text-secondary" style="font-size:13.5px; font-style:italic; margin-bottom:8px;">
+                      Este certificado digital se otorga a
+                    </p>
+                    <div class="dp-border" style="position:relative; display:inline-block; padding: 0 28px 10px 28px; margin-bottom:14px; border-bottom:2px solid; min-width:300px;">
+                      <div id="dp-recipient-name" class="dp-recipient-name dp-text-primary" style="font-size:34px; font-weight:800; letter-spacing:-0.02em; line-height:1.15;">
+                        Nombre del Alumno
+                      </div>
+                      <svg style="position:absolute; bottom:-3px; left:0; right:0; margin:0 auto; width:110px; height:4px; border-radius:99px;" viewBox="0 0 128 4" preserveAspectRatio="none">
+                        <rect x="0" y="0" width="32" height="4" fill="#4285F4" />
+                        <rect x="32" y="0" width="32" height="4" fill="#EA4335" />
+                        <rect x="64" y="0" width="32" height="4" fill="#FBBC04" />
+                        <rect x="96" y="0" width="32" height="4" fill="#34A853" />
+                      </svg>
+                    </div>
+
+                    <p id="dp-badge-desc" class="dp-text-primary" style="font-size:13.5px; max-width:560px; line-height:1.5;">
+                      Certificado oficial otorgado por GDG on Campus Universidad de Huelva.
+                    </p>
+                    <p id="dp-badge-narrative" class="dp-text-secondary" style="font-size:12px; max-width:500px; line-height:1.45; margin-top:6px;">
+                      Otorgado por completar satisfactoriamente las actividades prácticas del evento.
+                    </p>
+
+                    <div class="dp-meta" style="margin-top:16px; width:100%; max-width:560px; border-radius:14px; padding:12px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; text-align:center;">
+                      <div>
+                        <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Rol Acreditado</div>
+                        <div id="dp-meta-role" class="dp-text-primary" style="font-size:12.5px; font-weight:800; margin-top:2px;">Asistente Certificado</div>
+                      </div>
+                      <div class="dp-border" style="border-left:2px solid; border-right:2px solid; padding:0 8px;">
+                        <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Entidad Emisora</div>
+                        <div class="dp-text-primary" style="font-size:12.5px; font-weight:800; margin-top:2px;">GDG on Campus UHU</div>
+                      </div>
+                      <div>
+                        <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Estándar</div>
+                        <div style="font-size:12.5px; font-weight:800; color:#34A853; margin-top:2px; display:flex; align-items:center; justify-content:center; gap:5px;">
+                          <svg style="width:16px; height:16px; flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                          </svg>
+                          <span>Open Badges 2.0</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="dp-tags-row" style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:6px;"></div>
+                  </div>
+
+                  <!-- Pie del Diploma con QR + ID Completo -->
+                  <div class="dp-border" style="position:relative; z-index:2; width:100%; padding-top:14px; border-top:2px solid; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;">
+                      <div class="dp-accent" style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; line-height:1.2;">GDG on Campus</div>
+                      <div class="dp-border" style="width:120px; border-top:2px solid; margin:6px auto;"></div>
+                      <div class="dp-text-primary" style="font-size:10px; font-weight:700;">Universidad de Huelva</div>
+                      <div class="dp-text-secondary" style="font-size:9px;">Comunidad de Desarrolladores</div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; justify-content:center; padding:0 8px;">
+                      <div class="dp-border" style="padding:4px; border-radius:10px; border:2px solid; background:#fff;">
+                        <svg id="dp-qr-svg" style="width:62px; height:62px; display:block;" viewBox="0 0 31 31" shape-rendering="crispEdges"></svg>
+                      </div>
+                    </div>
+
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;">
+                      <div id="dp-full-id" class="dp-text-secondary mono" style="font-size:9px; font-weight:700; white-space:nowrap; user-select:all;">69679d9fa12d24f4a673b54b</div>
+                      <div class="dp-border" style="width:120px; border-top:2px solid; margin:6px auto;"></div>
+                      <div class="dp-text-primary" style="font-size:10px; font-weight:700;">Credencial Criptográfica</div>
+                      <div class="dp-text-secondary" style="font-size:9px;">Verificación SHA-256</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Solo botón de evidencia condicional (si el campo tiene contenido) -->
+              <div id="dp-evidence-wrapper" class="hidden" style="margin-top:14px; display:flex; justify-content:center;">
+                <span id="dp-evidence-btn" class="btn btn-secondary btn-sm" style="pointer-events:none; border-color:#4285F4; color:#1967D2;">
+                  Ver Evidencia / Proyecto ↗
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subvista 2: Correo -->
+          <div id="preview-pane-email" class="hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+              <div style="font-size:12.5px; color:var(--text-muted);">
+                Asunto: <strong id="email-preview-subject" style="color:var(--text);">Certificado: Selecciona una badge</strong>
+              </div>
+            </div>
+            <iframe
+              id="email-preview-iframe"
+              title="Vista Previa del Correo"
+              style="width:100%; height:560px; border:1px solid var(--border); border-radius:14px; background:#f8fafc;"
+            ></iframe>
+          </div>
+
+          <!-- Subvista 3: Archivo .json -->
+          <div id="preview-pane-json" class="hidden">
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="copyCurrentAssertionJson()">
+                Copiar .json
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="downloadSingleAssertionJson()">
+                Descargar .json
+              </button>
+            </div>
+            <pre id="assertion-json-output" class="json-code-box"></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         MODO 2: CREAR NUEVA BADGE
+         ====================================================================== -->
+    <div id="view-mode-badge" class="grid-2col hidden">
+      <div class="panel">
+        <div class="panel-title">
+          <span>Crear nueva badge</span>
+        </div>
+
+        <div class="form-group">
+          <label>Nombre de la badge</label>
+          <input
+            type="text"
+            id="badge-name"
+            value="Capture The Flag - Reversing de Binarios"
+            oninput="onBadgeNameInput(this.value)"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>ID de la badge</label>
+          <input
+            type="text"
+            id="badge-slug"
+            class="mono"
+            value="capture-the-flag-reversing-de-binarios"
+            oninput="updateBadgePreview()"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Estilo visual (12 temas UI Rework)</label>
+          <div class="style-selector" id="badge-creator-style-selector">
+            <button type="button" class="style-btn active" data-style="google" onclick="setBadgeCreatorStyle('google')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#4285F4,#EA4335,#FBBC04,#34A853)"></span><span>Google Mesh</span>
+            </button>
+            <button type="button" class="style-btn" data-style="hardware" onclick="setBadgeCreatorStyle('hardware')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#00FF88,#FFB800)"></span><span>Hardware PCB</span>
+            </button>
+            <button type="button" class="style-btn" data-style="cyberpunk" onclick="setBadgeCreatorStyle('cyberpunk')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#FCEE0A,#FF0055,#00F0FF)"></span><span>Cyberpunk</span>
+            </button>
+            <button type="button" class="style-btn" data-style="piscina" onclick="setBadgeCreatorStyle('piscina')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#00E5FF,#0284C7)"></span><span>Verano</span>
+            </button>
+            <button type="button" class="style-btn" data-style="nieve" onclick="setBadgeCreatorStyle('nieve')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#7DD3FC,#F8FAFC)"></span><span>Ventisca</span>
+            </button>
+            <button type="button" class="style-btn" data-style="caramelos" onclick="setBadgeCreatorStyle('caramelos')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#FF1493,#FFB800,#A855F7)"></span><span>Caramelos</span>
+            </button>
+            <button type="button" class="style-btn" data-style="aurora" onclick="setBadgeCreatorStyle('aurora')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#2DD4BF,#A855F7,#38BDF8)"></span><span>Aurora</span>
+            </button>
+            <button type="button" class="style-btn" data-style="blueprint" onclick="setBadgeCreatorStyle('blueprint')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#07193E,#38BDF8)"></span><span>Blueprint</span>
+            </button>
+            <button type="button" class="style-btn" data-style="antiguo" onclick="setBadgeCreatorStyle('antiguo')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#D97706,#1D4ED8)"></span><span>Grecia &amp; Egipto</span>
+            </button>
+            <button type="button" class="style-btn" data-style="japon" onclick="setBadgeCreatorStyle('japon')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#DC2626,#F472B6)"></span><span>Japón &amp; Dongba</span>
+            </button>
+            <button type="button" class="style-btn" data-style="voynich" onclick="setBadgeCreatorStyle('voynich')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#F59E0B,#8B5CF6,#EC4899)"></span><span>Voynich</span>
+            </button>
+            <button type="button" class="style-btn" data-style="mixteca" onclick="setBadgeCreatorStyle('mixteca')">
+              <span class="style-btn-swatch" style="background:linear-gradient(90deg,#10B981,#F59E0B,#EF4444)"></span><span>Mixteca</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Ruta del logo en el repositorio</label>
+          <div style="display:flex; gap:8px;">
+            <input
+              type="text"
+              id="badge-image"
+              class="mono"
+              value="/images/badges/capture-the-flag-reversing-de-binarios.png"
+              oninput="updateBadgePreview()"
+            />
+            <label class="btn btn-secondary btn-sm" style="margin:0; white-space:nowrap; cursor:pointer;">
+              Probar logo local
+              <input type="file" accept="image/*" style="display:none" onchange="previewLocalBadgeLogo(event)" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="badge-desc" oninput="updateBadgePreview()">Certificado oficial de asistencia al taller organizado por GDGoC Universidad de Huelva</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Criterios de obtención <span style="font-weight: 400;">(narrative)</span></label>
+          <textarea id="badge-narrative" oninput="updateBadgePreview()">Otorgado por asistir presencialmente al 100% del taller y participar en las actividades presentadas</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Tags <span style="font-weight: 400;">(separados por comas)</span></label>
+          <input
+            type="text"
+            id="badge-tags"
+            value="CTF, Reversing, Binarios, Ghidra"
+            oninput="updateBadgePreview()"
+          />
+        </div>
+
+        <div class="action-bar" style="flex-direction:column;">
+          <button type="button" class="btn btn-success" style="width:100%; padding:12px;" onclick="downloadBadgePublishFolderUncompressed()">
+            Descargar publish.json
+          </button>
+          <button type="button" class="btn btn-secondary" style="width:100%;" onclick="useCreatedBadgeForCerts()">
+            Usar esta badge en Crear certificados →
+          </button>
+        </div>
+      </div>
+
+      <!-- Vista previa del JSON de la Badge -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>Archivo .json</span>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="copyBadgeJson()">
+              Copiar .json
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="downloadBadgeJsonFile()">
+              Descargar .json
+            </button>
+          </div>
+        </div>
+        <pre id="badge-json-output" class="json-code-box"></pre>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    /* ========================================================================
+       1. IMPLEMENTACIÓN PURA DE SHA-256 (100% Offline)
+       ======================================================================== */
+    function sha256Hex(ascii) {
+      function rightRotate(value, amount) {
+        return (value >>> amount) | (value << (32 - amount));
+      }
+      const utf8 = unescape(encodeURIComponent(ascii));
+      const mathPow = Math.pow;
+      const maxWord = mathPow(2, 32);
+      const lengthProperty = 'length';
+      let i, j;
+      let result = '';
+      const words = [];
+      const asciiBitLength = utf8[lengthProperty] * 8;
+      let hash = (sha256Hex.h = sha256Hex.h || []);
+      const k = (sha256Hex.k = sha256Hex.k || []);
+      let primeCounter = k[lengthProperty];
+      const isComposite = {};
+      for (let candidate = 2; primeCounter < 64; candidate++) {
+        if (!isComposite[candidate]) {
+          for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+          hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+          k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+        }
+      }
+      let str = utf8 + '\x80';
+      while ((str[lengthProperty] % 64) - 56) str += '\x00';
+      for (i = 0; i < str[lengthProperty]; i++) {
+        j = str.charCodeAt(i);
+        words[i >> 2] |= j << (((3 - i) % 4) * 8);
+      }
+      words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+      words[words[lengthProperty]] = asciiBitLength;
+      let h = hash.slice(0, 8);
+      for (j = 0; j < words[lengthProperty]; ) {
+        const w = words.slice(j, (j += 16));
+        const oldHash = h.slice(0);
+        for (i = 0; i < 64; i++) {
+          const w15 = w[i - 15], w2 = w[i - 2];
+          const a = h[0], e = h[4];
+          const temp1 =
+            h[7] +
+            (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) +
+            ((e & h[5]) ^ (~e & h[6])) +
+            k[i] +
+            (w[i] =
+              i < 16
+                ? w[i]
+                : (w[i - 16] +
+                    (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) +
+                    w[i - 7] +
+                    (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) |
+                  0);
+          const temp2 =
+            (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) +
+            ((a & h[1]) ^ (a & h[2]) ^ (h[1] & h[2]));
+          h = [(temp1 + temp2) | 0].concat(h);
+          h[4] = (h[4] + temp1) | 0;
+          h.pop();
+        }
+        for (i = 0; i < 8; i++) h[i] = (h[i] + oldHash[i]) | 0;
+      }
+      for (i = 0; i < 8; i++) {
+        for (j = 3; j + 1; j--) {
+          const b = (h[i] >> (j * 8)) & 255;
+          result += (b < 16 ? 0 : '') + b.toString(16);
+        }
+      }
+      return result;
+    }
+
+    function computeOpenBadgeIdentity(email, salt) {
+      const clean = (email || '').toLowerCase().trim();
+      return 'sha256$' + sha256Hex(clean + salt);
+    }
+
+    // Conjunto de IDs existentes en el sistema para garantizar que nunca se genere un duplicado
+    const SYSTEM_USED_IDS = new Set([
+      '69679d9fa12d24f4a673b54b',
+      '6ae00a61a65e3dd2d40bcb0f',
+      '7c11b204e91f44a8b301ca01',
+      '8d22c305f82e55b9c402fa02',
+      '9e33d406a73f66c0d503fb03',
+    ]);
+    var recipients = [];
+
+    function generateUniqueHexId24() {
+      let candidate = '';
+      let attempts = 0;
+      do {
+        const bytes = new Uint8Array(12);
+        if (window.crypto && window.crypto.getRandomValues) {
+          window.crypto.getRandomValues(bytes);
+        } else {
+          for (let i = 0; i < 12; i++) bytes[i] = Math.floor(Math.random() * 256);
+        }
+        candidate = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+        attempts++;
+      } while (
+        attempts < 100 &&
+        (SYSTEM_USED_IDS.has(candidate) ||
+          (Array.isArray(recipients) && recipients.some((r) => r.id === candidate)))
+      );
+      SYSTEM_USED_IDS.add(candidate);
+      return candidate;
+    }
+
+    /* ========================================================================
+       2. GENERADOR DE QR VECTORIAL (ISO/IEC 18004)
+       ======================================================================== */
+    const QR_VERSIONS = [
+      { version: 1, total: 26, data: 19, ec: 7, align: [] },
+      { version: 2, total: 44, data: 34, ec: 10, align: [6, 18] },
+      { version: 3, total: 70, data: 55, ec: 15, align: [6, 22] },
+      { version: 4, total: 100, data: 80, ec: 20, align: [6, 26] },
+      { version: 5, total: 134, data: 108, ec: 26, align: [6, 30] },
+    ];
+    const GF_EXP = new Uint8Array(512);
+    const GF_LOG = new Uint8Array(256);
+    (function initGf() {
+      let x = 1;
+      for (let i = 0; i < 255; i++) {
+        GF_EXP[i] = x;
+        GF_LOG[x] = i;
+        x <<= 1;
+        if (x & 0x100) x ^= 0x11d;
+      }
+      for (let i = 255; i < 512; i++) GF_EXP[i] = GF_EXP[i - 255];
+    })();
+    function gfMul(a, b) {
+      return a === 0 || b === 0 ? 0 : GF_EXP[GF_LOG[a] + GF_LOG[b]];
+    }
+    function getQrsvg(text) {
+      const utf8 = unescape(encodeURIComponent(text));
+      const bytes = new Uint8Array(utf8.length);
+      for (let i = 0; i < utf8.length; i++) bytes[i] = utf8.charCodeAt(i);
+      const spec = QR_VERSIONS.find((v) => v.data - 2 >= bytes.length) || QR_VERSIONS[QR_VERSIONS.length - 1];
+      const bits = [];
+      const pushBits = (val, len) => {
+        for (let i = len - 1; i >= 0; i--) bits.push((val >> i) & 1);
+      };
+      pushBits(0b0100, 4);
+      pushBits(bytes.length, 8);
+      for (let i = 0; i < bytes.length; i++) pushBits(bytes[i], 8);
+      for (let i = 0; i < 4 && bits.length < spec.data * 8; i++) bits.push(0);
+      while (bits.length % 8 !== 0) bits.push(0);
+      const dataBytes = new Uint8Array(spec.data);
+      const byteLen = bits.length / 8;
+      for (let i = 0; i < byteLen; i++) {
+        let b = 0;
+        for (let j = 0; j < 8; j++) b = (b << 1) | bits[i * 8 + j];
+        dataBytes[i] = b;
+      }
+      const pads = [0xec, 0x11];
+      for (let i = byteLen; i < spec.data; i++) dataBytes[i] = pads[(i - byteLen) % 2];
+      let poly = new Uint8Array([1]);
+      for (let i = 0; i < spec.ec; i++) {
+        const next = new Uint8Array(poly.length + 1);
+        for (let j = 0; j < poly.length; j++) {
+          next[j] ^= poly[j];
+          next[j + 1] ^= gfMul(poly[j], GF_EXP[i]);
+        }
+        poly = next;
+      }
+      const msg = new Uint8Array(spec.data + spec.ec);
+      msg.set(dataBytes, 0);
+      for (let i = 0; i < spec.data; i++) {
+        const coef = msg[i];
+        if (coef !== 0) {
+          for (let j = 0; j < poly.length; j++) msg[i + j] ^= gfMul(poly[j], coef);
+        }
+      }
+      const codewords = new Uint8Array(spec.total);
+      codewords.set(dataBytes, 0);
+      codewords.set(msg.slice(spec.data), spec.data);
+      const size = 17 + spec.version * 4;
+      const modules = Array.from({ length: size }, () => Array(size).fill(false));
+      const isFunc = Array.from({ length: size }, () => Array(size).fill(false));
+      const setF = (r, c, d) => {
+        if (r >= 0 && r < size && c >= 0 && c < size) {
+          modules[r][c] = d;
+          isFunc[r][c] = true;
+        }
+      };
+      const drawFinder = (row, col) => {
+        for (let dr = -1; dr <= 7; dr++) {
+          for (let dc = -1; dc <= 7; dc++) {
+            const r = row + dr, c = col + dc;
+            if (r < 0 || r >= size || c < 0 || c >= size) continue;
+            const d =
+              (dr >= 0 && dr <= 6 && (dc === 0 || dc === 6)) ||
+              (dc >= 0 && dc <= 6 && (dr === 0 || dr === 6)) ||
+              (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4);
+            setF(r, c, d);
+          }
+        }
+      };
+      drawFinder(0, 0);
+      drawFinder(0, size - 7);
+      drawFinder(size - 7, 0);
+      if (spec.align.length > 1) {
+        const center = spec.align[spec.align.length - 1];
+        for (let dr = -2; dr <= 2; dr++) {
+          for (let dc = -2; dc <= 2; dc++) {
+            setF(center + dr, center + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1);
+          }
+        }
+      }
+      for (let i = 8; i < size - 8; i++) {
+        setF(6, i, i % 2 === 0);
+        setF(i, 6, i % 2 === 0);
+      }
+      for (let i = 0; i < 9; i++) {
+        if (i !== 6) {
+          isFunc[8][i] = true;
+          isFunc[i][8] = true;
+        }
+      }
+      for (let i = 0; i < 8; i++) {
+        isFunc[8][size - 1 - i] = true;
+        isFunc[size - 1 - i][8] = true;
+      }
+      setF(4 * spec.version + 9, 8, true);
+      let bitIdx = 0, upward = true;
+      for (let right = size - 1; right >= 1; right -= 2) {
+        if (right === 6) right = 5;
+        for (let vert = 0; vert < size; vert++) {
+          const r = upward ? size - 1 - vert : vert;
+          for (let j = 0; j < 2; j++) {
+            const c = right - j;
+            if (!isFunc[r][c]) {
+              let dark = false;
+              if (bitIdx < codewords.length * 8) {
+                dark = ((codewords[bitIdx >> 3] >> (7 - (bitIdx & 7))) & 1) === 1;
+                bitIdx++;
+              }
+              if ((r + c) % 2 === 0) dark = !dark;
+              modules[r][c] = dark;
+            }
+          }
+        }
+        upward = !upward;
+      }
+      const dataBits = 0b01000;
+      let rem = dataBits << 10;
+      for (let i = 14; i >= 10; i--) if ((rem >> i) & 1) rem ^= 0x537 << (i - 10);
+      const formatBits = ((dataBits << 10) | rem) ^ 0x5412;
+      const getBit = (i) => ((formatBits >> i) & 1) === 1;
+      for (let i = 0; i <= 5; i++) modules[8][i] = getBit(14 - i);
+      modules[8][7] = getBit(8);
+      modules[8][8] = getBit(7);
+      modules[7][8] = getBit(6);
+      for (let i = 0; i <= 5; i++) modules[5 - i][8] = getBit(5 - i);
+      for (let i = 0; i <= 6; i++) modules[size - 1 - i][8] = getBit(14 - i);
+      for (let i = 0; i <= 7; i++) modules[8][size - 8 + i] = getBit(7 - i);
+      let path = '';
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (modules[r][c]) path += `M${c},${r}h1v1h-1z`;
+        }
+      }
+      return { size, path };
+    }
+
+    /* ========================================================================
+       3. DESCARGA DIRECTA DE PUBLICACIÓN SIN COMPRIMIR (publish.json)
+       ======================================================================== */
+    function saveFilesToPublishFolderUncompressed(files) {
+      if (!files || files.length === 0) return;
+      // Descarga directa a través del navegador sin ventanas de permisos ni compresión .zip
+      files.forEach((f, idx) => {
+        const cleanFileName = f.name.replace(/^publish\//, '');
+        setTimeout(() => {
+          const blob = new Blob([f.content], { type: 'application/json' });
+          triggerDownload(blob, cleanFileName);
+        }, idx * 120);
+      });
+      showToast(`Descargados ${files.length} ${files.length === 1 ? 'archivo' : 'archivos'} .json sin comprimir.`);
+    }
+
+    /* ========================================================================
+       4. CATÁLOGO DE BADGES DEL SISTEMA Y DESPLEGABLE / BUSCADOR DE ID DE BADGE
+       ======================================================================== */
+    const KNOWN_BADGES = {
+      'workshop-ai-cloud': {
+        name: 'Taller de IA Generativa & Google Cloud',
+        description: 'Certificado oficial por completar el taller práctico de Inteligencia Artificial Generativa con Gemini y despliegue en Google Cloud Platform organizado por GDG on Campus UHU.',
+        image: '/images/badges/workshop-ai-cloud.svg',
+        criteria: { narrative: 'El estudiante asistió a la sesión formativa y completó los laboratorios prácticos.' },
+        tags: ['Google Cloud', 'Gemini AI', 'Vertex AI', 'Workshop'],
+        style: 'google',
+      },
+      'hackathon-2026': {
+        name: 'Hackathon GDGoC UHU 2026',
+        description: 'Otorgado por la participación activa en el Hackathon Tecnológico 2026 organizado por GDG on Campus en la Universidad de Huelva, habiendo ideado, programado y defendido una solución técnica innovadora.',
+        image: '/images/badges/hackathon-2026.svg',
+        criteria: { narrative: 'El portador de esta insignia completó 24 horas ininterrumpidas de desarrollo de software colaborativo.' },
+        tags: ['Hackathon', 'Google Cloud', 'AI', 'Open Source', 'Teamwork'],
+        style: 'cyber',
+      },
+      'summer-code-camp': {
+        name: 'Summer Pool Code Camp 2026',
+        description: 'Acreditación oficial por superar el Bootcamp intensivo de verano de desarrollo web y tecnologías cloud organizado por el Google Developer Group on Campus de la Universidad de Huelva.',
+        image: '/images/badges/summer-code-camp.svg',
+        criteria: { narrative: 'El participante completó los retos prácticos del campamento tecnológico de verano.' },
+        tags: ['Summer Camp', 'Web Dev', 'Flutter', 'Firebase'],
+        style: 'piscina',
+      },
+      'winter-cloud-freeze': {
+        name: 'Winter Cloud Freeze Summit',
+        description: 'Certificado oficial de participación en las jornadas de invierno sobre arquitectura en la nube, ciberseguridad y sistemas distribuidos de GDG on Campus Universidad de Huelva.',
+        image: '/images/badges/winter-cloud-freeze.svg',
+        criteria: { narrative: 'Asistencia completa y resolución de los laboratorios técnicos del encuentro invernal.' },
+        tags: ['Cloud', 'Kubernetes', 'Security', 'Winter Summit'],
+        style: 'nieve',
+      },
+      'creative-ui-jam': {
+        name: 'Sweet Candy UI/UX Creative Jam',
+        description: 'Reconocimiento oficial por participar en la Creative Jam de diseño de interfaces, accesibilidad y sistemas de diseño interactivos de GDG on Campus Universidad de Huelva.',
+        image: '/images/badges/creative-ui-jam.svg',
+        criteria: { narrative: 'Diseño y presentación de un prototipo interactivo completo evaluado por el jurado.' },
+        tags: ['UI/UX', 'Design Systems', 'CSS', 'Creative Jam'],
+        style: 'caramelos',
+      },
+    };
+
+    // Cargar badges personalizadas recordadas en localStorage
+    try {
+      const savedCustomBadges = JSON.parse(localStorage.getItem('gdgoc-uhu-custom-badges') || '{}');
+      Object.assign(KNOWN_BADGES, savedCustomBadges);
+    } catch {}
+
+    function saveCustomBadgeToMemory(slug, badgeObj) {
+      KNOWN_BADGES[slug] = badgeObj;
+      try {
+        const saved = JSON.parse(localStorage.getItem('gdgoc-uhu-custom-badges') || '{}');
+        saved[slug] = badgeObj;
+        localStorage.setItem('gdgoc-uhu-custom-badges', JSON.stringify(saved));
+      } catch {}
+      populateBadgeSelectDropdown();
+    }
+
+    function populateBadgeSelectDropdown(selectedSlug, filterText = '') {
+      const inputEl = document.getElementById('gen-badge-id');
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (selectedSlug !== undefined && inputEl) {
+        inputEl.value = selectedSlug;
+      }
+      if (!menuEl) return;
+
+      const currentVal = (inputEl ? inputEl.value : '').trim();
+      const q = (filterText || '').toLowerCase().trim();
+      const ids = Object.keys(KNOWN_BADGES);
+      const filtered = q
+        ? ids.filter((id) => id.toLowerCase().includes(q) || (KNOWN_BADGES[id]?.name || '').toLowerCase().includes(q))
+        : ids;
+
+      if (filtered.length === 0) {
+        menuEl.innerHTML = `<div style="padding:10px 12px; font-size:11.5px; color:#64748b;">Usando ID personalizado: <strong class="mono">${escapeHtml(currentVal || q)}</strong></div>`;
+        return;
+      }
+
+      menuEl.innerHTML = filtered
+        .map((id) => {
+          const b = KNOWN_BADGES[id] || {};
+          const isAct = currentVal === id ? 'active' : '';
+          return `
+            <div class="combobox-option ${isAct}" onmousedown="selectBadgeFromDropdown('${escapeHtml(id)}')">
+              <span class="combobox-option-id">${escapeHtml(id)}</span>
+              <span class="combobox-option-name">${escapeHtml(b.name || id)}</span>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    function openBadgeDropdownMenu() {
+      populateBadgeSelectDropdown(undefined, '');
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (menuEl) menuEl.classList.add('open');
+    }
+
+    function closeBadgeDropdownMenu() {
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (menuEl) menuEl.classList.remove('open');
+    }
+
+    function toggleBadgeDropdownMenu(e) {
+      if (e) e.stopPropagation();
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (!menuEl) return;
+      if (menuEl.classList.contains('open')) {
+        menuEl.classList.remove('open');
+      } else {
+        populateBadgeSelectDropdown(undefined, '');
+        menuEl.classList.add('open');
+        document.getElementById('gen-badge-id')?.focus();
+      }
+    }
+
+    function selectBadgeFromDropdown(badgeId) {
+      const inputEl = document.getElementById('gen-badge-id');
+      if (inputEl) inputEl.value = badgeId;
+      closeBadgeDropdownMenu();
+      onGenericBadgeChange(badgeId);
+    }
+
+    function onGenericBadgeInput(val) {
+      populateBadgeSelectDropdown(undefined, val);
+      const menuEl = document.getElementById('badge-dropdown-menu');
+      if (menuEl) menuEl.classList.add('open');
+      onGenericBadgeChange(val.trim());
+    }
+
+    document.addEventListener('click', (e) => {
+      const wrap = document.getElementById('badge-combobox-wrap');
+      if (wrap && !wrap.contains(e.target)) {
+        closeBadgeDropdownMenu();
+      }
+    });
+
+    // Sincronizar automáticamente desde el repositorio de GitHub cualquier badge nueva en src/content/badges/
+    async function syncBadgesFromGitHubRepo() {
+      if (typeof fetch !== 'function') return;
+      try {
+        const res = await fetch('https://api.github.com/repos/arixlariel/GDGoC-UHU-OpenBadges/contents/src/content/badges');
+        if (!res.ok) return;
+        const list = await res.json();
+        if (!Array.isArray(list)) return;
+        for (const item of list) {
+          if (item.type === 'file' && item.name.endsWith('.json') && item.download_url) {
+            const slug = item.name.replace(/\.json$/i, '');
+            if (!KNOWN_BADGES[slug]) {
+              const bRes = await fetch(item.download_url);
+              if (bRes.ok) {
+                const data = await bRes.json();
+                KNOWN_BADGES[slug] = {
+                  name: data.name || slug,
+                  description: data.description || '',
+                  image: data.image ? 'https://gdguhu.es' + data.image : '',
+                  criteria: data.criteria || { narrative: '' },
+                  tags: data.tags || [],
+                  style: data.style || 'google',
+                };
+              }
+            }
+          }
+        }
+        populateBadgeSelectDropdown();
+      } catch {}
+    }
+
+    const currentYearSalt = 'gdgoc-uhu-salt-' + new Date().getFullYear();
+    let genericStyle = 'google';
+    let activeBadgeCreatorStyle = 'google';
+    let lastRawCsvContent = '';
+    let lastBadgeFileHandle = null;
+    let selectedIndex = 0;
+
+    recipients = [
+      {
+        id: generateUniqueHexId24(),
+        name: 'Laura Benítez Romero',
+        email: 'laura.benitez@alu.uhu.es',
+        role: 'Asistente Certificado',
+        evidence: '',
+        style: 'google',
+        issuedOn: new Date().toISOString(),
+        customRole: false,
+        customEvidence: false,
+        customStyle: false,
+      },
+    ];
+
+    /* ========================================================================
+       5. SISTEMA UNDO / REDO (Compatible con Ctrl+Z, Ctrl+Shift+Z, Cmd+Z, Cmd+Shift+Z)
+       ======================================================================== */
+    const undoStack = [];
+    const redoStack = [];
+    const MAX_HISTORY = 50;
+
+    function cloneState() {
+      return JSON.stringify({
+        recipients,
+        selectedIndex,
+        genericStyle,
+        badgeId: document.getElementById('gen-badge-id')?.value || '',
+        defaultRole: document.getElementById('gen-default-role')?.value || '',
+        defaultEvidence: document.getElementById('gen-default-evidence')?.value || '',
+      });
+    }
+
+    function saveHistorySnapshot() {
+      const snap = cloneState();
+      if (undoStack.length > 0 && undoStack[undoStack.length - 1] === snap) return;
+      undoStack.push(snap);
+      if (undoStack.length > MAX_HISTORY) undoStack.shift();
+      redoStack.length = 0;
+      updateHistoryButtons();
+    }
+
+    function restoreStateSnapshot(snapStr) {
+      try {
+        const state = JSON.parse(snapStr);
+        recipients = state.recipients || [];
+        selectedIndex = Math.min(state.selectedIndex || 0, Math.max(0, recipients.length - 1));
+        genericStyle = state.genericStyle || 'google';
+        if (document.getElementById('gen-badge-id')) document.getElementById('gen-badge-id').value = state.badgeId || '';
+        if (document.getElementById('gen-default-role')) document.getElementById('gen-default-role').value = state.defaultRole || '';
+        if (document.getElementById('gen-default-evidence')) document.getElementById('gen-default-evidence').value = state.defaultEvidence || '';
+        updateGenericStyleButtonsUI();
+        renderRecipientList();
+        renderCurrentSelection();
+      } catch {}
+    }
+
+    function performUndo() {
+      if (undoStack.length === 0) return;
+      redoStack.push(cloneState());
+      const prev = undoStack.pop();
+      restoreStateSnapshot(prev);
+      updateHistoryButtons();
+      showToast('↶ Acción deshecha');
+    }
+
+    function performRedo() {
+      if (redoStack.length === 0) return;
+      undoStack.push(cloneState());
+      const next = redoStack.pop();
+      restoreStateSnapshot(next);
+      updateHistoryButtons();
+      showToast('↷ Acción rehecha');
+    }
+
+    function updateHistoryButtons() {
+      document.getElementById('btn-undo').disabled = undoStack.length === 0;
+      document.getElementById('btn-redo').disabled = redoStack.length === 0;
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      if (!isCtrlOrCmd) return;
+      const key = e.key.toLowerCase();
+      if (key === 'z' && !e.shiftKey) {
+        if (undoStack.length > 0) {
+          e.preventDefault();
+          performUndo();
+        }
+      } else if ((key === 'z' && e.shiftKey) || key === 'y') {
+        if (redoStack.length > 0) {
+          e.preventDefault();
+          performRedo();
+        }
+      }
+    });
+
+    /* ========================================================================
+       6. AUTOCORRECCIÓN DE NOMBRES Y PARSER CSV
+       ======================================================================== */
+    function toTitleCase(str) {
+      if (!str) return '';
+      const lowerWords = ['de', 'del', 'la', 'las', 'los', 'y', 'e', 'el', 'da', 'do', 'dos', 'das', 'von', 'van'];
+      return str
+        .toLowerCase()
+        .trim()
+        .split(/\s+/)
+        .map((word, index) => (index > 0 && lowerWords.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+        .join(' ');
+    }
+
+    function cleanFullName(firstName, lastName) {
+      const f = (firstName || '').trim();
+      const l = (lastName || '').trim();
+      if (!l) {
+        // También eliminar palabras finales duplicadas si vienen en un solo campo (ej: "Álvaro Ortiz Ortiz")
+        const parts = f.split(/\s+/);
+        if (parts.length >= 2 && parts[parts.length - 1].toLowerCase() === parts[parts.length - 2].toLowerCase()) {
+          parts.pop();
+        }
+        return toTitleCase(parts.join(' '));
+      }
+      if (!f) return toTitleCase(l);
+      if (f.toLowerCase() === l.toLowerCase() || f.toLowerCase().endsWith(l.toLowerCase())) {
+        return toTitleCase(f);
+      }
+      return toTitleCase(f + ' ' + l);
+    }
+
+    function autocorrectSelectedName() {
+      const current = recipients[selectedIndex];
+      if (!current || !current.name) return;
+      const corrected = cleanFullName(current.name, '');
+      if (corrected !== current.name) {
+        current.name = corrected;
+        document.getElementById('indiv-name').value = corrected;
+        renderRecipientList();
+        renderLivePreviewsOnly();
+      }
+    }
+
+    function autocorrectSelectedEmail() {
+      const current = recipients[selectedIndex];
+      if (!current || !current.email) return;
+      const corrected = current.email.toLowerCase().trim().replace(/\s+/g, '');
+      if (corrected !== current.email) {
+        current.email = corrected;
+        document.getElementById('indiv-email').value = corrected;
+        renderRecipientList();
+        renderLivePreviewsOnly();
+      }
+    }
+
+    function parseCSV(content) {
+      const clean = String(content || '').replace(/^\uFEFF/, '').trim();
+      const lines = clean.split(/\r\n|\n|\r/);
+      if (lines.length < 2) return [];
+      const firstLine = lines[0];
+      const sep = (firstLine.match(/;/g) || []).length > (firstLine.match(/,/g) || []).length ? ';' : ',';
+      function splitLine(line) {
+        const values = [];
+        let current = '', inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
+          } else if (char === sep && !inQuotes) {
+            values.push(current.trim());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        values.push(current.trim());
+        return values;
+      }
+      const header = splitLine(lines[0]).map((h) => h.trim().toLowerCase());
+      const rows = [];
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const vals = splitLine(lines[i]);
+        const obj = {};
+        for (let j = 0; j < header.length; j++) obj[header[j]] = vals[j] !== undefined ? vals[j] : '';
+        rows.push(obj);
+      }
+      return { header, rows };
+    }
+
+    function importFromCsvText(csvText, recordUndo = true) {
+      const parsed = parseCSV(csvText);
+      if (!parsed || !parsed.rows || parsed.rows.length === 0) {
+        showToast('⚠️ El archivo CSV está vacío o no tiene filas válidas.');
+        return;
+      }
+      if (recordUndo) saveHistorySnapshot();
+
+      // Desbloquear la casilla "¿Solo emitir a check-ins?" al haber subido un CSV exitosamente
+      const checkinInput = document.getElementById('gen-only-checkedin');
+      const checkinLabel = document.getElementById('checkin-checkbox-label');
+      checkinInput.disabled = false;
+      checkinLabel.classList.remove('disabled');
+
+      const { header, rows } = parsed;
+      const isBevy = header.includes('first name') && header.includes('email');
+      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado';
+      const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
+      const onlyCheckedIn = checkinInput.checked;
+
+      const seenEmails = new Set();
+      const loaded = [];
+      const nowIso = new Date().toISOString();
+
+      for (const r of rows) {
+        let name = '', email = '', role = defaultRole, evidence = defaultEvidence, checkedIn = true;
+        let hasCustomRole = false, hasCustomEvidence = false;
+
+        if (isBevy) {
+          name = cleanFullName(r['first name'], r['last name']);
+          email = (r['email'] || '').toLowerCase().trim();
+          const checkinCol = r['checkin date (utc)'] || r['checkin date'] || '';
+          checkedIn = Boolean(checkinCol && checkinCol.trim().length > 0);
+        } else {
+          name = cleanFullName(r['nombre'] || r['name'] || r['alumno'] || r['estudiante'] || '', '');
+          email = (r['email'] || r['correo'] || r['mail'] || '').toLowerCase().trim();
+          if (r['role'] || r['rol']) {
+            role = (r['role'] || r['rol']).trim();
+            hasCustomRole = true;
+          }
+          if (r['evidence'] || r['evidencia'] || r['proyecto']) {
+            evidence = (r['evidence'] || r['evidencia'] || r['proyecto']).trim();
+            hasCustomEvidence = true;
+          }
+        }
+
+        if (!name || !email) continue;
+        if (onlyCheckedIn && !checkedIn) continue;
+
+        if (seenEmails.has(email)) continue;
+        seenEmails.add(email);
+
+        loaded.push({
+          id: generateUniqueHexId24(),
+          name,
+          email,
+          role,
+          evidence,
+          style: genericStyle,
+          issuedOn: nowIso,
+          customRole: hasCustomRole,
+          customEvidence: hasCustomEvidence,
+          customStyle: false,
+        });
+      }
+
+      if (loaded.length === 0) {
+        showToast('⚠️ Ningún asistente cumple los criterios.');
+        return;
+      }
+
+      recipients = loaded;
+      selectedIndex = 0;
+      renderRecipientList();
+      renderCurrentSelection();
+      showToast(`✅ ${loaded.length} certificados cargados desde el CSV.`);
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('csv-dropzone').classList.add('dragover');
+    }
+    function handleDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('csv-dropzone').classList.remove('dragover');
+    }
+    function handleDropCsv(e) {
+      e.preventDefault();
+      document.getElementById('csv-dropzone').classList.remove('dragover');
+      const file = e.dataTransfer?.files?.[0];
+      if (file) readCsvFile(file);
+    }
+    function handleCsvFileSelect(e) {
+      const file = e.target.files?.[0];
+      if (file) readCsvFile(file);
+    }
+    function readCsvFile(file) {
+      document.getElementById('dropzone-title-text').textContent = file.name;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        lastRawCsvContent = String(ev.target.result || '');
+        importFromCsvText(lastRawCsvContent, true);
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+    function reparseLastCsvIfAny() {
+      if (lastRawCsvContent) importFromCsvText(lastRawCsvContent, true);
+    }
+
+    /* ========================================================================
+       7. LISTA DE CERTIFICADOS, BUSCADOR Y PERSONALIZACIÓN INDIVIDUAL
+       ======================================================================== */
+    function renderRecipientList() {
+      const box = document.getElementById('cert-list-box');
+      const query = (document.getElementById('cert-list-search').value || '').toLowerCase().trim();
+      document.getElementById('cert-count-badge').textContent = String(recipients.length);
+
+      if (recipients.length === 0) {
+        box.innerHTML = `<div style="padding:20px; text-align:center; font-size:12.5px; color:#64748b;">No hay certificados en la lista.</div>`;
+        return;
+      }
+
+      let html = '';
+      recipients.forEach((item, idx) => {
+        // Buscar por nombre, por código de certificado (ID) y por correo
+        if (
+          query &&
+          !item.name.toLowerCase().includes(query) &&
+          !item.id.toLowerCase().includes(query) &&
+          !item.email.toLowerCase().includes(query)
+        ) {
+          return;
+        }
+        const isActive = idx === selectedIndex;
+        const isEdited = item.customRole || item.customEvidence || item.customStyle;
+        html += `
+          <div class="cert-list-item ${isActive ? 'active' : ''}" onclick="selectRecipient(${idx})">
+            <div style="min-width:0; flex:1;">
+              <div class="cert-item-name">
+                <span style="color:#64748b; font-size:11.5px;">#${idx + 1}</span>
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(item.name)}</span>
+                ${isEdited ? '<span class="pill-mini pill-edited">Personalizado</span>' : ''}
+              </div>
+              <div class="cert-item-meta" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                ${escapeHtml(item.role)} · <span class="mono">${escapeHtml(item.email)}</span>
+              </div>
+            </div>
+            <span class="pill-mini mono">${item.id.slice(0, 8)}</span>
+          </div>
+        `;
+      });
+      box.innerHTML = html || `<div style="padding:16px; text-align:center; font-size:12px; color:#64748b;">Sin coincidencias para "${escapeHtml(query)}"</div>`;
+    }
+
+    function selectRecipient(idx) {
+      if (idx < 0 || idx >= recipients.length) return;
+      selectedIndex = idx;
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function addManualRecipient() {
+      saveHistorySnapshot();
+      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado';
+      const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
+      recipients.push({
+        id: generateUniqueHexId24(),
+        name: 'Nuevo Asistente ' + (recipients.length + 1),
+        email: `asistente${recipients.length + 1}@alu.uhu.es`,
+        role: defaultRole,
+        evidence: defaultEvidence,
+        style: genericStyle,
+        issuedOn: new Date().toISOString(),
+        customRole: false,
+        customEvidence: false,
+        customStyle: false,
+      });
+      selectedIndex = recipients.length - 1;
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function deleteSelectedRecipient() {
+      if (recipients.length <= 1) {
+        showToast('ℹ️ Debe quedar al menos 1 certificado en la lista.');
+        return;
+      }
+      saveHistorySnapshot();
+      recipients.splice(selectedIndex, 1);
+      if (selectedIndex >= recipients.length) selectedIndex = recipients.length - 1;
+      renderRecipientList();
+      renderCurrentSelection();
+      showToast('🗑️ Certificado eliminado (puedes pulsar Deshacer o Ctrl+Z para recuperarlo).');
+    }
+
+    function clearAllRecipients() {
+      saveHistorySnapshot();
+      recipients = [
+        {
+          id: generateUniqueHexId24(),
+          name: 'Nombre del Asistente',
+          email: 'alumno@alu.uhu.es',
+          role: document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado',
+          evidence: document.getElementById('gen-default-evidence').value.trim(),
+          style: genericStyle,
+          issuedOn: new Date().toISOString(),
+          customRole: false,
+          customEvidence: false,
+          customStyle: false,
+        },
+      ];
+      selectedIndex = 0;
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function regenerateSelectedId() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+      saveHistorySnapshot();
+      current.id = generateUniqueHexId24();
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function updateSelectedRecipientFromInputs() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+      const newName = document.getElementById('indiv-name').value;
+      const newEmail = document.getElementById('indiv-email').value;
+      const newRole = document.getElementById('indiv-role').value;
+      const newEvidence = document.getElementById('indiv-evidence').value;
+
+      const defaultRole = document.getElementById('gen-default-role').value.trim();
+      const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
+
+      current.name = newName;
+      current.email = newEmail;
+      current.role = newRole;
+      current.evidence = newEvidence;
+      current.customRole = newRole.trim() !== defaultRole;
+      current.customEvidence = newEvidence.trim() !== defaultEvidence;
+
+      renderRecipientList();
+      renderLivePreviewsOnly();
+    }
+
+    function onGenericBadgeChange(badgeId) {
+      saveHistorySnapshot();
+      if (KNOWN_BADGES[badgeId] && KNOWN_BADGES[badgeId].style) {
+        onGenericStyleChange(KNOWN_BADGES[badgeId].style, false);
+      }
+      renderCurrentSelection();
+    }
+
+    function onGenericRoleChange(newRole) {
+      recipients.forEach((r) => {
+        if (!r.customRole) r.role = newRole;
+      });
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function onGenericEvidenceChange(newEv) {
+      recipients.forEach((r) => {
+        if (!r.customEvidence) r.evidence = newEv;
+      });
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function normalizeReworkStyle(style) {
+      if (!style) return 'google';
+      return style === 'cyber' ? 'hardware' : style;
+    }
+
+    function onGenericStyleChange(style, recordUndo = true) {
+      const norm = normalizeReworkStyle(style);
+      if (recordUndo) saveHistorySnapshot();
+      genericStyle = norm;
+      updateGenericStyleButtonsUI();
+      recipients.forEach((r) => {
+        if (!r.customStyle) r.style = norm;
+      });
+      renderRecipientList();
+      renderCurrentSelection();
+    }
+
+    function updateGenericStyleButtonsUI() {
+      const norm = normalizeReworkStyle(genericStyle);
+      document.querySelectorAll('#certs-generic-style-selector .style-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-style') === norm);
+      });
+    }
+
+    function onIndividualStyleChange(style) {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+      const norm = normalizeReworkStyle(style);
+      saveHistorySnapshot();
+      current.style = norm;
+      current.customStyle = norm !== genericStyle;
+      updateIndividualStyleButtonsUI(norm);
+      renderRecipientList();
+      renderLivePreviewsOnly();
+    }
+
+    function updateIndividualStyleButtonsUI(style) {
+      const norm = normalizeReworkStyle(style);
+      document.querySelectorAll('#indiv-style-selector .style-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-style') === norm);
+      });
+    }
+
+    // Selector de archivo badge.json que recuerda la última ruta usada
+    async function openBadgeJsonPicker() {
+      if (window.showOpenFilePicker) {
+        try {
+          const opts = {
+            id: 'gdgoc-uhu-badge-json',
+            multiple: false,
+            types: [{ description: 'Badge JSON', accept: { 'application/json': ['.json'] } }],
+          };
+          if (lastBadgeFileHandle) opts.startIn = lastBadgeFileHandle;
+          const [fileHandle] = await window.showOpenFilePicker(opts);
+          lastBadgeFileHandle = fileHandle;
+          const file = await fileHandle.getFile();
+          processBadgeJsonFile(file);
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+      document.getElementById('fallback-badge-file-input').click();
+    }
+
+    function handleBadgeFileInput(event) {
+      const file = event.target.files?.[0];
+      if (file) processBadgeJsonFile(file);
+    }
+
+    function processBadgeJsonFile(file) {
+      const slug = file.name.replace(/\.json$/i, '');
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(String(ev.target.result || '{}'));
+          const badgeObj = {
+            name: data.name || slug,
+            description: data.description || '',
+            image: data.image ? './public' + data.image : '',
+            criteria: data.criteria || { narrative: '' },
+            tags: data.tags || [],
+            style: data.style || 'google',
+          };
+          saveCustomBadgeToMemory(slug, badgeObj);
+          populateBadgeSelectDropdown(slug);
+          onGenericStyleChange(badgeObj.style, false);
+          renderCurrentSelection();
+          showToast(`✅ Badge "${slug}" cargada y añadida al desplegable.`);
+        } catch {
+          showToast('❌ El archivo seleccionado no es un JSON válido.');
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    function buildAssertionObject(item) {
+      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'sin-seleccionar';
+      const identity = computeOpenBadgeIdentity(item.email, currentYearSalt);
+      const effectiveStyle = item.style || genericStyle || 'google';
+      const obj = {
+        recipient: {
+          name: item.name.trim(),
+          identity,
+          hashed: true,
+          type: 'email',
+          salt: currentYearSalt,
+        },
+        badgeId,
+        role: (item.role || 'Asistente Certificado').trim(),
+        issuedOn: item.issuedOn || new Date().toISOString(),
+        styleOverride: effectiveStyle,
+      };
+      if (item.evidence && item.evidence.trim().length > 0) {
+        obj.evidence = item.evidence.trim();
+      }
+      return obj;
+    }
+
+    function renderCurrentSelection() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+
+      document.getElementById('indiv-name').value = current.name;
+      document.getElementById('indiv-email').value = current.email;
+      document.getElementById('indiv-role').value = current.role;
+      document.getElementById('indiv-evidence').value = current.evidence || '';
+      document.getElementById('indiv-id').value = current.id;
+      updateIndividualStyleButtonsUI(current.style || genericStyle);
+
+      renderLivePreviewsOnly();
+    }
+
+    function renderLivePreviewsOnly() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+
+      const selectedBadgeId = document.getElementById('gen-badge-id').value.trim();
+      const effectiveStyle = current.style || genericStyle || 'google';
+      const badgeInfo = KNOWN_BADGES[selectedBadgeId] || {
+        name: selectedBadgeId ? selectedBadgeId.replace(/-/g, ' ').toUpperCase() : 'SELECCIONA UNA BADGE',
+        description: 'Certificado digital oficial emitido por GDG on Campus Universidad de Huelva.',
+        image: './public/images/gdgoc-uhu-logo.jpg',
+        criteria: { narrative: 'Otorgado por completar satisfactoriamente las actividades del evento.' },
+        tags: ['GDGoC UHU', 'Open Badges 2.0'],
+        style: effectiveStyle,
+      };
+
+      const assertionObj = buildAssertionObject(current);
+      document.getElementById('indiv-hash').value = assertionObj.recipient.identity;
+
+      // Aplicar tema del certificado seleccionado
+      const wrapper = document.getElementById('diploma-theme-wrapper');
+      wrapper.className = 'diploma-theme-' + effectiveStyle;
+
+      // Actualizar vista previa del Certificado
+      document.getElementById('dp-role-pill').textContent = assertionObj.role;
+      document.getElementById('dp-meta-role').textContent = assertionObj.role;
+      document.getElementById('dp-badge-title').textContent = badgeInfo.name;
+      document.getElementById('dp-recipient-name').textContent = assertionObj.recipient.name || 'Nombre Completo';
+      document.getElementById('dp-badge-desc').textContent = badgeInfo.description;
+      document.getElementById('dp-badge-narrative').textContent = badgeInfo.criteria?.narrative || '';
+      document.getElementById('dp-full-id').textContent = current.id;
+
+      const dateRaw = assertionObj.issuedOn || current.issuedOn || Date.now();
+      const formattedDate = new Date(dateRaw).toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+      const issueDateEl = document.getElementById('dp-issue-date');
+      if (issueDateEl) issueDateEl.textContent = formattedDate;
+
+      const badgeImgEl = document.getElementById('dp-badge-img');
+      if (badgeInfo.image) {
+        badgeImgEl.style.display = '';
+        badgeImgEl.src = badgeInfo.image;
+      }
+
+      // Tags
+      const tagsContainer = document.getElementById('dp-tags-row');
+      tagsContainer.innerHTML = (badgeInfo.tags || [])
+        .map((t) => `<span class="dp-pill" style="font-size:10.5px; font-weight:700; padding:4px 11px; border-radius:999px;">#${escapeHtml(t)}</span>`)
+        .join('');
+
+      // Botón de Evidencia condicional (único botón debajo del certificado)
+      const evWrapper = document.getElementById('dp-evidence-wrapper');
+      if (assertionObj.evidence) {
+        evWrapper.classList.remove('hidden');
+      } else {
+        evWrapper.classList.add('hidden');
+      }
+
+      // QR Vectorial
+      const certUrl = `https://gdguhu.es/cert/${current.id}/`;
+      const qr = getQrsvg(certUrl);
+      const qrSvgEl = document.getElementById('dp-qr-svg');
+      qrSvgEl.setAttribute('viewBox', `-1 -1 ${qr.size + 2} ${qr.size + 2}`);
+      qrSvgEl.innerHTML = `<rect x="-1" y="-1" width="${qr.size + 2}" height="${qr.size + 2}" fill="#FFFFFF"/><path d="${qr.path}" fill="#111827"/>`;
+
+      // JSON Output
+      document.getElementById('assertion-json-output').textContent = JSON.stringify(assertionObj, null, 2);
+
+      // Email Preview adaptado en tiempo real al estilo del certificado y sus campos
+      const emailHtml = generateThemedEmailHtml(
+        assertionObj.recipient.name,
+        badgeInfo,
+        certUrl,
+        `https://gdguhu.es/api/badges/assertion/${current.id}.json`,
+        assertionObj.role,
+        current.id,
+        effectiveStyle,
+        assertionObj.evidence || ''
+      );
+      document.getElementById('email-preview-subject').textContent = `Certificado: ${badgeInfo.name}`;
+      const iframe = document.getElementById('email-preview-iframe');
+      if (iframe) iframe.srcdoc = emailHtml;
+    }
+
+    /* ========================================================================
+       8. PLANTILLA DE CORREO ELECTRÓNICO ADAPTADA A LOS 5 ESTILOS EN TIEMPO REAL
+       ======================================================================== */
+    const EMAIL_THEMES = {
+      google: {
+        strip: ['#4285F4', '#EA4335', '#FBBC04', '#34A853'],
+        outerBg: '#f8fafc',
+        cardBg: '#ffffff',
+        cardBorder: '#dadce0',
+        headerBorder: '#f1f5f9',
+        textPrimary: '#202124',
+        textSecondary: '#475569',
+        textMuted: '#5f6368',
+        accent: '#1967D2',
+        verifiedBg: '#e6f4ea',
+        verifiedBorder: '#ceead6',
+        verifiedText: '#137333',
+        rolePillBg: '#e8f0fe',
+        rolePillBorder: '#d2e3fc',
+        rolePillText: '#1967D2',
+        boxBg: '#f8f9fa',
+        boxBorder: '#dadce0',
+        btnBg: '#4285F4',
+        btnText: '#ffffff',
+        footerBg: '#f8fafc',
+      },
+      cyber: {
+        strip: ['#00F0FF', '#FF007F', '#FFE600', '#00FF66'],
+        outerBg: '#05070F',
+        cardBg: '#070B19',
+        cardBorder: '#00F0FF',
+        headerBorder: 'rgba(0, 240, 255, 0.25)',
+        textPrimary: '#F0F9FF',
+        textSecondary: '#CBD5E1',
+        textMuted: '#94A3B8',
+        accent: '#00F0FF',
+        verifiedBg: 'rgba(0, 255, 102, 0.12)',
+        verifiedBorder: '#00FF66',
+        verifiedText: '#00FF66',
+        rolePillBg: 'rgba(0, 240, 255, 0.14)',
+        rolePillBorder: '#00F0FF',
+        rolePillText: '#00F0FF',
+        boxBg: '#0C142C',
+        boxBorder: 'rgba(255, 0, 127, 0.45)',
+        btnBg: '#00F0FF',
+        btnText: '#05070F',
+        footerBg: '#070B19',
+      },
+      piscina: {
+        strip: ['#00F2FE', '#4FACFE', '#00E5FF', '#0284C7'],
+        outerBg: '#E0F7FA',
+        cardBg: '#FFFFFF',
+        cardBorder: '#00BCD4',
+        headerBorder: '#B2EBF2',
+        textPrimary: '#002B3D',
+        textSecondary: '#004D61',
+        textMuted: '#00587A',
+        accent: '#0284C7',
+        verifiedBg: '#E0F2FE',
+        verifiedBorder: '#00E5FF',
+        verifiedText: '#004D61',
+        rolePillBg: '#E0F7FA',
+        rolePillBorder: '#00BCD4',
+        rolePillText: '#006064',
+        boxBg: '#F0FDFF',
+        boxBorder: '#00BCD4',
+        btnBg: '#0284C7',
+        btnText: '#FFFFFF',
+        footerBg: '#E0F7FA',
+      },
+      nieve: {
+        strip: ['#FFFFFF', '#7DD3FC', '#38BDF8', '#BAE6FD'],
+        outerBg: '#071527',
+        cardBg: '#08182E',
+        cardBorder: '#7DD3FC',
+        headerBorder: 'rgba(186, 230, 253, 0.3)',
+        textPrimary: '#F0F9FF',
+        textSecondary: '#E0F2FE',
+        textMuted: '#BAE6FD',
+        accent: '#7DD3FC',
+        verifiedBg: 'rgba(186, 230, 253, 0.15)',
+        verifiedBorder: '#7DD3FC',
+        verifiedText: '#E0F2FE',
+        rolePillBg: 'rgba(224, 242, 254, 0.18)',
+        rolePillBorder: '#BAE6FD',
+        rolePillText: '#FFFFFF',
+        boxBg: '#0E2442',
+        boxBorder: 'rgba(125, 211, 252, 0.5)',
+        btnBg: '#38BDF8',
+        btnText: '#040D1A',
+        footerBg: '#08182E',
+      },
+      caramelos: {
+        strip: ['#FF1493', '#FF85C0', '#FF69B4', '#D81B60'],
+        outerBg: '#FFE4F2',
+        cardBg: '#FFF9FC',
+        cardBorder: '#FF4D94',
+        headerBorder: '#FFD1E8',
+        textPrimary: '#880E4F',
+        textSecondary: '#AD1457',
+        textMuted: '#C2185B',
+        accent: '#D81B60',
+        verifiedBg: '#FFF0F6',
+        verifiedBorder: '#FF69B4',
+        verifiedText: '#AD1457',
+        rolePillBg: '#FFE0F0',
+        rolePillBorder: '#FF1493',
+        rolePillText: '#AD1457',
+        boxBg: '#FFE0F0',
+        boxBorder: '#FF69B4',
+        btnBg: '#FF1493',
+        btnText: '#FFFFFF',
+        footerBg: '#FFE8F3',
+      },
+      hardware: {
+        strip: ['#00FF88', '#FFB800', '#10B981', '#D97706'],
+        outerBg: '#030D09',
+        cardBg: '#051611',
+        cardBorder: '#00FF88',
+        headerBorder: 'rgba(0, 255, 136, 0.25)',
+        textPrimary: '#ECFDF5',
+        textSecondary: '#A7F3D0',
+        textMuted: '#6EE7B7',
+        accent: '#00FF88',
+        verifiedBg: 'rgba(0, 255, 136, 0.14)',
+        verifiedBorder: '#00FF88',
+        verifiedText: '#00FF88',
+        rolePillBg: 'rgba(255, 184, 0, 0.14)',
+        rolePillBorder: '#FFB800',
+        rolePillText: '#FFB800',
+        boxBg: '#081C15',
+        boxBorder: 'rgba(0, 255, 136, 0.45)',
+        btnBg: '#00FF88',
+        btnText: '#030D09',
+        footerBg: '#051611',
+      },
+      cyberpunk: {
+        strip: ['#FCEE0A', '#FF0055', '#00F0FF', '#FCEE0A'],
+        outerBg: '#05040A',
+        cardBg: '#070510',
+        cardBorder: '#FCEE0A',
+        headerBorder: 'rgba(255, 0, 85, 0.4)',
+        textPrimary: '#FFFFFF',
+        textSecondary: '#E2E8F0',
+        textMuted: '#00F0FF',
+        accent: '#FCEE0A',
+        verifiedBg: 'rgba(252, 238, 10, 0.16)',
+        verifiedBorder: '#FCEE0A',
+        verifiedText: '#FCEE0A',
+        rolePillBg: 'rgba(255, 0, 85, 0.22)',
+        rolePillBorder: '#FF0055',
+        rolePillText: '#FCEE0A',
+        boxBg: '#0E0A1C',
+        boxBorder: '#00F0FF',
+        btnBg: '#FCEE0A',
+        btnText: '#070510',
+        footerBg: '#070510',
+      },
+      aurora: {
+        strip: ['#2DD4BF', '#A855F7', '#38BDF8', '#10B981'],
+        outerBg: '#020617',
+        cardBg: '#060C21',
+        cardBorder: '#2DD4BF',
+        headerBorder: 'rgba(45, 212, 191, 0.28)',
+        textPrimary: '#F8FAFC',
+        textSecondary: '#CBD5E1',
+        textMuted: '#99F6E4',
+        accent: '#2DD4BF',
+        verifiedBg: 'rgba(45, 212, 191, 0.16)',
+        verifiedBorder: '#2DD4BF',
+        verifiedText: '#5EEAD4',
+        rolePillBg: 'rgba(168, 85, 247, 0.22)',
+        rolePillBorder: '#A855F7',
+        rolePillText: '#E9D5FF',
+        boxBg: '#0B132B',
+        boxBorder: 'rgba(56, 189, 248, 0.45)',
+        btnBg: '#2DD4BF',
+        btnText: '#030712',
+        footerBg: '#060C21',
+      },
+      blueprint: {
+        strip: ['#38BDF8', '#FFFFFF', '#0284C7', '#F59E0B'],
+        outerBg: '#040F28',
+        cardBg: '#07193E',
+        cardBorder: '#38BDF8',
+        headerBorder: 'rgba(255, 255, 255, 0.25)',
+        textPrimary: '#FFFFFF',
+        textSecondary: '#E0F2FE',
+        textMuted: '#BAE6FD',
+        accent: '#38BDF8',
+        verifiedBg: 'rgba(56, 189, 248, 0.18)',
+        verifiedBorder: '#FFFFFF',
+        verifiedText: '#FFFFFF',
+        rolePillBg: 'rgba(56, 189, 248, 0.2)',
+        rolePillBorder: '#38BDF8',
+        rolePillText: '#FFFFFF',
+        boxBg: '#0A2252',
+        boxBorder: '#38BDF8',
+        btnBg: '#38BDF8',
+        btnText: '#040F28',
+        footerBg: '#07193E',
+      },
+      antiguo: {
+        strip: ['#D97706', '#1D4ED8', '#F59E0B', '#0D9488'],
+        outerBg: '#F5EED8',
+        cardBg: '#FDFBF4',
+        cardBorder: '#D97706',
+        headerBorder: '#E7D8B5',
+        textPrimary: '#1C1917',
+        textSecondary: '#44403C',
+        textMuted: '#78716C',
+        accent: '#B45309',
+        verifiedBg: '#FEF3C7',
+        verifiedBorder: '#D97706',
+        verifiedText: '#92400E',
+        rolePillBg: '#EFF6FF',
+        rolePillBorder: '#1D4ED8',
+        rolePillText: '#1D4ED8',
+        boxBg: '#FAF3E0',
+        boxBorder: '#D97706',
+        btnBg: '#B45309',
+        btnText: '#FFFFFF',
+        footerBg: '#F5EED8',
+      },
+      japon: {
+        strip: ['#DC2626', '#F472B6', '#1E293B', '#D97706'],
+        outerBg: '#F6EFE2',
+        cardBg: '#FCF9F2',
+        cardBorder: '#DC2626',
+        headerBorder: '#E5DEC9',
+        textPrimary: '#1E1B18',
+        textSecondary: '#44403C',
+        textMuted: '#78716C',
+        accent: '#DC2626',
+        verifiedBg: '#FEE2E2',
+        verifiedBorder: '#DC2626',
+        verifiedText: '#991B1B',
+        rolePillBg: '#FCE7F3',
+        rolePillBorder: '#F472B6',
+        rolePillText: '#9D174D',
+        boxBg: '#F9F3E6',
+        boxBorder: '#D97706',
+        btnBg: '#DC2626',
+        btnText: '#FFFFFF',
+        footerBg: '#F6EFE2',
+      },
+      voynich: {
+        strip: ['#F59E0B', '#8B5CF6', '#EC4899', '#10B981'],
+        outerBg: '#0B0813',
+        cardBg: '#16102A',
+        cardBorder: '#F59E0B',
+        headerBorder: 'rgba(245, 158, 11, 0.3)',
+        textPrimary: '#FEF3C7',
+        textSecondary: '#EDE9FE',
+        textMuted: '#C4B5FD',
+        accent: '#FBBF24',
+        verifiedBg: 'rgba(245, 158, 11, 0.16)',
+        verifiedBorder: '#F59E0B',
+        verifiedText: '#FDE68A',
+        rolePillBg: 'rgba(139, 92, 246, 0.24)',
+        rolePillBorder: '#8B5CF6',
+        rolePillText: '#DDD6FE',
+        boxBg: '#21173B',
+        boxBorder: 'rgba(236, 72, 153, 0.5)',
+        btnBg: '#F59E0B',
+        btnText: '#0E0B18',
+        footerBg: '#16102A',
+      },
+      mixteca: {
+        strip: ['#10B981', '#F59E0B', '#EF4444', '#06B6D4'],
+        outerBg: '#04120E',
+        cardBg: '#071F18',
+        cardBorder: '#F59E0B',
+        headerBorder: 'rgba(16, 185, 129, 0.3)',
+        textPrimary: '#FEF3C7',
+        textSecondary: '#D1FAE5',
+        textMuted: '#6EE7B7',
+        accent: '#FBBF24',
+        verifiedBg: 'rgba(16, 185, 129, 0.2)',
+        verifiedBorder: '#10B981',
+        verifiedText: '#A7F3D0',
+        rolePillBg: 'rgba(245, 158, 11, 0.2)',
+        rolePillBorder: '#F59E0B',
+        rolePillText: '#FDE68A',
+        boxBg: '#0B2B22',
+        boxBorder: '#10B981',
+        btnBg: '#10B981',
+        btnText: '#04120E',
+        footerBg: '#071F18',
+      },
+    };
+
+    function generateThemedEmailHtml(name, badge, certUrl, assertionJsonUrl, role, assertionId, style, evidenceUrl) {
+      const t = EMAIL_THEMES[style] || EMAIL_THEMES.google;
+      const badgeName = badge.name || 'Certificado Oficial GDGoC UHU';
+      const badgeDesc = badge.description || '';
+      return `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>${escapeHtml(badgeName)}</title></head>
+<body style="margin:0;padding:0;background-color:${t.outerBg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:${t.textPrimary};">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td width="25%" height="6" style="background-color:${t.strip[0]};"></td>
+      <td width="25%" height="6" style="background-color:${t.strip[1]};"></td>
+      <td width="25%" height="6" style="background-color:${t.strip[2]};"></td>
+      <td width="25%" height="6" style="background-color:${t.strip[3]};"></td>
+    </tr>
+  </table>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${t.outerBg};padding:30px 15px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width:580px;background-color:${t.cardBg};border-radius:20px;overflow:hidden;border:2px solid ${t.cardBorder};" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td style="padding:28px 30px 18px 30px;text-align:center;border-bottom:1px solid ${t.headerBorder};">
+              <h2 style="margin:0;font-size:20px;color:${t.textPrimary};font-weight:800;letter-spacing:-0.5px;">GDG on Campus</h2>
+              <div style="font-size:13px;color:${t.accent};font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Universidad de Huelva</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px 30px 24px 30px;text-align:center;">
+              <div style="display:inline-block;padding:6px 14px;background-color:${t.verifiedBg};border:1px solid ${t.verifiedBorder};border-radius:50px;font-size:12px;font-weight:700;color:${t.verifiedText};margin-bottom:18px;">
+                ✓ Credencial Digital Oficial Emitida
+              </div>
+              <div style="font-size:12px;color:${t.textMuted};text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:6px;">
+                Este certificado digital se otorga a:
+              </div>
+              <h1 style="margin:0 0 12px 0;font-size:25px;color:${t.textPrimary};font-weight:800;">${escapeHtml(name)}</h1>
+              <div style="display:inline-block;padding:5px 14px;background-color:${t.rolePillBg};border:1.5px solid ${t.rolePillBorder};border-radius:50px;font-size:11px;font-weight:700;color:${t.rolePillText};text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;">
+                ${escapeHtml(role)}
+              </div>
+              <div style="background-color:${t.boxBg};border:1.5px solid ${t.boxBorder};border-radius:16px;padding:20px;margin:14px 0 20px 0;text-align:center;">
+                <div style="font-size:11px;color:${t.accent};text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px;">Insignia Acreditativa</div>
+                <h3 style="margin:0 0 8px 0;font-size:19px;color:${t.textPrimary};font-weight:800;">${escapeHtml(badgeName)}</h3>
+                <p style="margin:0;font-size:13px;color:${t.textSecondary};line-height:1.5;">${escapeHtml(badgeDesc)}</p>
+                <div style="margin-top:12px;padding-top:10px;border-top:1px dashed ${t.cardBorder};font-size:11px;color:${t.textMuted};font-family:monospace;">
+                  ID del certificado: <strong style="color:${t.textPrimary};">${escapeHtml(assertionId)}</strong>
+                </div>
+              </div>
+              <!-- Botón Principal Bulletproof para Móviles y Clientes de Correo -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:22px auto 14px auto;">
+                <tr>
+                  <td align="center" bgcolor="${t.btnBg}" style="border-radius:12px;background-color:${t.btnBg};">
+                    <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;font-weight:800;color:${t.btnText};text-decoration:none;border-radius:12px;-webkit-text-size-adjust:none;mso-padding-alt:0;cursor:pointer;text-align:center;">
+                      Abrir mi certificado oficial
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              ${
+                evidenceUrl
+                  ? `<div style="margin:10px 0 14px 0;"><a href="${escapeHtml(evidenceUrl)}" target="_blank" style="display:inline-block;color:${t.accent};font-size:12.5px;font-weight:700;text-decoration:underline;">Ver Evidencia / Proyecto ↗</a></div>`
+                  : ''
+              }
+              <p style="font-size:12px;color:${t.textMuted};margin:12px 0 0 0;line-height:1.5;">
+                Haz clic en el botón para ver tu certificado en línea, descargarlo como PDF o añadirlo a tu LinkedIn o cartera favorita
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 30px;background-color:${t.footerBg};border-top:1px solid ${t.headerBorder};text-align:center;">
+              <p style="margin:0;font-size:11px;color:${t.textMuted};line-height:1.4;">
+                Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> de 1EdTech.<br>
+                Alojado oficialmente en <a href="https://gdguhu.es" style="color:${t.accent};text-decoration:none;font-weight:700;">https://gdguhu.es</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+    }
+
+    /* ========================================================================
+       9. DESCARGA AUTOMÁTICA DE PUBLISH.JSON (SIN COMPRIMIR NI PERMISOS)
+       ======================================================================== */
+    function downloadPublishFolderUncompressed() {
+      const badgeId = document.getElementById('gen-badge-id').value.trim();
+      if (!badgeId) {
+        showToast('⚠️ Selecciona o escribe primero un "ID de la badge" en Datos genéricos.');
+        openBadgeDropdownMenu();
+        document.getElementById('gen-badge-id')?.focus();
+        return;
+      }
+      if (!recipients || recipients.length === 0) {
+        showToast('⚠️ No hay certificados en la lista.');
+        return;
+      }
+
+      const includeEmails = document.getElementById('gen-send-emails').checked;
+      const assertionsList = [];
+      const emailQueue = [];
+
+      for (const r of recipients) {
+        const obj = buildAssertionObject(r);
+        assertionsList.push({
+          id: r.id,
+          data: obj,
+        });
+        if (includeEmails && r.email && r.email.includes('@')) {
+          emailQueue.push({
+            nombre: obj.recipient.name,
+            email: r.email.trim(),
+            assertionId: r.id,
+            badgeId,
+            role: obj.role,
+            style: obj.styleOverride || 'google',
+            evidence: obj.evidence || '',
+            url: `https://gdguhu.es/cert/${r.id}/`,
+          });
+        }
+      }
+
+      const badgesList = [];
+      // Incluir la definición de la badge en el paquete si es personalizada
+      if (KNOWN_BADGES[badgeId]) {
+        badgesList.push({
+          id: badgeId,
+          data: KNOWN_BADGES[badgeId],
+        });
+      }
+
+      const bundle = {
+        version: 2,
+        generatedAt: new Date().toISOString(),
+        badges: badgesList,
+        assertions: assertionsList,
+        pendingEmails: emailQueue,
+      };
+
+      const jsonStr = JSON.stringify(bundle, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      triggerDownload(blob, 'publish.json');
+      showToast(`Descargado publish.json (${recipients.length} ${recipients.length === 1 ? 'certificado' : 'certificados'}) sin comprimir.`);
+    }
+
+    function downloadSingleAssertionJson() {
+      const current = recipients[selectedIndex];
+      if (!current) return;
+      const obj = buildAssertionObject(current);
+      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+      triggerDownload(blob, `${current.id}.json`);
+      showToast(`Descargado ${current.id}.json`);
+    }
+
+    /* ========================================================================
+       10. MODO CREAR NUEVA BADGE
+       ======================================================================== */
+    function slugify(text) {
+      return text
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    function onBadgeNameInput(val) {
+      const slug = slugify(val) || 'nueva-badge';
+      document.getElementById('badge-slug').value = slug;
+      document.getElementById('badge-image').value = `/images/badges/${slug}.svg`;
+      updateBadgePreview();
+    }
+
+    function setBadgeCreatorStyle(style) {
+      activeBadgeCreatorStyle = style;
+      document.querySelectorAll('#badge-creator-style-selector .style-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-style') === style);
+      });
+      updateBadgePreview();
+    }
+
+    function buildNewBadgeObject() {
+      const name = document.getElementById('badge-name').value.trim();
+      const description = document.getElementById('badge-desc').value.trim();
+      const image = document.getElementById('badge-image').value.trim();
+      const narrative = document.getElementById('badge-narrative').value.trim();
+      const tagsRaw = document.getElementById('badge-tags').value;
+      const tags = tagsRaw
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      return {
+        name,
+        description,
+        image,
+        criteria: { narrative },
+        tags,
+        style: activeBadgeCreatorStyle,
+        issuerId: 'gdgoc-uhu',
+      };
+    }
+
+    function updateBadgePreview() {
+      const obj = buildNewBadgeObject();
+      document.getElementById('badge-json-output').textContent = JSON.stringify(obj, null, 2);
+    }
+
+    function previewLocalBadgeLogo(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const dataUrl = String(ev.target.result || '');
+        const obj = buildNewBadgeObject();
+        saveCustomBadgeToMemory(slug, { ...obj, image: dataUrl });
+        document.getElementById('dp-badge-img').src = dataUrl;
+        showToast('✅ Logo cargado en memoria para la vista previa.');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function downloadBadgePublishFolderUncompressed() {
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const obj = buildNewBadgeObject();
+      saveCustomBadgeToMemory(slug, {
+        ...obj,
+        image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
+      });
+      const bundle = {
+        version: 2,
+        generatedAt: new Date().toISOString(),
+        badges: [{ id: slug, data: obj }],
+        assertions: [],
+        pendingEmails: [],
+      };
+      const jsonStr = JSON.stringify(bundle, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      triggerDownload(blob, 'publish.json');
+      showToast(`Descargado publish.json con la badge "${slug}".`);
+    }
+
+    function downloadBadgeJsonFile() {
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const obj = buildNewBadgeObject();
+      saveCustomBadgeToMemory(slug, {
+        ...obj,
+        image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
+      });
+      const content = JSON.stringify(obj, null, 2);
+      const blob = new Blob([content], { type: 'application/json' });
+      triggerDownload(blob, `${slug}.json`);
+      showToast(`Descargado ${slug}.json`);
+    }
+
+    function useCreatedBadgeForCerts() {
+      const slug = document.getElementById('badge-slug').value.trim() || 'nueva-badge';
+      const obj = buildNewBadgeObject();
+      saveCustomBadgeToMemory(slug, {
+        ...obj,
+        image: KNOWN_BADGES[slug]?.image || './public' + obj.image,
+      });
+      populateBadgeSelectDropdown(slug);
+      onGenericStyleChange(obj.style, false);
+      switchMainMode('certs');
+      renderCurrentSelection();
+      showToast(`🎓 Badge "${slug}" añadida y seleccionada.`);
+    }
+
+    /* ========================================================================
+       11. NAVEGACIÓN DE PESTAÑAS Y UTILIDADES UI
+       ======================================================================== */
+    function switchMainMode(mode) {
+      const isCerts = mode === 'certs';
+      document.getElementById('view-mode-certs').classList.toggle('hidden', !isCerts);
+      document.getElementById('view-mode-badge').classList.toggle('hidden', isCerts);
+      document.getElementById('tab-mode-certs').classList.toggle('active', isCerts);
+      document.getElementById('tab-mode-badge').classList.toggle('active', !isCerts);
+      if (!isCerts) updateBadgePreview();
+    }
+
+    function switchPreviewSubtab(tab) {
+      ['diploma', 'email', 'json'].forEach((t) => {
+        document.getElementById(`preview-pane-${t}`).classList.toggle('hidden', t !== tab);
+        document.getElementById(`subtab-${t}`).classList.toggle('active', t === tab);
+      });
+    }
+
+    function copyCurrentAssertionJson() {
+      const text = document.getElementById('assertion-json-output').textContent;
+      navigator.clipboard.writeText(text);
+      showToast('📋 Archivo .json copiado al portapapeles.');
+    }
+
+    function copyBadgeJson() {
+      const text = document.getElementById('badge-json-output').textContent;
+      navigator.clipboard.writeText(text);
+      showToast('📋 Archivo .json copiado al portapapeles.');
+    }
+
+    function triggerDownload(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 4000);
+    }
+
+    // Inicializar al abrir (con el desplegable de ID de la badge sin nada preseleccionado)
+    populateBadgeSelectDropdown('');
+    syncBadgesFromGitHubRepo();
+    renderRecipientList();
+    renderCurrentSelection();
+    updateBadgePreview();
+  </script>
+</body>
+</html>

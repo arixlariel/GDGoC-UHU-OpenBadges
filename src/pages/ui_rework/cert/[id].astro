@@ -1,0 +1,58 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayoutRework from '@/layouts/BaseLayoutRework.astro';
+import CertificateDiplomaRework from '@/components/rework/CertificateDiplomaRework.astro';
+import BadgeModalRework from '@/components/rework/BadgeModalRework.astro';
+import { getFullUrl, getAssetUrl } from '@/config/site';
+import { normalizeReworkStyle } from '@/utils/reworkThemes';
+
+export async function getStaticPaths() {
+  const assertions = await getCollection('assertions');
+  return assertions.map((assertion) => ({
+    params: { id: assertion.id.replace(/^.*\/|\.json$/g, '') },
+    props: { assertion },
+  }));
+}
+
+const { assertion } = Astro.props;
+const assertionId = Astro.params.id as string;
+
+const allBadges = await getCollection('badges');
+const badgeEntry =
+  (await getEntry('badges', assertion.data.badgeId)) ||
+  allBadges.find((b) => b.id.replace(/^.*\/|\.json$/g, '') === assertion.data.badgeId);
+
+if (!badgeEntry) {
+  throw new Error(`Badge no encontrado: ${assertion.data.badgeId}`);
+}
+
+const badge = badgeEntry;
+const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
+const badgeImageUrl = getFullUrl(badge.data.image);
+
+const certStyle = normalizeReworkStyle(assertion.data.styleOverride || badge.data.style || 'google');
+
+const pageTitle = `${badge.data.name} - ${assertion.data.recipient.name} | Certificados Digitales GDGoC UHU`;
+const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgado a ${assertion.data.recipient.name} por GDG on Campus Universidad de Huelva.`;
+---
+
+<BaseLayoutRework
+  title={pageTitle}
+  description={pageDescription}
+  image={badgeImageUrl}
+  certStyle={certStyle}
+  jsonLdUrl={assertionJsonUrl}
+  originalUrl={getAssetUrl(`/cert/${assertionId}`)}
+>
+  <CertificateDiplomaRework
+    assertion={assertion}
+    badge={badge}
+    assertionId={assertionId}
+    initialStyle={certStyle}
+  />
+
+  <BadgeModalRework
+    assertionUrl={assertionJsonUrl}
+    badgeName={badge.data.name}
+  />
+</BaseLayoutRework>

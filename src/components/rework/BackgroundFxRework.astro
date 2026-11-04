@@ -1,0 +1,522 @@
+---
+---
+
+<div id="theme-fx-container" class="fixed inset-0 pointer-events-none overflow-hidden z-0 no-print">
+  <!-- Interactive Cursor Spotlight Layer (Tracks mouse across all 12 styles) -->
+  <div class="cursor-spotlight absolute inset-0 transition-opacity duration-500"></div>
+
+  <!-- ======================================================================
+       1. GOOGLE MESH: Intelligent Multi-Point Gradient Mesh & Vector Rings
+       ====================================================================== -->
+  <div class="fx-layer fx-google absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full opacity-65" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="google-mesh-blur" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="85" />
+        </filter>
+      </defs>
+      <g filter="url(#google-mesh-blur)">
+        <circle cx="260" cy="210" r="240" fill="#4285F4" fill-opacity="0.32" style="animation: meshMorph 14s ease-in-out infinite;" />
+        <circle cx="1180" cy="220" r="250" fill="#EA4335" fill-opacity="0.26" style="animation: meshMorph 17s ease-in-out infinite reverse;" />
+        <circle cx="340" cy="720" r="240" fill="#FBBC04" fill-opacity="0.3" style="animation: meshMorph 16s ease-in-out infinite 2s;" />
+        <circle cx="1120" cy="700" r="260" fill="#34A853" fill-opacity="0.28" style="animation: meshMorph 15s ease-in-out infinite 1s;" />
+      </g>
+    </svg>
+    <!-- Precision Geometric Vector Rings -->
+    <svg class="absolute top-20 right-[5%] w-64 h-64 opacity-25" style="animation: spinSlow 45s linear infinite;" viewBox="0 0 240 240" fill="none">
+      <circle cx="120" cy="120" r="100" stroke="#4285F4" stroke-width="2.5" stroke-dasharray="18 12" />
+      <circle cx="120" cy="120" r="76" stroke="#EA4335" stroke-width="2" stroke-dasharray="8 10" />
+      <circle cx="120" cy="120" r="52" stroke="#FBBC04" stroke-width="2" />
+    </svg>
+    <svg class="absolute bottom-16 left-[4%] w-72 h-72 opacity-25" style="animation: spinSlow 50s linear infinite reverse;" viewBox="0 0 240 240" fill="none">
+      <circle cx="120" cy="120" r="104" stroke="#34A853" stroke-width="2.5" stroke-dasharray="22 14" />
+      <circle cx="120" cy="120" r="74" stroke="#4285F4" stroke-width="2" stroke-dasharray="10 12" />
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       2. HARDWARE PCB: Soldermask, 45° Gold/Copper Traces & IC Microchips
+       ====================================================================== -->
+  <div class="fx-layer fx-hardware absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full opacity-40" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Subtle PCB Via Grid -->
+      <defs>
+        <pattern id="pcb-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+          <circle cx="30" cy="30" r="1.5" fill="#00E676" fill-opacity="0.3" />
+          <path d="M 60 0 L 0 0 0 60" stroke="#00E676" stroke-width="0.4" stroke-opacity="0.12" />
+        </pattern>
+      </defs>
+      <rect width="1440" height="900" fill="url(#pcb-grid)" />
+
+      <!-- Left & Right 45-Degree Copper/Gold Traces -->
+      <g stroke="#D4AF37" stroke-width="2.5" stroke-opacity="0.55">
+        <path d="M0 140 H140 L210 210 H340" />
+        <path d="M0 165 H125 L195 235 H310" />
+        <path d="M0 680 H160 L230 610 H380" />
+        <path d="M1440 180 H1280 L1210 250 H1080" />
+        <path d="M1440 205 H1295 L1225 275 H1110" />
+        <path d="M1440 720 H1260 L1190 650 H1040" />
+      </g>
+
+      <!-- Animated High-Speed Signal Pulses along PCB Traces -->
+      <g stroke="#00E676" stroke-width="3" stroke-dasharray="40 260" style="animation: pcbSignal 4s linear infinite;">
+        <path d="M0 140 H140 L210 210 H340" />
+        <path d="M1440 180 H1280 L1210 250 H1080" />
+        <path d="M0 680 H160 L230 610 H380" />
+        <path d="M1440 720 H1260 L1190 650 H1040" />
+      </g>
+
+      <!-- Via Holes (Gold Rings) -->
+      <g fill="#03120C" stroke="#FFD54F" stroke-width="2.5">
+        <circle cx="340" cy="210" r="6" />
+        <circle cx="310" cy="235" r="6" />
+        <circle cx="380" cy="610" r="6" />
+        <circle cx="1080" cy="250" r="6" />
+        <circle cx="1110" cy="275" r="6" />
+        <circle cx="1040" cy="650" r="6" />
+      </g>
+
+      <!-- Left IC Microchip (U1: GDG-CORE) -->
+      <g transform="translate(70, 360)">
+        <rect x="20" y="20" width="110" height="110" rx="8" fill="#041B11" stroke="#D4AF37" stroke-width="2.5" />
+        <rect x="34" y="34" width="82" height="82" rx="4" fill="#072E1D" stroke="#00E676" stroke-width="1.5" />
+        <circle cx="46" cy="46" r="4" fill="#FFD54F" />
+        <!-- IC Pins -->
+        <path d="M35 6v14M55 6v14M75 6v14M95 6v14M115 6v14" stroke="#D4AF37" stroke-width="4" />
+        <path d="M35 130v14M55 130v14M75 130v14M95 130v14M115 130v14" stroke="#D4AF37" stroke-width="4" />
+        <path d="M6 35h14M6 55h14M6 75h14M6 95h14M6 115h14" stroke="#D4AF37" stroke-width="4" />
+        <path d="M130 35h14M130 55h14M130 75h14M130 95h14M130 115h14" stroke="#D4AF37" stroke-width="4" />
+        <text x="75" y="74" text-anchor="middle" fill="#FFD54F" font-family="monospace" font-size="10" font-weight="bold">GDG-UHU</text>
+        <text x="75" y="90" text-anchor="middle" fill="#00E676" font-family="monospace" font-size="9">REV 2.0</text>
+      </g>
+
+      <!-- Right IC Microchip (U2: SHA256-ENG) -->
+      <g transform="translate(1230, 380)">
+        <rect x="20" y="20" width="100" height="100" rx="8" fill="#041B11" stroke="#00E676" stroke-width="2.5" />
+        <rect x="34" y="34" width="72" height="72" rx="4" fill="#072E1D" stroke="#D4AF37" stroke-width="1.5" />
+        <path d="M38 6v14M58 6v14M78 6v14M98 6v14" stroke="#D4AF37" stroke-width="4" />
+        <path d="M38 120v14M58 120v14M78 120v14M98 120v14" stroke="#D4AF37" stroke-width="4" />
+        <text x="70" y="72" text-anchor="middle" fill="#00E676" font-family="monospace" font-size="10" font-weight="bold">SHA-256</text>
+        <text x="70" y="86" text-anchor="middle" fill="#FFD54F" font-family="monospace" font-size="8">VERIFIED</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       3. CYBERPUNK: Edgerunners Acid Yellow, Cyber Magenta & Glitch HUD
+       ====================================================================== -->
+  <div class="fx-layer fx-cyberpunk absolute inset-0">
+    <!-- Perspective Neon Grid -->
+    <div
+      class="absolute inset-0 opacity-30"
+      style="background-image: linear-gradient(rgba(252, 238, 10, 0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 85, 0.22) 1px, transparent 1px); background-size: 64px 64px;"
+    ></div>
+    <!-- High-Speed Scanline -->
+    <div class="absolute left-0 right-0 h-1 bg-gradient-to-r from-[#FF0055] via-[#FCEE0A] to-[#00F0FF] shadow-[0_0_24px_#FCEE0A]" style="animation: scanlineFast 5s linear infinite;"></div>
+
+    <!-- HUD Targeting Reticles & Hazard Geometry -->
+    <svg class="absolute inset-0 w-full h-full opacity-55" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Top-Left Hazard Block -->
+      <g transform="translate(45, 110)" style="animation: cyberGlitch 6s infinite;">
+        <path d="M0 0 H220 L200 28 H0 Z" fill="#FCEE0A" fill-opacity="0.18" stroke="#FCEE0A" stroke-width="1.5" />
+        <text x="14" y="19" fill="#FCEE0A" font-family="monospace" font-size="12" font-weight="bold">SYS.NEURAL_LINK // 2077.UHU</text>
+      </g>
+      <!-- Bottom-Left Telemetry -->
+      <g transform="translate(50, 760)">
+        <rect x="0" y="0" width="210" height="58" fill="#0D0618" stroke="#FF0055" stroke-width="2" />
+        <line x1="0" y1="0" x2="18" y2="0" stroke="#00F0FF" stroke-width="5" />
+        <text x="14" y="24" fill="#00F0FF" font-family="monospace" font-size="11" font-weight="bold">SANDEVISTAN::READY</text>
+        <text x="14" y="44" fill="#FF0055" font-family="monospace" font-size="10">BADGE_PROTOCOL: v2.0</text>
+      </g>
+      <!-- Right HUD Reticle -->
+      <g transform="translate(1260, 260)" style="animation: spinSlow 32s linear infinite;">
+        <circle cx="0" cy="0" r="88" stroke="#00F0FF" stroke-width="2" stroke-dasharray="28 14 8 14" />
+        <circle cx="0" cy="0" r="62" stroke="#FF0055" stroke-width="1.5" stroke-dasharray="12 12" />
+        <path d="M-98 0 H-72 M72 0 H98 M0 -98 V-72 M0 72 V98" stroke="#FCEE0A" stroke-width="2.5" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       4. PISCINA / VERANO: Real Ocean Swell, Water Splashes & Caustics
+       ====================================================================== -->
+  <div class="fx-layer fx-piscina absolute inset-0">
+    <!-- Underwater Caustic Light Network -->
+    <svg class="absolute inset-0 w-full h-full opacity-35" style="animation: causticShimmer 8s ease-in-out infinite;" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <path d="M-100 180 C220 90, 480 280, 760 160 C1040 40, 1280 240, 1540 130" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" opacity="0.45" />
+      <path d="M-80 380 C260 280, 540 460, 860 340 C1120 220, 1320 420, 1540 310" stroke="#E0F7FA" stroke-width="10" stroke-linecap="round" opacity="0.4" />
+      <path d="M120 0 C220 260, 80 540, 240 900" stroke="#FFFFFF" stroke-width="8" opacity="0.3" />
+      <path d="M1180 0 C1060 300, 1280 580, 1140 900" stroke="#FFFFFF" stroke-width="8" opacity="0.3" />
+    </svg>
+
+    <!-- Multi-Layered Rolling Ocean Waves & Vector Water Splashes at Bottom -->
+    <svg class="absolute bottom-0 left-0 w-[112%] h-64 opacity-55" style="animation: oceanSwellLeft 7s ease-in-out infinite;" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="#0284C7" d="M0,160 C180,240 360,80 540,160 C720,240 900,80 1080,160 C1260,240 1380,120 1440,160 L1440,320 L0,320 Z"></path>
+    </svg>
+    <svg class="absolute bottom-0 left-0 w-[112%] h-52 opacity-65" style="animation: oceanSwellRight 5.5s ease-in-out infinite;" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="#00E5FF" d="M0,192 C200,100 400,260 600,170 C800,80 1000,250 1200,175 C1320,130 1400,180 1440,200 L1440,320 L0,320 Z"></path>
+    </svg>
+    <svg class="absolute bottom-0 left-0 w-[112%] h-40 opacity-75" style="animation: oceanSwellLeft 4.5s ease-in-out infinite;" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="#FFFFFF" d="M0,230 C160,180 340,280 520,220 C700,160 880,270 1060,215 C1240,160 1360,240 1440,210 L1440,320 L0,320 Z"></path>
+    </svg>
+
+    <!-- Vector Water Splash Crowns & Droplets (Left & Right) -->
+    <svg class="absolute bottom-24 left-[5%] w-48 h-48 opacity-80" style="animation: splashPulse 4s ease-in-out infinite;" viewBox="0 0 200 200" fill="none">
+      <path d="M20 170 Q60 90 45 55 Q85 115 100 35 Q115 115 155 55 Q140 90 180 170 Z" fill="#FFFFFF" fill-opacity="0.65" stroke="#00E5FF" stroke-width="3" />
+      <circle cx="35" cy="35" r="7" fill="#FFFFFF" />
+      <circle cx="100" cy="16" r="9" fill="#00F2FE" />
+      <circle cx="165" cy="38" r="6" fill="#FFFFFF" />
+      <circle cx="70" cy="28" r="5" fill="#E0F7FA" />
+      <circle cx="135" cy="25" r="5.5" fill="#FFFFFF" />
+    </svg>
+    <svg class="absolute bottom-20 right-[5%] w-52 h-52 opacity-80" style="animation: splashPulse 4.8s ease-in-out infinite 1s;" viewBox="0 0 200 200" fill="none">
+      <path d="M20 170 Q60 90 45 55 Q85 115 100 35 Q115 115 155 55 Q140 90 180 170 Z" fill="#E0F7FA" fill-opacity="0.65" stroke="#FFFFFF" stroke-width="3" />
+      <circle cx="40" cy="32" r="8" fill="#FFFFFF" />
+      <circle cx="100" cy="14" r="7" fill="#FFFFFF" />
+      <circle cx="162" cy="34" r="8" fill="#00E5FF" />
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       5. NIEVE / INVIERNO: Storm Clouds, Lightning Bolts, Wind & Frost
+       ====================================================================== -->
+  <div class="fx-layer fx-nieve absolute inset-0">
+    <!-- Periodic Sheet-Lightning Sky Flash -->
+    <div class="absolute inset-0 bg-sky-100/25" style="animation: stormLightning 7.5s infinite;"></div>
+
+    <!-- Jagged SVG Lightning Bolts Striking from Storm Clouds -->
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Lightning Bolt 1 (Left-Center) -->
+      <g style="animation: boltStrike 7.5s infinite;">
+        <path d="M310 40 L260 190 L325 195 L245 380 L295 385 L210 620" stroke="#E0F2FE" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M260 190 L195 290 L165 370" stroke="#7DD3FC" stroke-width="2.5" stroke-linecap="round" />
+        <path d="M245 380 L330 480" stroke="#7DD3FC" stroke-width="2" stroke-linecap="round" />
+      </g>
+      <!-- Lightning Bolt 2 (Right-Center, offset timing) -->
+      <g style="animation: boltStrike 9.5s infinite 3.2s;">
+        <path d="M1140 30 L1085 180 L1150 188 L1060 390 L1115 400 L1025 650" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M1085 180 L1185 285" stroke="#BAE6FD" stroke-width="2.5" stroke-linecap="round" />
+      </g>
+
+      <!-- Layered Arctic Storm Clouds at Top -->
+      <g opacity="0.65" style="animation: cloudDrift 12s ease-in-out infinite;">
+        <path d="M-100 0 H1540 V110 C1380 160, 1220 90, 1060 135 C900 180, 740 95, 580 140 C420 185, 240 100, 80 145 C-20 170, -80 120, -100 110 Z" fill="url(#storm-cloud-grad)" />
+      </g>
+      <defs>
+        <linearGradient id="storm-cloud-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#020617" stop-opacity="0.95" />
+          <stop offset="65%" stop-color="#1E293B" stop-opacity="0.7" />
+          <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Corner Crystalline Ice Fractals -->
+      <g stroke="#BAE6FD" stroke-width="2" opacity="0.45" transform="translate(90, 760)">
+        <path d="M0 -65 V65 M-56 -32 L56 32 M-56 32 L56 -32" />
+        <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" stroke="#FFFFFF" stroke-width="1.5" />
+      </g>
+      <g stroke="#BAE6FD" stroke-width="2" opacity="0.45" transform="translate(1350, 750)">
+        <path d="M0 -65 V65 M-56 -32 L56 32 M-56 32 L56 -32" />
+        <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" stroke="#FFFFFF" stroke-width="1.5" />
+      </g>
+    </svg>
+
+    <!-- High-Velocity Freezing Wind Streaks -->
+    <div class="absolute top-[22%] left-0 w-[34rem] h-[2px] bg-gradient-to-r from-transparent via-sky-100/75 to-transparent" style="animation: windStreak 2.4s linear infinite;"></div>
+    <div class="absolute top-[45%] left-0 w-[40rem] h-[3px] bg-gradient-to-r from-transparent via-white/65 to-transparent" style="animation: windStreak 2.1s linear infinite 0.7s;"></div>
+    <div class="absolute top-[68%] left-0 w-[32rem] h-[2px] bg-gradient-to-r from-transparent via-sky-200/70 to-transparent" style="animation: windStreak 2.7s linear infinite 1.3s;"></div>
+    <div class="absolute top-[82%] left-0 w-[36rem] h-[2.5px] bg-gradient-to-r from-transparent via-white/60 to-transparent" style="animation: windStreak 2.3s linear infinite 0.4s;"></div>
+  </div>
+
+  <!-- ======================================================================
+       6. CARAMELOS: Iridescent Rainbow, Pot of Gold, Unicorn & Vector Sweets
+       ====================================================================== -->
+  <div class="fx-layer fx-caramelos absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Sweeping 7-Band Pastel-Vibrant Rainbow Arc -->
+      <g opacity="0.38">
+        <path d="M-80 860 A 860 860 0 0 1 1520 860" stroke="#FF1493" stroke-width="18" />
+        <path d="M-62 860 A 842 842 0 0 1 1502 860" stroke="#FF8C00" stroke-width="18" />
+        <path d="M-44 860 A 824 824 0 0 1 1484 860" stroke="#FFD700" stroke-width="18" />
+        <path d="M-26 860 A 806 806 0 0 1 1466 860" stroke="#00E676" stroke-width="18" />
+        <path d="M-8 860 A 788 788 0 0 1 1448 860" stroke="#00E5FF" stroke-width="18" />
+        <path d="M10 860 A 770 770 0 0 1 1430 860" stroke="#8B5CF6" stroke-width="18" />
+      </g>
+
+      <!-- Bottom-Right: Golden Cauldron (Caldero de Oro) Overflowing with Gold Coins -->
+      <g transform="translate(1210, 650)" style="animation: floatSlow 6s ease-in-out infinite;">
+        <!-- Shimmering Gold Aura -->
+        <circle cx="85" cy="70" r="85" fill="#FBBF24" fill-opacity="0.22" />
+        <!-- Overflowing Gold Coins -->
+        <circle cx="52" cy="48" r="14" fill="#FDE047" stroke="#D97706" stroke-width="2.5" />
+        <circle cx="75" cy="38" r="16" fill="#FACC15" stroke="#B45309" stroke-width="2.5" />
+        <circle cx="100" cy="42" r="15" fill="#FDE047" stroke="#D97706" stroke-width="2.5" />
+        <circle cx="120" cy="52" r="13" fill="#FBBF24" stroke="#B45309" stroke-width="2.5" />
+        <circle cx="64" cy="56" r="13" fill="#FBBF24" stroke="#D97706" stroke-width="2" />
+        <circle cx="90" cy="55" r="14" fill="#FDE047" stroke="#B45309" stroke-width="2" />
+        <!-- Cauldron Body -->
+        <path d="M28 60 H142 C158 95, 148 145, 85 148 C22 145, 12 95, 28 60 Z" fill="#1E1B4B" stroke="#F59E0B" stroke-width="4" />
+        <rect x="22" y="52" width="126" height="14" rx="7" fill="#D97706" stroke="#FEF08A" stroke-width="2" />
+        <!-- Golden 4-Point Sparkles Rising -->
+        <path d="M85 6 L89 18 L101 22 L89 26 L85 38 L81 26 L69 22 L81 18 Z" fill="#FACC15" style="animation: goldSparkle 2.5s ease-in-out infinite;" />
+        <path d="M135 16 L138 24 L146 27 L138 30 L135 38 L132 30 L124 27 L132 24 Z" fill="#FDE047" style="animation: goldSparkle 3.1s ease-in-out infinite 0.8s;" />
+      </g>
+
+      <!-- Bottom-Left: Stylized Vector Unicorn Silhouette with Golden Horn & Pastel Mane -->
+      <g transform="translate(55, 635)" style="animation: floatReverse 6.5s ease-in-out infinite;">
+        <!-- Fluffy Pastel Cloud Base -->
+        <path d="M20 140 C5 140, 0 120, 18 115 C22 95, 50 92, 62 105 C78 88, 115 92, 122 112 C142 112, 148 140, 125 140 Z" fill="#FFFFFF" stroke="#F472B6" stroke-width="2.5" />
+        <!-- Unicorn Head & Neck -->
+        <path d="M48 115 C45 85, 52 55, 68 42 L75 28 L82 42 C98 46, 115 58, 112 72 C108 82, 90 80, 82 76 C78 92, 82 106, 86 115 Z" fill="#FFFFFF" stroke="#EC4899" stroke-width="2.5" />
+        <!-- Spiraled Golden Unicorn Horn -->
+        <polygon points="78,36 108,4 88,46" fill="#FACC15" stroke="#D97706" stroke-width="2" />
+        <!-- Rainbow Mane -->
+        <path d="M62 45 C42 48, 34 64, 46 74 C32 78, 30 94, 46 102" stroke="#FF1493" stroke-width="6" stroke-linecap="round" />
+        <path d="M58 54 C40 58, 36 72, 48 82" stroke="#38BDF8" stroke-width="5" stroke-linecap="round" />
+      </g>
+
+      <!-- Top Swirled Vector Lollipops -->
+      <g transform="translate(115, 150)" opacity="0.65" style="animation: floatSlow 5.5s ease-in-out infinite;">
+        <line x1="0" y1="0" x2="0" y2="65" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" />
+        <circle cx="0" cy="0" r="28" fill="#FF85C0" stroke="#FF1493" stroke-width="3" />
+        <path d="M0 0 C10 -10, 18 5, 8 14 C-6 22, -20 6, -12 -12 C-2 -26, 22 -16, 22 4" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       7. AURORA & COSMOS: Deep Space Starfield, Constellations & Borealis
+       ====================================================================== -->
+  <div class="fx-layer fx-aurora absolute inset-0">
+    <!-- Sweeping Aurora Borealis Curtains -->
+    <div class="absolute -top-24 left-[5%] right-[5%] h-96 rounded-full bg-gradient-to-r from-[#00FFAA]/35 via-[#38BDF8]/30 to-[#A855F7]/35 blur-3xl" style="animation: auroraCurtain 10s ease-in-out infinite;"></div>
+    <div class="absolute top-32 left-[15%] right-[10%] h-80 rounded-full bg-gradient-to-r from-[#A855F7]/25 via-[#00FFAA]/30 to-[#EC4899]/25 blur-3xl" style="animation: auroraCurtain 13s ease-in-out infinite reverse;"></div>
+
+    <!-- Starfield, Sacred Constellations & Orbital Astrolabe -->
+    <svg class="absolute inset-0 w-full h-full opacity-75" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Constellation Lines (Left & Right) -->
+      <g stroke="#00FFAA" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="4 4">
+        <polyline points="90,180 155,140 220,165 265,230 190,265 155,140" />
+        <polyline points="1160,160 1230,195 1290,150 1350,210 1280,280" />
+      </g>
+      <!-- Constellation Stars -->
+      <g fill="#FFFFFF">
+        <circle cx="90" cy="180" r="3" style="animation: starTwinkle 3s infinite;" />
+        <circle cx="155" cy="140" r="4" fill="#00FFAA" style="animation: starTwinkle 4s infinite 0.5s;" />
+        <circle cx="220" cy="165" r="2.5" />
+        <circle cx="265" cy="230" r="3.5" fill="#38BDF8" style="animation: starTwinkle 3.5s infinite 1s;" />
+        <circle cx="190" cy="265" r="2.5" />
+        <circle cx="1160" cy="160" r="3.5" fill="#C084FC" style="animation: starTwinkle 3.2s infinite;" />
+        <circle cx="1230" cy="195" r="2.5" />
+        <circle cx="1290" cy="150" r="4" fill="#00FFAA" style="animation: starTwinkle 4.2s infinite 0.8s;" />
+        <circle cx="1350" cy="210" r="3" />
+        <circle cx="1280" cy="280" r="3.5" fill="#38BDF8" />
+      </g>
+      <!-- Cosmic Orbital Rings -->
+      <g transform="translate(1220, 680)" opacity="0.35" style="animation: spinSlow 60s linear infinite;">
+        <ellipse cx="0" cy="0" rx="160" ry="60" transform="rotate(-25)" stroke="#00FFAA" stroke-width="1.5" />
+        <ellipse cx="0" cy="0" rx="160" ry="60" transform="rotate(35)" stroke="#A855F7" stroke-width="1.5" stroke-dasharray="10 8" />
+        <circle cx="0" cy="0" r="18" fill="#00FFAA" fill-opacity="0.3" stroke="#FFFFFF" stroke-width="2" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       8. BLUEPRINT CAD: Engineering Schematics, Callouts & Compass
+       ====================================================================== -->
+  <div class="fx-layer fx-blueprint absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full opacity-55" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Outer Drafting Frame & Center Marks -->
+      <rect x="28" y="84" width="1384" height="788" stroke="#93C5FD" stroke-width="1.5" stroke-opacity="0.5" />
+      <rect x="36" y="92" width="1368" height="772" stroke="#60A5FA" stroke-width="0.8" stroke-dasharray="8 6" stroke-opacity="0.4" />
+
+      <!-- Left Isometric Gear / Engineering Compass Schematic -->
+      <g transform="translate(150, 460)" stroke="#93C5FD" stroke-width="1.5" opacity="0.65">
+        <circle cx="0" cy="0" r="92" stroke-dasharray="16 8 4 8" />
+        <circle cx="0" cy="0" r="68" />
+        <circle cx="0" cy="0" r="28" fill="#1E3A8A" fill-opacity="0.5" />
+        <line x1="-115" y1="0" x2="115" y2="0" stroke-dasharray="10 5" />
+        <line x1="0" y1="-115" x2="0" y2="115" stroke-dasharray="10 5" />
+        <!-- Dimension Callout -->
+        <line x1="-92" y1="125" x2="92" y2="125" stroke="#EFF6FF" />
+        <line x1="-92" y1="115" x2="-92" y2="135" stroke="#EFF6FF" />
+        <line x1="92" y1="115" x2="92" y2="135" stroke="#EFF6FF" />
+        <text x="0" y="142" text-anchor="middle" fill="#EFF6FF" font-family="monospace" font-size="11">Ø 184.00 mm ±0.02</text>
+      </g>
+
+      <!-- Bottom-Right ISO 7200 Engineering Title Block (Cajetín Técnico) -->
+      <g transform="translate(1030, 745)" opacity="0.7">
+        <rect x="0" y="0" width="360" height="105" fill="#07193E" fill-opacity="0.85" stroke="#93C5FD" stroke-width="2" />
+        <line x1="0" y1="35" x2="360" y2="35" stroke="#60A5FA" stroke-width="1.2" />
+        <line x1="0" y1="70" x2="360" y2="70" stroke="#60A5FA" stroke-width="1.2" />
+        <line x1="180" y1="35" x2="180" y2="105" stroke="#60A5FA" stroke-width="1.2" />
+        <text x="14" y="23" fill="#EFF6FF" font-family="monospace" font-size="12" font-weight="bold">ETSI · UNIVERSIDAD DE HUELVA</text>
+        <text x="14" y="57" fill="#93C5FD" font-family="monospace" font-size="10">SCALE: 1:1 (A4 ISO)</text>
+        <text x="192" y="57" fill="#93C5FD" font-family="monospace" font-size="10">STD: OPEN BADGES 2.0</text>
+        <text x="14" y="92" fill="#60A5FA" font-family="monospace" font-size="10">DWG NO: GDG-UHU-2026</text>
+        <text x="192" y="92" fill="#EFF6FF" font-family="monospace" font-size="10" font-weight="bold">STATUS: VERIFIED</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       9. ANTIGUO: Classical Greece & Egypt (Mosaics, Pyramids & Hieroglyphs)
+       ====================================================================== -->
+  <div class="fx-layer fx-antiguo absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full opacity-55" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Top & Bottom Greek Meander (Greca) Mosaic Border Pattern -->
+      <defs>
+        <pattern id="greek-meander" width="48" height="24" patternUnits="userSpaceOnUse">
+          <path d="M0 22 H48 M0 2 H48 M6 22 V8 H30 V16 H18 V12" stroke="#B45309" stroke-width="2" fill="none" opacity="0.45" />
+        </pattern>
+      </defs>
+      <rect x="0" y="76" width="1440" height="24" fill="url(#greek-meander)" />
+      <rect x="0" y="860" width="1440" height="24" fill="url(#greek-meander)" />
+
+      <!-- Left: Greek Doric Column Capital & Laurel Geometry -->
+      <g transform="translate(55, 240)" stroke="#B45309" stroke-width="2" opacity="0.45">
+        <rect x="10" y="0" width="110" height="16" fill="#D4AF37" fill-opacity="0.25" />
+        <path d="M20 16 L30 34 H100 L110 16 Z" fill="#1B365D" fill-opacity="0.15" />
+        <rect x="32" y="34" width="66" height="420" fill="#D4AF37" fill-opacity="0.1" />
+        <line x1="48" y1="34" x2="48" y2="454" />
+        <line x1="65" y1="34" x2="65" y2="454" />
+        <line x1="82" y1="34" x2="82" y2="454" />
+      </g>
+
+      <!-- Right: Egyptian Pyramids, Golden Solar Disc & Eye of Horus / Ankh Cartouche -->
+      <g transform="translate(1060, 560)" opacity="0.55">
+        <!-- Solar Disc with Rays -->
+        <circle cx="190" cy="40" r="52" fill="#D4AF37" fill-opacity="0.35" stroke="#B45309" stroke-width="2" />
+        <!-- Great Pyramids -->
+        <polygon points="40,260 175,75 310,260" fill="#D4AF37" fill-opacity="0.28" stroke="#92400E" stroke-width="2.5" />
+        <line x1="175" y1="75" x2="145" y2="260" stroke="#92400E" stroke-width="1.8" />
+        <polygon points="210,260 315,120 420,260" fill="#B45309" fill-opacity="0.22" stroke="#92400E" stroke-width="2" />
+        <!-- Hieroglyphic Cartouche Pillar -->
+        <rect x="250" y="-280" width="58" height="210" rx="29" fill="#FAF5E8" fill-opacity="0.7" stroke="#1B365D" stroke-width="2.5" />
+        <!-- Ankh Symbol inside Cartouche -->
+        <circle cx="279" cy="-225" r="12" stroke="#B45309" stroke-width="2.5" />
+        <line x1="279" y1="-213" x2="279" y2="-175" stroke="#B45309" stroke-width="2.5" />
+        <line x1="263" y1="-200" x2="295" y2="-200" stroke="#B45309" stroke-width="2.5" />
+        <!-- Eye of Ra / Pyramidion -->
+        <polygon points="279,-155 262,-125 296,-125" stroke="#1B365D" stroke-width="2" fill="#D4AF37" fill-opacity="0.4" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       10. JAPÓN TRADICIONAL & ARTE DONGBA: Sakura, Torii, Seigaiha & Dongba
+       ====================================================================== -->
+  <div class="fx-layer fx-japon absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Crimson Rising Sun & Mist-Shrouded Mountains -->
+      <circle cx="1180" cy="240" r="110" fill="#C82829" fill-opacity="0.16" />
+      <path d="M880 780 L1080 540 L1260 780 Z" fill="#1C1917" fill-opacity="0.06" />
+      <path d="M1060 780 L1240 500 L1440 780 Z" fill="#C82829" fill-opacity="0.08" />
+
+      <!-- Traditional Vermilion Torii Gate Silhouette (Bottom-Right) -->
+      <g transform="translate(1150, 560)" opacity="0.45">
+        <path d="M10 35 Q110 18 210 35 L204 48 Q110 34 16 48 Z" fill="#C82829" />
+        <rect x="28" y="68" width="164" height="10" rx="3" fill="#C82829" />
+        <rect x="52" y="42" width="14" height="190" fill="#C82829" />
+        <rect x="154" y="42" width="14" height="190" fill="#C82829" />
+        <rect x="104" y="44" width="12" height="32" fill="#1C1917" />
+      </g>
+
+      <!-- Authentic Naxi Dongba Pictographic Scroll (Left Margin: Sun, Mountain, Water, Scholar) -->
+      <g transform="translate(55, 220)" opacity="0.42" stroke="#1C1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="0" y="0" width="76" height="360" rx="12" fill="#FAF6F0" stroke="#C82829" stroke-width="2" />
+        <!-- Dongba Sun Pictograph -->
+        <circle cx="38" cy="55" r="16" fill="#C82829" fill-opacity="0.2" />
+        <circle cx="38" cy="55" r="4" fill="#C82829" />
+        <path d="M38 32v-6M38 84v-6M15 55H9M67 55h-6" />
+        <!-- Dongba Mountain & Cloud Pictograph -->
+        <path d="M16 155 L28 125 L38 142 L50 118 L62 155 Z" fill="#D4AF37" fill-opacity="0.25" />
+        <!-- Dongba Flowing Water Pictograph -->
+        <path d="M16 215 Q28 205 38 215 T60 215" />
+        <path d="M16 230 Q28 220 38 230 T60 230" />
+        <!-- Dongba Crowned Scholar / Wisdom Pictograph -->
+        <circle cx="38" cy="285" r="10" />
+        <path d="M24 274 L38 264 L52 274" stroke="#C82829" />
+        <path d="M38 295 V325 M22 308 H54 M26 338 L38 325 L50 338" />
+      </g>
+
+      <!-- Floating Vector Sakura Petals (No Emojis!) -->
+      <g fill="#FDA4AF" stroke="#E11D48" stroke-width="1">
+        <path d="M200 0 C210 -12, 225 -12, 220 5 C215 18, 200 22, 195 10 C190 -2, 195 -8, 200 0 Z" style="animation: sakuraFall 9s linear infinite;" />
+        <path d="M520 0 C530 -12, 545 -12, 540 5 C535 18, 520 22, 515 10 Z" style="animation: sakuraFall 11s linear infinite 2s;" />
+        <path d="M860 0 C870 -12, 885 -12, 880 5 C875 18, 860 22, 855 10 Z" style="animation: sakuraFall 8.5s linear infinite 4s;" />
+        <path d="M1140 0 C1150 -12, 1165 -12, 1160 5 C1155 18, 1140 22, 1135 10 Z" style="animation: sakuraFall 10.5s linear infinite 1.2s;" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       11. VOYNICH & VIDRIERAS: Stained-Glass Rose Window & Arcane Ciphers
+       ====================================================================== -->
+  <div class="fx-layer fx-voynich absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Stained Glass Leaded Pane Geometry -->
+      <g stroke="#F59E0B" stroke-width="1.5" stroke-opacity="0.28">
+        <line x1="0" y1="220" x2="360" y2="0" />
+        <line x1="0" y1="680" x2="360" y2="900" />
+        <line x1="1440" y1="220" x2="1080" y2="0" />
+        <line x1="1440" y1="680" x2="1080" y2="900" />
+      </g>
+
+      <!-- Left Cathedral Rose Window & Voynich Astrolabe Medallion -->
+      <g transform="translate(150, 450)" style="animation: spinSlow 70s linear infinite;">
+        <circle cx="0" cy="0" r="125" fill="#E11D48" fill-opacity="0.12" stroke="#F59E0B" stroke-width="2.5" />
+        <circle cx="0" cy="0" r="92" fill="#2563EB" fill-opacity="0.12" stroke="#FCD34D" stroke-width="1.8" stroke-dasharray="10 6" />
+        <circle cx="0" cy="0" r="54" fill="#10B981" fill-opacity="0.15" stroke="#F59E0B" stroke-width="2" />
+        <!-- Stained Glass Petals -->
+        <path d="M0 -125 L0 125 M-125 0 L125 0 M-88 -88 L88 88 M-88 88 L88 -88" stroke="#F59E0B" stroke-width="1.8" opacity="0.6" />
+        <!-- Central Voynich Sun/Star Emblem -->
+        <polygon points="0,-32 9,-9 32,-9 14,6 20,28 0,15 -20,28 -14,6 -32,-9 -9,-9" fill="#FBBF24" fill-opacity="0.45" stroke="#FEF3C7" stroke-width="1.5" />
+      </g>
+
+      <!-- Right Voynich Botanical / Celestial Medallion -->
+      <g transform="translate(1290, 450)" style="animation: spinSlow 80s linear infinite reverse;">
+        <circle cx="0" cy="0" r="115" fill="#9333EA" fill-opacity="0.14" stroke="#F59E0B" stroke-width="2.5" />
+        <circle cx="0" cy="0" r="78" fill="#F59E0B" fill-opacity="0.12" stroke="#F43F5E" stroke-width="2" />
+        <path d="M0 -115 C35 -55, 35 55, 0 115 C-35 55, -35 -55, 0 -115 Z" stroke="#34D399" stroke-width="2" fill="#10B981" fill-opacity="0.1" />
+        <path d="M-115 0 C-55 35, 55 35, 115 0 C55 -35, -55 -35, -115 0 Z" stroke="#60A5FA" stroke-width="2" fill="#2563EB" fill-opacity="0.1" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- ======================================================================
+       12. MIXTECA / AMAZONIA: Step-Fret Grecas, Codex Glyphs & Jungle Canopy
+       ====================================================================== -->
+  <div class="fx-layer fx-mixteca absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <!-- Mixtec Step-Fret (Xicalcoliuhqui) Geometric Borders -->
+      <defs>
+        <pattern id="mixtec-greca" width="80" height="36" patternUnits="userSpaceOnUse">
+          <path d="M0 32 H24 V10 H56 V24 H40 V18 H48 M56 24 H80" stroke="#F59E0B" stroke-width="3" fill="none" opacity="0.45" />
+          <rect x="8" y="8" width="8" height="8" fill="#00A86B" fill-opacity="0.5" />
+        </pattern>
+      </defs>
+      <rect x="0" y="74" width="1440" height="36" fill="url(#mixtec-greca)" />
+      <rect x="0" y="852" width="1440" height="36" fill="url(#mixtec-greca)" />
+
+      <!-- Left Mixtec Solar & Jade Codex Medallion -->
+      <g transform="translate(135, 450)" opacity="0.55">
+        <circle cx="0" cy="0" r="96" fill="#00A86B" fill-opacity="0.18" stroke="#F59E0B" stroke-width="3.5" />
+        <circle cx="0" cy="0" r="68" fill="#C41E3A" fill-opacity="0.2" stroke="#2DD4BF" stroke-width="2.5" stroke-dasharray="12 8" />
+        <polygon points="0,-88 20,-52 -20,-52" fill="#F59E0B" />
+        <polygon points="0,88 20,52 -20,52" fill="#F59E0B" />
+        <polygon points="-88,0 -52,20 -52,-20" fill="#F59E0B" />
+        <polygon points="88,0 52,20 52,-20" fill="#F59E0B" />
+        <rect x="-26" y="-26" width="52" height="52" rx="6" fill="#064E3B" stroke="#FCD34D" stroke-width="3" />
+        <circle cx="0" cy="0" r="10" fill="#2DD4BF" />
+      </g>
+
+      <!-- Amazonian Tropical Canopy Leaves (Bottom Corners) -->
+      <g fill="#00A86B" fill-opacity="0.22" stroke="#10B981" stroke-width="2">
+        <path d="M-20 900 C20 750, 120 680, 240 660 C190 760, 110 840, -20 900 Z" />
+        <path d="M0 900 C80 790, 180 750, 310 760 C230 830, 130 880, 0 900 Z" fill="#2DD4BF" fill-opacity="0.16" />
+        <path d="M1460 900 C1420 750, 1320 680, 1200 660 C1250 760, 1330 840, 1460 900 Z" />
+      </g>
+    </svg>
+  </div>
+</div>
