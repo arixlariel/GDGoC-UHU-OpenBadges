@@ -222,10 +222,14 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
 
       /* ==========================================================================
-         THEME DROPDOWN OPTIONS (Hover displacement sin desborde)
+         THEME DROPDOWN OPTIONS (Desplazamiento dinámico sin colisión)
          ========================================================================== */
       .theme-option-btn {
-        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                    background 0.2s ease,
+                    color 0.2s ease,
+                    box-shadow 0.2s ease;
+        will-change: transform;
       }
       .theme-option-btn > span {
         display: inline-block;
@@ -234,14 +238,13 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       .theme-option-btn:hover > span:first-child {
         transform: scale(1.15);
       }
-      .theme-option-btn:hover > span:last-child {
-        transform: translateX(5px);
-      }
       @media (prefers-reduced-motion: reduce) {
-        .theme-option-btn > span {
+        .theme-option-btn {
+          transform: none !important;
           transition: none !important;
         }
-        .theme-option-btn:hover > span {
+        .theme-option-btn > span {
+          transition: none !important;
           transform: none !important;
         }
       }
@@ -311,6 +314,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="google"] .theme-option-btn:hover {
         background: #E8F0FE;
         color: #1967D2;
+        transform: translateX(5px);
+        box-shadow: 0 4px 14px rgba(66, 133, 244, 0.16);
       }
       html[data-theme="google"] .theme-card {
         background: rgba(255, 255, 255, 0.92);
@@ -417,7 +422,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="cyber"] .theme-option-btn:hover {
         background: rgba(0, 240, 255, 0.18);
         color: #00F0FF;
-        box-shadow: inset 3px 0 0 #00F0FF;
+        transform: translateX(5px) skewX(-2.5deg);
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
       }
       html[data-theme="cyber"] .theme-card {
         background: rgba(11, 17, 36, 0.82);
@@ -524,6 +530,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="piscina"] .theme-option-btn:hover {
         background: rgba(0, 229, 255, 0.28);
         color: #004D61;
+        transform: translateX(5px);
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.2);
       }
       html[data-theme="piscina"] .theme-card {
         background: rgba(255, 255, 255, 0.82);
@@ -630,6 +638,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="nieve"] .theme-option-btn:hover {
         background: rgba(186, 230, 253, 0.22);
         color: #FFFFFF;
+        transform: translateX(5px);
+        box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
       }
       html[data-theme="nieve"] .theme-card {
         background: rgba(14, 38, 68, 0.65);
@@ -758,6 +768,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="caramelos"] .theme-option-btn:hover {
         background: #FFD1E8;
         color: #C2185B;
+        transform: translateX(5px) rotate(1deg);
+        box-shadow: 0 4px 14px rgba(255, 20, 147, 0.25);
       }
       html[data-theme="caramelos"] .theme-card {
         background: rgba(255, 250, 253, 0.9);
