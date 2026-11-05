@@ -58,7 +58,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
 >
   <!-- Hero Section -->
   <section class="theme-hero-section relative overflow-hidden pt-10 pb-16 sm:pt-16 sm:pb-20 backdrop-blur-md transition-all duration-500">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
         <!-- Left Column: Title, Copy & Verification Search -->
         <div class="lg:col-span-7 text-center lg:text-left">
@@ -121,9 +121,13 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </div>
         </div>
 
-        <!-- Right Column: Campus ETSI UHU Illustration Card -->
+        <!-- Right Column: Campus ETSI UHU Illustration Card with 3D Tilt -->
         <div class="lg:col-span-5">
-          <div class="theme-card relative mx-auto max-w-sm lg:max-w-none rounded-3xl overflow-hidden p-3">
+          <div
+            data-tilt-max="5.5"
+            class="tilt-card theme-card relative mx-auto max-w-sm lg:max-w-none rounded-3xl overflow-hidden p-3 group"
+          >
+            <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-3xl"></div>
             <div class="overflow-hidden rounded-2xl border theme-border">
               <img
                 src={getAssetUrl('/images/gdgoc-uhu-logo.jpg')}
@@ -141,7 +145,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
   </section>
 
   <!-- Certificados Emitidos Recientes -->
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 py-14 relative z-10">
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-14 relative z-10">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-2">
       <div>
         <h2 class="font-display text-2xl sm:text-3xl font-bold theme-text-primary">
@@ -167,8 +171,10 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
         return (
           <a
             href={getAssetUrl(`/cert/${id}`)}
-            class="cert-card-item theme-card group relative overflow-hidden rounded-2xl p-5 block"
+            data-tilt-max="4"
+            class="cert-card-item tilt-card theme-card group relative overflow-hidden rounded-2xl p-5 block"
           >
+            <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-2xl"></div>
             <!-- Top accent bar per certificate style -->
             {styleKey === 'google' && (
               <div class="absolute top-0 left-0 right-0 h-1.5 grid grid-cols-4">
@@ -255,7 +261,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
 
   <!-- Características del Sistema -->
   <section class="theme-hero-section border-t theme-border py-14 relative z-10 backdrop-blur-md">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="text-center max-w-xl mx-auto mb-10">
         <h2 class="font-display text-2xl font-bold theme-text-primary">
           Estándar Open Badges 2.0
@@ -266,7 +272,8 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-        <div class="theme-card p-6 rounded-2xl">
+        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
+          <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-2xl"></div>
           <div class="w-11 h-11 rounded-2xl bg-[#4285F4]/15 text-[#4285F4] flex items-center justify-center font-display font-bold text-lg mb-4">
             1
           </div>
@@ -276,7 +283,8 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </p>
         </div>
 
-        <div class="theme-card p-6 rounded-2xl">
+        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
+          <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-2xl"></div>
           <div class="w-11 h-11 rounded-2xl bg-[#34A853]/15 text-[#34A853] flex items-center justify-center font-display font-bold text-lg mb-4">
             2
           </div>
@@ -286,7 +294,8 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </p>
         </div>
 
-        <div class="theme-card p-6 rounded-2xl">
+        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
+          <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-2xl"></div>
           <div class="w-11 h-11 rounded-2xl bg-[#FBBC04]/20 text-[#F29900] flex items-center justify-center font-display font-bold text-lg mb-4">
             3
           </div>

@@ -196,6 +196,32 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="caramelos"] .fx-caramelos { display: block; }
 
       /* ==========================================================================
+         3D PERSPECTIVE TILT CARDS & SPECULAR GLARE
+         ========================================================================== */
+      .tilt-card {
+        transform-style: preserve-3d;
+        will-change: transform;
+        transition: transform 0.15s ease-out;
+      }
+      .tilt-glare {
+        background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.32), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .tilt-card:hover .tilt-glare {
+        opacity: 1;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .tilt-card {
+          transform: none !important;
+          transition: none !important;
+        }
+        .tilt-glare {
+          display: none !important;
+        }
+      }
+
+      /* ==========================================================================
          1. THEME: GOOGLE (Clásico Google · Material 3 · 4 Colores Oficiales)
          ========================================================================== */
       html[data-theme="google"] body {
@@ -756,8 +782,11 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           transition: none !important;
           font-variant-ligatures: none !important;
         }
-        header, footer, .no-print, #theme-fx-container, .diploma-watermark, badge-modal, dialog {
+        header, footer, .no-print, #theme-fx-container, .diploma-watermark, badge-modal, dialog, .tilt-glare {
           display: none !important;
+        }
+        .tilt-card {
+          transform: none !important;
         }
         .footer-lbl-mobile,
         .footer-lbl-short {
@@ -1223,6 +1252,32 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         dropdown?.classList.add('hidden');
         chevron?.classList.remove('rotate-180');
       });
+
+      // Interactive 3D Tilt Cards (.tilt-card)
+      function initTiltCards() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const cards = document.querySelectorAll('.tilt-card');
+        cards.forEach((card) => {
+          const maxTilt = Number(card.getAttribute('data-tilt-max') || '4.5');
+          card.addEventListener('pointermove', (e) => {
+            if (window.innerWidth < 768) return;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const pctX = x / rect.width;
+            const pctY = y / rect.height;
+            const rotateY = (pctX - 0.5) * maxTilt * 2;
+            const rotateX = (0.5 - pctY) * maxTilt * 2;
+            card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
+            card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
+            card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
+          });
+          card.addEventListener('pointerleave', () => {
+            card.style.transform = '';
+          });
+        });
+      }
+      initTiltCards();
     </script>
   </body>
 </html>
