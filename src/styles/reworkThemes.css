@@ -886,9 +886,6 @@ html[data-theme="aurora"] .theme-search-box {
   border: 2px solid #00FFAA;
   box-shadow: 0 0 25px rgba(0, 255, 170, 0.3);
 }
-  background: rgba(5, 8, 25, 0.9);
-  border: 1.5px solid #00FFAA;
-}
 
 /* ==========================================================================
    8. BLUEPRINT CAD (Prussian Cyanotype, Technical Drafting & ISO Schematics)
@@ -1246,8 +1243,6 @@ html[data-theme="voynich"] .theme-search-box {
   border: 2px solid #B45309;
   font-family: 'Almendra', Georgia, serif;
   box-shadow: 0 6px 24px rgba(120, 53, 15, 0.12);
-}
-  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* ==========================================================================
