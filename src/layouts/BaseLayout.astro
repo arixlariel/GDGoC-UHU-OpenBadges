@@ -222,22 +222,110 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
 
       /* ==========================================================================
-         THEME DROPDOWN OPTIONS (Desplazamiento dinámico sin colisión)
+         THEME DROPDOWN OPTIONS (Efecto Hover Dinámico, Llamativo y Sin Colisión)
          ========================================================================== */
       .theme-option-btn {
+        border: 1.5px solid transparent;
         transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
                     background 0.2s ease,
                     color 0.2s ease,
-                    box-shadow 0.2s ease;
+                    border-color 0.2s ease,
+                    box-shadow 0.22s ease;
         will-change: transform;
       }
       .theme-option-btn > span {
         display: inline-block;
-        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), filter 0.22s ease;
       }
-      .theme-option-btn:hover > span:first-child {
-        transform: scale(1.15);
+
+      /* Hover específico por cada estilo: preview interactivo con colores y personalidad propia */
+      /* 1. Opción Google */
+      .theme-option-btn[data-set-theme="google"]:hover {
+        transform: translateX(6.5px) translateY(-1px);
+        background: rgba(66, 133, 244, 0.16);
+        color: #1A73E8;
+        border-color: rgba(66, 133, 244, 0.5);
+        box-shadow: 0 4px 18px rgba(66, 133, 244, 0.28);
       }
+      .theme-option-btn[data-set-theme="google"]:hover > span:first-child {
+        transform: scale(1.3) rotate(-6deg);
+        filter: drop-shadow(0 2px 6px rgba(66, 133, 244, 0.5));
+      }
+
+      /* 2. Opción Cyber */
+      .theme-option-btn[data-set-theme="cyber"]:hover {
+        transform: translateX(6.5px) translateY(-1px) skewX(-2.5deg);
+        background: rgba(0, 240, 255, 0.2);
+        color: #008B99;
+        border-color: rgba(0, 240, 255, 0.7);
+        box-shadow: 0 0 22px rgba(0, 240, 255, 0.5), 0 4px 12px rgba(0, 240, 255, 0.25);
+      }
+      .theme-option-btn[data-set-theme="cyber"]:hover > span:first-child {
+        transform: scale(1.35) rotate(-10deg);
+        filter: drop-shadow(0 0 8px #00F0FF);
+      }
+
+      /* 3. Opción Piscina */
+      .theme-option-btn[data-set-theme="piscina"]:hover {
+        transform: translateX(6.5px) translateY(-1px);
+        background: rgba(0, 229, 255, 0.24);
+        color: #007791;
+        border-color: rgba(0, 188, 212, 0.6);
+        box-shadow: 0 4px 18px rgba(2, 132, 199, 0.32);
+      }
+      .theme-option-btn[data-set-theme="piscina"]:hover > span:first-child {
+        transform: scale(1.3) rotate(8deg);
+        filter: drop-shadow(0 2px 8px rgba(0, 229, 255, 0.6));
+      }
+
+      /* 4. Opción Nieve */
+      .theme-option-btn[data-set-theme="nieve"]:hover {
+        transform: translateX(6.5px) translateY(-1px);
+        background: rgba(186, 230, 253, 0.32);
+        color: #0284C7;
+        border-color: rgba(56, 189, 248, 0.6);
+        box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);
+      }
+      .theme-option-btn[data-set-theme="nieve"]:hover > span:first-child {
+        transform: scale(1.3) rotate(22deg);
+        filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.6));
+      }
+
+      /* 5. Opción Caramelos */
+      .theme-option-btn[data-set-theme="caramelos"]:hover {
+        transform: translateX(6.5px) translateY(-1px) rotate(1.2deg);
+        background: rgba(255, 105, 180, 0.24);
+        color: #D81B60;
+        border-color: rgba(255, 105, 180, 0.6);
+        box-shadow: 0 4px 18px rgba(255, 20, 147, 0.35);
+      }
+      .theme-option-btn[data-set-theme="caramelos"]:hover > span:first-child {
+        transform: scale(1.35) rotate(-12deg);
+        filter: drop-shadow(0 2px 8px rgba(255, 20, 147, 0.6));
+      }
+
+      /* Adaptación de contraste para paneles oscuros (Cyber y Nieve) */
+      html[data-theme="cyber"] .theme-option-btn[data-set-theme="google"]:hover,
+      html[data-theme="nieve"] .theme-option-btn[data-set-theme="google"]:hover {
+        color: #8AB4F8;
+      }
+      html[data-theme="cyber"] .theme-option-btn[data-set-theme="cyber"]:hover,
+      html[data-theme="nieve"] .theme-option-btn[data-set-theme="cyber"]:hover {
+        color: #00F0FF;
+      }
+      html[data-theme="cyber"] .theme-option-btn[data-set-theme="piscina"]:hover,
+      html[data-theme="nieve"] .theme-option-btn[data-set-theme="piscina"]:hover {
+        color: #38BDF8;
+      }
+      html[data-theme="cyber"] .theme-option-btn[data-set-theme="nieve"]:hover,
+      html[data-theme="nieve"] .theme-option-btn[data-set-theme="nieve"]:hover {
+        color: #FFFFFF;
+      }
+      html[data-theme="cyber"] .theme-option-btn[data-set-theme="caramelos"]:hover,
+      html[data-theme="nieve"] .theme-option-btn[data-set-theme="caramelos"]:hover {
+        color: #FF69B4;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .theme-option-btn {
           transform: none !important;
@@ -310,12 +398,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         background: rgba(255, 255, 255, 0.96);
         border-color: #DADCE0;
         color: #202124;
-      }
-      html[data-theme="google"] .theme-option-btn:hover {
-        background: #E8F0FE;
-        color: #1967D2;
-        transform: translateX(5px);
-        box-shadow: 0 4px 14px rgba(66, 133, 244, 0.16);
       }
       html[data-theme="google"] .theme-card {
         background: rgba(255, 255, 255, 0.92);
@@ -419,12 +501,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         color: #E2F1FF;
         box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
       }
-      html[data-theme="cyber"] .theme-option-btn:hover {
-        background: rgba(0, 240, 255, 0.18);
-        color: #00F0FF;
-        transform: translateX(5px) skewX(-2.5deg);
-        box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
-      }
       html[data-theme="cyber"] .theme-card {
         background: rgba(11, 17, 36, 0.82);
         border: 1px solid rgba(0, 240, 255, 0.35);
@@ -527,12 +603,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         border: 2px solid #00BCD4;
         color: #003847;
       }
-      html[data-theme="piscina"] .theme-option-btn:hover {
-        background: rgba(0, 229, 255, 0.28);
-        color: #004D61;
-        transform: translateX(5px);
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.2);
-      }
       html[data-theme="piscina"] .theme-card {
         background: rgba(255, 255, 255, 0.82);
         backdrop-filter: blur(14px);
@@ -634,12 +704,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         border: 1.5px solid rgba(186, 230, 253, 0.65);
         color: #F0F9FF;
         box-shadow: 0 15px 45px rgba(2, 132, 199, 0.5);
-      }
-      html[data-theme="nieve"] .theme-option-btn:hover {
-        background: rgba(186, 230, 253, 0.22);
-        color: #FFFFFF;
-        transform: translateX(5px);
-        box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
       }
       html[data-theme="nieve"] .theme-card {
         background: rgba(14, 38, 68, 0.65);
@@ -764,12 +828,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         border: 3px solid #FF69B4;
         color: #880E4F;
         box-shadow: 0 15px 40px rgba(255, 20, 147, 0.32);
-      }
-      html[data-theme="caramelos"] .theme-option-btn:hover {
-        background: #FFD1E8;
-        color: #C2185B;
-        transform: translateX(5px) rotate(1deg);
-        box-shadow: 0 4px 14px rgba(255, 20, 147, 0.25);
       }
       html[data-theme="caramelos"] .theme-card {
         background: rgba(255, 250, 253, 0.9);
