@@ -119,40 +119,68 @@ linkedinUrl.searchParams.set('certId', assertionId);
         </svg>
       </div>
 
-      <!-- 2. Hardware PCB Ornaments -->
+      <!-- 2. Hardware PCB Ornaments (Microchip, Gold Traces & Solder Pads) -->
       <div class="fx-layer fx-hardware absolute inset-0 pointer-events-none overflow-hidden">
-        <svg class="absolute top-0 left-0 w-64 h-64 opacity-40" viewBox="0 0 220 220" fill="none">
-          <path d="M0 45 H75 L110 80 H165" stroke="#D4AF37" stroke-width="2.5" />
-          <path d="M0 70 H60 L95 105 H140" stroke="#00E676" stroke-width="2" />
-          <circle cx="165" cy="80" r="5" fill="#04160E" stroke="#FFD54F" stroke-width="2.5" />
-          <circle cx="140" cy="105" r="5" fill="#04160E" stroke="#00E676" stroke-width="2.5" />
-          <rect x="28" y="28" width="28" height="28" rx="4" fill="#06291A" stroke="#D4AF37" stroke-width="2" />
+        <svg class="absolute top-0 left-0 w-72 h-72 opacity-50" viewBox="0 0 240 240" fill="none">
+          <!-- BGA Microchip Socket -->
+          <rect x="24" y="24" width="56" height="56" rx="6" fill="#04160E" stroke="#D4AF37" stroke-width="2.5" />
+          <text x="32" y="55" fill="#FFD54F" font-family="monospace" font-size="9" font-weight="bold">GDG-V4</text>
+          <!-- Bus traces with 45° bends -->
+          <path d="M80 38 H145 L175 68 H220" stroke="#D4AF37" stroke-width="2.5" />
+          <path d="M80 52 H135 L165 82 H210" stroke="#00E676" stroke-width="2" />
+          <path d="M52 80 V135 L82 165 V210" stroke="#D4AF37" stroke-width="2.5" />
+          <path d="M38 80 V145 L68 175 V220" stroke="#00E676" stroke-width="2" />
+          <!-- Test Points -->
+          <circle cx="220" cy="68" r="4.5" fill="#04160E" stroke="#FFD54F" stroke-width="2.5" />
+          <circle cx="210" cy="82" r="4" fill="#04160E" stroke="#00E676" stroke-width="2" />
+          <circle cx="82" cy="210" r="4.5" fill="#04160E" stroke="#FFD54F" stroke-width="2.5" />
+          <circle cx="68" cy="220" r="4" fill="#04160E" stroke="#00E676" stroke-width="2" />
         </svg>
-        <svg class="absolute bottom-0 right-0 w-64 h-64 opacity-40" viewBox="0 0 220 220" fill="none">
-          <path d="M220 175 H145 L110 140 H55" stroke="#D4AF37" stroke-width="2.5" />
-          <path d="M220 150 H160 L125 115 H80" stroke="#00E676" stroke-width="2" />
-          <circle cx="55" cy="140" r="5" fill="#04160E" stroke="#FFD54F" stroke-width="2.5" />
-          <circle cx="80" cy="115" r="5" fill="#04160E" stroke="#00E676" stroke-width="2.5" />
+        <svg class="absolute bottom-0 right-0 w-72 h-72 opacity-50" viewBox="0 0 240 240" fill="none">
+          <path d="M240 202 H165 L135 172 H75" stroke="#D4AF37" stroke-width="2.5" />
+          <path d="M240 188 H175 L145 158 H90" stroke="#00E676" stroke-width="2" />
+          <circle cx="75" cy="172" r="4.5" fill="#04160E" stroke="#FFD54F" stroke-width="2.5" />
+          <circle cx="90" cy="158" r="4" fill="#04160E" stroke="#00E676" stroke-width="2" />
         </svg>
       </div>
 
-      <!-- 3. Cyberpunk Ornaments -->
+      <!-- 3. Cyberpunk Ornaments (Night City Telemetry, Warning Chevrons & HUD) -->
       <div class="fx-layer fx-cyberpunk absolute inset-0 pointer-events-none overflow-hidden">
-        <svg class="absolute top-5 left-6 w-52 h-24 opacity-65" viewBox="0 0 220 90" fill="none">
-          <path d="M0 0 H170 L150 22 H0 Z" fill="#FCEE0A" fill-opacity="0.2" stroke="#FCEE0A" stroke-width="1.5" />
-          <text x="10" y="15" fill="#FCEE0A" font-family="monospace" font-size="10" font-weight="bold">NC_NET // VERIFIED</text>
+        <svg class="absolute top-4 left-5 w-60 h-28 opacity-75" viewBox="0 0 240 90" fill="none">
+          <path d="M0 0 H180 L160 26 H0 Z" fill="#FCEE0A" fill-opacity="0.25" stroke="#FCEE0A" stroke-width="2" />
+          <text x="12" y="18" fill="#FCEE0A" font-family="'Orbitron', monospace" font-size="10" font-weight="900" letter-spacing="1">NC_NET // 超過駆動</text>
+          <!-- Chevrons -->
+          <path d="M190 6 L200 13 L190 20" stroke="#FF0055" stroke-width="2.5" fill="none" />
+          <path d="M204 6 L214 13 L204 20" stroke="#00F0FF" stroke-width="2.5" fill="none" />
         </svg>
-        <svg class="absolute bottom-5 right-6 w-56 h-56 opacity-40" viewBox="0 0 200 200" fill="none">
-          <circle cx="130" cy="130" r="58" stroke="#00F0FF" stroke-width="2.5" stroke-dasharray="18 8 4 8" />
-          <circle cx="130" cy="130" r="40" stroke="#FF0055" stroke-width="2" />
+        <svg class="absolute bottom-4 right-5 w-60 h-60 opacity-55" viewBox="0 0 220 220" fill="none">
+          <circle cx="150" cy="150" r="62" stroke="#00F0FF" stroke-width="2.5" stroke-dasharray="24 10 6 10" />
+          <circle cx="150" cy="150" r="44" stroke="#FF0055" stroke-width="2" />
+          <path d="M150 78 V96 M150 204 V222 M78 150 H96 M204 150 H222" stroke="#FCEE0A" stroke-width="2" />
+          <text x="110" y="154" fill="#FCEE0A" font-family="monospace" font-size="9" font-weight="bold">SEC_OK</text>
         </svg>
       </div>
 
-      <!-- 4. Piscina / Verano Ornaments (Vector Waves & Splashes) -->
+      <!-- 4. Piscina / Verano Ornaments (Vector Waves & High-Pressure Splash Bursts) -->
       <div class="fx-layer fx-piscina absolute inset-0 pointer-events-none overflow-hidden">
-        <svg class="absolute bottom-0 left-0 w-full h-28 opacity-35" viewBox="0 0 1200 120" preserveAspectRatio="none">
-          <path d="M0,50 C200,110 400,-10 600,50 C800,110 1000,-10 1200,50 L1200,120 L0,120 Z" fill="#00E5FF" />
-          <path d="M0,75 C250,20 450,115 700,65 C950,15 1100,90 1200,70 L1200,120 L0,120 Z" fill="#0284C7" fill-opacity="0.45" />
+        <svg class="absolute bottom-0 left-0 w-full h-32 opacity-45" viewBox="0 0 1200 130" preserveAspectRatio="none">
+          <!-- Back ocean swell -->
+          <path d="M0,60 C220,120 420,-15 640,65 C860,130 1020,-10 1200,60 L1200,130 L0,130 Z" fill="#00E5FF" fill-opacity="0.5" />
+          <!-- Main rolling wave crest -->
+          <path d="M0,80 C280,25 460,125 720,70 C960,18 1120,95 1200,75 L1200,130 L0,130 Z" fill="#0284C7" />
+          <!-- Wave foam lip -->
+          <path d="M0,80 C280,25 460,125 720,70 C960,18 1120,95 1200,75" stroke="#FFFFFF" stroke-width="3" fill="none" stroke-linecap="round" />
+        </svg>
+        <!-- Splash Droplets Left & Right -->
+        <svg class="absolute bottom-6 left-6 w-24 h-24 opacity-60" viewBox="0 0 100 100" fill="none">
+          <circle cx="25" cy="40" r="5" fill="#FFFFFF" stroke="#00E5FF" stroke-width="2" />
+          <circle cx="45" cy="20" r="7" fill="#FFFFFF" stroke="#0284C7" stroke-width="2.5" />
+          <circle cx="68" cy="35" r="4.5" fill="#FFFFFF" stroke="#00E5FF" stroke-width="2" />
+        </svg>
+        <svg class="absolute bottom-6 right-6 w-24 h-24 opacity-60" viewBox="0 0 100 100" fill="none">
+          <circle cx="75" cy="40" r="5" fill="#FFFFFF" stroke="#00E5FF" stroke-width="2" />
+          <circle cx="55" cy="20" r="7" fill="#FFFFFF" stroke="#0284C7" stroke-width="2.5" />
+          <circle cx="32" cy="35" r="4.5" fill="#FFFFFF" stroke="#00E5FF" stroke-width="2" />
         </svg>
       </div>
 
@@ -184,12 +212,26 @@ linkedinUrl.searchParams.set('certId', assertionId);
         </svg>
       </div>
 
-      <!-- 7. Aurora & Cosmos Ornaments -->
+      <!-- 7. Aurora & Cosmos Ornaments (Constellations, Polaris & Borealis Arc) -->
       <div class="fx-layer fx-aurora absolute inset-0 pointer-events-none overflow-hidden">
-        <svg class="absolute top-6 right-6 w-44 h-44 opacity-45" viewBox="0 0 160 160" fill="none">
-          <ellipse cx="80" cy="80" rx="68" ry="26" transform="rotate(-30 80 80)" stroke="#00FFAA" stroke-width="1.5" />
-          <ellipse cx="80" cy="80" rx="68" ry="26" transform="rotate(30 80 80)" stroke="#A855F7" stroke-width="1.5" stroke-dasharray="6 4" />
-          <circle cx="80" cy="80" r="8" fill="#00FFAA" />
+        <!-- Constellation Top Right -->
+        <svg class="absolute top-5 right-6 w-48 h-48 opacity-65" viewBox="0 0 180 180" fill="none">
+          <!-- Ursa Major / Polaris linked stars -->
+          <line x1="30" y1="40" x2="68" y2="35" stroke="#00FFAA" stroke-width="1.5" stroke-dasharray="4 4" />
+          <line x1="68" y1="35" x2="110" y2="70" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="4 4" />
+          <line x1="110" y1="70" x2="148" y2="58" stroke="#A855F7" stroke-width="1.5" stroke-dasharray="4 4" />
+          <!-- Star nodes -->
+          <circle cx="30" cy="40" r="3.5" fill="#FFFFFF" />
+          <circle cx="68" cy="35" r="4.5" fill="#00FFAA" />
+          <circle cx="110" cy="70" r="4" fill="#38BDF8" />
+          <circle cx="148" cy="58" r="6" fill="#FFFFFF" stroke="#00FFAA" stroke-width="2" />
+          <!-- Concentric Orbit Ring -->
+          <ellipse cx="90" cy="90" rx="75" ry="32" transform="rotate(-25 90 90)" stroke="#00FFAA" stroke-width="1.5" stroke-opacity="0.4" />
+        </svg>
+        <!-- Alpine Pine Silhouette Bottom Corners -->
+        <svg class="absolute bottom-3 left-4 w-28 h-16 opacity-40" viewBox="0 0 120 70" fill="none">
+          <polygon points="25,70 25,25 15,40 25,20 18,30 25,10 32,30 25,20 35,40" fill="#00FFAA" />
+          <polygon points="65,70 65,30 55,45 65,22 58,34 65,14 72,34 65,22 75,45" fill="#38BDF8" />
         </svg>
       </div>
 
@@ -203,54 +245,74 @@ linkedinUrl.searchParams.set('certId', assertionId);
         </div>
       </div>
 
-      <!-- 9. Antiguo (Greece & Egypt) Ornaments -->
+      <!-- 9. Antiguo (Greece & Egypt) Ornaments (Doric Columns & Golden Ra Pyramids) -->
       <div class="fx-layer fx-antiguo absolute inset-0 pointer-events-none overflow-hidden">
-        <svg class="absolute bottom-6 left-7 w-28 h-24 opacity-45" viewBox="0 0 120 100" fill="none">
-          <polygon points="10,90 60,15 110,90" fill="#D4AF37" fill-opacity="0.3" stroke="#92400E" stroke-width="2.5" />
-          <circle cx="60" cy="58" r="10" stroke="#1B365D" stroke-width="2" />
+        <svg class="absolute bottom-5 left-6 w-32 h-28 opacity-55" viewBox="0 0 130 110" fill="none">
+          <polygon points="10,100 65,18 120,100" fill="#D4AF37" fill-opacity="0.25" stroke="#92400E" stroke-width="2.5" />
+          <circle cx="65" cy="55" r="14" fill="#D4AF37" stroke="#1B365D" stroke-width="2" />
         </svg>
-        <svg class="absolute bottom-6 right-7 w-28 h-24 opacity-45" viewBox="0 0 120 100" fill="none">
-          <polygon points="10,90 60,15 110,90" fill="#D4AF37" fill-opacity="0.3" stroke="#92400E" stroke-width="2.5" />
-          <circle cx="60" cy="58" r="10" stroke="#1B365D" stroke-width="2" />
+        <svg class="absolute bottom-5 right-6 w-32 h-28 opacity-55" viewBox="0 0 130 110" fill="none">
+          <polygon points="10,100 65,18 120,100" fill="#D4AF37" fill-opacity="0.25" stroke="#92400E" stroke-width="2.5" />
+          <circle cx="65" cy="55" r="14" fill="#D4AF37" stroke="#1B365D" stroke-width="2" />
         </svg>
       </div>
 
-      <!-- 10. Japón Tradicional & Dongba Ornaments -->
+      <!-- 10. Japón Tradicional & Dongba Ornaments (Torii, Fuji & Hanko Stamp) -->
       <div class="fx-layer fx-japon absolute inset-0 pointer-events-none overflow-hidden">
-        <svg class="absolute top-6 left-7 w-24 h-24 opacity-50" viewBox="0 0 100 100" fill="none">
-          <path d="M10 24 Q50 14 90 24 L86 32 Q50 24 14 32 Z" fill="#C82829" />
-          <rect x="20" y="42" width="60" height="6" fill="#C82829" />
-          <rect x="28" y="28" width="7" height="64" fill="#C82829" />
-          <rect x="65" y="28" width="7" height="64" fill="#C82829" />
+        <svg class="absolute top-5 left-6 w-28 h-28 opacity-65" viewBox="0 0 110 110" fill="none">
+          <!-- Torii Gate -->
+          <path d="M10 26 Q55 16 100 26 L96 34 Q55 26 14 34 Z" fill="#C82829" />
+          <rect x="22" y="44" width="66" height="6" fill="#C82829" />
+          <rect x="30" y="30" width="8" height="70" fill="#C82829" />
+          <rect x="72" y="30" width="8" height="70" fill="#C82829" />
         </svg>
-        <svg class="absolute top-6 right-7 w-20 h-20 opacity-45" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="36" fill="#C82829" fill-opacity="0.25" stroke="#C82829" stroke-width="2" />
+        <!-- Hanko Vermilion Stamp Top Right -->
+        <svg class="absolute top-5 right-6 w-24 h-24 opacity-60" viewBox="0 0 90 90" fill="none">
+          <rect x="10" y="10" width="70" height="70" rx="10" fill="#C82829" fill-opacity="0.15" stroke="#C82829" stroke-width="2.5" />
+          <text x="24" y="52" fill="#C82829" font-family="'Shippori Mincho', serif" font-size="28" font-weight="900">認可</text>
         </svg>
       </div>
 
-      <!-- 11. Voynich & Stained Glass Ornaments -->
+      <!-- 11. Manuscrito Voynich Ornaments (Auténticas Raíces Botánicas & Círculo Astrológico) -->
       <div class="fx-layer fx-voynich absolute inset-0 pointer-events-none overflow-hidden">
-        <svg class="absolute top-5 left-6 w-28 h-28 opacity-45" viewBox="0 0 120 120" fill="none">
-          <circle cx="60" cy="60" r="48" stroke="#F59E0B" stroke-width="2" />
-          <circle cx="60" cy="60" r="32" stroke="#F43F5E" stroke-width="1.5" stroke-dasharray="6 4" />
-          <path d="M60 12 V108 M12 60 H108" stroke="#F59E0B" stroke-width="1.5" />
+        <!-- Botanical Tuber Root Vine Top Left -->
+        <svg class="absolute top-4 left-5 w-36 h-36 opacity-60" viewBox="0 0 140 140" fill="none">
+          <!-- Curving Stem & Leaves -->
+          <path d="M15 125 C30 95, 45 75, 75 60 C95 50, 115 35, 125 15" stroke="#3F5E38" stroke-width="2.5" fill="none" />
+          <path d="M75 60 C65 42, 50 35, 35 42 C45 58, 60 62, 75 60 Z" fill="#3F5E38" fill-opacity="0.4" stroke="#78350F" stroke-width="1.5" />
+          <path d="M95 50 C110 40, 120 48, 125 60 C110 65, 100 58, 95 50 Z" fill="#3F5E38" fill-opacity="0.4" stroke="#78350F" stroke-width="1.5" />
+          <!-- Tuber Root Base -->
+          <path d="M10 130 C12 110, 28 105, 35 120 C40 132, 25 138, 10 130 Z" fill="#B45309" fill-opacity="0.5" stroke="#78350F" stroke-width="2" />
         </svg>
-        <svg class="absolute top-5 right-6 w-28 h-28 opacity-45" viewBox="0 0 120 120" fill="none">
-          <circle cx="60" cy="60" r="48" stroke="#F59E0B" stroke-width="2" />
-          <circle cx="60" cy="60" r="32" stroke="#34D399" stroke-width="1.5" stroke-dasharray="6 4" />
-          <path d="M60 12 V108 M12 60 H108" stroke="#F59E0B" stroke-width="1.5" />
+        <!-- Concentric Astrological Zodiac Wheel Top Right -->
+        <svg class="absolute top-4 right-5 w-36 h-36 opacity-60" viewBox="0 0 140 140" fill="none">
+          <circle cx="70" cy="70" r="60" stroke="#B45309" stroke-width="2" />
+          <circle cx="70" cy="70" r="44" stroke="#78350F" stroke-width="1.5" stroke-dasharray="5 3" />
+          <circle cx="70" cy="70" r="28" stroke="#B45309" stroke-width="1.5" />
+          <circle cx="70" cy="70" r="10" fill="#B45309" fill-opacity="0.3" stroke="#78350F" stroke-width="1.5" />
+          <!-- Radial astrological ticks -->
+          <line x1="70" y1="10" x2="70" y2="26" stroke="#78350F" stroke-width="1.5" />
+          <line x1="70" y1="114" x2="70" y2="130" stroke="#78350F" stroke-width="1.5" />
+          <line x1="10" y1="70" x2="26" y2="70" stroke="#78350F" stroke-width="1.5" />
+          <line x1="114" y1="70" x2="130" y2="70" stroke="#78350F" stroke-width="1.5" />
         </svg>
       </div>
 
-      <!-- 12. Mixteca / Amazonia Ornaments -->
+      <!-- 12. Mixteca / Amazonia Ornaments (Quetzalcoatl Scales, Sun Stone & Grecas) -->
       <div class="fx-layer fx-mixteca absolute inset-0 pointer-events-none overflow-hidden">
-        <svg class="absolute top-6 left-7 w-28 h-28 opacity-55" viewBox="0 0 120 120" fill="none">
-          <path d="M10 60 H40 V25 H85 V50 H60" stroke="#F59E0B" stroke-width="4" />
-          <rect x="18" y="18" width="14" height="14" fill="#00A86B" />
+        <svg class="absolute top-5 left-6 w-32 h-32 opacity-65" viewBox="0 0 130 130" fill="none">
+          <!-- Stepped Greca Frieze -->
+          <path d="M10 65 H45 V25 H95 V55 H65 V85 H105" stroke="#F59E0B" stroke-width="4" stroke-linejoin="miter" />
+          <rect x="20" y="20" width="16" height="16" fill="#00A86B" stroke="#F59E0B" stroke-width="1.5" />
+          <rect x="70" y="60" width="14" height="14" fill="#C41E3A" stroke="#F59E0B" stroke-width="1.5" />
         </svg>
-        <svg class="absolute top-6 right-7 w-28 h-28 opacity-55" viewBox="0 0 120 120" fill="none">
-          <path d="M110 60 H80 V25 H35 V50 H60" stroke="#F59E0B" stroke-width="4" />
-          <rect x="88" y="18" width="14" height="14" fill="#00A86B" />
+        <svg class="absolute top-5 right-6 w-32 h-32 opacity-65" viewBox="0 0 130 130" fill="none">
+          <circle cx="65" cy="65" r="54" stroke="#F59E0B" stroke-width="3" />
+          <circle cx="65" cy="65" r="38" stroke="#00A86B" stroke-width="2.5" stroke-dasharray="8 6" />
+          <polygon points="65,18 72,32 58,32" fill="#F59E0B" />
+          <polygon points="65,112 72,98 58,98" fill="#F59E0B" />
+          <polygon points="18,65 32,72 32,58" fill="#F59E0B" />
+          <polygon points="112,65 98,72 98,58" fill="#F59E0B" />
         </svg>
       </div>
 
@@ -762,25 +824,31 @@ linkedinUrl.searchParams.set('certId', assertionId);
     border: 2px solid rgba(200, 40, 41, 0.45);
   }
 
-  /* 11. Voynich & Vidrieras Glassmorphism Diploma */
+  /* 11. Manuscrito Voynich Diploma (Auténtico Pergamino, Tintas Sepia & MedievalSharp) */
   html[data-theme="voynich"] .diploma-outer {
-    background: linear-gradient(135deg, #E11D48, #F59E0B, #10B981, #2563EB, #9333EA);
-    box-shadow: 0 20px 60px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, #78350F 0%, #D4AF37 35%, #451A03 70%, #B45309 100%);
+    box-shadow: 0 20px 60px rgba(120, 53, 15, 0.35);
   }
   html[data-theme="voynich"] .diploma-inner {
-    background: linear-gradient(135deg, rgba(24, 13, 44, 0.92) 0%, rgba(15, 8, 28, 0.95) 100%);
-    backdrop-filter: blur(24px);
+    background: linear-gradient(180deg, #FBF6E9 0%, #F5EBD7 50%, #EDE0C7 100%);
+    color: #381E0B;
   }
-  html[data-theme="voynich"] .diploma-frame-1 { border: 2px solid rgba(245, 158, 11, 0.65); }
-  html[data-theme="voynich"] .diploma-frame-2 { border: 1.5px dashed rgba(244, 63, 94, 0.5); }
+  html[data-theme="voynich"] .diploma-frame-1 { border: 2.5px solid #78350F; }
+  html[data-theme="voynich"] .diploma-frame-2 { border: 1.5px dashed #B45309; }
   html[data-theme="voynich"] .diploma-recipient-name {
-    background: linear-gradient(90deg, #FBBF24, #F43F5E, #34D399);
+    font-family: 'MedievalSharp', 'Almendra', Georgia, serif;
+    background: linear-gradient(90deg, #451A03, #78350F, #92400E);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+  html[data-theme="voynich"] .diploma-issue-date {
+    color: #78350F !important;
+    -webkit-text-fill-color: #78350F !important;
+    font-family: 'Almendra', Georgia, serif;
+  }
   html[data-theme="voynich"] .diploma-meta-box {
-    background: rgba(30, 16, 53, 0.85);
-    border: 2px solid rgba(245, 158, 11, 0.55);
+    background: rgba(244, 234, 211, 0.94);
+    border: 2px solid #B45309;
   }
 
   /* 12. Mixteca / Amazonia Precolombina Diploma */
@@ -803,3 +871,4 @@ linkedinUrl.searchParams.set('certId', assertionId);
     border: 2px solid #F59E0B;
   }
 </style>
+

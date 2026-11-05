@@ -270,26 +270,25 @@ const THEMES: Record<string, ThemeColors> = {
   },
   voynich: {
     outerType: 'gradient',
-    outerStops: [[0, '#E11D48'], [0.33, '#F59E0B'], [0.66, '#10B981'], [1, '#6366F1']],
-    innerBg: ['#110920', '#1E1038'],
-    frame1Color: 'rgba(245, 158, 11, 0.7)',
+    outerStops: [[0, '#78350F'], [0.35, '#D4AF37'], [0.7, '#451A03'], [1, '#B45309']],
+    innerBg: ['#F8F3E4', '#EDE0C8'],
+    frame1Color: '#78350F',
     frame1Dash: [],
-    frame2Color: 'rgba(244, 63, 94, 0.55)',
+    frame2Color: '#B45309',
     frame2Dash: [16, 12],
-    textPrimary: '#FFFBEB',
-    textSecondary: '#FDE68A',
-    accentText: '#FBBF24',
-    dateGlow: 'rgba(245, 158, 11, 0.65)',
-    recipientStops: ['#FBBF24', '#F43F5E', '#34D399'],
-    borderColor: 'rgba(245, 158, 11, 0.55)',
-    pillBg: 'rgba(245, 158, 11, 0.2)',
-    pillBorder: '#FBBF24',
-    pillText: '#FEF3C7',
-    metaBg: 'rgba(24, 13, 44, 0.92)',
-    metaBorder: 'rgba(245, 158, 11, 0.6)',
-    fontMain: '"Plus Jakarta Sans", Georgia, serif',
-    fontDisplay: '"Cormorant Garamond", "Cinzel", Georgia, serif',
-    barColors: ['#E11D48', '#F59E0B', '#10B981', '#6366F1'],
+    textPrimary: '#2D1505',
+    textSecondary: '#6B3811',
+    accentText: '#B45309',
+    recipientStops: ['#451A03', '#78350F', '#B45309'],
+    borderColor: '#B45309',
+    pillBg: '#F3E8D0',
+    pillBorder: '#B45309',
+    pillText: '#451A03',
+    metaBg: 'rgba(243, 232, 208, 0.94)',
+    metaBorder: '#B45309',
+    fontMain: '"MedievalSharp", "Almendra", Georgia, serif',
+    fontDisplay: '"MedievalSharp", "Almendra", Georgia, serif',
+    barColors: ['#78350F', '#B45309', '#D4AF37', '#451A03'],
   },
   mixteca: {
     outerType: 'gradient',
@@ -453,31 +452,53 @@ function drawBespokeThemeCanvasArt(
       ctx.stroke();
     }
   } else if (key === 'hardware') {
-    // PCB Grid & Gold/Emerald Circuit Traces + IC Chip
+    // High-Density BGA Microchip, PCB Copper Traces & Solder Test Pads
     ctx.strokeStyle = 'rgba(0, 230, 118, 0.08)';
     ctx.lineWidth = 1.5;
-    for (let x = ix + 80; x < ix + iw; x += 80) {
+    for (let x = ix + 60; x < ix + iw; x += 60) {
       ctx.beginPath(); ctx.moveTo(x, iy); ctx.lineTo(x, iy + ih); ctx.stroke();
     }
-    for (let y = iy + 80; y < iy + ih; y += 80) {
+    for (let y = iy + 60; y < iy + ih; y += 60) {
       ctx.beginPath(); ctx.moveTo(ix, y); ctx.lineTo(ix + iw, y); ctx.stroke();
     }
+    // Microchip packages on both sides
+    const drawChip = (cxPos: number, cyPos: number) => {
+      ctx.fillStyle = '#03140C';
+      ctx.strokeStyle = '#D4AF37';
+      ctx.lineWidth = 4;
+      ctx.fillRect(cxPos - 60, cyPos - 60, 120, 120);
+      ctx.strokeRect(cxPos - 60, cyPos - 60, 120, 120);
+      // Pins
+      ctx.strokeStyle = '#00E676';
+      ctx.lineWidth = 3;
+      for (let p = -40; p <= 40; p += 20) {
+        ctx.beginPath(); ctx.moveTo(cxPos - 75, cyPos + p); ctx.lineTo(cxPos - 60, cyPos + p); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cxPos + 60, cyPos + p); ctx.lineTo(cxPos + 75, cyPos + p); ctx.stroke();
+      }
+      ctx.fillStyle = '#FFD54F';
+      ctx.font = '700 16px "Space Grotesk", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('GDG-V4', cxPos, cyPos + 6);
+    };
+    drawChip(ix + 160, iy + ih / 2);
+    drawChip(ix + iw - 160, iy + ih / 2);
+
     const drawTraces = (startX: number, dir: number) => {
-      [380, 680, 1020, 1360].forEach((yo, i) => {
+      [360, 640, 980, 1280].forEach((yo, i) => {
         const y = iy + yo;
-        ctx.strokeStyle = i % 2 === 0 ? 'rgba(212, 175, 55, 0.45)' : 'rgba(0, 230, 118, 0.42)';
+        ctx.strokeStyle = i % 2 === 0 ? 'rgba(212, 175, 55, 0.55)' : 'rgba(0, 230, 118, 0.5)';
         ctx.lineWidth = 5;
         ctx.beginPath();
         ctx.moveTo(startX, y);
         ctx.lineTo(startX + dir * 140, y);
-        ctx.lineTo(startX + dir * 200, y + (i % 2 === 0 ? -55 : 55));
-        ctx.lineTo(startX + dir * 290, y + (i % 2 === 0 ? -55 : 55));
+        ctx.lineTo(startX + dir * 200, y + (i % 2 === 0 ? -60 : 60));
+        ctx.lineTo(startX + dir * 320, y + (i % 2 === 0 ? -60 : 60));
         ctx.stroke();
         ctx.fillStyle = '#04160E';
         ctx.strokeStyle = '#FFD54F';
         ctx.lineWidth = 4;
         ctx.beginPath();
-        ctx.arc(startX + dir * 290, y + (i % 2 === 0 ? -55 : 55), 11, 0, Math.PI * 2);
+        ctx.arc(startX + dir * 320, y + (i % 2 === 0 ? -60 : 60), 12, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
       });
@@ -485,55 +506,83 @@ function drawBespokeThemeCanvasArt(
     drawTraces(ix + 50, 1);
     drawTraces(ix + iw - 50, -1);
   } else if (key === 'cyberpunk') {
-    // Edgerunners Diagonal Hazard Stripes & HUD Reticles
-    ctx.fillStyle = 'rgba(252, 238, 10, 0.12)';
-    for (let i = 0; i < 8; i++) {
+    // Night City Skyscraper Silhouette & Acid Yellow Hazard Chevrons
+    ctx.fillStyle = 'rgba(7, 4, 14, 0.75)';
+    // Futuristic skyline background
+    const buildings: Array<[number, number, number]> = [
+      [ix + 60, 280, 70], [ix + 140, 420, 85], [ix + 240, 310, 60],
+      [ix + iw - 320, 350, 75], [ix + iw - 230, 460, 90], [ix + iw - 130, 290, 65]
+    ];
+    for (const [bx, bh, bw] of buildings) {
+      ctx.fillRect(bx, iy + ih - bh, bw, bh);
+      // Lit windows
+      ctx.fillStyle = Math.random() > 0.5 ? 'rgba(252, 238, 10, 0.65)' : 'rgba(0, 240, 255, 0.65)';
+      for (let wy = iy + ih - bh + 25; wy < iy + ih - 30; wy += 35) {
+        ctx.fillRect(bx + 12, wy, 8, 8);
+        ctx.fillRect(bx + bw - 20, wy, 8, 8);
+      }
+      ctx.fillStyle = 'rgba(7, 4, 14, 0.75)';
+    }
+
+    // Hazard Stripes & Reticles
+    ctx.fillStyle = 'rgba(252, 238, 10, 0.2)';
+    for (let i = 0; i < 10; i++) {
       ctx.beginPath();
-      ctx.moveTo(ix + 60 + i * 36, iy + 60);
-      ctx.lineTo(ix + 78 + i * 36, iy + 60);
-      ctx.lineTo(ix + 58 + i * 36, iy + 96);
-      ctx.lineTo(ix + 40 + i * 36, iy + 96);
+      ctx.moveTo(ix + 50 + i * 40, iy + 50);
+      ctx.lineTo(ix + 72 + i * 40, iy + 50);
+      ctx.lineTo(ix + 48 + i * 40, iy + 94);
+      ctx.lineTo(ix + 26 + i * 40, iy + 94);
       ctx.closePath();
       ctx.fill();
     }
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.35)';
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.5)';
     ctx.lineWidth = 5;
     ctx.setLineDash([28, 12, 8, 12]);
     ctx.beginPath();
     ctx.arc(ix + 160, iy + ih - 160, 190, 0, Math.PI * 2);
     ctx.stroke();
-    ctx.strokeStyle = 'rgba(255, 0, 85, 0.4)';
+    ctx.strokeStyle = 'rgba(255, 0, 85, 0.55)';
     ctx.beginPath();
     ctx.arc(ix + iw - 160, iy + 160, 190, 0, Math.PI * 2);
     ctx.stroke();
     ctx.setLineDash([]);
   } else if (key === 'piscina') {
-    // Multi-layered rolling ocean waves + water splash crowns
-    ctx.fillStyle = 'rgba(0, 229, 255, 0.22)';
+    // Multi-layered ocean waves curling forward + high-pressure water splash bursts
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.28)';
     ctx.beginPath();
     ctx.moveTo(ix, iy + ih);
-    ctx.lineTo(ix, iy + ih - 250);
-    ctx.bezierCurveTo(ix + iw * 0.28, iy + ih - 350, ix + iw * 0.62, iy + ih - 140, ix + iw, iy + ih - 270);
+    ctx.lineTo(ix, iy + ih - 260);
+    ctx.bezierCurveTo(ix + iw * 0.28, iy + ih - 380, ix + iw * 0.62, iy + ih - 140, ix + iw, iy + ih - 290);
     ctx.lineTo(ix + iw, iy + ih);
     ctx.closePath();
     ctx.fill();
 
-    ctx.fillStyle = 'rgba(2, 132, 199, 0.14)';
+    ctx.fillStyle = 'rgba(2, 132, 199, 0.22)';
     ctx.beginPath();
     ctx.moveTo(ix, iy + ih);
-    ctx.lineTo(ix, iy + ih - 165);
-    ctx.bezierCurveTo(ix + iw * 0.35, iy + ih - 80, ix + iw * 0.72, iy + ih - 250, ix + iw, iy + ih - 150);
+    ctx.lineTo(ix, iy + ih - 180);
+    ctx.bezierCurveTo(ix + iw * 0.35, iy + ih - 90, ix + iw * 0.72, iy + ih - 280, ix + iw, iy + ih - 160);
     ctx.lineTo(ix + iw, iy + ih);
     ctx.closePath();
     ctx.fill();
 
-    // Vector Water Droplets & Bubbles
+    // White foam crest lines
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(ix, iy + ih - 180);
+    ctx.bezierCurveTo(ix + iw * 0.35, iy + ih - 90, ix + iw * 0.72, iy + ih - 280, ix + iw, iy + ih - 160);
+    ctx.stroke();
+
+    // Splashing Droplets radiating outwards
     for (const [bx, by, br] of [
-      [ix + 160, iy + 520, 32], [ix + 230, iy + 860, 22], [ix + 150, iy + 1220, 36],
-      [ix + iw - 160, iy + 520, 32], [ix + iw - 230, iy + 860, 22], [ix + iw - 150, iy + 1220, 36],
+      [ix + 140, iy + 480, 28], [ix + 220, iy + 820, 20], [ix + 130, iy + 1180, 32],
+      [ix + 260, iy + 360, 16], [ix + 180, iy + 960, 24],
+      [ix + iw - 140, iy + 480, 28], [ix + iw - 220, iy + 820, 20], [ix + iw - 130, iy + 1180, 32],
+      [ix + iw - 260, iy + 360, 16], [ix + iw - 180, iy + 960, 24],
     ]) {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
-      ctx.strokeStyle = 'rgba(0, 188, 212, 0.6)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+      ctx.strokeStyle = 'rgba(0, 188, 212, 0.75)';
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.arc(bx, by, br, 0, Math.PI * 2);
@@ -591,30 +640,67 @@ function drawBespokeThemeCanvasArt(
       ctx.stroke();
     });
   } else if (key === 'aurora') {
-    // Aurora Borealis Glow + Star Constellations
-    const g1 = ctx.createRadialGradient(ix + iw * 0.25, iy + 240, 20, ix + iw * 0.25, iy + 240, 850);
-    g1.addColorStop(0, 'rgba(0, 255, 170, 0.22)');
-    g1.addColorStop(0.5, 'rgba(56, 189, 248, 0.14)');
-    g1.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    // Spectacular Cosmic Starfield, Shooting Meteor & Undulating Aurora Borealis Curtains
+    // Twinkling Starfield
+    const stars: Array<[number, number, number, number]> = [
+      [ix + 120, iy + 140, 3, 0.9], [ix + 220, iy + 260, 4, 1], [ix + 310, iy + 180, 2.5, 0.8],
+      [ix + 180, iy + 380, 3.5, 0.85], [ix + 280, iy + 480, 3, 0.7], [ix + 140, iy + 620, 2, 0.6],
+      [ix + iw - 140, iy + 150, 4, 1], [ix + iw - 240, iy + 240, 2.5, 0.8], [ix + iw - 320, iy + 190, 3, 0.9],
+      [ix + iw - 180, iy + 360, 3.5, 0.85], [ix + iw - 260, iy + 490, 2, 0.7], [ix + iw - 120, iy + 600, 3, 0.75],
+    ];
+    for (const [sx, sy, sr, so] of stars) {
+      ctx.fillStyle = `rgba(255, 255, 255, ${so})`;
+      ctx.beginPath();
+      ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Shooting Meteor Streak
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(ix + 160, iy + 100);
+    ctx.lineTo(ix + 340, iy + 220);
+    ctx.stroke();
+
+    // Multi-Layer Glowing Aurora Curtains
+    const g1 = ctx.createLinearGradient(ix, iy + 100, ix + iw, iy + 400);
+    g1.addColorStop(0, 'rgba(0, 255, 170, 0.35)');
+    g1.addColorStop(0.35, 'rgba(56, 189, 248, 0.28)');
+    g1.addColorStop(0.7, 'rgba(168, 85, 247, 0.32)');
+    g1.addColorStop(1, 'rgba(0, 255, 170, 0.2)');
     ctx.fillStyle = g1;
-    ctx.fillRect(ix, iy, iw, ih);
+    ctx.beginPath();
+    ctx.moveTo(ix, iy + 350);
+    ctx.bezierCurveTo(ix + iw * 0.25, iy + 120, ix + iw * 0.55, iy + 420, ix + iw, iy + 220);
+    ctx.lineTo(ix + iw, iy + 420);
+    ctx.bezierCurveTo(ix + iw * 0.6, iy + 580, ix + iw * 0.2, iy + 320, ix, iy + 480);
+    ctx.closePath();
+    ctx.fill();
 
-    const g2 = ctx.createRadialGradient(ix + iw * 0.78, iy + ih - 260, 20, ix + iw * 0.78, iy + ih - 260, 850);
-    g2.addColorStop(0, 'rgba(168, 85, 247, 0.24)');
-    g2.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = g2;
-    ctx.fillRect(ix, iy, iw, ih);
-
-    ctx.strokeStyle = 'rgba(0, 255, 170, 0.38)';
+    // Constellation lines top right
+    ctx.strokeStyle = 'rgba(0, 255, 170, 0.5)';
     ctx.lineWidth = 2.5;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
-    ctx.moveTo(ix + 120, iy + 320);
-    ctx.lineTo(ix + 210, iy + 240);
-    ctx.lineTo(ix + 260, iy + 360);
-    ctx.lineTo(ix + 170, iy + 460);
+    ctx.moveTo(ix + iw - 320, iy + 190);
+    ctx.lineTo(ix + iw - 240, iy + 240);
+    ctx.lineTo(ix + iw - 180, iy + 360);
+    ctx.lineTo(ix + iw - 140, iy + 150);
     ctx.stroke();
     ctx.setLineDash([]);
+
+    // Alpine Pine Tree Horizon Silhouette at bottom
+    ctx.fillStyle = '#02040A';
+    for (let px = ix + 40; px < ix + iw - 40; px += 45) {
+      const ph = 60 + ((px * 13) % 45);
+      ctx.beginPath();
+      ctx.moveTo(px, iy + ih);
+      ctx.lineTo(px + 15, iy + ih - ph);
+      ctx.lineTo(px + 30, iy + ih);
+      ctx.closePath();
+      ctx.fill();
+    }
   } else if (key === 'blueprint') {
     // Millimeter & Centimeter Engineering CAD Grid + Dimension Arrows
     ctx.strokeStyle = 'rgba(147, 197, 253, 0.14)';
@@ -665,16 +751,48 @@ function drawBespokeThemeCanvasArt(
     ctx.fillRect(ix + 132, iy + 490, 14, 150);
     ctx.fillRect(ix + 224, iy + 490, 14, 150);
   } else if (key === 'voynich') {
-    // Stained-Glass Rose Window & Voynich Astrolabe Rings
-    for (const cxPos of [ix + 190, ix + iw - 190]) {
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.38)';
-      ctx.lineWidth = 4;
+    // Authentic Voynich Manuscript Botanical Roots & Zodiac Wheel
+    // Botanical Root Tubers & Curving Vines on left
+    ctx.strokeStyle = '#3F5E38';
+    ctx.lineWidth = 4.5;
+    ctx.beginPath();
+    ctx.moveTo(ix + 120, iy + ih - 140);
+    ctx.bezierCurveTo(ix + 140, iy + ih - 320, ix + 80, iy + ih - 460, ix + 160, iy + ih - 600);
+    ctx.stroke();
+
+    // Tuber roots
+    ctx.fillStyle = 'rgba(180, 83, 9, 0.45)';
+    ctx.strokeStyle = '#78350F';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(ix + 120, iy + ih - 140, 45, 25, Math.PI * 0.25, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Botanical Fantasy Leaves
+    ctx.fillStyle = 'rgba(63, 94, 56, 0.35)';
+    ctx.beginPath();
+    ctx.ellipse(ix + 125, iy + ih - 380, 38, 16, -Math.PI * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Concentric Voynich Astronomical Zodiac Circle on right
+    const zx = ix + iw - 190;
+    const zy = iy + ih / 2;
+    ctx.strokeStyle = '#B45309';
+    ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.arc(zx, zy, 140, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = '#78350F';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 6]);
+    ctx.beginPath(); ctx.arc(zx, zy, 100, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(zx, zy, 55, 0, Math.PI * 2); ctx.stroke();
+    // Radial ticks
+    for (let a = 0; a < Math.PI * 2; a += Math.PI / 6) {
       ctx.beginPath();
-      ctx.arc(cxPos, iy + ih / 2, 145, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.strokeStyle = 'rgba(244, 63, 94, 0.35)';
-      ctx.beginPath();
-      ctx.arc(cxPos, iy + ih / 2, 98, 0, Math.PI * 2);
+      ctx.moveTo(zx + Math.cos(a) * 100, zy + Math.sin(a) * 100);
+      ctx.lineTo(zx + Math.cos(a) * 140, zy + Math.sin(a) * 140);
       ctx.stroke();
     }
   } else if (key === 'mixteca') {
@@ -1423,3 +1541,4 @@ export async function downloadCertificatePdfRework(data: CertificatePdfData, the
   }, 500);
   setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }
+

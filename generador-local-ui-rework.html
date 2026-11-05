@@ -6,7 +6,7 @@
   <title>UI Rework Studio · Generador Local de Badges y Certificados · GDGoC UHU</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Cinzel:wght@600;700;800&family=Shippori+Mincho:wght@600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Cinzel:wght@600;700;800&family=Shippori+Mincho:wght@600;700;800&family=MedievalSharp&family=Almendra:wght@400;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #f1f5f9;
@@ -740,24 +740,24 @@
     .diploma-theme-japon .dp-pill { background: #FEE2E2; border: 1.5px solid #DC2626; color: #991B1B; font-family: 'Plus Jakarta Sans', sans-serif; }
     .diploma-theme-japon .dp-meta { background: rgba(255, 251, 245, 0.9); border: 2px solid #DC2626; font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* 11. Códice Voynich & Vitral Gótico */
+    /* 11. Manuscrito Voynich (Auténtico Pergamino & Tintas Sepia) */
     .diploma-theme-voynich .diploma-preview-outer {
-      background: linear-gradient(135deg, #F59E0B, #8B5CF6, #EC4899, #10B981);
-      box-shadow: 0 16px 45px rgba(139, 92, 246, 0.35);
+      background: linear-gradient(135deg, #78350F, #D4AF37, #451A03, #B45309);
+      box-shadow: 0 16px 45px rgba(120, 53, 15, 0.35);
     }
     .diploma-theme-voynich .diploma-preview-inner {
-      background: radial-gradient(circle at 50% 25%, #231838 0%, #0E0B18 100%);
-      color: #FEF3C7;
-      font-family: 'Cormorant Garamond', serif;
+      background: linear-gradient(180deg, #FBF6E9 0%, #F5EBD7 50%, #EDE0C7 100%);
+      color: #381E0B;
+      font-family: 'MedievalSharp', 'Almendra', Georgia, serif;
     }
-    .diploma-theme-voynich .diploma-frame-1 { border: 2px solid rgba(245, 158, 11, 0.65); }
-    .diploma-theme-voynich .diploma-frame-2 { border: 1.5px dashed rgba(139, 92, 246, 0.55); }
-    .diploma-theme-voynich .dp-text-primary { color: #FEF3C7; }
-    .diploma-theme-voynich .dp-text-secondary { color: #DDD6FE; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .diploma-theme-voynich .dp-accent { color: #FBBF24; }
-    .diploma-theme-voynich .dp-border { border-color: rgba(245, 158, 11, 0.45); }
-    .diploma-theme-voynich .dp-pill { background: rgba(245, 158, 11, 0.16); border: 1px solid #F59E0B; color: #FDE68A; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .diploma-theme-voynich .dp-meta { background: rgba(22, 16, 42, 0.88); border: 2px solid rgba(245, 158, 11, 0.55); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .diploma-theme-voynich .diploma-frame-1 { border: 2.5px solid #78350F; }
+    .diploma-theme-voynich .diploma-frame-2 { border: 1.5px dashed #B45309; }
+    .diploma-theme-voynich .dp-text-primary { color: #381E0B; }
+    .diploma-theme-voynich .dp-text-secondary { color: #6B4226; font-family: 'Almendra', Georgia, serif; }
+    .diploma-theme-voynich .dp-accent { color: #B45309; }
+    .diploma-theme-voynich .dp-border { border-color: #B45309; }
+    .diploma-theme-voynich .dp-pill { background: #F4EAD3; border: 1.5px solid #B45309; color: #78350F; font-family: 'Almendra', Georgia, serif; }
+    .diploma-theme-voynich .dp-meta { background: rgba(244, 234, 211, 0.94); border: 2px solid #B45309; font-family: 'Almendra', Georgia, serif; }
 
     /* 12. Amazonia Precolombina & Códice Mixteca */
     .diploma-theme-mixteca .diploma-preview-outer {
@@ -825,7 +825,8 @@
       -webkit-text-fill-color: transparent;
     }
     .diploma-theme-voynich .dp-recipient-name {
-      background: linear-gradient(90deg, #FDE68A, #C084FC, #F472B6);
+      font-family: 'MedievalSharp', 'Almendra', Georgia, serif;
+      background: linear-gradient(90deg, #451A03, #78350F, #92400E);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -860,7 +861,7 @@
     .diploma-theme-blueprint .dp-issue-date { color: #FBBF24; }
     .diploma-theme-antiguo .dp-issue-date { color: #1D4ED8; }
     .diploma-theme-japon .dp-issue-date { color: #DC2626; }
-    .diploma-theme-voynich .dp-issue-date { color: #FBBF24; }
+    .diploma-theme-voynich .dp-issue-date { color: #78350F; font-family: 'Almendra', Georgia, serif; }
     .diploma-theme-mixteca .dp-issue-date { color: #34D399; }
 
     /* Corner Ornaments Visibility */
@@ -1370,12 +1371,19 @@
                     </svg>
                   </div>
 
-                  <!-- 11. Códice Voynich & Vitral -->
+                  <!-- 11. Manuscrito Voynich (Raíces Botánicas & Rueda Astrológica) -->
                   <div class="dp-ornament dp-ornament-voynich" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
-                    <svg style="position:absolute; top:14px; right:18px; width:85px; height:85px; opacity:0.4;" viewBox="0 0 100 100" fill="none">
-                      <circle cx="50" cy="50" r="40" stroke="#F59E0B" stroke-width="1.8" />
-                      <circle cx="50" cy="50" r="24" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="4 3" />
-                      <polygon points="50,12 61,39 90,50 61,61 50,88 39,61 10,50 39,39" stroke="#EC4899" stroke-width="1.2" />
+                    <svg style="position:absolute; top:12px; left:16px; width:90px; height:90px; opacity:0.55;" viewBox="0 0 100 100" fill="none">
+                      <path d="M10 90 C20 70, 35 55, 60 45 C75 38, 85 25, 90 10" stroke="#3F5E38" stroke-width="2" />
+                      <path d="M60 45 C50 30, 40 25, 28 30 C35 44, 48 46, 60 45 Z" fill="#3F5E38" fill-opacity="0.35" stroke="#78350F" stroke-width="1.2" />
+                      <circle cx="15" cy="88" r="8" fill="#B45309" fill-opacity="0.5" stroke="#78350F" stroke-width="1.5" />
+                    </svg>
+                    <svg style="position:absolute; top:12px; right:16px; width:90px; height:90px; opacity:0.55;" viewBox="0 0 100 100" fill="none">
+                      <circle cx="50" cy="50" r="42" stroke="#B45309" stroke-width="1.8" />
+                      <circle cx="50" cy="50" r="28" stroke="#78350F" stroke-width="1.2" stroke-dasharray="4 3" />
+                      <circle cx="50" cy="50" r="16" stroke="#B45309" stroke-width="1.2" />
+                      <line x1="50" y1="8" x2="50" y2="22" stroke="#78350F" stroke-width="1.2" />
+                      <line x1="50" y1="78" x2="50" y2="92" stroke="#78350F" stroke-width="1.2" />
                     </svg>
                   </div>
 
@@ -3067,26 +3075,26 @@
         footerBg: '#F6EFE2',
       },
       voynich: {
-        strip: ['#F59E0B', '#8B5CF6', '#EC4899', '#10B981'],
-        outerBg: '#0B0813',
-        cardBg: '#16102A',
-        cardBorder: '#F59E0B',
-        headerBorder: 'rgba(245, 158, 11, 0.3)',
-        textPrimary: '#FEF3C7',
-        textSecondary: '#EDE9FE',
-        textMuted: '#C4B5FD',
-        accent: '#FBBF24',
-        verifiedBg: 'rgba(245, 158, 11, 0.16)',
-        verifiedBorder: '#F59E0B',
-        verifiedText: '#FDE68A',
-        rolePillBg: 'rgba(139, 92, 246, 0.24)',
-        rolePillBorder: '#8B5CF6',
-        rolePillText: '#DDD6FE',
-        boxBg: '#21173B',
-        boxBorder: 'rgba(236, 72, 153, 0.5)',
-        btnBg: '#F59E0B',
-        btnText: '#0E0B18',
-        footerBg: '#16102A',
+        strip: ['#78350F', '#D4AF37', '#3F5E38', '#9E2A2B'],
+        outerBg: '#F8F3E4',
+        cardBg: '#FDF9EE',
+        cardBorder: '#B45309',
+        headerBorder: 'rgba(180, 83, 9, 0.35)',
+        textPrimary: '#381E0B',
+        textSecondary: '#6B4226',
+        textMuted: '#92400E',
+        accent: '#B45309',
+        verifiedBg: '#F4EAD3',
+        verifiedBorder: '#B45309',
+        verifiedText: '#78350F',
+        rolePillBg: '#FAF3E3',
+        rolePillBorder: '#B45309',
+        rolePillText: '#451A03',
+        boxBg: '#F5ECDA',
+        boxBorder: 'rgba(180, 83, 9, 0.45)',
+        btnBg: '#78350F',
+        btnText: '#FFFDF7',
+        footerBg: '#2D1608',
       },
       mixteca: {
         strip: ['#10B981', '#F59E0B', '#EF4444', '#06B6D4'],
