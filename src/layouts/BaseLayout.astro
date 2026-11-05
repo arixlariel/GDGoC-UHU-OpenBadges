@@ -222,6 +222,31 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
 
       /* ==========================================================================
+         THEME DROPDOWN OPTIONS (Hover displacement sin desborde)
+         ========================================================================== */
+      .theme-option-btn {
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .theme-option-btn > span {
+        display: inline-block;
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .theme-option-btn:hover > span:first-child {
+        transform: scale(1.15);
+      }
+      .theme-option-btn:hover > span:last-child {
+        transform: translateX(5px);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .theme-option-btn > span {
+          transition: none !important;
+        }
+        .theme-option-btn:hover > span {
+          transform: none !important;
+        }
+      }
+
+      /* ==========================================================================
          1. THEME: GOOGLE (Clásico Google · Material 3 · 4 Colores Oficiales)
          ========================================================================== */
       html[data-theme="google"] body {
@@ -286,7 +311,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="google"] .theme-option-btn:hover {
         background: #E8F0FE;
         color: #1967D2;
-        transform: translateX(4px);
       }
       html[data-theme="google"] .theme-card {
         background: rgba(255, 255, 255, 0.92);
@@ -393,7 +417,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="cyber"] .theme-option-btn:hover {
         background: rgba(0, 240, 255, 0.18);
         color: #00F0FF;
-        transform: translateX(6px) skewX(-3deg);
+        box-shadow: inset 3px 0 0 #00F0FF;
       }
       html[data-theme="cyber"] .theme-card {
         background: rgba(11, 17, 36, 0.82);
@@ -500,7 +524,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="piscina"] .theme-option-btn:hover {
         background: rgba(0, 229, 255, 0.28);
         color: #004D61;
-        transform: translateX(5px);
       }
       html[data-theme="piscina"] .theme-card {
         background: rgba(255, 255, 255, 0.82);
@@ -607,7 +630,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="nieve"] .theme-option-btn:hover {
         background: rgba(186, 230, 253, 0.22);
         color: #FFFFFF;
-        transform: translateX(5px);
       }
       html[data-theme="nieve"] .theme-card {
         background: rgba(14, 38, 68, 0.65);
@@ -736,7 +758,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="caramelos"] .theme-option-btn:hover {
         background: #FFD1E8;
         color: #C2185B;
-        transform: scale(1.04) rotate(1deg);
       }
       html[data-theme="caramelos"] .theme-card {
         background: rgba(255, 250, 253, 0.9);
