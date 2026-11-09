@@ -11,6 +11,7 @@ export default defineConfig({
   integrations: [tailwind()],
   output: 'static',
   build: {
-    format: 'directory' // Genera archivos limpios como /api/badges/issuer.json directamente
+    format: 'directory', // Genera archivos limpios como /api/badges/issuer.json directamente
+    inlineStylesheets: 'always'
   }
 });

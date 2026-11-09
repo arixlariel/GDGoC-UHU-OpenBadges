@@ -116,10 +116,12 @@ linkedinUrl.searchParams.set('certId', assertionId);
       <div class="diploma-watermark absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.055]">
         <div class="w-80 h-80 sm:w-96 sm:h-96 rounded-full overflow-hidden border-4 border-current p-2">
           <img
-            src={logoUrl}
+            src={getAssetUrl('/images/gdgoc-uhu-logo-400.webp')}
             alt=""
+            width="384"
+            height="384"
             loading="eager"
-            decoding="sync"
+            decoding="async"
             class="w-full h-full object-cover rounded-full grayscale contrast-125"
           />
         </div>
@@ -133,10 +135,12 @@ linkedinUrl.searchParams.set('certId', assertionId);
           <div class="print-logos-row flex items-center justify-center gap-4 sm:gap-6 mb-4">
             <div class="flex items-center gap-3">
               <img
-                src={logoUrl}
-                alt="GDG on Campus Universidad de Huelva"
+                src={getAssetUrl('/images/gdgoc-uhu-logo-sm.webp')}
+                alt=""
+                width="56"
+                height="56"
                 loading="eager"
-                decoding="sync"
+                decoding="async"
                 class="h-12 w-12 sm:h-14 sm:w-14 rounded-xl object-cover border theme-border bg-white shadow-xs"
               />
               <div class="text-left">
@@ -155,8 +159,11 @@ linkedinUrl.searchParams.set('certId', assertionId);
             <img
               src={badgeImageUrl}
               alt={badge.data.name}
+              width="56"
+              height="56"
+              fetchpriority="high"
               loading="eager"
-              decoding="sync"
+              decoding="async"
               class="h-12 w-12 sm:h-14 sm:w-14 object-contain drop-shadow-md hover:scale-110 transition-transform duration-300"
             />
           </div>

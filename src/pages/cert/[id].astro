@@ -34,6 +34,27 @@ const certStyle = (assertion.data.styleOverride || badge.data.style || 'google')
 
 const pageTitle = `${badge.data.name} - ${assertion.data.recipient.name} | Certificados Digitales GDGoC UHU`;
 const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgado a ${assertion.data.recipient.name} por GDG on Campus Universidad de Huelva.`;
+
+const certSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOccupationalCredential',
+  '@id': getFullUrl(`/cert/${assertionId}`),
+  name: `${badge.data.name} - ${assertion.data.recipient.name}`,
+  description: badge.data.description,
+  credentialCategory: assertion.data.role,
+  dateCreated: assertion.data.issuedOn,
+  url: getFullUrl(`/cert/${assertionId}`),
+  image: badgeImageUrl,
+  recognizedBy: {
+    '@type': 'EducationalOrganization',
+    name: 'GDG on Campus Universidad de Huelva',
+    url: 'https://gdguhu.es',
+  },
+  about: {
+    '@type': 'Person',
+    name: assertion.data.recipient.name,
+  },
+};
 ---
 
 <BaseLayout
@@ -42,6 +63,7 @@ const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgad
   image={badgeImageUrl}
   certStyle={certStyle}
   jsonLdUrl={assertionJsonUrl}
+  schemaData={certSchema}
 >
   <CertificateDiploma
     assertion={assertion}

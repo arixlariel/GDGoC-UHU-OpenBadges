@@ -10,6 +10,8 @@ interface Props {
   theme?: string;
   certStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
   jsonLdUrl?: string;
+  preloadHeroImage?: boolean;
+  schemaData?: Record<string, any>;
 }
 
 const {
@@ -18,10 +20,37 @@ const {
   image = getFullUrl('/images/gdgoc-uhu-logo.jpg'),
   certStyle,
   jsonLdUrl,
+  preloadHeroImage = false,
+  schemaData,
 } = Astro.props;
 
 const initialTheme = certStyle || 'google';
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
+
+const defaultSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'EducationalOrganization',
+      '@id': `${siteConfig.url}/#organization`,
+      name: 'GDG on Campus Universidad de Huelva',
+      alternateName: 'Google Developer Group on Campus UHU',
+      url: siteConfig.url,
+      logo: getFullUrl('/images/gdgoc-uhu-logo.jpg'),
+      sameAs: [siteConfig.communityUrl, siteConfig.linkedinUrl],
+      description: siteConfig.description,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteConfig.url}/#website`,
+      url: siteConfig.url,
+      name: siteConfig.name,
+      description: siteConfig.description,
+      inLanguage: 'es-ES',
+      publisher: { '@id': `${siteConfig.url}/#organization` },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -33,11 +62,15 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4285F4" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="GDG on Campus Universidad de Huelva" />
     <link rel="icon" type="image/png" sizes="32x32" href={getAssetUrl('/favicon-32x32.png')} />
     <link rel="icon" type="image/png" sizes="192x192" href={getAssetUrl('/favicon-192x192.png')} />
     <link rel="icon" type="image/png" href={getAssetUrl('/favicon.png')} />
     <link rel="icon" type="image/svg+xml" href={getAssetUrl('/favicon.svg')} />
     <link rel="apple-touch-icon" href={getAssetUrl('/apple-touch-icon.png')} />
+    <link rel="sitemap" type="application/xml" href={getAssetUrl('/sitemap.xml')} />
     <meta name="generator" content={Astro.generator} />
 
     <!-- SEO Meta Tags -->
@@ -47,10 +80,13 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
 
     <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:locale" content="es_ES" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={title} />
 
     <!-- Twitter / X -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -59,15 +95,42 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={image} />
 
+    <!-- Schema.org Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData || defaultSchema)} />
+
     <!-- Open Badges v2 Discovery Link (interno para validadores) -->
     {jsonLdUrl && (
       <link rel="alternate" type="application/ld+json" href={jsonLdUrl} title="Open Badges Assertion" />
     )}
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=Google+Sans+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Preload Hero LCP Image on Home Page -->
+    {preloadHeroImage && (
+      <link
+        rel="preload"
+        as="image"
+        type="image/webp"
+        href={getAssetUrl('/images/gdgoc-uhu-logo-400.webp')}
+        imagesrcset={`${getAssetUrl('/images/gdgoc-uhu-logo-400.webp')} 400w, ${getAssetUrl('/images/gdgoc-uhu-logo.webp')} 704w`}
+        imagesizes="(max-width: 640px) 352px, 400px"
+        fetchpriority="high"
+      />
+    )}
+
+    <!-- Google Fonts (Non-Render-Blocking for Instant FCP & LCP) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=Google+Sans+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=Google+Sans+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Orbitron:wght@600;700;800&display=swap"
+      />
+    </noscript>
 
     <!-- Theme Pre-Init Script: Default is 'google', remembers user's last selection in localStorage, and respects certificate's own style -->
     <script is:inline>
@@ -89,10 +152,24 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       /* ==========================================================================
          BASE & KEYFRAME ANIMATIONS FOR ALL 5 THEMES
          ========================================================================== */
+      @font-face {
+        font-family: 'Google Sans Fallback';
+        src: local('BlinkMacSystemFont'), local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial');
+        size-adjust: 100.5%;
+        ascent-override: 96%;
+        descent-override: 24%;
+        line-gap-override: 0%;
+      }
+
       body {
-        font-family: 'Google Sans', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        font-family: 'Google Sans', 'Plus Jakarta Sans', 'Google Sans Fallback', system-ui, -apple-system, sans-serif;
         overflow-x: hidden;
         transition: background 0.5s ease, color 0.4s ease;
+      }
+
+      .cv-auto {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 480px;
       }
 
       @keyframes floatSlow {
@@ -107,20 +184,15 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
       }
-      @keyframes rainbowFlow {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
       @keyframes scanlineSweep {
-        0% { top: -10%; opacity: 0; }
+        0% { transform: translateY(-10vh); opacity: 0; }
         20% { opacity: 0.75; }
         80% { opacity: 0.75; }
-        100% { top: 110%; opacity: 0; }
+        100% { transform: translateY(110vh); opacity: 0; }
       }
       @keyframes cyberGridMove {
-        0% { background-position: 0 0; }
-        100% { background-position: 0 60px; }
+        0% { transform: translateY(0); }
+        100% { transform: translateY(60px); }
       }
       @keyframes candyBounce {
         0%, 100% { transform: translateY(0) rotate(-6deg) scale(1); }
@@ -175,19 +247,15 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
 
       /* ==========================================================================
-         GPU HARDWARE ACCELERATION (Proposal 2: Smooth 60/120fps on mobile)
-         Promotes background animated layers to independent GPU compositor layers
-         without altering aesthetics, shapes, colors or timing.
+         BACKGROUND FX CONTAINER ISOLATION (Step 1: No wildcard GPU layer promotion)
          ========================================================================== */
+      #theme-fx-container {
+        contain: strict;
+        pointer-events: none;
+      }
       .fx-layer {
         display: none;
         pointer-events: none;
-      }
-      #theme-fx-container,
-      #theme-fx-container * {
-        will-change: transform;
-        transform: translate3d(0, 0, 0);
-        backface-visibility: hidden;
       }
       html[data-theme="google"] .fx-google { display: block; }
       html[data-theme="cyber"] .fx-cyber { display: block; }
@@ -200,7 +268,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
          ========================================================================== */
       .tilt-card {
         transform-style: preserve-3d;
-        will-change: transform;
         transition: transform 0.15s ease-out;
       }
       .tilt-glare {
@@ -212,6 +279,16 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         opacity: 1;
       }
       @media (prefers-reduced-motion: reduce) {
+        #theme-fx-container *,
+        .fx-layer *,
+        .theme-accent-text,
+        .theme-top-strip,
+        .theme-primary-btn,
+        .animate-pulse,
+        .animate-ping {
+          animation: none !important;
+          transition: none !important;
+        }
         .tilt-card {
           transform: none !important;
           transition: none !important;
@@ -361,10 +438,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="google"] .theme-text-secondary { color: #5F6368; }
       html[data-theme="google"] .theme-accent-text {
         background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC04, #34A853);
-        background-size: 200% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: rainbowFlow 6s linear infinite;
       }
       html[data-theme="google"] .theme-hero-section {
         background: rgba(255, 255, 255, 0.75);
@@ -434,8 +509,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
       html[data-theme="cyber"] .theme-top-strip {
         background: linear-gradient(90deg, #00F0FF, #FF007F, #FFE600, #00FF66, #00F0FF);
-        background-size: 300% 100%;
-        animation: rainbowFlow 3s linear infinite;
         box-shadow: 0 0 16px #00F0FF;
       }
       html[data-theme="cyber"] .theme-top-strip > div { display: none; }
@@ -456,11 +529,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="cyber"] .theme-accent-text {
         font-family: 'Orbitron', 'Google Sans Display', sans-serif;
         background: linear-gradient(90deg, #00F0FF, #FF007F, #00FF66);
-        background-size: 200% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.4));
-        animation: rainbowFlow 4s linear infinite;
       }
       html[data-theme="cyber"] .theme-hero-section {
         background: rgba(8, 12, 26, 0.65);
@@ -538,8 +609,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="piscina"] .theme-top-strip {
         height: 7px;
         background: linear-gradient(90deg, #00F2FE, #4FACFE, #00E5FF, #76FF03, #00F2FE);
-        background-size: 200% 100%;
-        animation: rainbowFlow 4s linear infinite;
         box-shadow: 0 2px 14px rgba(0, 229, 255, 0.6);
       }
       html[data-theme="piscina"] .theme-top-strip > div { display: none; }
@@ -562,10 +631,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="piscina"] .theme-text-secondary { color: #00587A; }
       html[data-theme="piscina"] .theme-accent-text {
         background: linear-gradient(90deg, #0284C7, #00B4DB, #00897B, #0284C7);
-        background-size: 200% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: rainbowFlow 4s linear infinite;
       }
       html[data-theme="piscina"] .theme-hero-section {
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.68) 0%, rgba(165, 243, 252, 0.52) 100%);
@@ -640,8 +707,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="nieve"] .theme-top-strip {
         height: 6px;
         background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #38BDF8, #BAE6FD, #FFFFFF);
-        background-size: 200% 100%;
-        animation: rainbowFlow 4s linear infinite;
         box-shadow: 0 0 18px rgba(186, 230, 253, 0.8);
       }
       html[data-theme="nieve"] .theme-top-strip > div { display: none; }
@@ -662,10 +727,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="nieve"] .theme-text-secondary { color: #BAE6FD; }
       html[data-theme="nieve"] .theme-accent-text {
         background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #38BDF8, #E0F2FE);
-        background-size: 200% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: rainbowFlow 4s linear infinite;
       }
       html[data-theme="nieve"] .theme-hero-section {
         background: rgba(10, 28, 52, 0.58);
@@ -766,8 +829,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
           #FF69B4 42px,
           #FF69B4 56px
         );
-        background-size: 200% 200%;
-        animation: rainbowFlow 35s linear infinite;
         box-shadow: 0 3px 15px rgba(255, 20, 147, 0.35);
       }
       html[data-theme="caramelos"] .theme-top-strip > div { display: none; }
@@ -785,10 +846,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       html[data-theme="caramelos"] .theme-text-secondary { color: #C2185B; }
       html[data-theme="caramelos"] .theme-accent-text {
         background: linear-gradient(90deg, #FF007F, #FF1493, #FF69B4, #D81B60, #FF007F);
-        background-size: 200% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: rainbowFlow 3.5s linear infinite;
       }
       html[data-theme="caramelos"] .theme-hero-section {
         background: rgba(255, 245, 250, 0.68);
@@ -815,8 +874,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       }
       html[data-theme="caramelos"] .theme-primary-btn {
         background: linear-gradient(90deg, #FF1493, #FF69B4, #EC407A);
-        background-size: 200% auto;
-        animation: rainbowFlow 4s linear infinite;
         box-shadow: 0 6px 20px rgba(255, 20, 147, 0.45);
       }
       html[data-theme="caramelos"] .theme-primary-btn:hover {
@@ -851,6 +908,42 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         border-color: #FF1493;
         transform: scale(1.04) rotate(-0.8deg);
         box-shadow: 0 12px 35px rgba(255, 20, 147, 0.5);
+      }
+
+      /* ==========================================================================
+         MOBILE GPU & SCROLL OPTIMIZATION (Step 2: Disable backdrop-filter on mobile)
+         ========================================================================== */
+      @media (max-width: 768px) {
+        .theme-header,
+        .theme-footer,
+        .theme-hero-section,
+        .theme-card,
+        .theme-search-box,
+        .theme-dropdown-panel {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+        }
+        html[data-theme="google"] .theme-header { background: rgba(255, 255, 255, 0.97); }
+        html[data-theme="google"] .theme-hero-section { background: rgba(255, 255, 255, 0.94); }
+        html[data-theme="google"] .theme-card { background: rgba(255, 255, 255, 0.98); }
+        html[data-theme="cyber"] .theme-header { background: rgba(6, 9, 20, 0.97); }
+        html[data-theme="cyber"] .theme-hero-section { background: rgba(8, 12, 26, 0.92); }
+        html[data-theme="cyber"] .theme-card { background: rgba(11, 17, 36, 0.96); }
+        html[data-theme="piscina"] .theme-header { background: rgba(224, 247, 250, 0.96); }
+        html[data-theme="piscina"] .theme-hero-section { background: rgba(240, 253, 255, 0.92); }
+        html[data-theme="piscina"] .theme-card { background: rgba(255, 255, 255, 0.96); }
+        html[data-theme="nieve"] .theme-header { background: rgba(8, 22, 42, 0.96); }
+        html[data-theme="nieve"] .theme-hero-section { background: rgba(10, 28, 52, 0.92); }
+        html[data-theme="nieve"] .theme-card { background: rgba(14, 38, 68, 0.95); }
+        html[data-theme="nieve"] .theme-search-box { background: rgba(10, 30, 56, 0.96); }
+        html[data-theme="caramelos"] .theme-header { background: rgba(255, 240, 248, 0.97); }
+        html[data-theme="caramelos"] .theme-hero-section { background: rgba(255, 245, 250, 0.92); }
+        html[data-theme="caramelos"] .theme-card { background: rgba(255, 250, 253, 0.97); }
+        html[data-theme="piscina"] body,
+        html[data-theme="nieve"] body,
+        html[data-theme="caramelos"] body {
+          background-attachment: scroll !important;
+        }
       }
 
       /* ==========================================================================
@@ -1130,10 +1223,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
 
       <!-- 1. GOOGLE FX: Floating Google 4-Color Orbs & Geometric Rings -->
       <div class="fx-layer fx-google absolute inset-0">
-        <div class="absolute top-16 left-[8%] w-72 h-72 rounded-full bg-[#4285F4]/12 blur-3xl" style="animation: floatSlow 9s ease-in-out infinite;"></div>
-        <div class="absolute top-36 right-[10%] w-80 h-80 rounded-full bg-[#EA4335]/10 blur-3xl" style="animation: floatReverse 11s ease-in-out infinite;"></div>
-        <div class="absolute bottom-20 left-[18%] w-72 h-72 rounded-full bg-[#FBBC04]/14 blur-3xl" style="animation: floatReverse 10s ease-in-out infinite;"></div>
-        <div class="absolute bottom-16 right-[14%] w-80 h-80 rounded-full bg-[#34A853]/12 blur-3xl" style="animation: floatSlow 12s ease-in-out infinite;"></div>
+        <div class="absolute top-16 left-[8%] w-72 h-72 rounded-full" style="background: radial-gradient(circle, rgba(66, 133, 244, 0.16) 0%, rgba(66, 133, 244, 0) 70%); animation: floatSlow 9s ease-in-out infinite;"></div>
+        <div class="absolute top-36 right-[10%] w-80 h-80 rounded-full" style="background: radial-gradient(circle, rgba(234, 67, 53, 0.14) 0%, rgba(234, 67, 53, 0) 70%); animation: floatReverse 11s ease-in-out infinite;"></div>
+        <div class="absolute bottom-20 left-[18%] w-72 h-72 rounded-full" style="background: radial-gradient(circle, rgba(251, 188, 4, 0.18) 0%, rgba(251, 188, 4, 0) 70%); animation: floatReverse 10s ease-in-out infinite;"></div>
+        <div class="absolute bottom-16 right-[14%] w-80 h-80 rounded-full" style="background: radial-gradient(circle, rgba(52, 168, 83, 0.16) 0%, rgba(52, 168, 83, 0) 70%); animation: floatSlow 12s ease-in-out infinite;"></div>
         <svg class="absolute top-24 right-[6%] w-44 h-44 opacity-20" style="animation: spinSlow 40s linear infinite;" viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="80" stroke="#4285F4" stroke-width="3" stroke-dasharray="12 10" />
           <circle cx="100" cy="100" r="55" stroke="#EA4335" stroke-width="2.5" stroke-dasharray="8 8" />
@@ -1147,10 +1240,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       <!-- 2. CYBER FX: Perspective Neon Grid, Laser Scanline & Floating Matrix Tokens -->
       <div class="fx-layer fx-cyber absolute inset-0">
         <div
-          class="absolute inset-0 opacity-25"
+          class="absolute -top-[60px] inset-x-0 bottom-0 opacity-25"
           style="background-image: linear-gradient(rgba(0, 240, 255, 0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 127, 0.18) 1px, transparent 1px); background-size: 60px 60px; animation: cyberGridMove 3s linear infinite;"
         ></div>
-        <div class="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent shadow-[0_0_20px_#00F0FF]" style="animation: scanlineSweep 6s linear infinite;"></div>
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent shadow-[0_0_20px_#00F0FF]" style="animation: scanlineSweep 6s linear infinite;"></div>
         <span class="absolute top-[18%] left-[7%] font-mono text-xs text-[#00F0FF]/50 font-bold" style="animation: floatSlow 5s ease-in-out infinite;">0xFA92_VERIFIED //⚡</span>
         <span class="absolute top-[32%] right-[8%] font-mono text-sm text-[#FF007F]/50 font-bold" style="animation: floatReverse 6s ease-in-out infinite;">&lt;OPEN_BADGES_2.0 /&gt;</span>
         <span class="absolute bottom-[22%] left-[12%] font-mono text-xs text-[#00FF66]/50 font-bold" style="animation: floatReverse 7s ease-in-out infinite;">SHA256::ACTIVE</span>
@@ -1160,7 +1253,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
       <!-- 3. PISCINA FX: Multi-Layer Animated Waves, Lots of Rising Water Bubbles & Refreshing Pool Vibes -->
       <div class="fx-layer fx-piscina absolute inset-0">
         <!-- Shimmering sun reflection -->
-        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br from-[#FFFFFF] via-[#80DEEA] to-transparent opacity-70 blur-2xl" style="animation: floatSlow 7s ease-in-out infinite;"></div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-70" style="background: radial-gradient(circle, #FFFFFF 0%, #80DEEA 45%, transparent 70%); animation: floatSlow 7s ease-in-out infinite;"></div>
         <!-- Animated Multi-Layered Translucent Pool Waves at Bottom -->
         <svg class="absolute bottom-0 left-0 w-[110%] h-48 opacity-45" style="animation: waveSlideLeft 6s ease-in-out infinite;" viewBox="0 0 1440 320" preserveAspectRatio="none">
           <path fill="#00E5FF" d="M0,160L60,170.7C120,181,240,203,360,192C480,181,600,139,720,138.7C840,139,960,181,1080,197.3C1200,213,1320,203,1380,197.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
@@ -1204,7 +1297,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href;
         <!-- Icy screen-edge frost vignette -->
         <div class="absolute inset-0 shadow-[inset_0_0_90px_rgba(186,230,253,0.35)]"></div>
         <!-- Aurora Borealis glow -->
-        <div class="absolute -top-20 left-[10%] right-[10%] h-72 rounded-full bg-gradient-to-r from-[#38BDF8]/30 via-[#BAE6FD]/35 to-[#818CF8]/30 blur-3xl" style="animation: auroraWave 9s ease-in-out infinite;"></div>
+        <div class="absolute -top-20 left-[10%] right-[10%] h-72 rounded-full" style="background: radial-gradient(ellipse at center, rgba(186, 230, 253, 0.35) 0%, rgba(56, 189, 248, 0.2) 45%, transparent 70%); animation: auroraWave 9s ease-in-out infinite;"></div>
 
         <!-- Freezing Wind Gust Streaks (Viento Helado) -->
         <div class="absolute top-[18%] left-0 w-96 h-[2px] bg-gradient-to-r from-transparent via-white/60 to-transparent blur-[0.5px]" style="animation: windGust 3.2s linear infinite;"></div>

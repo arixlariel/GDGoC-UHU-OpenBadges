@@ -55,6 +55,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
 <BaseLayout
   title="Certificados Digitales · GDG on Campus Universidad de Huelva"
   description="Acreditaciones oficiales en relación a los eventos tecnológicos que organiza el Google Developer Group on Campus de la Universidad de Huelva."
+  preloadHeroImage={true}
 >
   <!-- Hero Section -->
   <section class="theme-hero-section relative overflow-hidden pt-10 pb-16 sm:pt-16 sm:pb-20 backdrop-blur-md transition-all duration-500">
@@ -95,6 +96,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
               <input
                 type="text"
                 id="search-cert-id"
+                aria-label="Introduce el ID del certificado"
                 placeholder="Introduce el ID del certificado"
                 class="flex-1 bg-transparent text-xs sm:text-sm theme-text-primary placeholder:opacity-60 outline-none px-2 font-mono"
                 required
@@ -128,12 +130,24 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
             class="tilt-card theme-card relative mx-auto max-w-sm lg:max-w-none rounded-3xl overflow-hidden p-3 group"
           >
             <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-3xl"></div>
-            <div class="overflow-hidden rounded-2xl border theme-border">
-              <img
-                src={getAssetUrl('/images/gdgoc-uhu-logo.jpg')}
-                alt="Escuela Técnica Superior de Ingeniería - GDG on Campus Universidad de Huelva"
-                class="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
-              />
+            <div class="overflow-hidden rounded-2xl border theme-border aspect-square">
+              <picture>
+                <source
+                  type="image/webp"
+                  srcset={`${getAssetUrl('/images/gdgoc-uhu-logo-400.webp')} 400w, ${getAssetUrl('/images/gdgoc-uhu-logo.webp')} 704w`}
+                  sizes="(max-width: 640px) 352px, 400px"
+                />
+                <img
+                  src={getAssetUrl('/images/gdgoc-uhu-logo-400.webp')}
+                  alt="Escuela Técnica Superior de Ingeniería - GDG on Campus Universidad de Huelva"
+                  width="400"
+                  height="400"
+                  fetchpriority="high"
+                  loading="eager"
+                  decoding="async"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </picture>
             </div>
             <div class="pt-3 px-2 pb-1 flex items-center justify-between text-xs theme-text-secondary">
               <span class="font-semibold theme-text-primary">ETSI · Universidad de Huelva</span>
@@ -162,7 +176,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
     </div>
 
     <div id="cert-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {sortedAssertions.map((assertion) => {
+      {sortedAssertions.map((assertion, index) => {
         const id = assertion.id.replace(/^.*\/|\.json$/g, '');
         const badge = badges.find((b) => b.id.replace(/^.*\/|\.json$/g, '') === assertion.data.badgeId);
         const styleKey = assertion.data.styleOverride || badge?.data.style || 'google';
@@ -172,6 +186,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           <a
             href={getAssetUrl(`/cert/${id}`)}
             data-tilt-max="4"
+            style={index >= 6 ? 'display: none;' : undefined}
             class="cert-card-item tilt-card theme-card group relative overflow-hidden rounded-2xl p-5 block"
           >
             <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-2xl"></div>
@@ -200,7 +215,15 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
             <div class="flex items-center gap-4 pt-1">
               <div class="w-16 h-16 shrink-0 p-2 rounded-2xl border theme-border bg-white/80 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-xs">
                 {badge && (
-                  <img src={getAssetUrl(badge.data.image)} alt={badge.data.name} class="w-full h-full object-contain" />
+                  <img
+                    src={getAssetUrl(badge.data.image)}
+                    alt={badge.data.name}
+                    width="48"
+                    height="48"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-contain"
+                  />
                 )}
               </div>
               <div class="flex-1 min-w-0">
@@ -260,7 +283,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
   </section>
 
   <!-- Características del Sistema -->
-  <section class="theme-hero-section border-t theme-border py-14 relative z-10 backdrop-blur-md">
+  <section class="theme-hero-section cv-auto border-t theme-border py-14 relative z-10 backdrop-blur-md">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="text-center max-w-xl mx-auto mb-10">
         <h2 class="font-display text-2xl font-bold theme-text-primary">
