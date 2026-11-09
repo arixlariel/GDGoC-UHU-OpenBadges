@@ -131,23 +131,16 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           >
             <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-3xl"></div>
             <div class="overflow-hidden rounded-2xl border theme-border aspect-square">
-              <picture>
-                <source
-                  type="image/webp"
-                  srcset={`${getAssetUrl('/images/gdgoc-uhu-logo-400.webp')} 400w, ${getAssetUrl('/images/gdgoc-uhu-logo.webp')} 704w`}
-                  sizes="(max-width: 640px) 352px, 400px"
-                />
-                <img
-                  src={getAssetUrl('/images/gdgoc-uhu-logo-400.webp')}
-                  alt="Escuela Técnica Superior de Ingeniería - GDG on Campus Universidad de Huelva"
-                  width="400"
-                  height="400"
-                  fetchpriority="high"
-                  loading="eager"
-                  decoding="async"
-                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </picture>
+              <img
+                src={getAssetUrl('/images/gdgoc-uhu-logo-400.webp')}
+                alt="Escuela Técnica Superior de Ingeniería - GDG on Campus Universidad de Huelva"
+                width="360"
+                height="360"
+                fetchpriority="high"
+                loading="eager"
+                decoding="sync"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              />
             </div>
             <div class="pt-3 px-2 pb-1 flex items-center justify-between text-xs theme-text-secondary">
               <span class="font-semibold theme-text-primary">ETSI · Universidad de Huelva</span>

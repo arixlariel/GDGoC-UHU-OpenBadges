@@ -62,6 +62,15 @@ const defaultSchema = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {preloadHeroImage && (
+      <link
+        rel="preload"
+        as="image"
+        type="image/webp"
+        href={getAssetUrl('/images/gdgoc-uhu-logo-400.webp')}
+        fetchpriority="high"
+      />
+    )}
     <meta name="theme-color" content="#4285F4" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="author" content="GDG on Campus Universidad de Huelva" />
@@ -101,19 +110,6 @@ const defaultSchema = {
     <!-- Open Badges v2 Discovery Link (interno para validadores) -->
     {jsonLdUrl && (
       <link rel="alternate" type="application/ld+json" href={jsonLdUrl} title="Open Badges Assertion" />
-    )}
-
-    <!-- Preload Hero LCP Image on Home Page -->
-    {preloadHeroImage && (
-      <link
-        rel="preload"
-        as="image"
-        type="image/webp"
-        href={getAssetUrl('/images/gdgoc-uhu-logo-400.webp')}
-        imagesrcset={`${getAssetUrl('/images/gdgoc-uhu-logo-400.webp')} 400w, ${getAssetUrl('/images/gdgoc-uhu-logo.webp')} 704w`}
-        imagesizes="(max-width: 640px) 352px, 400px"
-        fetchpriority="high"
-      />
     )}
 
     <!-- Google Fonts (Non-Render-Blocking for Instant FCP & LCP) -->
@@ -1367,101 +1363,100 @@ const defaultSchema = {
     <Footer />
 
     <!-- Global Theme Switcher Interactive Script -->
-    <script>
-      const THEME_META: Record<string, { icon: string; label: string }> = {
-        google: { icon: '🔵', label: 'Google' },
-        cyber: { icon: '⚡', label: 'Cyber' },
-        piscina: { icon: '🌊', label: 'Piscina' },
-        nieve: { icon: '❄️', label: 'Nieve' },
-        caramelos: { icon: '🍬', label: 'Caramelos' },
-      };
+    <script is:inline>
+      (function () {
+        const THEME_META = {
+          google: { icon: '🔵', label: 'Google' },
+          cyber: { icon: '⚡', label: 'Cyber' },
+          piscina: { icon: '🌊', label: 'Piscina' },
+          nieve: { icon: '❄️', label: 'Nieve' },
+          caramelos: { icon: '🍬', label: 'Caramelos' },
+        };
 
-      function updateThemeUI(theme: string) {
-        const meta = THEME_META[theme] || THEME_META.google;
-        const iconEl = document.getElementById('current-theme-icon');
-        const labelEl = document.getElementById('current-theme-label');
-        if (iconEl) iconEl.textContent = meta.icon;
-        if (labelEl) labelEl.textContent = meta.label;
+        function updateThemeUI(theme) {
+          const meta = THEME_META[theme] || THEME_META.google;
+          const iconEl = document.getElementById('current-theme-icon');
+          const labelEl = document.getElementById('current-theme-label');
+          if (iconEl) iconEl.textContent = meta.icon;
+          if (labelEl) labelEl.textContent = meta.label;
 
-        document.querySelectorAll('[data-set-theme]').forEach((btn) => {
-          const t = btn.getAttribute('data-set-theme');
-          if (t === theme) {
-            btn.classList.add('ring-2', 'ring-current');
+          document.querySelectorAll('[data-set-theme]').forEach((btn) => {
+            const t = btn.getAttribute('data-set-theme');
+            if (t === theme) {
+              btn.classList.add('ring-2', 'ring-current');
+            } else {
+              btn.classList.remove('ring-2', 'ring-current');
+            }
+          });
+        }
+
+        function applyTheme(theme, persist = true) {
+          document.documentElement.setAttribute('data-theme', theme);
+          if (persist) {
+            localStorage.setItem('gdgoc-uhu-theme', theme);
+          }
+          updateThemeUI(theme);
+          window.dispatchEvent(new CustomEvent('gdgoc-theme-change', { detail: { theme } }));
+        }
+
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'google';
+        updateThemeUI(currentTheme);
+
+        const menuBtn = document.getElementById('theme-menu-button');
+        const dropdown = document.getElementById('theme-dropdown-menu');
+        const chevron = document.getElementById('theme-chevron');
+
+        menuBtn?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = dropdown?.classList.contains('hidden');
+          if (isHidden) {
+            dropdown?.classList.remove('hidden');
+            chevron?.classList.add('rotate-180');
           } else {
-            btn.classList.remove('ring-2', 'ring-current');
+            dropdown?.classList.add('hidden');
+            chevron?.classList.remove('rotate-180');
           }
         });
-      }
 
-      function applyTheme(theme: string, persist = true) {
-        document.documentElement.setAttribute('data-theme', theme);
-        if (persist) {
-          localStorage.setItem('gdgoc-uhu-theme', theme);
-        }
-        updateThemeUI(theme);
-        window.dispatchEvent(new CustomEvent('gdgoc-theme-change', { detail: { theme } }));
-      }
+        document.querySelectorAll('[data-set-theme]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const selected = btn.getAttribute('data-set-theme') || 'google';
+            applyTheme(selected, true);
+            dropdown?.classList.add('hidden');
+            chevron?.classList.remove('rotate-180');
+          });
+        });
 
-      // Initialize Header UI with current active theme
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 'google';
-      updateThemeUI(currentTheme);
-
-      // Dropdown open/close logic
-      const menuBtn = document.getElementById('theme-menu-button');
-      const dropdown = document.getElementById('theme-dropdown-menu');
-      const chevron = document.getElementById('theme-chevron');
-
-      menuBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isHidden = dropdown?.classList.contains('hidden');
-        if (isHidden) {
-          dropdown?.classList.remove('hidden');
-          chevron?.classList.add('rotate-180');
-        } else {
-          dropdown?.classList.add('hidden');
-          chevron?.classList.remove('rotate-180');
-        }
-      });
-
-      document.querySelectorAll('[data-set-theme]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const selected = btn.getAttribute('data-set-theme') || 'google';
-          applyTheme(selected, true);
+        document.addEventListener('click', () => {
           dropdown?.classList.add('hidden');
           chevron?.classList.remove('rotate-180');
         });
-      });
 
-      document.addEventListener('click', () => {
-        dropdown?.classList.add('hidden');
-        chevron?.classList.remove('rotate-180');
-      });
-
-      // Interactive 3D Tilt Cards (.tilt-card)
-      function initTiltCards() {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const cards = document.querySelectorAll('.tilt-card');
-        cards.forEach((card) => {
-          const maxTilt = Number(card.getAttribute('data-tilt-max') || '4.5');
-          card.addEventListener('pointermove', (e) => {
-            if (window.innerWidth < 768) return;
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const pctX = x / rect.width;
-            const pctY = y / rect.height;
-            const rotateY = (pctX - 0.5) * maxTilt * 2;
-            const rotateX = (0.5 - pctY) * maxTilt * 2;
-            card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
-            card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
-            card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
+        function initTiltCards() {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          const cards = document.querySelectorAll('.tilt-card');
+          cards.forEach((card) => {
+            const maxTilt = Number(card.getAttribute('data-tilt-max') || '4.5');
+            card.addEventListener('pointermove', (e) => {
+              if (window.innerWidth < 768) return;
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              const pctX = x / rect.width;
+              const pctY = y / rect.height;
+              const rotateY = (pctX - 0.5) * maxTilt * 2;
+              const rotateX = (0.5 - pctY) * maxTilt * 2;
+              card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
+              card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
+              card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
+            });
+            card.addEventListener('pointerleave', () => {
+              card.style.transform = '';
+            });
           });
-          card.addEventListener('pointerleave', () => {
-            card.style.transform = '';
-          });
-        });
-      }
-      initTiltCards();
+        }
+        initTiltCards();
+      })();
     </script>
   </body>
 </html>
