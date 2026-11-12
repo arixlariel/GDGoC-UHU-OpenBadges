@@ -69,10 +69,10 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 ```json
 {
   "name": "Cumpleaños feliz!",
-  "description": "Certificado de cumpleañero emitido por GDGoC Universidad de Huelva",
+  "description": "Certificado oficial de cumpleaños por GDGoC Universidad de Huelva",
   "image": "/images/badges/cumpleanos-feliz.png",
   "criteria": {
-    "narrative": "Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU"
+    "narrative": "Efectivamente, ha llegado tu día de entre los 365 que hay"
   },
   "tags": ["Cumpleaños", "Vuelta al sol", "Un día más", "Un día menos?"],
   "style": "caramelos",

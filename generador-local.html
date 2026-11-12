@@ -1124,10 +1124,10 @@
                     </div>
 
                     <p id="dp-badge-desc" class="dp-text-primary" style="font-size:13.5px; max-width:560px; line-height:1.5;">
-                      Certificado de cumpleañero emitido por GDGoC Universidad de Huelva
+                      Certificado oficial de cumpleaños por GDGoC Universidad de Huelva
                     </p>
                     <p id="dp-badge-narrative" class="dp-text-secondary" style="font-size:12px; max-width:500px; line-height:1.45; margin-top:6px;">
-                      Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU
+                      Efectivamente, ha llegado tu día de entre los 365 que hay
                     </p>
 
                     <div class="dp-meta" style="margin-top:16px; width:100%; max-width:560px; border-radius:14px; padding:12px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; text-align:center;">
@@ -1288,12 +1288,12 @@
 
         <div class="form-group">
           <label>Descripción</label>
-          <textarea id="badge-desc" oninput="updateBadgePreview()">Certificado de cumpleañero emitido por GDGoC Universidad de Huelva</textarea>
+          <textarea id="badge-desc" oninput="updateBadgePreview()">Certificado oficial de cumpleaños por GDGoC Universidad de Huelva</textarea>
         </div>
 
         <div class="form-group">
           <label>Criterios de obtención <span style="font-weight: 400;">(narrative)</span></label>
-          <textarea id="badge-narrative" oninput="updateBadgePreview()">Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU</textarea>
+          <textarea id="badge-narrative" oninput="updateBadgePreview()">Efectivamente, ha llegado tu día de entre los 365 que hay</textarea>
         </div>
 
         <div class="form-group">
@@ -1626,9 +1626,9 @@
     const KNOWN_BADGES = {
       'cumpleanos-feliz': {
         name: 'Cumpleaños feliz!',
-        description: 'Certificado de cumpleañero emitido por GDGoC Universidad de Huelva',
+        description: 'Certificado oficial de cumpleaños por GDGoC Universidad de Huelva',
         image: '/images/badges/cumpleanos-feliz.png',
-        criteria: { narrative: 'Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU' },
+        criteria: { narrative: 'Efectivamente, ha llegado tu día de entre los 365 que hay' },
         tags: ['Cumpleaños', 'Vuelta al sol', 'Un día más', 'Un día menos?'],
         style: 'caramelos',
       },
@@ -1780,23 +1780,22 @@
         for (const item of list) {
           if (item.type === 'file' && item.name.endsWith('.json') && item.download_url) {
             const slug = item.name.replace(/\.json$/i, '');
-            if (!KNOWN_BADGES[slug]) {
-              const bRes = await fetch(item.download_url);
-              if (bRes.ok) {
-                const data = await bRes.json();
-                KNOWN_BADGES[slug] = {
-                  name: data.name || slug,
-                  description: data.description || '',
-                  image: data.image ? 'https://gdguhu.es' + data.image : '',
-                  criteria: data.criteria || { narrative: '' },
-                  tags: data.tags || [],
-                  style: data.style || 'google',
-                };
-              }
+            const bRes = await fetch(item.download_url);
+            if (bRes.ok) {
+              const data = await bRes.json();
+              KNOWN_BADGES[slug] = {
+                name: data.name || slug,
+                description: data.description || '',
+                image: data.image || '',
+                criteria: data.criteria || { narrative: '' },
+                tags: data.tags || [],
+                style: data.style || 'google',
+              };
             }
           }
         }
         populateBadgeSelectDropdown();
+        renderLivePreviewsOnly();
       } catch {}
     }
 
