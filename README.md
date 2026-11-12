@@ -23,7 +23,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 
 ## 1. Arquitectura del Sistema
 
-- **Registrador del dominio**: Ariel Bustillo via DonDominio `https://www.dondominio.com/es/`
+- **Registrador del dominio**: Cloudflare
 - **Web de verificación**: `https://gdguhu.com`
 - **Hosting**: GitHub Pages
 - **Estándar**: Open Badges 2.0 firmado por GDGoC UHU con hash SHA-256
