@@ -800,8 +800,8 @@
               <input
                 type="text"
                 id="gen-default-role"
-                value="Asistente Certificado"
-                placeholder="ej: Asistente Certificado, Ponente..."
+                value="Asistencia certificada"
+                placeholder="ej: Asistencia certificada, Ponente..."
                 onfocus="saveHistorySnapshot()"
                 oninput="onGenericRoleChange(this.value)"
               />
@@ -1087,19 +1087,19 @@
                       <div class="dp-border" style="height:34px; border-left:2px solid;"></div>
                       <img
                         id="dp-badge-img"
-                        src="/images/badges/workshop-ai-cloud.svg"
-                        onerror="this.style.display='none'"
+                        src="./public/images/badges/cumpleanos-feliz.png"
+                        onerror="this.src='https://gdguhu.es/images/badges/cumpleanos-feliz.png'; this.onerror=null;"
                         alt="Badge"
                         style="width:46px; height:46px; object-fit:contain;"
                       />
                     </div>
 
                     <div id="dp-role-pill" class="dp-pill" style="display:inline-flex; align-items:center; justify-content:center; padding:5px 14px; border-radius:999px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
-                      ASISTENTE CERTIFICADO
+                      ASISTENCIA CERTIFICADA
                     </div>
 
                     <h2 id="dp-badge-title" class="dp-text-primary" style="font-size:24px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">
-                      Selecciona una badge
+                      Cumpleaños feliz!
                     </h2>
                     <div id="dp-issue-date" class="dp-issue-date dp-accent">
                       28 de octubre de 2026
@@ -1124,16 +1124,16 @@
                     </div>
 
                     <p id="dp-badge-desc" class="dp-text-primary" style="font-size:13.5px; max-width:560px; line-height:1.5;">
-                      Certificado oficial otorgado por GDG on Campus Universidad de Huelva.
+                      Certificado de cumpleañero emitido por GDGoC Universidad de Huelva
                     </p>
                     <p id="dp-badge-narrative" class="dp-text-secondary" style="font-size:12px; max-width:500px; line-height:1.45; margin-top:6px;">
-                      Otorgado por completar satisfactoriamente las actividades prácticas del evento.
+                      Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU
                     </p>
 
                     <div class="dp-meta" style="margin-top:16px; width:100%; max-width:560px; border-radius:14px; padding:12px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; text-align:center;">
                       <div>
                         <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Rol Acreditado</div>
-                        <div id="dp-meta-role" class="dp-text-primary" style="font-size:12.5px; font-weight:800; margin-top:2px;">Asistente Certificado</div>
+                        <div id="dp-meta-role" class="dp-text-primary" style="font-size:12.5px; font-weight:800; margin-top:2px;">Asistencia certificada</div>
                       </div>
                       <div class="dp-border" style="border-left:2px solid; border-right:2px solid; padding:0 8px;">
                         <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Entidad Emisora</div>
@@ -1232,7 +1232,7 @@
           <input
             type="text"
             id="badge-name"
-            value="Capture The Flag - Reversing de Binarios"
+            value="Cumpleaños feliz!"
             oninput="onBadgeNameInput(this.value)"
           />
         </div>
@@ -1243,7 +1243,7 @@
             type="text"
             id="badge-slug"
             class="mono"
-            value="capture-the-flag-reversing-de-binarios"
+            value="cumpleanos-feliz"
             oninput="updateBadgePreview()"
           />
         </div>
@@ -1251,7 +1251,7 @@
         <div class="form-group">
           <label>Estilo visual</label>
           <div class="style-selector" id="badge-creator-style-selector">
-            <button type="button" class="style-btn active" data-style="google" onclick="setBadgeCreatorStyle('google')">
+            <button type="button" class="style-btn" data-style="google" onclick="setBadgeCreatorStyle('google')">
               <span class="icon">🔵</span><span>Google</span>
             </button>
             <button type="button" class="style-btn" data-style="cyber" onclick="setBadgeCreatorStyle('cyber')">
@@ -1263,7 +1263,7 @@
             <button type="button" class="style-btn" data-style="nieve" onclick="setBadgeCreatorStyle('nieve')">
               <span class="icon">❄️</span><span>Nieve</span>
             </button>
-            <button type="button" class="style-btn" data-style="caramelos" onclick="setBadgeCreatorStyle('caramelos')">
+            <button type="button" class="style-btn active" data-style="caramelos" onclick="setBadgeCreatorStyle('caramelos')">
               <span class="icon">🍬</span><span>Caramelos</span>
             </button>
           </div>
@@ -1276,7 +1276,7 @@
               type="text"
               id="badge-image"
               class="mono"
-              value="/images/badges/capture-the-flag-reversing-de-binarios.png"
+              value="/images/badges/cumpleanos-feliz.png"
               oninput="updateBadgePreview()"
             />
             <label class="btn btn-secondary btn-sm" style="margin:0; white-space:nowrap; cursor:pointer;">
@@ -1288,12 +1288,12 @@
 
         <div class="form-group">
           <label>Descripción</label>
-          <textarea id="badge-desc" oninput="updateBadgePreview()">Certificado oficial de asistencia al taller organizado por GDGoC Universidad de Huelva</textarea>
+          <textarea id="badge-desc" oninput="updateBadgePreview()">Certificado de cumpleañero emitido por GDGoC Universidad de Huelva</textarea>
         </div>
 
         <div class="form-group">
           <label>Criterios de obtención <span style="font-weight: 400;">(narrative)</span></label>
-          <textarea id="badge-narrative" oninput="updateBadgePreview()">Otorgado por asistir presencialmente al 100% del taller y participar en las actividades presentadas</textarea>
+          <textarea id="badge-narrative" oninput="updateBadgePreview()">Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU</textarea>
         </div>
 
         <div class="form-group">
@@ -1301,7 +1301,7 @@
           <input
             type="text"
             id="badge-tags"
-            value="CTF, Reversing, Binarios, Ghidra"
+            value="Cumpleaños, Vuelta al sol, Un día más, Un día menos?"
             oninput="updateBadgePreview()"
           />
         </div>
@@ -1624,6 +1624,14 @@
        4. CATÁLOGO DE BADGES DEL SISTEMA Y DESPLEGABLE / BUSCADOR DE ID DE BADGE
        ======================================================================== */
     const KNOWN_BADGES = {
+      'cumpleanos-feliz': {
+        name: 'Cumpleaños feliz!',
+        description: 'Certificado de cumpleañero emitido por GDGoC Universidad de Huelva',
+        image: '/images/badges/cumpleanos-feliz.png',
+        criteria: { narrative: 'Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU' },
+        tags: ['Cumpleaños', 'Vuelta al sol', 'Un día más', 'Un día menos?'],
+        style: 'caramelos',
+      },
       'workshop-ai-cloud': {
         name: 'Taller de IA Generativa & Google Cloud',
         description: 'Certificado oficial por completar el taller práctico de Inteligencia Artificial Generativa con Gemini y despliegue en Google Cloud Platform organizado por GDG on Campus UHU.',
@@ -1662,14 +1670,6 @@
         image: '/images/badges/creative-ui-jam.svg',
         criteria: { narrative: 'Diseño y presentación de un prototipo interactivo completo evaluado por el jurado.' },
         tags: ['UI/UX', 'Design Systems', 'CSS', 'Creative Jam'],
-        style: 'caramelos',
-      },
-      'cumpleanos-feliz': {
-        name: 'Cumpleaños feliz!',
-        description: 'Certificado de cumpleañero emitido por GDGoC Universidad de Huelva',
-        image: '/images/badges/cumpleanos-feliz.png',
-        criteria: { narrative: 'Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU' },
-        tags: ['Cumpleaños', 'Vuelta al sol', 'Un día más', 'Un día menos?'],
         style: 'caramelos',
       },
     };
@@ -1802,7 +1802,7 @@
 
     const currentYearSalt = 'gdgoc-uhu-salt-' + new Date().getFullYear();
     let genericStyle = 'google';
-    let activeBadgeCreatorStyle = 'google';
+    let activeBadgeCreatorStyle = 'caramelos';
     let lastRawCsvContent = '';
     let lastBadgeFileHandle = null;
     let selectedIndex = 0;
@@ -1812,7 +1812,7 @@
         id: generateUniqueHexId24(),
         name: 'John Doe Doe',
         email: 'john.doe@alu.uhu.es',
-        role: 'Asistente Certificado',
+        role: 'Asistencia certificada',
         evidence: '',
         style: 'google',
         issuedOn: new Date().toISOString(),
@@ -2016,7 +2016,7 @@
 
       const { header, rows } = parsed;
       const isBevy = header.includes('first name') && header.includes('email');
-      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado';
+      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistencia certificada';
       const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
       const onlyCheckedIn = checkinInput.checked;
 
@@ -2163,7 +2163,7 @@
 
     function addManualRecipient() {
       saveHistorySnapshot();
-      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado';
+      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistencia certificada';
       const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
       recipients.push({
         id: generateUniqueHexId24(),
@@ -2202,7 +2202,7 @@
           id: generateUniqueHexId24(),
           name: 'John Doe Doe',
           email: 'john.doe@alu.uhu.es',
-          role: document.getElementById('gen-default-role').value.trim() || 'Asistente Certificado',
+          role: document.getElementById('gen-default-role').value.trim() || 'Asistencia certificada',
           evidence: document.getElementById('gen-default-evidence').value.trim(),
           style: genericStyle,
           issuedOn: new Date().toISOString(),
@@ -2359,7 +2359,7 @@
     }
 
     function buildAssertionObject(item) {
-      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'sin-seleccionar';
+      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'cumpleanos-feliz';
       const identity = computeOpenBadgeIdentity(item.email, currentYearSalt);
       const effectiveStyle = item.style || genericStyle || 'google';
       const obj = {
@@ -2371,7 +2371,7 @@
           salt: currentYearSalt,
         },
         badgeId,
-        role: (item.role || 'Asistente Certificado').trim(),
+        role: (item.role || 'Asistencia certificada').trim(),
         issuedOn: item.issuedOn || new Date().toISOString(),
         styleOverride: effectiveStyle,
       };
@@ -2401,14 +2401,18 @@
 
       const selectedBadgeId = document.getElementById('gen-badge-id').value.trim();
       const effectiveStyle = current.style || genericStyle || 'google';
-      const badgeInfo = KNOWN_BADGES[selectedBadgeId] || {
-        name: selectedBadgeId ? selectedBadgeId.replace(/-/g, ' ').toUpperCase() : 'SELECCIONA UNA BADGE',
-        description: 'Certificado digital oficial emitido por GDG on Campus Universidad de Huelva.',
-        image: './public/images/gdgoc-uhu-logo.jpg',
-        criteria: { narrative: 'Otorgado por completar satisfactoriamente las actividades del evento.' },
-        tags: ['GDGoC UHU', 'Open Badges 2.0'],
-        style: effectiveStyle,
-      };
+      const badgeInfo =
+        KNOWN_BADGES[selectedBadgeId] ||
+        (!selectedBadgeId
+          ? KNOWN_BADGES['cumpleanos-feliz']
+          : {
+              name: selectedBadgeId.replace(/-/g, ' ').toUpperCase(),
+              description: 'Certificado digital oficial emitido por GDG on Campus Universidad de Huelva.',
+              image: './public/images/gdgoc-uhu-logo.jpg',
+              criteria: { narrative: 'Otorgado por completar satisfactoriamente las actividades del evento.' },
+              tags: ['GDGoC UHU', 'Open Badges 2.0'],
+              style: effectiveStyle,
+            });
 
       const assertionObj = buildAssertionObject(current);
       document.getElementById('indiv-hash').value = assertionObj.recipient.identity;
@@ -2438,7 +2442,16 @@
       const badgeImgEl = document.getElementById('dp-badge-img');
       if (badgeInfo.image) {
         badgeImgEl.style.display = '';
-        badgeImgEl.src = badgeInfo.image;
+        const rawImg = String(badgeInfo.image);
+        if (rawImg.startsWith('/images/')) {
+          badgeImgEl.onerror = function () {
+            this.onerror = null;
+            this.src = 'https://gdguhu.es' + rawImg;
+          };
+          badgeImgEl.src = './public' + rawImg;
+        } else {
+          badgeImgEl.src = rawImg;
+        }
       }
 
       // Tags
@@ -2750,7 +2763,7 @@
     function onBadgeNameInput(val) {
       const slug = slugify(val) || 'nueva-badge';
       document.getElementById('badge-slug').value = slug;
-      document.getElementById('badge-image').value = `/images/badges/${slug}.svg`;
+      document.getElementById('badge-image').value = `/images/badges/${slug}.png`;
       updateBadgePreview();
     }
 

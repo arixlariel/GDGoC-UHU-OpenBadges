@@ -104,7 +104,7 @@ function writeAssertion(id, assertionObj) {
       salt: assertionObj.recipient.salt || `gdgoc-uhu-salt-${new Date().getFullYear()}`,
     },
     badgeId: assertionObj.badgeId,
-    role: assertionObj.role || 'Asistente Certificado',
+    role: assertionObj.role || 'Asistencia certificada',
     issuedOn: assertionObj.issuedOn || new Date().toISOString(),
   };
   if (assertionObj.expires) safeAssertion.expires = assertionObj.expires;

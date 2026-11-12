@@ -3,13 +3,13 @@ on:
   workflow_dispatch:
     inputs:
       badge_id:
-        description: 'ID de la insignia (ej: workshop-ai-cloud, hackathon-2026)'
+        description: 'ID de la insignia (ej: cumpleanos-feliz, workshop-ai-cloud)'
         required: true
         type: string
       role:
-        description: 'Rol o Reconocimiento (ej: Asistente Certificado, Participante)'
+        description: 'Rol o Reconocimiento (ej: Asistencia certificada, Participante)'
         required: true
-        default: 'Asistente Certificado'
+        default: 'Asistencia certificada'
         type: string
       only_checked_in:
         description: 'Solo emitir a quienes hicieron Check-in en el evento de Bevy'

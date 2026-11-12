@@ -9,12 +9,12 @@
  * 2. Un CSV estándar personalizado (columnas: nombre, email, badgeId, role, evidence)
  *
  * USO:
- *   npm run bulk -- asistentes.csv --badge capture-the-flag-reversing-de-binarios --role "Asistente Certificado"
- *   node scripts/bulk-issue.mjs asistentes.csv --badge workshop-ai-cloud
+ *   npm run bulk -- asistentes.csv --badge cumpleanos-feliz --role "Asistencia certificada"
+ *   node scripts/bulk-issue.mjs asistentes.csv --badge cumpleanos-feliz
  *
  * PARÁMETROS OPCIONALES:
  *   --badge <badgeId>       Insignia a otorgar a todos los del CSV (si el CSV no tiene columna badgeId)
- *   --role <role>           Rol por defecto (ej: "Asistente Certificado", por defecto "Participante")
+ *   --role <role>           Rol por defecto (ej: "Asistencia certificada")
  *   --only-checked-in       Solo emitir certificados a quienes tengan fecha de Check-in en Bevy
  *   --output-list <path>    Guardar lista de emisión temporal con emails para envío posterior
  */
@@ -244,7 +244,7 @@ async function main() {
   const args = process.argv.slice(2);
   let csvPath = '';
   let defaultBadge = '';
-  let defaultRole = 'Asistente Certificado';
+  let defaultRole = 'Asistencia certificada';
   let onlyCheckedIn = false;
   let outputList = '';
 

@@ -107,7 +107,7 @@ async function main() {
     }
 
     console.log(`\nInsignias disponibles: ${badges.join(', ')}`);
-    const defaultBadge = badges[0];
+    const defaultBadge = badges.includes('cumpleanos-feliz') ? 'cumpleanos-feliz' : badges[0];
     const badgeId = await askQuestion(rl, '3. ID de la insignia', defaultBadge);
 
     if (!badges.includes(badgeId)) {
@@ -115,7 +115,7 @@ async function main() {
       process.exit(1);
     }
 
-    const role = await askQuestion(rl, '4. Rol / Reconocimiento', 'Participante');
+    const role = await askQuestion(rl, '4. Rol / Reconocimiento', 'Asistencia certificada');
     const evidence = await askQuestion(rl, '5. Enlace a proyecto o evidencia (opcional, Enter para omitir)', '');
 
     const duplicateId = findDuplicateAssertion(email, name, badgeId);

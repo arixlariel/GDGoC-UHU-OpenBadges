@@ -192,7 +192,7 @@ export function buildEmailText(
   badge,
   certUrl,
   assertionJsonUrl,
-  role = 'Asistente Certificado',
+  role = 'Asistencia certificada',
   assertionId = '',
   style = 'google',
   evidence = ''
@@ -230,7 +230,7 @@ export function buildEmailHTML(
   badge,
   certUrl,
   assertionJsonUrl,
-  role = 'Asistente Certificado',
+  role = 'Asistencia certificada',
   assertionId = '',
   style = 'google',
   evidence = ''
@@ -383,7 +383,7 @@ async function main() {
     const assertionData = loadAssertion(item.assertionId);
     const resolvedStyle = item.style || assertionData?.styleOverride || badge.style || 'google';
     const resolvedEvidence = item.evidence || assertionData?.evidence || '';
-    const resolvedRole = item.role || assertionData?.role || 'Asistente Certificado';
+    const resolvedRole = item.role || assertionData?.role || 'Asistencia certificada';
     const rawCertUrl = item.url || `${siteUrl}/cert/${item.assertionId}`;
     const certUrl = rawCertUrl.endsWith('/') ? rawCertUrl : `${rawCertUrl}/`;
     const assertionJsonUrl = `${siteUrl}/api/badges/assertion/${item.assertionId}.json`;

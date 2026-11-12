@@ -68,14 +68,14 @@ Crear y guardar el archivo `.json` en `src/content/badges/`
 **Plantilla a usar:**
 ```json
 {
-  "name": "Capture The Flag - Reversing de Binarios",
-  "description": "Certificado oficial de asistencia al taller organizado por GDGoC Universidad de Huelva",
-  "image": "/images/badges/capture-the-flag-reversing-de-binarios.png",
+  "name": "Cumpleaños feliz!",
+  "description": "Certificado de cumpleañero emitido por GDGoC Universidad de Huelva",
+  "image": "/images/badges/cumpleanos-feliz.png",
   "criteria": {
-    "narrative": "Otorgado por asistir presencialmente al 100% del taller y participar en las actividades presentadas"
+    "narrative": "Efectivamente, has cumplido 21 años y todos te deseamos un feliz cumpleaños de parte de GDGoC UHU"
   },
-  "tags": ["CTF", "Reversing", "Binarios", "Ghidra"],
-  "style": "google",
+  "tags": ["Cumpleaños", "Vuelta al sol", "Un día más", "Un día menos?"],
+  "style": "caramelos",
   "issuerId": "gdgoc-uhu"
 }
 ```
@@ -114,8 +114,8 @@ npm run issue
 El asistente te pedirá:
 1. **Nombre completo**
 2. **Email de contacto** (solo se usa para calcular el hash `SHA-256`)
-3. **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `capture-the-flag-reversing-de-binarios`)
-4. **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
+3. **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `cumpleanos-feliz`)
+4. **Rol o reconocimiento** (`Asistencia certificada`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
 5. **Enlace a proyecto o evidencia** (opcional)
 
 El script generará automáticamente un archivo con un nombre único de 24 caracteres hexadecimales en `src/content/assertions/`
@@ -137,8 +137,8 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
     "type": "email",
     "salt": "gdgoc-uhu-salt-2026"         <-- Se pega justo detrás del email, y ese conjunto es lo que se cifra
   },
-  "badgeId": "workshop-ai-cloud",         <-- Nombre del archivo .json de la badge (sin .json)
-  "role": "Asistente Certificado",
+  "badgeId": "cumpleanos-feliz",          <-- Nombre del archivo .json de la badge (sin .json)
+  "role": "Asistencia certificada",
   "issuedOn": "2026-10-27T18:00:00Z",
   "evidence": "https://github.com/laura/proyecto-final"
 }
@@ -154,7 +154,7 @@ Detecta automáticamente las columnas `First Name`, `Last Name`, `Email`, `Check
 
 ```bash
 git pull
-npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
+npm run bulk -- ARCHIVO.csv --badge cumpleanos-feliz --role "Asistencia certificada"
 ```
 
 - Si añades `--only-checked-in`, solo se emitirán certificados a quienes tengan asistencia registrada
@@ -170,8 +170,8 @@ npm run bulk -- ARCHIVO.csv --badge workshop-ai-cloud --role "ELQUESEA"
 1. Entra arriba en la pestaña `Actions`
 2. En la lista de flujos de trabajo, corre el workflow `Emitir certificados y emails`
 3. Rellena los campos:
-   - **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `capture-the-flag-reversing-de-binarios`)
-   - **Rol o reconocimiento** (`Participante`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
+   - **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `cumpleanos-feliz`)
+   - **Rol o reconocimiento** (`Asistencia certificada`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
    - **¿Solo emitir a check-ins?**
    - **¿Enviar `gmail` automático con la `URL` del certificado?**
    - **Pega el contenido del `.csv`**: Abre el archivo con cualquier bloc de notas para copiar y pegar todo el texto
@@ -197,7 +197,7 @@ Abre una terminal, navega a la ruta donde guardes el proyecto y ejecuta:
 
 ```bash
 git add .
-git commit -m "feat(cert): Emisión de certificados para Capture The Flag - Reversing de Binarios"
+git commit -m "feat(cert): Emisión de certificados para Cumpleaños feliz!"
 git push origin main
 ```
 
