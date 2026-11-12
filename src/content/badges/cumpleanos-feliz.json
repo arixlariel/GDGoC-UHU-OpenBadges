@@ -1,0 +1,16 @@
+{
+  "name": "Cumpleaños feliz!",
+  "description": "Certificado oficial de cumpleañero por GDGoC Universidad de Huelva",
+  "image": "/images/badges/cumpleanos-feliz.svg",
+  "criteria": {
+    "narrative": "Efectivamente, has cumplido 21 años"
+  },
+  "tags": [
+    "Cumpleaños",
+    "Vuelta al sol",
+    "Un día más",
+    "Un día menos?"
+  ],
+  "style": "caramelos",
+  "issuerId": "gdgoc-uhu"
+}

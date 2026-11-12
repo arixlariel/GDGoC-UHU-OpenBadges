@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Luis Isnard Galán",
+    "identity": "sha256$99ca7b154295d678b28d665db1f105270fc8eaeb5a74c71b095b50bce52d362d",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "cumpleanos-feliz",
+  "role": "CEO del JOSEO",
+  "issuedOn": "2026-11-12T10:15:07.189Z",
+  "styleOverride": "caramelos"
+}
