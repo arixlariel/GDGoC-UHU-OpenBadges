@@ -187,6 +187,44 @@ const EMAIL_THEMES = {
   },
 };
 
+export function buildEmailText(
+  name,
+  badge,
+  certUrl,
+  assertionJsonUrl,
+  role = 'Asistente Certificado',
+  assertionId = '',
+  style = 'google',
+  evidence = ''
+) {
+  const badgeName = badge.name || 'Certificado oficial GDGoC UHU';
+  const badgeDesc = badge.description || '';
+  const cleanDomain = siteUrl.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+
+  const lines = [
+    'GDG on Campus — Universidad de Huelva',
+    '✓ Credencial Digital Oficial Hosteada',
+    '',
+    `Este certificado digital se otorga a: ${name}`,
+    role ? `Rol: ${role}` : '',
+    '',
+    `Insignia Acreditativa: ${badgeName}`,
+    badgeDesc ? badgeDesc : '',
+    assertionId ? `ID del certificado: ${assertionId}` : '',
+    '',
+    `Abrir mi certificado oficial: ${certUrl}`,
+    evidence ? `Ver Evidencia / Proyecto: ${evidence}` : '',
+    '',
+    'Haz clic en el enlace para ver tu certificado en línea, descargarlo como PDF o añadirlo a tu LinkedIn o cartera favorita.',
+    '',
+    '---',
+    'Certificado verificado bajo el estándar internacional Open Badges 2.0 de 1EdTech.',
+    `Alojado oficialmente en ${cleanDomain} (${siteUrl})`,
+  ];
+
+  return lines.filter((line, idx, arr) => line !== '' || arr[idx - 1] !== '').join('\n');
+}
+
 export function buildEmailHTML(
   name,
   badge,
@@ -201,6 +239,7 @@ export function buildEmailHTML(
   const badgeDesc = badge.description || '';
   const resolvedStyle = style || badge.style || 'google';
   const t = EMAIL_THEMES[resolvedStyle] || EMAIL_THEMES.google;
+  const cleanDomain = siteUrl.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -212,97 +251,74 @@ export function buildEmailHTML(
 <body style="margin: 0; padding: 0; background-color: ${t.outerBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: ${t.textPrimary};">
 
   <!-- Barra de Estilo -->
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tr>
-      <td width="25%" height="6" style="background-color: ${t.strip[0]};"></td>
-      <td width="25%" height="6" style="background-color: ${t.strip[1]};"></td>
-      <td width="25%" height="6" style="background-color: ${t.strip[2]};"></td>
-      <td width="25%" height="6" style="background-color: ${t.strip[3]};"></td>
-    </tr>
-  </table>
+  <div style="width: 100%; height: 6px; background-color: ${t.strip[0]}; background-image: linear-gradient(to right, ${t.strip[0]} 0%, ${t.strip[0]} 25%, ${t.strip[1]} 25%, ${t.strip[1]} 50%, ${t.strip[2]} 50%, ${t.strip[2]} 75%, ${t.strip[3]} 75%, ${t.strip[3]} 100%);"></div>
 
   <!-- Contenedor Principal -->
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: ${t.outerBg}; padding: 30px 15px;">
-    <tr>
-      <td align="center">
+  <div style="background-color: ${t.outerBg}; padding: 30px 15px;">
+    <div style="max-width: 580px; margin: 0 auto; background-color: ${t.cardBg}; border-radius: 20px; overflow: hidden; border: 2px solid ${t.cardBorder};">
+      
+      <!-- Encabezado con Identidad GDGoC UHU -->
+      <div style="padding: 28px 30px 18px 30px; text-align: center; border-bottom: 1px solid ${t.headerBorder};">
+        <h2 style="margin: 0; font-size: 20px; color: ${t.textPrimary}; font-weight: 800; letter-spacing: -0.5px;">
+          GDG on Campus
+        </h2>
+        <div style="font-size: 13px; color: ${t.accent}; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
+          Universidad de Huelva
+        </div>
+      </div>
+
+      <!-- Insignia y Enhorabuena -->
+      <div style="padding: 30px 30px 24px 30px; text-align: center;">
         
-        <table role="presentation" width="100%" style="max-width: 580px; background-color: ${t.cardBg}; border-radius: 20px; overflow: hidden; border: 2px solid ${t.cardBorder};" cellspacing="0" cellpadding="0" border="0">
-          
-          <!-- Encabezado con Identidad GDGoC UHU -->
-          <tr>
-            <td style="padding: 28px 30px 18px 30px; text-align: center; border-bottom: 1px solid ${t.headerBorder};">
-              <h2 style="margin: 0; font-size: 20px; color: ${t.textPrimary}; font-weight: 800; letter-spacing: -0.5px;">
-                GDG on Campus
-              </h2>
-              <div style="font-size: 13px; color: ${t.accent}; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
-                Universidad de Huelva
-              </div>
-            </td>
-          </tr>
+        <div style="display: inline-block; padding: 6px 14px; background-color: ${t.verifiedBg}; border: 1px solid ${t.verifiedBorder}; border-radius: 50px; font-size: 12px; font-weight: 700; color: ${t.verifiedText}; margin-bottom: 18px;">
+          ✓ Credencial Digital Oficial Hosteada
+        </div>
 
-          <!-- Insignia y Enhorabuena -->
-          <tr>
-            <td style="padding: 30px 30px 24px 30px; text-align: center;">
-              
-              <div style="display: inline-block; padding: 6px 14px; background-color: ${t.verifiedBg}; border: 1px solid ${t.verifiedBorder}; border-radius: 50px; font-size: 12px; font-weight: 700; color: ${t.verifiedText}; margin-bottom: 18px;">
-                ✓ Credencial Digital Oficial Hosteada
-              </div>
+        <div style="font-size: 12px; color: ${t.textMuted}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">
+          Este certificado digital se otorga a:
+        </div>
+        <h1 style="margin: 0 0 12px 0; font-size: 25px; color: ${t.textPrimary}; font-weight: 800;">
+          ${name}
+        </h1>
 
-              <div style="font-size: 12px; color: ${t.textMuted}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">
-                Este certificado digital se otorga a:
-              </div>
-              <h1 style="margin: 0 0 12px 0; font-size: 25px; color: ${t.textPrimary}; font-weight: 800;">
-                ${name}
-              </h1>
+        ${role ? `<div style="display: inline-block; padding: 5px 14px; background-color: ${t.rolePillBg}; border: 1.5px solid ${t.rolePillBorder}; border-radius: 50px; font-size: 11px; font-weight: 700; color: ${t.rolePillText}; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">${role}</div>` : ''}
 
-              ${role ? `<div style="display: inline-block; padding: 5px 14px; background-color: ${t.rolePillBg}; border: 1.5px solid ${t.rolePillBorder}; border-radius: 50px; font-size: 11px; font-weight: 700; color: ${t.rolePillText}; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">${role}</div>` : ''}
+        <div style="background-color: ${t.boxBg}; border: 1.5px solid ${t.boxBorder}; border-radius: 16px; padding: 20px; margin: 14px 0 20px 0; text-align: center;">
+          <div style="font-size: 11px; color: ${t.accent}; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;">
+            Insignia Acreditativa
+          </div>
+          <h3 style="margin: 0 0 8px 0; font-size: 19px; color: ${t.textPrimary}; font-weight: 800;">
+            ${badgeName}
+          </h3>
+          ${badgeDesc ? `<p style="margin: 0; font-size: 13px; color: ${t.textSecondary}; line-height: 1.5;">${badgeDesc}</p>` : ''}
+          ${assertionId ? `<div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed ${t.cardBorder}; font-size: 11px; color: ${t.textMuted}; font-family: monospace;">ID del certificado: <strong style="color: ${t.textPrimary};">${assertionId}</strong></div>` : ''}
+        </div>
 
-              <div style="background-color: ${t.boxBg}; border: 1.5px solid ${t.boxBorder}; border-radius: 16px; padding: 20px; margin: 14px 0 20px 0; text-align: center;">
-                <div style="font-size: 11px; color: ${t.accent}; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;">
-                  Insignia Acreditativa
-                </div>
-                <h3 style="margin: 0 0 8px 0; font-size: 19px; color: ${t.textPrimary}; font-weight: 800;">
-                  ${badgeName}
-                </h3>
-                ${badgeDesc ? `<p style="margin: 0; font-size: 13px; color: ${t.textSecondary}; line-height: 1.5;">${badgeDesc}</p>` : ''}
-                ${assertionId ? `<div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed ${t.cardBorder}; font-size: 11px; color: ${t.textMuted}; font-family: monospace;">ID del certificado: <strong style="color: ${t.textPrimary};">${assertionId}</strong></div>` : ''}
-              </div>
+        <!-- Botón Principal -->
+        <div style="margin: 22px auto 14px auto; text-align: center;">
+          <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 14px 28px; background-color: ${t.btnBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 800; color: ${t.btnText}; text-decoration: none; border-radius: 12px; text-align: center;">
+            Abrir mi certificado oficial
+          </a>
+        </div>
 
-              <!-- Botón Principal Bulletproof para Móviles y Clientes de Correo -->
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 22px auto 14px auto;">
-                <tr>
-                  <td align="center" bgcolor="${t.btnBg}" style="border-radius: 12px; background-color: ${t.btnBg};">
-                    <a href="${certUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 14px 28px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 800; color: ${t.btnText}; text-decoration: none; border-radius: 12px; -webkit-text-size-adjust: none; mso-padding-alt: 0; cursor: pointer; text-align: center;">
-                      Abrir mi certificado oficial
-                    </a>
-                  </td>
-                </tr>
-              </table>
+        ${evidence ? `<div style="margin: 10px 0 14px 0;"><a href="${evidence}" target="_blank" rel="noopener noreferrer" style="display: inline-block; color: ${t.accent}; font-size: 12.5px; font-weight: 700; text-decoration: underline;">Ver Evidencia / Proyecto ↗</a></div>` : ''}
 
-              ${evidence ? `<div style="margin: 10px 0 14px 0;"><a href="${evidence}" target="_blank" style="display: inline-block; color: ${t.accent}; font-size: 12.5px; font-weight: 700; text-decoration: underline;">Ver Evidencia / Proyecto ↗</a></div>` : ''}
+        <p style="font-size: 12px; color: ${t.textMuted}; margin: 12px 0 0 0; line-height: 1.5;">
+          Haz clic en el botón para ver tu certificado en línea, descargarlo como PDF o añadirlo a tu LinkedIn o cartera favorita
+        </p>
 
-              <p style="font-size: 12px; color: ${t.textMuted}; margin: 12px 0 0 0; line-height: 1.5;">
-                Haz clic en el botón para ver tu certificado en línea, descargarlo como PDF o añadirlo a tu LinkedIn o cartera favorita
-              </p>
+      </div>
 
-            </td>
-          </tr>
+      <!-- Pie de página del correo -->
+      <div style="padding: 20px 30px; background-color: ${t.footerBg}; border-top: 1px solid ${t.headerBorder}; text-align: center;">
+        <p style="margin: 0; font-size: 11px; color: ${t.textMuted}; line-height: 1.4;">
+          Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> de 1EdTech.<br>
+          Alojado oficialmente en <a href="${siteUrl}" target="_blank" rel="noopener noreferrer" style="color: ${t.accent}; text-decoration: none; font-weight: 700;">${cleanDomain}</a>
+        </p>
+      </div>
 
-          <!-- Pie de página del correo -->
-          <tr>
-            <td style="padding: 20px 30px; background-color: ${t.footerBg}; border-top: 1px solid ${t.headerBorder}; text-align: center;">
-              <p style="margin: 0; font-size: 11px; color: ${t.textMuted}; line-height: 1.4;">
-                Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> de 1EdTech.<br>
-                Alojado oficialmente en <a href="${siteUrl}" style="color: ${t.accent}; text-decoration: none; font-weight: 700;">${siteUrl}</a>
-              </p>
-            </td>
-          </tr>
-
-        </table>
-
-      </td>
-    </tr>
-  </table>
+    </div>
+  </div>
 
 </body>
 </html>`;
@@ -371,12 +387,27 @@ async function main() {
     const rawCertUrl = item.url || `${siteUrl}/cert/${item.assertionId}`;
     const certUrl = rawCertUrl.endsWith('/') ? rawCertUrl : `${rawCertUrl}/`;
     const assertionJsonUrl = `${siteUrl}/api/badges/assertion/${item.assertionId}.json`;
-    const subject = `Certificado: ${badge.name || item.badgeId}`;
+    const cleanBadgeSubject = String(badge.name || item.badgeId).replace(/[!¡]+/g, '').trim();
+    const safeRecipientName = String(item.nombre || '').replace(/"/g, '').trim();
+    const subject = safeRecipientName
+      ? `Certificado de ${cleanBadgeSubject} — ${safeRecipientName}`
+      : `Certificado: ${cleanBadgeSubject}`;
 
     const mailOptions = {
       from: `"GDG on Campus Universidad de Huelva" <${gmailUser}>`,
-      to: item.email,
+      to: safeRecipientName ? `"${safeRecipientName}" <${item.email}>` : item.email,
+      replyTo: gmailUser,
       subject,
+      text: buildEmailText(
+        item.nombre,
+        badge,
+        certUrl,
+        assertionJsonUrl,
+        resolvedRole,
+        item.assertionId || '',
+        resolvedStyle,
+        resolvedEvidence
+      ),
       html: buildEmailHTML(
         item.nombre,
         badge,
@@ -387,6 +418,9 @@ async function main() {
         resolvedStyle,
         resolvedEvidence
       ),
+      headers: {
+        'X-Entity-Ref-ID': item.assertionId || String(Date.now()),
+      },
     };
 
     try {
