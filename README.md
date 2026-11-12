@@ -131,16 +131,16 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
 ```json
 {
   "recipient": {
-    "name": "Laura Benítez Romero",
+    "name": "John Doe Doe",
     "identity": "sha256$a8b2c4...",       <-- Correo cifrado (SHA-256) con prefijo mandatorio `sha256$`
     "hashed": true,                       <-- Siempre en `true`
     "type": "email",
-    "salt": "gdgoc-uhu-salt-2026"         <-- Se pega justo detrás del email, y ese conjunto es lo que se cifra
+    "salt": "gdgoc-uhu-salt-2026"         <-- Se pega justo detrás del email, y ese conjunto es lo que se cifra (el año varía)
   },
   "badgeId": "cumpleanos-feliz",          <-- Nombre del archivo .json de la badge (sin .json)
-  "role": "Asistencia certificada",
+  "role": "Cumpleañero",
   "issuedOn": "2026-10-27T18:00:00Z",
-  "evidence": "https://github.com/laura/proyecto-final"
+  "evidence": "https://github.com/johndoedoe/proyecto-final"
 }
 ```
 
