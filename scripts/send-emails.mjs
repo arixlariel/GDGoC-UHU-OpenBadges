@@ -245,7 +245,7 @@ export function buildEmailHTML(
             <td style="padding: 30px 30px 24px 30px; text-align: center;">
               
               <div style="display: inline-block; padding: 6px 14px; background-color: ${t.verifiedBg}; border: 1px solid ${t.verifiedBorder}; border-radius: 50px; font-size: 12px; font-weight: 700; color: ${t.verifiedText}; margin-bottom: 18px;">
-                ✓ Credencial Digital Oficial Emitida
+                ✓ Credencial Digital Oficial Hosteada
               </div>
 
               <div style="font-size: 12px; color: ${t.textMuted}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">
