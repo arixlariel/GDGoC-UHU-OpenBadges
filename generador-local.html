@@ -279,13 +279,13 @@
     .combobox-option:hover, .combobox-option.active {
       background: #eff6ff;
     }
-    .combobox-option-id {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+    .combobox-option-name {
+      font-size: 12.5px;
       font-weight: 700;
       color: var(--text);
     }
-    .combobox-option-name {
+    .combobox-option-id {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       color: var(--text-muted);
     }
@@ -762,16 +762,15 @@
           </div>
 
           <div class="form-group">
-            <label>ID de la badge</label>
+            <label>Nombre de la badge</label>
             <div style="display: flex; gap: 8px; align-items: stretch;">
               <div class="combobox-wrap" id="badge-combobox-wrap">
                 <div class="combobox-input-wrap">
                   <input
                     type="text"
                     id="gen-badge-id"
-                    class="mono"
                     value=""
-                    placeholder="Selecciona o escribe un ID..."
+                    placeholder="Selecciona o escribe una badge..."
                     autocomplete="off"
                     onfocus="openBadgeDropdownMenu()"
                     oninput="onGenericBadgeInput(this.value)"
@@ -1075,7 +1074,7 @@
                       <div style="display:flex; align-items:center; gap:10px;">
                         <img
                           src="./public/images/gdgoc-uhu-logo-rounded.png"
-                          onerror="this.src='https://gdguhu.es/images/gdgoc-uhu-logo.jpg'; this.onerror=null;"
+                          onerror="this.src='https://gdguhu.com/images/gdgoc-uhu-logo.jpg'; this.onerror=null;"
                           alt="GDG on Campus UHU"
                           style="width:46px; height:46px; border-radius:12px; object-fit:cover; border:1px solid #dadce0; background:#fff;"
                         />
@@ -1088,7 +1087,7 @@
                       <img
                         id="dp-badge-img"
                         src="./public/images/badges/cumpleanos-feliz.png"
-                        onerror="this.src='https://gdguhu.es/images/badges/cumpleanos-feliz.png'; this.onerror=null;"
+                        onerror="this.src='https://gdguhu.com/images/badges/cumpleanos-feliz.png'; this.onerror=null;"
                         alt="Badge"
                         style="width:46px; height:46px; object-fit:contain;"
                       />
@@ -1244,7 +1243,7 @@
             id="badge-slug"
             class="mono"
             value="cumpleanos-feliz"
-            oninput="updateBadgePreview()"
+            readonly
           />
         </div>
 
@@ -1329,7 +1328,22 @@
             </button>
           </div>
         </div>
-        <pre id="badge-json-output" class="json-code-box"></pre>
+        <pre id="badge-json-output" class="json-code-box">{
+  "name": "Cumpleaños feliz!",
+  "description": "Certificado oficial de cumpleaños por GDGoC Universidad de Huelva",
+  "image": "/images/badges/cumpleanos-feliz.png",
+  "criteria": {
+    "narrative": "Efectivamente, ha llegado tu día de entre los 365 que hay"
+  },
+  "tags": [
+    "Cumpleaños",
+    "Vuelta al sol",
+    "Un día más",
+    "Un día menos?"
+  ],
+  "style": "caramelos",
+  "issuerId": "gdgoc-uhu"
+}</pre>
       </div>
     </div>
 
@@ -1621,8 +1635,19 @@
     }
 
     /* ========================================================================
-       4. CATÁLOGO DE BADGES DEL SISTEMA Y DESPLEGABLE / BUSCADOR DE ID DE BADGE
+       4. CATÁLOGO DE BADGES DEL SISTEMA Y DESPLEGABLE / BUSCADOR DE BADGE
        ======================================================================== */
+    function slugify(text) {
+      return text
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
     const KNOWN_BADGES = {
       'cumpleanos-feliz': {
         name: 'Cumpleaños feliz!',
@@ -1631,6 +1656,7 @@
         criteria: { narrative: 'Efectivamente, ha llegado tu día de entre los 365 que hay' },
         tags: ['Cumpleaños', 'Vuelta al sol', 'Un día más', 'Un día menos?'],
         style: 'caramelos',
+        issuerId: 'gdgoc-uhu',
       },
       'workshop-ai-cloud': {
         name: 'Taller de IA Generativa & Google Cloud',
@@ -1674,10 +1700,29 @@
       },
     };
 
-    // Cargar badges personalizadas recordadas en localStorage
+    function resolveBadgeSlug(val) {
+      const raw = String(val || '').trim();
+      if (!raw) return '';
+      if (KNOWN_BADGES[raw]) return raw;
+      const lower = raw.toLowerCase();
+      for (const [id, b] of Object.entries(KNOWN_BADGES)) {
+        if (id.toLowerCase() === lower || (b.name && b.name.trim().toLowerCase() === lower)) {
+          return id;
+        }
+      }
+      return slugify(raw) || raw;
+    }
+
+    // Cargar badges personalizadas recordadas en localStorage (sin sobrescribir las oficiales del repositorio)
     try {
       const savedCustomBadges = JSON.parse(localStorage.getItem('gdgoc-uhu-custom-badges') || '{}');
-      Object.assign(KNOWN_BADGES, savedCustomBadges);
+      delete savedCustomBadges['cumpleanos-feliz'];
+      for (const [k, v] of Object.entries(savedCustomBadges)) {
+        if (!KNOWN_BADGES[k]) {
+          KNOWN_BADGES[k] = v;
+        }
+      }
+      localStorage.setItem('gdgoc-uhu-custom-badges', JSON.stringify(savedCustomBadges));
     } catch {}
 
     function saveCustomBadgeToMemory(slug, badgeObj) {
@@ -1694,11 +1739,12 @@
       const inputEl = document.getElementById('gen-badge-id');
       const menuEl = document.getElementById('badge-dropdown-menu');
       if (selectedSlug !== undefined && inputEl) {
-        inputEl.value = selectedSlug;
+        inputEl.value = selectedSlug ? KNOWN_BADGES[selectedSlug]?.name || selectedSlug : '';
       }
       if (!menuEl) return;
 
       const currentVal = (inputEl ? inputEl.value : '').trim();
+      const currentSlug = resolveBadgeSlug(currentVal);
       const q = (filterText || '').toLowerCase().trim();
       const ids = Object.keys(KNOWN_BADGES);
       const filtered = q
@@ -1706,18 +1752,19 @@
         : ids;
 
       if (filtered.length === 0) {
-        menuEl.innerHTML = `<div style="padding:10px 12px; font-size:11.5px; color:#64748b;">Usando ID personalizado: <strong class="mono">${escapeHtml(currentVal || q)}</strong></div>`;
+        const customSlug = resolveBadgeSlug(currentVal || q);
+        menuEl.innerHTML = `<div style="padding:10px 12px; font-size:11.5px; color:#64748b;">Badge personalizada: <strong>${escapeHtml(currentVal || q)}</strong> <span class="mono" style="font-size:11px; color:#94a3b8;">(${escapeHtml(customSlug)})</span></div>`;
         return;
       }
 
       menuEl.innerHTML = filtered
         .map((id) => {
           const b = KNOWN_BADGES[id] || {};
-          const isAct = currentVal === id ? 'active' : '';
+          const isAct = currentSlug === id ? 'active' : '';
           return `
             <div class="combobox-option ${isAct}" onmousedown="selectBadgeFromDropdown('${escapeHtml(id)}')">
-              <span class="combobox-option-id">${escapeHtml(id)}</span>
               <span class="combobox-option-name">${escapeHtml(b.name || id)}</span>
+              <span class="combobox-option-id">${escapeHtml(id)}</span>
             </div>
           `;
         })
@@ -1750,7 +1797,8 @@
 
     function selectBadgeFromDropdown(badgeId) {
       const inputEl = document.getElementById('gen-badge-id');
-      if (inputEl) inputEl.value = badgeId;
+      const b = KNOWN_BADGES[badgeId];
+      if (inputEl) inputEl.value = b?.name || badgeId;
       closeBadgeDropdownMenu();
       onGenericBadgeChange(badgeId);
     }
@@ -1759,7 +1807,7 @@
       populateBadgeSelectDropdown(undefined, val);
       const menuEl = document.getElementById('badge-dropdown-menu');
       if (menuEl) menuEl.classList.add('open');
-      onGenericBadgeChange(val.trim());
+      onGenericBadgeChange(resolveBadgeSlug(val));
     }
 
     document.addEventListener('click', (e) => {
@@ -2247,9 +2295,10 @@
     }
 
     function onGenericBadgeChange(badgeId) {
+      const resolvedId = resolveBadgeSlug(badgeId);
       saveHistorySnapshot();
-      if (KNOWN_BADGES[badgeId] && KNOWN_BADGES[badgeId].style) {
-        onGenericStyleChange(KNOWN_BADGES[badgeId].style, false);
+      if (KNOWN_BADGES[resolvedId] && KNOWN_BADGES[resolvedId].style) {
+        onGenericStyleChange(KNOWN_BADGES[resolvedId].style, false);
       }
       renderCurrentSelection();
     }
@@ -2358,7 +2407,8 @@
     }
 
     function buildAssertionObject(item) {
-      const badgeId = document.getElementById('gen-badge-id').value.trim() || 'cumpleanos-feliz';
+      const rawBadgeVal = document.getElementById('gen-badge-id').value.trim();
+      const badgeId = resolveBadgeSlug(rawBadgeVal) || 'cumpleanos-feliz';
       const identity = computeOpenBadgeIdentity(item.email, currentYearSalt);
       const effectiveStyle = item.style || genericStyle || 'google';
       const obj = {
@@ -2398,14 +2448,15 @@
       const current = recipients[selectedIndex];
       if (!current) return;
 
-      const selectedBadgeId = document.getElementById('gen-badge-id').value.trim();
+      const rawBadgeVal = document.getElementById('gen-badge-id').value.trim();
+      const selectedBadgeId = resolveBadgeSlug(rawBadgeVal);
       const effectiveStyle = current.style || genericStyle || 'google';
       const badgeInfo =
         KNOWN_BADGES[selectedBadgeId] ||
         (!selectedBadgeId
           ? KNOWN_BADGES['cumpleanos-feliz']
           : {
-              name: selectedBadgeId.replace(/-/g, ' ').toUpperCase(),
+              name: rawBadgeVal || selectedBadgeId.replace(/-/g, ' ').toUpperCase(),
               description: 'Certificado digital oficial emitido por GDG on Campus Universidad de Huelva.',
               image: './public/images/gdgoc-uhu-logo.jpg',
               criteria: { narrative: 'Otorgado por completar satisfactoriamente las actividades del evento.' },
@@ -2445,7 +2496,7 @@
         if (rawImg.startsWith('/images/')) {
           badgeImgEl.onerror = function () {
             this.onerror = null;
-            this.src = 'https://gdguhu.es' + rawImg;
+            this.src = 'https://gdguhu.com' + rawImg;
           };
           badgeImgEl.src = './public' + rawImg;
         } else {
@@ -2468,7 +2519,7 @@
       }
 
       // QR Vectorial
-      const certUrl = `https://gdguhu.es/cert/${current.id}/`;
+      const certUrl = `https://gdguhu.com/cert/${current.id}/`;
       const qr = getQrsvg(certUrl);
       const qrSvgEl = document.getElementById('dp-qr-svg');
       qrSvgEl.setAttribute('viewBox', `-1 -1 ${qr.size + 2} ${qr.size + 2}`);
@@ -2482,7 +2533,7 @@
         assertionObj.recipient.name,
         badgeInfo,
         certUrl,
-        `https://gdguhu.es/api/badges/assertion/${current.id}.json`,
+        `https://gdguhu.com/api/badges/assertion/${current.id}.json`,
         assertionObj.role,
         current.id,
         effectiveStyle,
@@ -2664,7 +2715,7 @@
       <div style="padding:20px 30px;background-color:${t.footerBg};border-top:1px solid ${t.headerBorder};text-align:center;">
         <p style="margin:0;font-size:11px;color:${t.textMuted};line-height:1.4;">
           Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> de 1EdTech.<br>
-          Alojado oficialmente en <a href="https://gdguhu.es" target="_blank" rel="noopener noreferrer" style="color:${t.accent};text-decoration:none;font-weight:700;">gdguhu.es</a>
+          Alojado oficialmente en <a href="https://gdguhu.com" target="_blank" rel="noopener noreferrer" style="color:${t.accent};text-decoration:none;font-weight:700;">gdguhu.com</a>
         </p>
       </div>
     </div>
@@ -2677,9 +2728,10 @@
        9. DESCARGA AUTOMÁTICA DE PUBLISH.JSON (SIN COMPRIMIR NI PERMISOS)
        ======================================================================== */
     function downloadPublishFolderUncompressed() {
-      const badgeId = document.getElementById('gen-badge-id').value.trim();
+      const rawBadgeVal = document.getElementById('gen-badge-id').value.trim();
+      const badgeId = resolveBadgeSlug(rawBadgeVal);
       if (!badgeId) {
-        showToast('⚠️ Selecciona o escribe primero un "ID de la badge" en Datos genéricos.');
+        showToast('⚠️ Selecciona o escribe primero un "Nombre de la badge" en Datos genéricos.');
         openBadgeDropdownMenu();
         document.getElementById('gen-badge-id')?.focus();
         return;
@@ -2708,7 +2760,7 @@
             role: obj.role,
             style: obj.styleOverride || 'google',
             evidence: obj.evidence || '',
-            url: `https://gdguhu.es/cert/${r.id}/`,
+            url: `https://gdguhu.com/cert/${r.id}/`,
           });
         }
       }
@@ -2748,21 +2800,10 @@
     /* ========================================================================
        10. MODO CREAR NUEVA BADGE
        ======================================================================== */
-    function slugify(text) {
-      return text
-        .toString()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-
     function onBadgeNameInput(val) {
-      const slug = slugify(val) || 'nueva-badge';
+      const slug = slugify(val);
       document.getElementById('badge-slug').value = slug;
-      document.getElementById('badge-image').value = `/images/badges/${slug}.png`;
+      document.getElementById('badge-image').value = `/images/badges/${slug || 'nueva-badge'}.png`;
       updateBadgePreview();
     }
 

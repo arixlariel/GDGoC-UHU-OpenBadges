@@ -38,9 +38,11 @@ jobs:
 
       - name: Build site
         env:
-          SITE_URL: "https://gdguhu.es"
+          SITE_URL: "https://gdguhu.com"
           BASE_PATH: "/"
-        run: npm run build
+        run: |
+          cp generador-local.html public/generador-local.html
+          npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -87,7 +89,7 @@ jobs:
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER || 'arielbustilloleon@gmail.com' }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          SITE_URL: "https://gdguhu.es"
+          SITE_URL: "https://gdguhu.com"
         run: |
           node scripts/process-publish.mjs
 

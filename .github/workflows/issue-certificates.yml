@@ -84,7 +84,7 @@ jobs:
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER || 'arielbustilloleon@gmail.com' }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          SITE_URL: "https://gdguhu.es"
+          SITE_URL: "https://gdguhu.com"
         run: |
           if [ -f /tmp/issued-list.json ]; then
             node scripts/send-emails.mjs /tmp/issued-list.json

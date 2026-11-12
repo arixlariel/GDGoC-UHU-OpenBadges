@@ -122,7 +122,7 @@ async function main() {
     if (duplicateId) {
       console.error(`\n⚠️  Certificado duplicado detectado:`);
       console.error(`   "${name}" (${email}) ya tiene un certificado emitido para "${badgeId}".`);
-      console.error(`   ID existente: ${duplicateId} → https://gdguhu.es/cert/${duplicateId}\n`);
+      console.error(`   ID existente: ${duplicateId} → https://gdguhu.com/cert/${duplicateId}\n`);
       process.exit(1);
     }
 

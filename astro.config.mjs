@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 
-// Configuración con Dominio Oficial Propio: https://gdguhu.es
-const SITE_URL = process.env.SITE_URL || 'https://gdguhu.es';
+// Configuración con Dominio Oficial Propio: https://gdguhu.com
+const SITE_URL = process.env.SITE_URL || 'https://gdguhu.com';
 const BASE_PATH = process.env.BASE_PATH || '/';
 
 export default defineConfig({

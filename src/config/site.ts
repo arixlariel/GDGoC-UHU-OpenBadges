@@ -7,7 +7,7 @@ export interface IssuerConfig {
   image: string;
 }
 
-const siteUrl = process.env.SITE_URL || 'https://gdguhu.es';
+const siteUrl = process.env.SITE_URL || 'https://gdguhu.com';
 const basePath = process.env.BASE_PATH || '';
 
 export const siteConfig = {

@@ -13,7 +13,7 @@
  *       "email": "aarongarridosilvera@gmail.com",
  *       "assertionId": "69679d9fa12d24f4a673b54b",
  *       "badgeId": "workshop-ai-cloud",
- *       "url": "https://gdguhu.es/cert/69679d9fa12d24f4a673b54b"
+ *       "url": "https://gdguhu.com/cert/69679d9fa12d24f4a673b54b"
  *     }
  *   ]
  *
@@ -33,7 +33,7 @@ const rootDir = path.resolve(__dirname, '..');
 const badgesDir = path.join(rootDir, 'src', 'content', 'badges');
 const assertionsDir = path.join(rootDir, 'src', 'content', 'assertions');
 
-const siteUrl = process.env.SITE_URL || 'https://gdguhu.es';
+const siteUrl = process.env.SITE_URL || 'https://gdguhu.com';
 const gmailUser = process.env.GMAIL_USER || 'arielbustilloleon@gmail.com';
 const gmailPassword = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
 

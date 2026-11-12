@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gdguhu.es/sitemap.xml
+Sitemap: https://gdguhu.com/sitemap.xml

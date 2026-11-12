@@ -24,7 +24,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 ## 1. Arquitectura del Sistema
 
 - **Registrador del dominio**: Ariel Bustillo via DonDominio `https://www.dondominio.com/es/`
-- **Web de verificación**: `https://gdguhu.es`
+- **Web de verificación**: `https://gdguhu.com`
 - **Hosting**: GitHub Pages
 - **Estándar**: Open Badges 2.0 firmado por GDGoC UHU con hash SHA-256
 
@@ -184,7 +184,7 @@ npm run bulk -- ARCHIVO.csv --badge cumpleanos-feliz --role "Asistencia certific
 
 > Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vista previas en tiempo real y demás
 
-1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este **[enlace](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html)**
+1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este **[enlace](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html?v=2)**
 2. Configura las badges, certificados y correos a generar
 3. Pulsa `Descargar publish.json` para guardar el archivo maestro
 4. Arrastra `publish.json` (o la carpeta `publish` si usas archivos sueltos) directamente a la raíz del repositorio en GitHub y haz el commit (o continua al punto 5)
@@ -207,7 +207,7 @@ git push origin main
 
 Una vez publicado, el certificado del alumno tiene su propia `URL`, única e intransferible:
 
-**`https://gdguhu.es/cert/<NOMBRE24CIFRASHEX>`**  
+**`https://gdguhu.com/cert/<NOMBRE24CIFRASHEX>`**  
 
 ---
 
@@ -217,4 +217,4 @@ El sistema está diseñado respetando escrupulosamente la normativa europea de p
 
 - **Correos electrónicos jamás expuestos**: Los emails nunca se guardan en el repositorio ni se muestran en la web, se anonimizan mediante el hash **SHA-256** con salt unidireccional e irreversible.
 - **Falsificación imposible**: Solo los organizadores con permisos en el repositorio pueden publicar o modificar certificados.
-- **Verificación confiable**: La autenticidad se basa en el estándar **hosted verification**. Mientras el certificado provenga del dominio oficial privado `gdguhu.es`, cualquier entidad reconoce su legitimidad
+- **Verificación confiable**: La autenticidad se basa en el estándar **hosted verification**. Mientras el certificado provenga del dominio oficial privado `gdguhu.com`, cualquier entidad reconoce su legitimidad
