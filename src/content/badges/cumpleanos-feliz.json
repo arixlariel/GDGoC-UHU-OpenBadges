@@ -1,7 +1,7 @@
 {
   "name": "Cumpleaños feliz!",
   "description": "Certificado oficial de cumpleaños por GDGoC Universidad de Huelva",
-  "image": "/images/badges/cumpleanos-feliz.svg",
+  "image": "/images/badges/cumpleanos-feliz.png",
   "criteria": {
     "narrative": "Efectivamente, ha llegado tu día de entre los 365 que hay"
   },
