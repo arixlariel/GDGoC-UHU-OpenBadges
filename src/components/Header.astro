@@ -54,7 +54,7 @@ const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) 
       <!-- Style / Theme Switcher Dropdown (or Locked Badge on Certificate pages) -->
       {lockedMeta ? (
         <div
-          class="theme-pill-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold select-none opacity-90 cursor-default"
+          class="theme-pill-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 select-none cursor-default"
           title="Estilo fijo asignado a este certificado en su emisión"
         >
           <span class="text-base leading-none">{lockedMeta.icon}</span>

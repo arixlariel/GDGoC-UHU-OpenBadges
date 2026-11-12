@@ -264,10 +264,12 @@ const defaultSchema = {
          ========================================================================== */
       .tilt-card {
         transform-style: preserve-3d;
-        transition: transform 0.15s ease-out;
+        transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease;
       }
       .tilt-glare {
-        background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.32), transparent 60%);
+        background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.24), transparent 60%);
         opacity: 0;
         transition: opacity 0.3s ease;
       }
@@ -295,7 +297,7 @@ const defaultSchema = {
       }
 
       /* ==========================================================================
-         THEME DROPDOWN OPTIONS (Efecto Hover Dinámico, Llamativo y Sin Colisión)
+         THEME DROPDOWN OPTIONS (Efecto Hover Unificado y Sin Colisión)
          ========================================================================== */
       .theme-option-btn {
         border: 1.5px solid transparent;
@@ -310,70 +312,66 @@ const defaultSchema = {
         display: inline-block;
         transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), filter 0.22s ease;
       }
+      .theme-option-btn:hover {
+        transform: translateX(6px) translateY(-1px);
+      }
+      .theme-option-btn:hover > span:first-child {
+        transform: scale(1.25) rotate(-6deg);
+      }
 
-      /* Hover específico por cada estilo: preview interactivo con colores y personalidad propia */
+      /* Colores de hover por cada opción manteniendo exactamente el mismo movimiento */
       /* 1. Opción Google */
       .theme-option-btn[data-set-theme="google"]:hover {
-        transform: translateX(6.5px) translateY(-1px);
         background: rgba(66, 133, 244, 0.16);
         color: #1A73E8;
         border-color: rgba(66, 133, 244, 0.5);
         box-shadow: 0 4px 18px rgba(66, 133, 244, 0.28);
       }
       .theme-option-btn[data-set-theme="google"]:hover > span:first-child {
-        transform: scale(1.3) rotate(-6deg);
         filter: drop-shadow(0 2px 6px rgba(66, 133, 244, 0.5));
       }
 
       /* 2. Opción Cyber */
       .theme-option-btn[data-set-theme="cyber"]:hover {
-        transform: translateX(6.5px) translateY(-1px) skewX(-2.5deg);
         background: rgba(0, 240, 255, 0.2);
         color: #008B99;
         border-color: rgba(0, 240, 255, 0.7);
         box-shadow: 0 0 22px rgba(0, 240, 255, 0.5), 0 4px 12px rgba(0, 240, 255, 0.25);
       }
       .theme-option-btn[data-set-theme="cyber"]:hover > span:first-child {
-        transform: scale(1.35) rotate(-10deg);
         filter: drop-shadow(0 0 8px #00F0FF);
       }
 
       /* 3. Opción Piscina */
       .theme-option-btn[data-set-theme="piscina"]:hover {
-        transform: translateX(6.5px) translateY(-1px);
         background: rgba(0, 229, 255, 0.24);
         color: #007791;
         border-color: rgba(0, 188, 212, 0.6);
         box-shadow: 0 4px 18px rgba(2, 132, 199, 0.32);
       }
       .theme-option-btn[data-set-theme="piscina"]:hover > span:first-child {
-        transform: scale(1.3) rotate(8deg);
         filter: drop-shadow(0 2px 8px rgba(0, 229, 255, 0.6));
       }
 
       /* 4. Opción Nieve */
       .theme-option-btn[data-set-theme="nieve"]:hover {
-        transform: translateX(6.5px) translateY(-1px);
         background: rgba(186, 230, 253, 0.32);
         color: #0284C7;
         border-color: rgba(56, 189, 248, 0.6);
         box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);
       }
       .theme-option-btn[data-set-theme="nieve"]:hover > span:first-child {
-        transform: scale(1.3) rotate(22deg);
         filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.6));
       }
 
       /* 5. Opción Caramelos */
       .theme-option-btn[data-set-theme="caramelos"]:hover {
-        transform: translateX(6.5px) translateY(-1px) rotate(1.2deg);
         background: rgba(255, 105, 180, 0.24);
         color: #D81B60;
         border-color: rgba(255, 105, 180, 0.6);
         box-shadow: 0 4px 18px rgba(255, 20, 147, 0.35);
       }
       .theme-option-btn[data-set-theme="caramelos"]:hover > span:first-child {
-        transform: scale(1.35) rotate(-12deg);
         filter: drop-shadow(0 2px 8px rgba(255, 20, 147, 0.6));
       }
 
@@ -462,7 +460,7 @@ const defaultSchema = {
         box-shadow: 0 4px 14px rgba(66, 133, 244, 0.35);
       }
       html[data-theme="google"] .theme-primary-btn:hover {
-        transform: translateY(-2px) scale(1.05);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 8px 25px rgba(66, 133, 244, 0.5);
       }
       html[data-theme="google"] .theme-dropdown-panel {
@@ -474,10 +472,11 @@ const defaultSchema = {
         background: rgba(255, 255, 255, 0.92);
         border: 1px solid #DADCE0;
         box-shadow: 0 4px 20px rgba(32, 33, 36, 0.06);
-        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease;
       }
       html[data-theme="google"] .theme-card:hover {
-        transform: translateY(-8px) scale(1.02) rotate(-0.4deg);
         border-color: #4285F4;
         box-shadow: -8px 12px 30px rgba(66, 133, 244, 0.18),
                     8px 12px 30px rgba(234, 67, 53, 0.14),
@@ -549,7 +548,7 @@ const defaultSchema = {
         background: rgba(255, 0, 127, 0.2);
         border-color: #FF007F;
         color: #FFFFFF;
-        transform: translateY(-3px) scale(1.07) skewX(-4deg);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 0 24px #FF007F, 0 0 40px rgba(0, 240, 255, 0.5);
       }
       html[data-theme="cyber"] .theme-primary-btn {
@@ -559,7 +558,7 @@ const defaultSchema = {
         box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
       }
       html[data-theme="cyber"] .theme-primary-btn:hover {
-        transform: translateY(-3px) scale(1.08) skewX(-4deg);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 0 32px #00F0FF, 0 0 50px #FF007F;
       }
       html[data-theme="cyber"] .theme-dropdown-panel {
@@ -572,10 +571,11 @@ const defaultSchema = {
         background: rgba(11, 17, 36, 0.82);
         border: 1px solid rgba(0, 240, 255, 0.35);
         box-shadow: 0 0 25px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05);
-        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease;
       }
       html[data-theme="cyber"] .theme-card:hover {
-        transform: translateY(-10px) scale(1.035) skewX(-1.5deg);
         border-color: #FF007F;
         box-shadow: -6px 0 30px rgba(0, 240, 255, 0.55),
                     6px 0 30px rgba(255, 0, 127, 0.55),
@@ -650,7 +650,7 @@ const defaultSchema = {
         background: linear-gradient(135deg, #00F2FE, #4FACFE);
         color: #FFFFFF;
         border-color: #FFFFFF;
-        transform: translateY(-4px) scale(1.08) rotate(-2deg);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 12px 28px rgba(0, 180, 219, 0.55);
       }
       html[data-theme="piscina"] .theme-primary-btn {
@@ -658,7 +658,7 @@ const defaultSchema = {
         box-shadow: 0 6px 20px rgba(0, 180, 219, 0.5);
       }
       html[data-theme="piscina"] .theme-primary-btn:hover {
-        transform: translateY(-4px) scale(1.09) rotate(2deg);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 12px 30px rgba(0, 229, 255, 0.75);
       }
       html[data-theme="piscina"] .theme-dropdown-panel {
@@ -671,10 +671,11 @@ const defaultSchema = {
         backdrop-filter: blur(14px);
         border: 2px solid rgba(0, 229, 255, 0.65);
         box-shadow: 0 14px 34px rgba(2, 132, 199, 0.22), inset 0 0 24px rgba(165, 243, 252, 0.45);
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease;
       }
       html[data-theme="piscina"] .theme-card:hover {
-        transform: translateY(-10px) scale(1.035) rotate(-1.2deg);
         border-color: #FFFFFF;
         box-shadow: 0 22px 48px rgba(2, 132, 199, 0.45),
                     0 0 32px rgba(0, 229, 255, 0.75),
@@ -747,7 +748,7 @@ const defaultSchema = {
         background: rgba(224, 242, 254, 0.28);
         border-color: #FFFFFF;
         color: #FFFFFF;
-        transform: translateY(-3px) scale(1.06);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 0 28px rgba(186, 230, 253, 0.75), inset 0 0 18px rgba(255, 255, 255, 0.45);
       }
       html[data-theme="nieve"] .theme-primary-btn {
@@ -755,7 +756,7 @@ const defaultSchema = {
         box-shadow: 0 0 22px rgba(56, 189, 248, 0.55);
       }
       html[data-theme="nieve"] .theme-primary-btn:hover {
-        transform: translateY(-3px) scale(1.07);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 0 34px rgba(224, 242, 254, 0.9);
       }
       html[data-theme="nieve"] .theme-dropdown-panel {
@@ -769,10 +770,11 @@ const defaultSchema = {
         backdrop-filter: blur(18px);
         border: 1.5px solid rgba(186, 230, 253, 0.5);
         box-shadow: 0 10px 35px rgba(2, 12, 27, 0.45), inset 0 0 28px rgba(255, 255, 255, 0.14);
-        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease;
       }
       html[data-theme="nieve"] .theme-card:hover {
-        transform: translateY(-9px) scale(1.03);
         border-color: #FFFFFF;
         box-shadow: 0 18px 46px rgba(56, 189, 248, 0.5),
                     0 0 30px rgba(255, 255, 255, 0.6),
@@ -865,7 +867,7 @@ const defaultSchema = {
         background: linear-gradient(135deg, #FF1493, #FF69B4);
         color: #FFFFFF;
         border-color: #FFFFFF;
-        transform: translateY(-4px) scale(1.1) rotate(3deg);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 12px 28px rgba(255, 20, 147, 0.5);
       }
       html[data-theme="caramelos"] .theme-primary-btn {
@@ -873,7 +875,7 @@ const defaultSchema = {
         box-shadow: 0 6px 20px rgba(255, 20, 147, 0.45);
       }
       html[data-theme="caramelos"] .theme-primary-btn:hover {
-        transform: translateY(-4px) scale(1.12) rotate(-3deg);
+        transform: translateY(-2px) scale(1.04);
         box-shadow: 0 12px 30px rgba(255, 20, 147, 0.65);
       }
       html[data-theme="caramelos"] .theme-dropdown-panel {
@@ -887,10 +889,11 @@ const defaultSchema = {
         border: 3px solid #FF85C0;
         border-radius: 28px;
         box-shadow: 0 10px 30px rgba(255, 20, 147, 0.22), inset 0 0 20px rgba(255, 182, 193, 0.35);
-        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease;
       }
       html[data-theme="caramelos"] .theme-card:hover {
-        transform: translateY(-12px) scale(1.05) rotate(1.8deg);
         border-color: #FF1493;
         box-shadow: 0 22px 45px rgba(255, 20, 147, 0.42),
                     0 0 30px rgba(255, 105, 180, 0.65);
@@ -1436,21 +1439,33 @@ const defaultSchema = {
           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
           const cards = document.querySelectorAll('.tilt-card');
           cards.forEach((card) => {
-            const maxTilt = Number(card.getAttribute('data-tilt-max') || '4.5');
+            const maxTilt = Math.min(Number(card.getAttribute('data-tilt-max') || '2.2'), 2.5);
+            let baseRect = null;
+
+            card.addEventListener('pointerenter', () => {
+              if (window.innerWidth < 768) return;
+              card.style.transform = '';
+              baseRect = card.getBoundingClientRect();
+            });
+
             card.addEventListener('pointermove', (e) => {
               if (window.innerWidth < 768) return;
-              const rect = card.getBoundingClientRect();
-              const x = e.clientX - rect.left;
-              const y = e.clientY - rect.top;
-              const pctX = x / rect.width;
-              const pctY = y / rect.height;
+              if (!baseRect || baseRect.width === 0) {
+                baseRect = card.getBoundingClientRect();
+              }
+              const x = e.clientX - baseRect.left;
+              const y = e.clientY - baseRect.top;
+              const pctX = Math.max(0, Math.min(1, x / baseRect.width));
+              const pctY = Math.max(0, Math.min(1, y / baseRect.height));
               const rotateY = (pctX - 0.5) * maxTilt * 2;
               const rotateX = (0.5 - pctY) * maxTilt * 2;
-              card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
+              card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.01, 1.01, 1)`;
               card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
               card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
             });
+
             card.addEventListener('pointerleave', () => {
+              baseRect = null;
               card.style.transform = '';
             });
           });

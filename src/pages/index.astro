@@ -126,7 +126,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
         <!-- Right Column: Campus ETSI UHU Illustration Card with 3D Tilt -->
         <div class="lg:col-span-5">
           <div
-            data-tilt-max="5.5"
+            data-tilt-max="2.2"
             class="tilt-card theme-card relative mx-auto max-w-sm lg:max-w-none rounded-3xl overflow-hidden p-3 group"
           >
             <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-3xl"></div>
@@ -178,7 +178,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
         return (
           <a
             href={getAssetUrl(`/cert/${id}`)}
-            data-tilt-max="4"
+            data-tilt-max="2.2"
             style={index >= 6 ? 'display: none;' : undefined}
             class="cert-card-item tilt-card theme-card group relative overflow-hidden rounded-2xl p-5 block"
           >
@@ -206,14 +206,14 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
             )}
 
             <div class="flex items-center gap-4 pt-1">
-              <div class="w-16 h-16 shrink-0 p-2 rounded-2xl border theme-border bg-white/80 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-xs">
+              <div class="w-16 h-16 shrink-0 p-2 rounded-2xl border theme-border bg-white/80 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-xs">
                 {badge && (
                   <img
                     src={getAssetUrl(badge.data.image)}
                     alt={badge.data.name}
                     width="48"
                     height="48"
-                    loading="lazy"
+                    loading="eager"
                     decoding="async"
                     class="w-full h-full object-contain"
                   />
@@ -266,6 +266,12 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
         cards.forEach((card, index) => {
           if (index < maxVisible) {
             card.style.display = '';
+            const img = card.querySelector('img');
+            if (img) {
+              img.loading = 'eager';
+              const src = img.getAttribute('src');
+              if (src) img.src = src;
+            }
             grid.appendChild(card);
           } else {
             card.style.display = 'none';
@@ -288,7 +294,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
+        <div data-tilt-max="2.2" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
           <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-2xl"></div>
           <div class="w-11 h-11 rounded-2xl bg-[#4285F4]/15 text-[#4285F4] flex items-center justify-center font-display font-bold text-lg mb-4">
             1
@@ -299,7 +305,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </p>
         </div>
 
-        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
+        <div data-tilt-max="2.2" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
           <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-2xl"></div>
           <div class="w-11 h-11 rounded-2xl bg-[#34A853]/15 text-[#34A853] flex items-center justify-center font-display font-bold text-lg mb-4">
             2
@@ -310,7 +316,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </p>
         </div>
 
-        <div data-tilt-max="4" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
+        <div data-tilt-max="2.2" class="tilt-card theme-card p-6 rounded-2xl relative overflow-hidden">
           <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-2xl"></div>
           <div class="w-11 h-11 rounded-2xl bg-[#FBBC04]/20 text-[#F29900] flex items-center justify-center font-display font-bold text-lg mb-4">
             3
