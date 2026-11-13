@@ -1,0 +1,55 @@
+{
+  "version": 2,
+  "generatedAt": "2026-11-13T08:52:49.541Z",
+  "badges": [
+    {
+      "id": "hackathon-2026",
+      "data": {
+        "name": "Hackathon GDGoC UHU 2026",
+        "description": "Otorgado por la participación activa en el Hackathon Tecnológico 2026 organizado por GDG on Campus en la Universidad de Huelva, habiendo ideado, programado y defendido una solución técnica innovadora.",
+        "image": "/images/badges/hackathon-2026.svg",
+        "criteria": {
+          "narrative": "El portador de esta insignia completó 24 horas ininterrumpidas de desarrollo de software colaborativo."
+        },
+        "tags": [
+          "Hackathon",
+          "Google Cloud",
+          "AI",
+          "Open Source",
+          "Teamwork"
+        ],
+        "style": "cyber"
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "78f198626a27e9ed5ffa2c03",
+      "data": {
+        "recipient": {
+          "name": "John Doe Doe",
+          "identity": "sha256$cd7ea810e00d45221c1a0b0f6fb7aa5096608034174bc12185c48b77153d5fda",
+          "hashed": true,
+          "type": "email",
+          "salt": "gdgoc-uhu-salt-2026"
+        },
+        "badgeId": "hackathon-2026",
+        "role": "Cumpleañero",
+        "issuedOn": "2026-11-13T08:51:52.219Z",
+        "styleOverride": "cyber"
+      }
+    }
+  ],
+  "pendingEmails": [
+    {
+      "nombre": "John Doe Doe",
+      "email": "jesusrodrimerc99@gmail.com",
+      "assertionId": "78f198626a27e9ed5ffa2c03",
+      "badgeId": "hackathon-2026",
+      "role": "Cumpleañero",
+      "style": "cyber",
+      "evidence": "",
+      "url": "https://gdguhu.com/cert/78f198626a27e9ed5ffa2c03/"
+    }
+  ]
+}
