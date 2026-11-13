@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "John Doe Doe",
+    "identity": "sha256$cd7ea810e00d45221c1a0b0f6fb7aa5096608034174bc12185c48b77153d5fda",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "hackathon-2026",
+  "role": "Cumpleañero",
+  "issuedOn": "2026-11-13T08:51:52.219Z",
+  "styleOverride": "cyber"
+}
