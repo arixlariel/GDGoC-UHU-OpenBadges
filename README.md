@@ -132,7 +132,7 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
 {
   "recipient": {
     "name": "John Doe Doe",
-    "identity": "sha256$a8b2c4...",       <-- Correo cifrado (SHA-256) con prefijo mandatorio `sha256$`
+    "identity": "sha256$abe802...",       <-- Correo cifrado (SHA-256) con prefijo mandatorio `sha256$`
     "hashed": true,                       <-- Siempre en `true`
     "type": "email",
     "salt": "gdgoc-uhu-salt-2026"         <-- Se pega justo detrás del email, y ese conjunto es lo que se cifra (el año varía)
@@ -184,7 +184,7 @@ npm run bulk -- ARCHIVO.csv --badge cumpleanos-feliz --role "Asistencia certific
 
 > Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vista previas en tiempo real y demás
 
-1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este **[enlace](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html?v=2)**
+1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este **[enlace](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html?v=3)**
 2. Configura las badges, certificados y correos a generar
 3. Pulsa `Descargar publish.json` para guardar el archivo maestro
 4. Arrastra `publish.json` (o la carpeta `publish` si usas archivos sueltos) directamente a la raíz del repositorio en GitHub y haz el commit (o continua al punto 5)

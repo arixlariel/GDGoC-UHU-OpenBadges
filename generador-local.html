@@ -799,8 +799,8 @@
               <input
                 type="text"
                 id="gen-default-role"
-                value="Asistencia certificada"
-                placeholder="ej: Asistencia certificada, Ponente..."
+                value="Cumpleañero"
+                placeholder="ej: Cumpleañero, Asistencia certificada, Ponente..."
                 onfocus="saveHistorySnapshot()"
                 oninput="onGenericRoleChange(this.value)"
               />
@@ -1094,7 +1094,7 @@
                     </div>
 
                     <div id="dp-role-pill" class="dp-pill" style="display:inline-flex; align-items:center; justify-content:center; padding:5px 14px; border-radius:999px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
-                      ASISTENCIA CERTIFICADA
+                      CUMPLEAÑERO
                     </div>
 
                     <h2 id="dp-badge-title" class="dp-text-primary" style="font-size:24px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em;">
@@ -1132,7 +1132,7 @@
                     <div class="dp-meta" style="margin-top:16px; width:100%; max-width:560px; border-radius:14px; padding:12px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; text-align:center;">
                       <div>
                         <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Rol Acreditado</div>
-                        <div id="dp-meta-role" class="dp-text-primary" style="font-size:12.5px; font-weight:800; margin-top:2px;">Asistencia certificada</div>
+                        <div id="dp-meta-role" class="dp-text-primary" style="font-size:12.5px; font-weight:800; margin-top:2px;">Cumpleañero</div>
                       </div>
                       <div class="dp-border" style="border-left:2px solid; border-right:2px solid; padding:0 8px;">
                         <div class="dp-text-secondary" style="font-size:10px; font-weight:800; text-transform:uppercase;">Entidad Emisora</div>
@@ -1859,7 +1859,7 @@
         id: generateUniqueHexId24(),
         name: 'John Doe Doe',
         email: 'john.doe@alu.uhu.es',
-        role: 'Asistencia certificada',
+        role: 'Cumpleañero',
         evidence: '',
         style: 'google',
         issuedOn: new Date().toISOString(),
@@ -2063,7 +2063,7 @@
 
       const { header, rows } = parsed;
       const isBevy = header.includes('first name') && header.includes('email');
-      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistencia certificada';
+      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Cumpleañero';
       const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
       const onlyCheckedIn = checkinInput.checked;
 
@@ -2210,7 +2210,7 @@
 
     function addManualRecipient() {
       saveHistorySnapshot();
-      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Asistencia certificada';
+      const defaultRole = document.getElementById('gen-default-role').value.trim() || 'Cumpleañero';
       const defaultEvidence = document.getElementById('gen-default-evidence').value.trim();
       recipients.push({
         id: generateUniqueHexId24(),
@@ -2249,7 +2249,7 @@
           id: generateUniqueHexId24(),
           name: 'John Doe Doe',
           email: 'john.doe@alu.uhu.es',
-          role: document.getElementById('gen-default-role').value.trim() || 'Asistencia certificada',
+          role: document.getElementById('gen-default-role').value.trim() || 'Cumpleañero',
           evidence: document.getElementById('gen-default-evidence').value.trim(),
           style: genericStyle,
           issuedOn: new Date().toISOString(),
@@ -2420,7 +2420,7 @@
           salt: currentYearSalt,
         },
         badgeId,
-        role: (item.role || 'Asistencia certificada').trim(),
+        role: (item.role || 'Cumpleañero').trim(),
         issuedOn: item.issuedOn || new Date().toISOString(),
         styleOverride: effectiveStyle,
       };
