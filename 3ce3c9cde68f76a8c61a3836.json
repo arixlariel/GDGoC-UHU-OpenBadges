@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Miguel Ángel Rodríguez Romero",
+    "identity": "sha256$69cff131499945e507211c3171d2a74e50910d495a98632e36b00f57fbc4bffd",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "creative-ui-jam",
+  "role": "Persona sexualmente interesante",
+  "issuedOn": "2026-10-28T20:00:36.011Z",
+  "styleOverride": "caramelos"
+}

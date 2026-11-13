@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Miguel Ángel Rodríguez Romero",
+    "identity": "sha256$69cff131499945e507211c3171d2a74e50910d495a98632e36b00f57fbc4bffd",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "hackathon-2026",
+  "role": "Se come un nabo",
+  "issuedOn": "2026-10-28T20:24:15.790Z",
+  "styleOverride": "cyber"
+}
