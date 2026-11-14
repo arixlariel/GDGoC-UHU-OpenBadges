@@ -105,6 +105,6 @@ jobs:
 
           if [ -f /tmp/pending-emails.json ]; then
             npm install nodemailer
-            node scripts/send-emails.mjs /tmp/pending-emails.json || echo "⚠️ Advertencia al enviar correos (comprueba GMAIL_APP_PASSWORD en Secrets)"
+            node scripts/send-emails.mjs /tmp/pending-emails.json
             rm -f /tmp/pending-emails.json
           fi

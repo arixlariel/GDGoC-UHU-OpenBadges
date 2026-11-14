@@ -329,9 +329,8 @@ async function main() {
 
   if (!gmailUser || !gmailPassword) {
     console.error('⚠️  No se han configurado GMAIL_USER y GMAIL_APP_PASSWORD.');
-    console.error('   Los certificados ya están publicados en la web.');
     console.error('   Para activar el envío de emails, añade los dos secretos en GitHub Settings > Secrets.\n');
-    process.exit(0);
+    process.exit(1);
   }
 
   const listArg = process.argv[2];
@@ -419,7 +418,7 @@ async function main() {
         resolvedEvidence
       ),
       headers: {
-        'X-Entity-Ref-ID': item.assertionId || String(Date.now()),
+        'X-Entity-Ref-ID': `${item.assertionId || 'cert'}-${Date.now()}-${i}`,
       },
     };
 
@@ -438,6 +437,10 @@ async function main() {
   console.log('\n══════════════════════════════════════════════════════════');
   console.log(`  📊 RESUMEN DE ENVÍO: ${sent} enviados con éxito, ${failed} fallos.`);
   console.log('══════════════════════════════════════════════════════════\n');
+
+  if (failed > 0) {
+    process.exit(1);
+  }
 }
 
 main().catch(console.error);
