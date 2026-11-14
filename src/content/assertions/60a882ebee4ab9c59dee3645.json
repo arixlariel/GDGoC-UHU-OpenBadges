@@ -1,0 +1,13 @@
+{
+  "recipient": {
+    "name": "Lina el Bakioui el Ayachi",
+    "identity": "sha256$c82578863fa19299a6c1e183b13255e4df8ae76d7bacae59432147330f38eb6b",
+    "hashed": true,
+    "type": "email",
+    "salt": "gdgoc-uhu-salt-2026"
+  },
+  "badgeId": "feliz-cumpleanos",
+  "role": "OFICIALMENTE 18",
+  "issuedOn": "2026-11-14T15:16:52.393Z",
+  "styleOverride": "caramelos"
+}
