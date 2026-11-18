@@ -17,7 +17,7 @@ export const siteConfig = {
   shortName: 'Certificados Digitales',
   description: 'Plataforma oficial de certificados digitales e insignias Open Badges de GDG on Campus Universidad de Huelva.',
   communityUrl: 'https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/',
-  linkedinUrl: 'https://www.linkedin.com/company/gdg-huelva/?viewAsMember=true',
+  linkedinUrl: 'https://www.linkedin.com/company/gdgoc-huelva',
 };
 
 export function getFullUrl(path: string): string {
