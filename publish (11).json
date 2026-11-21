@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "generatedAt": "2026-11-21T12:02:44.809Z",
+  "badges": [
+    {
+      "id": "capture-the-flag-reversing-de-binarios",
+      "data": {
+        "name": "Capture The Flag - Reversing de binarios",
+        "description": "Evento práctico donde los asistentes recibieron una introducción al reversing con Ghidra mediante una rápida competición individual",
+        "image": "/images/badges/capture-the-flag-reversing-de-binarios.png",
+        "criteria": {
+          "narrative": "Preparación del taller, tareas de administración institucional y gerencia del evento"
+        },
+        "tags": [
+          "Capture The Flag",
+          "Reversing de binarios",
+          "Taller",
+          "Organizador"
+        ],
+        "style": "cyber",
+        "issuerId": "gdgoc-uhu"
+      }
+    }
+  ],
+  "assertions": [],
+  "pendingEmails": []
+}

@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "generatedAt": "2026-11-21T12:08:50.660Z",
+  "badges": [
+    {
+      "id": "fundacion-del-club-de-programacion",
+      "data": {
+        "name": "Fundación del Club de Programación",
+        "description": "El Club de Programación es un espacio donde personas con ambición se unen para desarrollar y aprender con proyectos que impulsen sus perfiles profesionales",
+        "image": "/images/badges/fundacion-del-club-de-programacion.png",
+        "criteria": {
+          "narrative": "Idea del Club de Programación, búsqueda de candidatos y tareas de logística y reserva"
+        },
+        "tags": [
+          "Fundación",
+          "Club de Programación",
+          "Proyectos"
+        ],
+        "style": "piscina",
+        "issuerId": "gdgoc-uhu"
+      }
+    }
+  ],
+  "assertions": [],
+  "pendingEmails": []
+}
