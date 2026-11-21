@@ -70,7 +70,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
               <span class="w-2 h-2 rounded-full bg-[#FBBC04] animate-pulse" style="animation-delay: 0.4s"></span>
               <span class="w-2 h-2 rounded-full bg-[#34A853] animate-pulse" style="animation-delay: 0.6s"></span>
             </span>
-            <span>Open Badges 2.0</span>
+            <span>Open Badges 2.0 &amp; 3.0</span>
           </div>
 
           <h1 class="font-display text-4xl sm:text-5xl font-bold theme-text-primary tracking-tight leading-[1.12]">
@@ -110,10 +110,10 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
             </form>
           </div>
 
-          <!-- Single 1EdTech Validator Link -->
+          <!-- Single 1EdTech Validator Link (Open Badges 3.0) -->
           <div class="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs">
             <a
-              href="https://vc.1ed.tech/upload?validatorId=OB20Inspector"
+              href="https://vc.1ed.tech/upload?validatorId=OB30Inspector"
               target="_blank"
               rel="noopener noreferrer"
               class="theme-pill-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-semibold transition-all duration-300"
@@ -286,10 +286,10 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
     <div class="max-w-[1320px] mx-auto px-4 sm:px-6">
       <div class="text-center max-w-xl mx-auto mb-10">
         <h2 class="font-display text-2xl font-bold theme-text-primary">
-          Estándar Open Badges 2.0
+          Estándar Open Badges 2.0 &amp; 3.0
         </h2>
         <p class="text-sm theme-text-secondary mt-2">
-          Credenciales verificables con garantía criptográfica y portabilidad internacional
+          Credenciales verificables con firma criptográfica Ed25519 y portabilidad internacional
         </p>
       </div>
 
@@ -301,7 +301,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           </div>
           <h3 class="font-display font-bold theme-text-primary mb-2">Autenticidad Verificable</h3>
           <p class="text-xs theme-text-secondary leading-relaxed">
-            Cada certificado está respaldado por metadatos JSON-LD oficiales de GDGoC Universidad de Huelva, siguiendo la especificación de 1EdTech
+            Cada certificado está respaldado por metadatos JSON-LD oficiales de GDGoC Universidad de Huelva (Open Badges 2.0 &amp; 3.0) y firma criptográfica Ed25519 conforme a 1EdTech
           </p>
         </div>
 
@@ -326,6 +326,28 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
             Descarga tu diploma en formato horizontal listo para imprimir o añádelo directamente a tu LinkedIn u otras carteras
           </p>
         </div>
+      </div>
+
+      <!-- Mini-guía de uso del Validador Oficial de 1EdTech -->
+      <div class="mt-6 theme-card p-5 sm:p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <h3 class="font-display text-sm sm:text-base font-bold theme-text-primary flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#34A853]/15 text-[#34A853] text-xs font-bold shrink-0">✓</span>
+            <span>¿Cómo comprobar un certificado en el Validador 1EdTech Global?</span>
+          </h3>
+          <p class="text-xs theme-text-secondary leading-relaxed max-w-3xl">
+            Abre tu certificado y pulsa <strong class="theme-text-primary">Añadir a tu cartera</strong> para copiar el enlace de tu credencial <strong class="theme-text-primary">Open Badges 3.0</strong> (o descargar el archivo <code class="font-mono">.json</code>). Después, accede al validador oficial de 1EdTech, pega ese enlace en <strong class="theme-text-primary">URI to Resource</strong> (o sube el <code class="font-mono">.json</code>) y pulsa <strong class="theme-text-primary">Validate</strong> para verificar su firma criptográfica.
+          </p>
+        </div>
+        <a
+          href="https://vc.1ed.tech/upload?validatorId=OB30Inspector"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="theme-pill-btn inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full font-semibold text-xs shrink-0 transition-all duration-300 self-start md:self-center"
+        >
+          <span>Abrir Validador 1EdTech</span>
+          <span>↗</span>
+        </a>
       </div>
     </div>
   </section>

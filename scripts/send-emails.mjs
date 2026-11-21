@@ -218,7 +218,7 @@ export function buildEmailText(
     'Haz clic en el enlace para ver tu certificado en línea, descargarlo como PDF o añadirlo a tu LinkedIn o cartera favorita.',
     '',
     '---',
-    'Certificado verificado bajo el estándar internacional Open Badges 2.0 de 1EdTech.',
+    'Certificado verificado bajo el estándar internacional Open Badges 2.0 & 3.0 de 1EdTech.',
     `Alojado oficialmente en ${cleanDomain} (${siteUrl})`,
   ];
 
@@ -312,7 +312,7 @@ export function buildEmailHTML(
       <!-- Pie de página del correo -->
       <div style="padding: 20px 30px; background-color: ${t.footerBg}; border-top: 1px solid ${t.headerBorder}; text-align: center;">
         <p style="margin: 0; font-size: 11px; color: ${t.textMuted}; line-height: 1.4;">
-          Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0</strong> de 1EdTech.<br>
+          Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0 &amp; 3.0</strong> de 1EdTech.<br>
           Alojado oficialmente en <a href="${siteUrl}" target="_blank" rel="noopener noreferrer" style="color: ${t.accent}; text-decoration: none; font-weight: 700;">${cleanDomain}</a>
         </p>
       </div>

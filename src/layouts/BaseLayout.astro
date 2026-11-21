@@ -10,6 +10,7 @@ interface Props {
   theme?: string;
   certStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
   jsonLdUrl?: string;
+  jsonLdV2Url?: string;
   preloadHeroImage?: boolean;
   schemaData?: Record<string, any>;
 }
@@ -20,6 +21,7 @@ const {
   image = getFullUrl('/images/gdgoc-uhu-logo.jpg'),
   certStyle,
   jsonLdUrl,
+  jsonLdV2Url,
   preloadHeroImage = false,
   schemaData,
 } = Astro.props;
@@ -107,9 +109,12 @@ const defaultSchema = {
     <!-- Schema.org Structured Data (JSON-LD) -->
     <script type="application/ld+json" set:html={JSON.stringify(schemaData || defaultSchema)} />
 
-    <!-- Open Badges v2 Discovery Link (interno para validadores) -->
+    <!-- Open Badges 3.0 & 2.0 Discovery Links (interno para validadores) -->
     {jsonLdUrl && (
-      <link rel="alternate" type="application/ld+json" href={jsonLdUrl} title="Open Badges Assertion" />
+      <link rel="alternate" type="application/ld+json" href={jsonLdUrl} title="Open Badges 3.0 Verifiable Credential" />
+    )}
+    {jsonLdV2Url && (
+      <link rel="alternate" type="application/ld+json" href={jsonLdV2Url} title="Open Badges 2.0 Assertion" />
     )}
 
     <!-- Google Fonts (Non-Render-Blocking for Instant FCP & LCP) -->

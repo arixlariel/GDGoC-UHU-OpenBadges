@@ -1487,37 +1487,45 @@ export async function renderCertificateCanvas(
   ctx.font = `700 42px ${theme.fontMain}`;
   ctx.fillText('GDG on Campus UHU', col2Cx, valY);
 
-  // Col 3: Estándar Open Badges 2.0
+  // Col 3: Estándar Open Badges 2.0 & 3.0
   const col3Cx = metaX + colW * 2.5;
   ctx.fillStyle = theme.textSecondary;
   ctx.font = `700 31px ${theme.fontMain}`;
   ctx.fillText('ESTÁNDAR OFICIAL', col3Cx, labelY);
 
-  ctx.font = `700 42px ${theme.fontMain}`;
-  const stdText = 'Open Badges 2.0';
+  const stdText = 'Open Badges 2.0 & 3.0';
+  let stdFontSize = 40;
+  const iconR = 19;
+  const iconGap = 15;
+  ctx.font = `700 ${stdFontSize}px ${theme.fontMain}`;
+  while (iconR * 2 + iconGap + ctx.measureText(stdText).width > colW - 40 && stdFontSize > 26) {
+    stdFontSize -= 1;
+    ctx.font = `700 ${stdFontSize}px ${theme.fontMain}`;
+  }
   const stdTextW = ctx.measureText(stdText).width;
-  const iconR = 21;
-  const totalStdW = iconR * 2 + 18 + stdTextW;
+  const totalStdW = iconR * 2 + iconGap + stdTextW;
   const stdStartX = col3Cx - totalStdW / 2;
+  const stdTextY = valY + Math.round((42 - stdFontSize) * 0.45);
+  const iconCy = stdTextY + Math.round(stdFontSize * 0.54);
 
   ctx.fillStyle = '#34A853';
   ctx.beginPath();
-  ctx.arc(stdStartX + iconR, valY + 23, iconR, 0, Math.PI * 2);
+  ctx.arc(stdStartX + iconR, iconCy, iconR, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.strokeStyle = '#FFFFFF';
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 4.5;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   ctx.beginPath();
-  ctx.moveTo(stdStartX + iconR - 9, valY + 23);
-  ctx.lineTo(stdStartX + iconR - 2, valY + 30);
-  ctx.lineTo(stdStartX + iconR + 10, valY + 16);
+  ctx.moveTo(stdStartX + iconR - 8, iconCy);
+  ctx.lineTo(stdStartX + iconR - 2, iconCy + 6);
+  ctx.lineTo(stdStartX + iconR + 9, iconCy - 6);
   ctx.stroke();
 
   ctx.textAlign = 'left';
   ctx.fillStyle = '#34A853';
-  ctx.fillText(stdText, stdStartX + iconR * 2 + 18, valY);
+  ctx.fillText(stdText, stdStartX + iconR * 2 + iconGap, stdTextY);
   ctx.restore();
 
   bodyY += metaBoxH;

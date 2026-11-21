@@ -40,9 +40,21 @@ jobs:
         env:
           SITE_URL: "https://gdguhu.com"
           BASE_PATH: "/"
+          OB3_PRIVATE_KEY: ${{ secrets.OB3_PRIVATE_KEY }}
         run: |
           cp generador-local.html public/generador-local.html
           npm run build
+
+      - name: Verificar salida Open Badges 2.0 y 3.0 firmada
+        run: |
+          test -f dist/.well-known/did.json
+          test -f dist/.nojekyll
+          test -f dist/api/badges/issuer.json
+          FIRST_V3=$(ls dist/api/badges/v3/*.json | head -n 1)
+          test -n "$FIRST_V3"
+          grep -q '"cryptosuite": "eddsa-rdfc-2022"' "$FIRST_V3"
+          grep -q '"proofValue": "z' "$FIRST_V3"
+          echo "OK: Credencial Open Badges 3.0 firmada verificada en $FIRST_V3"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

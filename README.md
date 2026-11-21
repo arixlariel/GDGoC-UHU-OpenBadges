@@ -1,6 +1,6 @@
 # GDGoC Universidad de Huelva - Open Badges
 
-Bienvenido al manual oficial de gestión y emisión de certificados digitales para nuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en el estándar internacional **Open Badges 2.0** de 1EdTech (IMS Global). Solo los organizadores (con acceso al correo del GDGoC, quien administra el repositorio) pueden administrar las acreditaciones.
+Bienvenido al manual oficial de gestión y emisión de certificados digitales para nuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en los estándares internacionales **Open Badges 2.0 & 3.0** (*W3C Verifiable Credentials*) de **1EdTech**. Solo los organizadores (con acceso al correo del GDGoC, quien administra el repositorio) pueden administrar las acreditaciones.
 
 ---
 
@@ -17,7 +17,8 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
    - [Método E: Generador visual local (`generador-local.html`)](#----método-e-generador-visual-local-generador-localhtml)
 5. [Cómo publicar los certificados (`git push`)](#5-cómo-publicar-los-certificados-git-push)
 6. [Cómo compartir los certificados con los miembros](#6-cómo-compartir-los-certificados-con-los-miembros)
-7. [Privacidad y Protección de Datos (RGPD/LOPD)](#7-privacidad-y-protección-de-datos-rgpdlopd)
+7. [Cómo verificar un certificado en el Validador Oficial de 1EdTech](#7-cómo-verificar-un-certificado-en-el-validador-oficial-de-1edtech)
+8. [Privacidad y Protección de Datos (RGPD/LOPD)](#8-privacidad-y-protección-de-datos-rgpdlopd)
 
 ---
 
@@ -25,8 +26,11 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 
 - **Registrador del dominio**: Cloudflare
 - **Web de verificación**: `https://gdguhu.com`
-- **Hosting**: GitHub Pages
-- **Estándar**: Open Badges 2.0 firmado por GDGoC UHU con hash SHA-256
+- **Hosting**: GitHub Pages (desplegado automáticamente con GitHub Actions)
+- **Estándares emitidos en paralelo**:
+  - **Open Badges 3.0 (`W3C Verifiable Credentials v2`)**: cada certificado se compila y firma automáticamente durante el build en `/api/badges/v3/<id>.json` con firma criptográfica **Ed25519** (`DataIntegrityProof` · `eddsa-rdfc-2022`), vinculada a la identidad descentralizada oficial `did:web:gdguhu.com` publicada en `https://gdguhu.com/.well-known/did.json`.
+  - **Open Badges 2.0 (retrocompatibilidad)**: se mantienen intactos los endpoints `/api/badges/assertion/<id>.json`, `/api/badges/class/<badgeId>.json` y `/api/badges/issuer.json` con verificación *hosted* y hash `SHA-256`.
+- **Secreto de firma en GitHub Actions**: la clave privada Ed25519 se almacena exclusivamente en `Settings -> Secrets and variables -> Actions -> OB3_PRIVATE_KEY` (nunca en el repositorio). Si alguna vez fuera necesario rotarla, existe el asistente `node scripts/generate-ob3-key.mjs --write`.
 
 ---
 
@@ -36,6 +40,9 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 Open Badges/
 ├── generador-local.html             <-- Generador visual offline (Badges, CSV y vista previa)
 ├── public/
+│   ├── .nojekyll                    <-- Permite servir .well-known/ en GitHub Pages
+│   ├── .well-known/
+│   │   └── did.json                 <-- Clave pública oficial Ed25519 (did:web:gdguhu.com)
 │   └── images/
 │       └── badges/                  <-- Aquí se guardan los logo.png de las badges
 ├── src/
@@ -44,12 +51,20 @@ Open Badges/
 │   │   │   └── publish/             <-- Carpeta temporal para subir nuevas badges
 │   │   └── assertions/              <-- Aquí se guardan los certificado.json de los alumnos
 │   │       └── publish/             <-- Carpeta temporal para subir nuevos certificados
+│   ├── pages/api/badges/
+│   │   ├── v3/[id].json.ts          <-- Generador y firmador automático Open Badges 3.0
+│   │   ├── assertion/[id].json.ts   <-- Endpoint Open Badges 2.0 (Assertion)
+│   │   ├── class/[id].json.ts       <-- Endpoint Open Badges 2.0 (BadgeClass)
+│   │   └── issuer.json.ts           <-- Endpoint Open Badges 2.0 (Issuer)
+│   ├── utils/
+│   │   └── openbadges3.ts           <-- Construcción y firma Ed25519 (eddsa-rdfc-2022)
 │   └── config/
 │       └── site.ts                  <-- Datos del emisor o issuer (GDGoC UHU)
 └── scripts/
     ├── issue-badge.mjs              <-- Asistente automático para emitir certificados individuales
     ├── bulk-issue.mjs               <-- Emisión masiva de certificados desde archivo .csv
-    └── send-emails.mjs              <-- Envío automático de correos con los certificados
+    ├── send-emails.mjs              <-- Envío automático de correos con los certificados
+    └── generate-ob3-key.mjs         <-- Utilidad de rotación de clave Ed25519 (did:web)
 ```
 
 ---
@@ -207,14 +222,32 @@ git push origin main
 
 Una vez publicado, el certificado del alumno tiene su propia `URL`, única e intransferible:
 
-**`https://gdguhu.com/cert/<NOMBRE24CIFRASHEX>`**  
+**`https://gdguhu.com/cert/<NOMBRE24CIFRASHEX>`**
+
+El workflow de emisión no cambia: al publicar una badge o una assertion, GitHub Actions genera y firma automáticamente tanto el certificado visual como las credenciales Open Badges 3.0 (`/api/badges/v3/<id>.json`) y 2.0 (`/api/badges/assertion/<id>.json`).
 
 ---
 
-## 7. Privacidad y Protección de Datos (RGPD/LOPD)
+## 7. Cómo verificar un certificado en el Validador Oficial de 1EdTech
+
+Cualquier persona, empresa o universidad puede comprobar la autenticidad e integridad criptográfica de un certificado emitido por GDGoC UHU usando el **Validador Oficial de 1EdTech (Open Badges 3.0)**:
+
+1. Abre la página pública del certificado (`https://gdguhu.com/cert/<ID>`).
+2. Pulsa el botón **Añadir a tu cartera**.
+3. Copia la URL de la credencial **Open Badges 3.0** (`https://gdguhu.com/api/badges/v3/<ID>.json`) o pulsa el icono de descarga para guardar el archivo `.json` firmado.
+4. Entra en el **[Validador 1EdTech Global (Open Badges 3.0)](https://vc.1ed.tech/upload?validatorId=OB30Inspector)**.
+5. Pega la URL en el campo **URI to Resource** (o sube el archivo `.json` descargado en el recuadro de subida) y pulsa **Validate**.
+
+El validador resolverá automáticamente nuestra identidad `did:web:gdguhu.com` (`https://gdguhu.com/.well-known/did.json`), comprobará el esquema JSON-LD de Open Badges 3.0 y verificará la firma criptográfica **Ed25519**, devolviendo **`VALID` (0 errores y 0 advertencias)**.
+
+> **Nota sobre carteras y validación**: el validador oficial de 1EdTech no almacena una base de datos central de certificados; comprueba en tiempo real que el documento cumple la especificación internacional y que su firma criptográfica corresponde exactamente a la clave pública alojada en `gdguhu.com`.
+
+---
+
+## 8. Privacidad y Protección de Datos (RGPD/LOPD)
 
 El sistema está diseñado respetando escrupulosamente la normativa europea de protección de datos:
 
-- **Correos electrónicos jamás expuestos**: Los emails nunca se guardan en el repositorio ni se muestran en la web, se anonimizan mediante el hash **SHA-256** con salt unidireccional e irreversible.
-- **Falsificación imposible**: Solo los organizadores con permisos en el repositorio pueden publicar o modificar certificados.
-- **Verificación confiable**: La autenticidad se basa en el estándar **hosted verification**. Mientras el certificado provenga del dominio oficial privado `gdguhu.com`, cualquier entidad reconoce su legitimidad
+- **Correos electrónicos jamás expuestos**: Los emails nunca se guardan en el repositorio ni se muestran en la web, se anonimizan mediante el hash **SHA-256** con salt variable unidireccional e irreversible.
+- **Falsificación imposible**: Solo los organizadores con permisos en el repositorio pueden publicar certificados y cada credencial Open Badges 3.0 lleva una firma digital **Ed25519** generada con nuestra clave privada protegida en GitHub Secrets (`OB3_PRIVATE_KEY`).
+- **Verificación confiable**: La autenticidad está respaldada por identidad descentralizada **`did:web:gdguhu.com`** (Open Badges 3.0) y verificación *hosted* en `gdguhu.com` (Open Badges 2.0), de modo que cualquier entidad puede verificar su legitimidad incluso si el archivo `.json` se descarga y se comprueba fuera de la web.

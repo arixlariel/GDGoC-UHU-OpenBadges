@@ -27,6 +27,7 @@ if (!badgeEntry) {
 }
 
 const badge = badgeEntry;
+const credentialV3Url = getFullUrl(`/api/badges/v3/${assertionId}.json`);
 const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
 const badgeImageUrl = getFullUrl(badge.data.image);
 
@@ -62,7 +63,8 @@ const certSchema = {
   description={pageDescription}
   image={badgeImageUrl}
   certStyle={certStyle}
-  jsonLdUrl={assertionJsonUrl}
+  jsonLdUrl={credentialV3Url}
+  jsonLdV2Url={assertionJsonUrl}
   schemaData={certSchema}
 >
   <CertificateDiploma
@@ -74,7 +76,8 @@ const certSchema = {
 
   <!-- Modal interactivo Web Component (Añadir a tu cartera) -->
   <BadgeModal
-    assertionUrl={assertionJsonUrl}
+    assertionUrl={credentialV3Url}
+    assertionId={assertionId}
     badgeName={badge.data.name}
   />
 </BaseLayout>

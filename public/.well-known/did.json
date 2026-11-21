@@ -1,0 +1,21 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/multikey/v1"
+  ],
+  "id": "did:web:gdguhu.com",
+  "verificationMethod": [
+    {
+      "id": "did:web:gdguhu.com#key-1",
+      "type": "Multikey",
+      "controller": "did:web:gdguhu.com",
+      "publicKeyMultibase": "z6MkkPXLoVB9M4eYhacQDizuekw5v3LrjtNHHDX3a4bpk1KP"
+    }
+  ],
+  "authentication": [
+    "did:web:gdguhu.com#key-1"
+  ],
+  "assertionMethod": [
+    "did:web:gdguhu.com#key-1"
+  ]
+}
