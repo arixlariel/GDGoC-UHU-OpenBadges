@@ -285,9 +285,12 @@ const defaultSchema = {
         will-change: transform;
       }
       .tilt-glare {
-        background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.24), transparent 60%);
+        background: radial-gradient(260px circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.14), transparent 70%);
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.25s ease;
+      }
+      html[data-theme="cyber"] .tilt-glare {
+        background: radial-gradient(260px circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(0, 240, 255, 0.075), rgba(255, 0, 127, 0.025) 48%, transparent 72%);
       }
       .tilt-card:hover .tilt-glare {
         opacity: 1;
@@ -449,6 +452,7 @@ const defaultSchema = {
       html[data-theme="google"] .theme-accent-text {
         background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC04, #34A853);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
       }
       html[data-theme="google"] .theme-hero-section {
@@ -460,6 +464,7 @@ const defaultSchema = {
         border: 1px solid #D2E3FC;
         color: #1967D2;
       }
+      html[data-theme="google"] .theme-info-pill,
       html[data-theme="google"] .theme-pill-btn {
         background: #FFFFFF;
         border: 1px solid #DADCE0;
@@ -541,6 +546,7 @@ const defaultSchema = {
         font-family: 'Orbitron', 'Google Sans Display', sans-serif;
         background: linear-gradient(90deg, #00F0FF, #FF007F, #00FF66);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
         filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.4));
       }
@@ -554,6 +560,7 @@ const defaultSchema = {
         color: #00F0FF;
         box-shadow: 0 0 15px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(0, 240, 255, 0.15);
       }
+      html[data-theme="cyber"] .theme-info-pill,
       html[data-theme="cyber"] .theme-pill-btn {
         background: rgba(12, 18, 38, 0.9);
         border: 1px solid rgba(0, 240, 255, 0.5);
@@ -644,6 +651,7 @@ const defaultSchema = {
       html[data-theme="piscina"] .theme-accent-text {
         background: linear-gradient(90deg, #0284C7, #00B4DB, #00897B, #0284C7);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
       }
       html[data-theme="piscina"] .theme-hero-section {
@@ -656,6 +664,7 @@ const defaultSchema = {
         color: #006064;
         box-shadow: 0 4px 16px rgba(0, 188, 212, 0.35);
       }
+      html[data-theme="piscina"] .theme-info-pill,
       html[data-theme="piscina"] .theme-pill-btn {
         background: rgba(255, 255, 255, 0.88);
         border: 2px solid #00E5FF;
@@ -741,6 +750,7 @@ const defaultSchema = {
       html[data-theme="nieve"] .theme-accent-text {
         background: linear-gradient(90deg, #FFFFFF, #7DD3FC, #38BDF8, #E0F2FE);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
       }
       html[data-theme="nieve"] .theme-hero-section {
@@ -754,6 +764,7 @@ const defaultSchema = {
         color: #FFFFFF;
         box-shadow: 0 0 18px rgba(125, 211, 252, 0.4);
       }
+      html[data-theme="nieve"] .theme-info-pill,
       html[data-theme="nieve"] .theme-pill-btn {
         background: rgba(14, 36, 66, 0.82);
         border: 1.5px solid rgba(186, 230, 253, 0.6);
@@ -861,6 +872,7 @@ const defaultSchema = {
       html[data-theme="caramelos"] .theme-accent-text {
         background: linear-gradient(90deg, #FF007F, #FF1493, #FF69B4, #D81B60, #FF007F);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
       }
       html[data-theme="caramelos"] .theme-hero-section {
@@ -873,6 +885,7 @@ const defaultSchema = {
         color: #AD1457;
         box-shadow: 0 4px 15px rgba(255, 20, 147, 0.28);
       }
+      html[data-theme="caramelos"] .theme-info-pill,
       html[data-theme="caramelos"] .theme-pill-btn {
         background: #FFF5FA;
         border: 2px solid #FF69B4;

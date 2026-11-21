@@ -2,6 +2,7 @@
   "name": "gdgoc-uhu-openbadges",
   "version": "1.0.0",
   "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "description": "Sistema de Certificados Open Badges para GDG on Campus Universidad de Huelva",
   "scripts": {

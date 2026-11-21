@@ -13,8 +13,8 @@ const basePath = process.env.BASE_PATH || '';
 export const siteConfig = {
   url: siteUrl.replace(/\/$/, ''),
   base: basePath,
-  name: 'Certificados Digitales · GDG on Campus Universidad de Huelva',
-  shortName: 'Certificados Digitales',
+  name: 'GDGoC UHU Open Badges',
+  shortName: 'GDGoC UHU Open Badges',
   description: 'Plataforma oficial de certificados digitales e insignias Open Badges de GDG on Campus Universidad de Huelva.',
   communityUrl: 'https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/',
   linkedinUrl: 'https://www.linkedin.com/company/gdgoc-huelva',
