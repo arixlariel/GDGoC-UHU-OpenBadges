@@ -38,7 +38,7 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 
 ```text
 Open Badges/
-├── generador-local.html             <-- Generador visual offline (Badges, CSV y vista previa)
+├── generador-local.html             <-- Generador visual offline
 ├── public/
 │   ├── .nojekyll                    <-- Permite servir .well-known/ en GitHub Pages
 │   ├── .well-known/
@@ -47,9 +47,9 @@ Open Badges/
 │       └── badges/                  <-- Aquí se guardan los logo.png de las badges
 ├── src/
 │   ├── content/
-│   │   ├── badges/                  <-- Aquí se definen los badge.json
+│   │   ├── badges/                  <-- Aquí se guardan los badge.json
 │   │   │   └── publish/             <-- Carpeta temporal para subir nuevas badges
-│   │   └── assertions/              <-- Aquí se guardan los certificado.json de los alumnos
+│   │   └── assertions/              <-- Aquí se guardan los certificados
 │   │       └── publish/             <-- Carpeta temporal para subir nuevos certificados
 │   ├── pages/api/badges/
 │   │   ├── v3/[id].json.ts          <-- Generador y firmador automático Open Badges 3.0
@@ -63,7 +63,7 @@ Open Badges/
 └── scripts/
     ├── issue-badge.mjs              <-- Asistente automático para emitir certificados individuales
     ├── bulk-issue.mjs               <-- Emisión masiva de certificados desde archivo .csv
-    ├── send-emails.mjs              <-- Envío automático de correos con los certificados
+    ├── send-emails.mjs              <-- Envío automático de correos para los certificados
     └── generate-ob3-key.mjs         <-- Utilidad de rotación de clave Ed25519 (did:web)
 ```
 
@@ -238,7 +238,7 @@ Cualquier persona, empresa o universidad puede comprobar la autenticidad e integ
 
 El validador resolverá automáticamente la identidad `did:web:gdguhu.com` (`https://gdguhu.com/.well-known/did.json`), comprobará el esquema JSON-LD de Open Badges 3.0 y verificará la firma criptográfica **Ed25519**, devolviendo **`VALID` (0 errores y 0 advertencias)**.
 
-> **El validador oficial de 1EdTech Global no almacena una base de datos central de certificados; comprueba en tiempo real que el documento cumple la especificación internacional y que su firma criptográfica corresponde exactamente a la clave pública alojada en `gdguhu.com`
+> El validador oficial de 1EdTech Global no almacena una base de datos central de certificados; comprueba en tiempo real que el documento cumple la especificación internacional y que su firma criptográfica corresponde exactamente a la clave pública alojada en `gdguhu.com`
 
 ---
 
