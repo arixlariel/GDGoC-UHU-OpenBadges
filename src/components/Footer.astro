@@ -3,7 +3,7 @@ import { siteConfig, getAssetUrl } from '@/config/site';
 ---
 
 <footer class="theme-footer cv-auto relative z-10 mt-20 border-t theme-border py-10 text-xs theme-text-secondary backdrop-blur-xl transition-all duration-500">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+  <div class="max-w-[1320px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
     <div class="flex items-center gap-3.5">
       <img
         src={getAssetUrl('/images/gdgoc-uhu-logo-sm.webp')}
@@ -16,20 +16,29 @@ import { siteConfig, getAssetUrl } from '@/config/site';
       />
       <div class="flex flex-col items-start gap-0.5">
         <div class="font-bold text-sm theme-text-primary">
-          GDG on Campus · Universidad de Huelva
+          GDG on Campus
         </div>
         <div class="text-xs theme-text-secondary">
-          Certificados Digitales verificados
+          Certificados Digitales
         </div>
       </div>
     </div>
 
-    <div class="flex flex-wrap items-center justify-center gap-5 text-xs font-medium">
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-5 text-xs">
+      <a
+        href="https://openbadges.org"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="theme-link-muted font-medium transition-colors"
+      >
+        Powered by Open Badges
+      </a>
+      <span class="opacity-40">·</span>
       <a
         href={siteConfig.communityUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="theme-link transition-colors"
+        class="theme-link font-semibold transition-all"
       >
         Comunidad
       </a>
@@ -38,18 +47,18 @@ import { siteConfig, getAssetUrl } from '@/config/site';
         href={siteConfig.linkedinUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="theme-link transition-colors"
+        class="theme-link font-semibold transition-all"
       >
         LinkedIn
       </a>
       <span class="opacity-40">·</span>
       <a
-        href="https://openbadges.org"
+        href={siteConfig.instagramUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="theme-link transition-colors"
+        class="theme-link font-semibold transition-all"
       >
-        OpenBadges
+        Instagram
       </a>
     </div>
   </div>

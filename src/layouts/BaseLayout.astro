@@ -910,6 +910,65 @@ const defaultSchema = {
       }
 
       /* ==========================================================================
+         FOOTER LINKS (Ligeramente destacados por tema + estilo discreto para Powered by)
+         ========================================================================== */
+      .theme-link-muted {
+        opacity: 0.78;
+      }
+      .theme-link-muted:hover {
+        opacity: 1;
+      }
+      html[data-theme="google"] .theme-link {
+        color: #1A73E8;
+      }
+      html[data-theme="google"] .theme-link:hover {
+        color: #4285F4;
+        text-decoration: underline;
+      }
+      html[data-theme="cyber"] .theme-link {
+        color: #00F0FF;
+      }
+      html[data-theme="cyber"] .theme-link:hover {
+        color: #FF4DA6;
+        text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+      }
+      html[data-theme="cyber"] .theme-link-muted {
+        color: #94A3B8;
+      }
+      html[data-theme="cyber"] .theme-link-muted:hover {
+        color: #CBD5E1;
+      }
+      html[data-theme="piscina"] .theme-link {
+        color: #67E8F9;
+      }
+      html[data-theme="piscina"] .theme-link:hover {
+        color: #FFFFFF;
+        text-shadow: 0 0 10px rgba(103, 232, 249, 0.55);
+      }
+      html[data-theme="piscina"] .theme-link-muted {
+        color: #E0F7FA;
+        opacity: 0.72;
+      }
+      html[data-theme="nieve"] .theme-link {
+        color: #7DD3FC;
+      }
+      html[data-theme="nieve"] .theme-link:hover {
+        color: #FFFFFF;
+        text-shadow: 0 0 10px rgba(186, 230, 253, 0.55);
+      }
+      html[data-theme="nieve"] .theme-link-muted {
+        color: #BAE6FD;
+        opacity: 0.72;
+      }
+      html[data-theme="caramelos"] .theme-link {
+        color: #D81B60;
+      }
+      html[data-theme="caramelos"] .theme-link:hover {
+        color: #FF1493;
+        text-decoration: underline;
+      }
+
+      /* ==========================================================================
          MOBILE GPU & SCROLL OPTIMIZATION (Step 2: Disable backdrop-filter on mobile)
          ========================================================================== */
       @media (max-width: 768px) {
