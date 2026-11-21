@@ -72,7 +72,7 @@ Open Badges/
 ## 3. Cómo crear una nueva badge (`BadgeClass`)
 
 ### --- 1: Crear el logo
-Formato `.png` con fondo transparente
+Formato `.png` con fondo transparente, 512x512
 
 ### --- 2: Guardar el logo
 Almacenar en `public/images/badges/`
