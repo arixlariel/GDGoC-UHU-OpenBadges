@@ -6,8 +6,8 @@ interface Props {
 
 const { assertionUrl } = Astro.props;
 
-// Official IMS Global Open Badges Validator
-const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
+// Official 1EdTech Open Badges 2.0 Validator
+const validatorUrl = 'https://vc.1ed.tech/upload?validatorId=OB20Inspector';
 ---
 
 <!-- Web Component Custom Element -->
@@ -105,7 +105,7 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
             <span>Credly</span>
           </a>
 
-          <!-- Validar Insignia (IMS Global Open Badges Validator) -->
+          <!-- Validar Insignia (1EdTech Open Badges Validator) -->
           <a
             href={validatorUrl}
             target="_blank"
@@ -115,7 +115,7 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
             <svg class="w-4 h-4 shrink-0 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>Validador Oficial IMS Global</span>
+            <span>Validador 1EdTech Global</span>
           </a>
         </div>
       </div>
@@ -123,7 +123,7 @@ const validatorUrl = 'https://openbadgesvalidator.imsglobal.org/';
       <!-- Footer Info -->
       <div class="mt-6 pt-3 border-t border-gray-100 dark:border-gray-800 text-center">
         <p class="text-[11px] text-gray-400 dark:text-gray-500">
-          Insignia emitida bajo el estándar Open Badges 2.0 · GDG on Campus UHU
+          Insignia emitida bajo el estándar Open Badges 2.0
         </p>
       </div>
     </div>
