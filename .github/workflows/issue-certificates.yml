@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       badge_id:
-        description: 'ID de la insignia (ej: cumpleanos-feliz, workshop-ai-cloud)'
+        description: 'ID de la insignia (ej: capture-the-flag-reversing-de-binarios, fundacion-del-club-de-programacion, cumpleanos-feliz)'
         required: true
         type: string
       role:

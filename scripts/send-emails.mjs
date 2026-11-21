@@ -12,7 +12,7 @@
  *       "nombre": "Aarón Garrido",
  *       "email": "aarongarridosilvera@gmail.com",
  *       "assertionId": "69679d9fa12d24f4a673b54b",
- *       "badgeId": "workshop-ai-cloud",
+ *       "badgeId": "capture-the-flag-reversing-de-binarios",
  *       "url": "https://gdguhu.com/cert/69679d9fa12d24f4a673b54b"
  *     }
  *   ]

@@ -40,6 +40,7 @@ const assertionsCollection = defineCollection({
     expires: z.string().optional(),
     evidence: z.string().optional(),
     styleOverride: styleEnum.optional(),
+    showcase: z.boolean().optional(),
   }),
 });
 

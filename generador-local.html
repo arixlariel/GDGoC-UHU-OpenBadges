@@ -160,6 +160,7 @@
       border-radius: var(--radius);
       padding: 22px;
       box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035);
+      min-width: 0;
     }
     .panel-title {
       font-size: 16px;
@@ -689,8 +690,11 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
       line-height: 1.55;
+      max-width: 100%;
       overflow-x: auto;
-      white-space: pre;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .toast {
@@ -718,7 +722,7 @@
 
   <header class="app-header">
     <div class="brand">
-      <img src="./public/images/gdgoc-uhu-logo.jpg" onerror="this.style.display='none'" alt="GDGoC UHU" class="brand-logo" />
+      <img src="./public/images/gdgoc-uhu-logo.jpg" onerror="this.src='https://gdguhu.com/images/gdgoc-uhu-logo.jpg'; this.onerror=null;" alt="GDGoC UHU" class="brand-logo" />
       <div>
         <div class="brand-title">GDG on Campus Universidad de Huelva</div>
         <div class="brand-sub">Generador local de badges y certificados</div>
@@ -1649,6 +1653,24 @@
     }
 
     const KNOWN_BADGES = {
+      'capture-the-flag-reversing-de-binarios': {
+        name: 'Capture The Flag - Reversing de binarios',
+        description: 'Evento práctico donde los asistentes recibieron una introducción al reversing con Ghidra mediante una rápida competición individual',
+        image: '/images/badges/capture-the-flag-reversing-de-binarios.png',
+        criteria: { narrative: 'Preparación del taller, tareas de administración institucional y gerencia del evento' },
+        tags: ['Capture The Flag', 'Reversing de binarios', 'Taller', 'Organizador'],
+        style: 'cyber',
+        issuerId: 'gdgoc-uhu',
+      },
+      'fundacion-del-club-de-programacion': {
+        name: 'Fundación del Club de Programación',
+        description: 'El Club de Programación es un espacio donde personas con ambición se unen para desarrollar y aprender con proyectos que impulsen sus perfiles profesionales',
+        image: '/images/badges/fundacion-del-club-de-programacion.png',
+        criteria: { narrative: 'Idea del Club de Programación, búsqueda de candidatos y tareas de logística y reserva' },
+        tags: ['Fundación', 'Club de Programación', 'Proyectos'],
+        style: 'piscina',
+        issuerId: 'gdgoc-uhu',
+      },
       'cumpleanos-feliz': {
         name: 'Cumpleaños feliz!',
         description: 'Certificado oficial de cumpleaños por GDGoC Universidad de Huelva',
@@ -1658,47 +1680,24 @@
         style: 'caramelos',
         issuerId: 'gdgoc-uhu',
       },
-      'workshop-ai-cloud': {
-        name: 'Taller de IA Generativa & Google Cloud',
-        description: 'Certificado oficial por completar el taller práctico de Inteligencia Artificial Generativa con Gemini y despliegue en Google Cloud Platform organizado por GDG on Campus UHU.',
-        image: '/images/badges/workshop-ai-cloud.svg',
-        criteria: { narrative: 'El estudiante asistió a la sesión formativa y completó los laboratorios prácticos.' },
-        tags: ['Google Cloud', 'Gemini AI', 'Vertex AI', 'Workshop'],
-        style: 'google',
-      },
-      'hackathon-2026': {
-        name: 'Hackathon GDGoC UHU 2026',
-        description: 'Otorgado por la participación activa en el Hackathon Tecnológico 2026 organizado por GDG on Campus en la Universidad de Huelva, habiendo ideado, programado y defendido una solución técnica innovadora.',
-        image: '/images/badges/hackathon-2026.svg',
-        criteria: { narrative: 'El portador de esta insignia completó 24 horas ininterrumpidas de desarrollo de software colaborativo.' },
-        tags: ['Hackathon', 'Google Cloud', 'AI', 'Open Source', 'Teamwork'],
-        style: 'cyber',
-      },
-      'summer-code-camp': {
-        name: 'Summer Pool Code Camp 2026',
-        description: 'Acreditación oficial por superar el Bootcamp intensivo de verano de desarrollo web y tecnologías cloud organizado por el Google Developer Group on Campus de la Universidad de Huelva.',
-        image: '/images/badges/summer-code-camp.svg',
-        criteria: { narrative: 'El participante completó los retos prácticos del campamento tecnológico de verano.' },
-        tags: ['Summer Camp', 'Web Dev', 'Flutter', 'Firebase'],
-        style: 'piscina',
-      },
-      'winter-cloud-freeze': {
-        name: 'Winter Cloud Freeze Summit',
-        description: 'Certificado oficial de participación en las jornadas de invierno sobre arquitectura en la nube, ciberseguridad y sistemas distribuidos de GDG on Campus Universidad de Huelva.',
-        image: '/images/badges/winter-cloud-freeze.svg',
-        criteria: { narrative: 'Asistencia completa y resolución de los laboratorios técnicos del encuentro invernal.' },
-        tags: ['Cloud', 'Kubernetes', 'Security', 'Winter Summit'],
-        style: 'nieve',
-      },
-      'creative-ui-jam': {
-        name: 'Sweet Candy UI/UX Creative Jam',
-        description: 'Reconocimiento oficial por participar en la Creative Jam de diseño de interfaces, accesibilidad y sistemas de diseño interactivos de GDG on Campus Universidad de Huelva.',
-        image: '/images/badges/creative-ui-jam.svg',
-        criteria: { narrative: 'Diseño y presentación de un prototipo interactivo completo evaluado por el jurado.' },
-        tags: ['UI/UX', 'Design Systems', 'CSS', 'Creative Jam'],
+      'feliz-cumpleanos': {
+        name: 'Feliz cumpleaños!',
+        description: 'Certificado oficial de cumpleaños por GDGoC Universidad de Huelva',
+        image: '/images/badges/feliz-cumpleanos.png',
+        criteria: { narrative: 'No vuelvo a ir andando a  Mala Santa' },
+        tags: ['تطوان', 'The Weeknd', 'Roblox', 'Long Live Ceuta'],
         style: 'caramelos',
+        issuerId: 'gdgoc-uhu',
       },
     };
+
+    const DEPRECATED_BADGE_IDS = new Set([
+      'workshop-ai-cloud',
+      'hackathon-2026',
+      'summer-code-camp',
+      'winter-cloud-freeze',
+      'creative-ui-jam',
+    ]);
 
     function resolveBadgeSlug(val) {
       const raw = String(val || '').trim();
@@ -1713,10 +1712,12 @@
       return slugify(raw) || raw;
     }
 
-    // Cargar badges personalizadas recordadas en localStorage (sin sobrescribir las oficiales del repositorio)
+    // Cargar badges personalizadas recordadas en localStorage (sin sobrescribir las oficiales del repositorio ni restaurar badges eliminadas)
     try {
       const savedCustomBadges = JSON.parse(localStorage.getItem('gdgoc-uhu-custom-badges') || '{}');
-      delete savedCustomBadges['cumpleanos-feliz'];
+      for (const k of [...Object.keys(KNOWN_BADGES), ...DEPRECATED_BADGE_IDS]) {
+        delete savedCustomBadges[k];
+      }
       for (const [k, v] of Object.entries(savedCustomBadges)) {
         if (!KNOWN_BADGES[k]) {
           KNOWN_BADGES[k] = v;
@@ -2460,7 +2461,7 @@
               description: 'Certificado digital oficial emitido por GDG on Campus Universidad de Huelva.',
               image: './public/images/gdgoc-uhu-logo.jpg',
               criteria: { narrative: 'Otorgado por completar satisfactoriamente las actividades del evento.' },
-              tags: ['GDGoC UHU', 'Open Badges 2.0'],
+              tags: ['GDGoC UHU', 'Open Badges 2.0 & 3.0'],
               style: effectiveStyle,
             });
 
@@ -2533,7 +2534,7 @@
         assertionObj.recipient.name,
         badgeInfo,
         certUrl,
-        `https://gdguhu.com/api/badges/assertion/${current.id}.json`,
+        `https://gdguhu.com/api/badges/v3/${current.id}.json`,
         assertionObj.role,
         current.id,
         effectiveStyle,
@@ -2766,11 +2767,21 @@
       }
 
       const badgesList = [];
-      // Incluir la definición de la badge en el paquete si es personalizada
+      // Incluir la definición de la badge en el paquete (siempre con ruta limpia, sin data URLs de vista previa)
       if (KNOWN_BADGES[badgeId]) {
+        const b = KNOWN_BADGES[badgeId];
+        const rawImg = String(b.image || '').trim();
+        const safeImage =
+          !rawImg || rawImg.startsWith('data:')
+            ? `/images/badges/${badgeId}.png`
+            : rawImg.replace(/^\.\/public/, '');
         badgesList.push({
           id: badgeId,
-          data: KNOWN_BADGES[badgeId],
+          data: {
+            ...b,
+            image: safeImage,
+            issuerId: b.issuerId || 'gdgoc-uhu',
+          },
         });
       }
 

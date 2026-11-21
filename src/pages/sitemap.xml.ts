@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { getFullUrl } from '@/config/site';
+import { getFullUrl, isShowcaseAssertion } from '@/config/site';
 
 export const GET: APIRoute = async () => {
-  const assertions = await getCollection('assertions');
+  const assertions = (await getCollection('assertions')).filter((a) => isShowcaseAssertion(a));
   const today = new Date().toISOString().split('T')[0];
 
   const urls = [

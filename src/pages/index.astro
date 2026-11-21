@@ -1,10 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getAssetUrl } from '@/config/site';
+import { getAssetUrl, isShowcaseAssertion } from '@/config/site';
 
 const badges = await getCollection('badges');
 const assertions = await getCollection('assertions');
+const showcaseAssertions = assertions.filter((a) => isShowcaseAssertion(a));
 
 const styleOrder: Record<string, number> = {
   google: 1,
@@ -14,8 +15,8 @@ const styleOrder: Record<string, number> = {
   caramelos: 5,
 };
 
-// Ordenar los certificados de ejemplo según el orden de estilos (Google, Cyber, Piscina, Nieve, Caramelos)
-const sortedAssertions = [...assertions].sort((a, b) => {
+// Rotar únicamente entre los certificados públicos de los organizadores
+const sortedAssertions = [...showcaseAssertions].sort((a, b) => {
   const badgeA = badges.find((bg) => bg.id.replace(/^.*\/|\.json$/g, '') === a.data.badgeId);
   const badgeB = badges.find((bg) => bg.id.replace(/^.*\/|\.json$/g, '') === b.data.badgeId);
   const styleA = a.data.styleOverride || badgeA?.data.style || 'google';
@@ -167,7 +168,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
       </div>
       <span class="theme-pill-btn inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-1.5 rounded-full self-start sm:self-auto">
         <span class="w-2 h-2 rounded-full bg-[#34A853] animate-ping"></span>
-        {sortedAssertions.length} {sortedAssertions.length === 1 ? 'credencial activa' : 'credenciales activas'}
+        {assertions.length} {assertions.length === 1 ? 'credencial activa' : 'credenciales activas'}
       </span>
     </div>
 
@@ -336,7 +337,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
         <div class="space-y-1.5">
           <h3 class="font-display text-sm sm:text-base font-bold theme-text-primary flex items-center gap-2">
             <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#34A853]/15 text-[#34A853] text-xs font-bold shrink-0">✓</span>
-            <span>¿Cómo comprobar un certificado en el Validador 1EdTech Global?</span>
+            <span>¿Cómo verificar un certificado con el Validador 1EdTech Global?</span>
           </h3>
           <p class="text-xs theme-text-secondary leading-relaxed max-w-3xl">
             Abre tu certificado, pulsa <strong class="theme-text-primary">Añadir a tu cartera</strong> para copiar el enlace <strong class="theme-text-primary">Open Badges 3.0</strong> de tu credencial (o descarga el archivo <code class="font-mono">.json</code>), accede al validador oficial de 1EdTech Global, pega el enlace o sube el <code class="font-mono">.json</code> y pulsa <strong class="theme-text-primary">Upload</strong> para verificar su firma criptográfica sin errores

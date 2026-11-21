@@ -3,7 +3,7 @@ import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CertificateDiploma from '@/components/CertificateDiploma.astro';
 import BadgeModal from '@/components/BadgeModal.astro';
-import { getFullUrl } from '@/config/site';
+import { getFullUrl, isShowcaseAssertion } from '@/config/site';
 
 export async function getStaticPaths() {
   const assertions = await getCollection('assertions');
@@ -27,6 +27,7 @@ if (!badgeEntry) {
 }
 
 const badge = badgeEntry;
+const isPublicShowcase = isShowcaseAssertion(assertion);
 const credentialV3Url = getFullUrl(`/api/badges/v3/${assertionId}.json`);
 const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
 const badgeImageUrl = getFullUrl(badge.data.image);
@@ -65,6 +66,7 @@ const certSchema = {
   certStyle={certStyle}
   jsonLdUrl={credentialV3Url}
   jsonLdV2Url={assertionJsonUrl}
+  noIndex={!isPublicShowcase}
   schemaData={certSchema}
 >
   <CertificateDiploma

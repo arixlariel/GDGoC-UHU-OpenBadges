@@ -11,6 +11,7 @@ interface Props {
   certStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
   jsonLdUrl?: string;
   jsonLdV2Url?: string;
+  noIndex?: boolean;
   preloadHeroImage?: boolean;
   schemaData?: Record<string, any>;
 }
@@ -22,6 +23,7 @@ const {
   certStyle,
   jsonLdUrl,
   jsonLdV2Url,
+  noIndex = false,
   preloadHeroImage = false,
   schemaData,
 } = Astro.props;
@@ -74,7 +76,10 @@ const defaultSchema = {
       />
     )}
     <meta name="theme-color" content="#4285F4" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta
+      name="robots"
+      content={noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
     <meta name="author" content="GDG on Campus Universidad de Huelva" />
     <link rel="icon" type="image/png" sizes="32x32" href={getAssetUrl('/favicon-32x32.png')} />
     <link rel="icon" type="image/png" sizes="192x192" href={getAssetUrl('/favicon-192x192.png')} />

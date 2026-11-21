@@ -66,10 +66,15 @@ let hasRepoChanges = false;
 function writeBadge(slug, badgeObj) {
   const cleanSlug = String(slug || '').replace(/\.json$/i, '').trim();
   if (!cleanSlug) return;
+  const rawImg = badgeObj.image ? String(badgeObj.image).trim() : '';
+  const safeImage =
+    !rawImg || rawImg.startsWith('data:')
+      ? `/images/badges/${cleanSlug}.png`
+      : rawImg.replace(/^\.\/public/, '');
   const cleanBadge = {
     name: badgeObj.name || cleanSlug,
     description: badgeObj.description || '',
-    image: badgeObj.image ? String(badgeObj.image).replace(/^\.\/public/, '') : `/images/badges/${cleanSlug}.png`,
+    image: safeImage,
     criteria: badgeObj.criteria || { narrative: '' },
     tags: Array.isArray(badgeObj.tags) ? badgeObj.tags : [],
     style: badgeObj.style || 'google',
@@ -110,6 +115,7 @@ function writeAssertion(id, assertionObj) {
   if (assertionObj.expires) safeAssertion.expires = assertionObj.expires;
   if (assertionObj.evidence) safeAssertion.evidence = assertionObj.evidence;
   if (assertionObj.styleOverride) safeAssertion.styleOverride = assertionObj.styleOverride;
+  if (typeof assertionObj.showcase === 'boolean') safeAssertion.showcase = assertionObj.showcase;
 
   const destPath = path.join(assertionsDir, `${cleanId}.json`);
   fs.writeFileSync(destPath, JSON.stringify(safeAssertion, null, 2) + '\n', 'utf-8');

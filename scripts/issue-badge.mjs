@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * Script interactivo para emitir certificados Open Badges v2.0
+ * Script interactivo para emitir certificados Open Badges 2.0 & 3.0
  * para GDG on Campus Universidad de Huelva.
  *
  * Uso:
  *   npm run issue
  *   o
- *   node scripts/issue-badge.mjs --name "Juan Pérez" --email "juan@alu.uhu.es" --badge "hackathon-2026" --role "Ganador"
+ *   node scripts/issue-badge.mjs --name "Juan Pérez" --email "juan@alu.uhu.es" --badge "capture-the-flag-reversing-de-binarios" --role "Asistencia certificada"
  */
 
 import fs from 'node:fs';
@@ -161,7 +161,8 @@ async function main() {
     console.log(`ID de Certificado: ${assertionId}`);
     console.log(`Archivo generado:  src/content/assertions/${assertionId}.json`);
     console.log(`Ruta Web:          /cert/${assertionId}`);
-    console.log(`API Assertion:     /api/badges/assertion/${assertionId}.json`);
+    console.log(`API OB 3.0 (VC):   /api/badges/v3/${assertionId}.json`);
+    console.log(`API OB 2.0:        /api/badges/assertion/${assertionId}.json`);
     console.log('------------------------------------------------------');
     console.log('Siguiente paso: Haz commit y push a tu repositorio GitHub para publicarlo.\n');
   } finally {

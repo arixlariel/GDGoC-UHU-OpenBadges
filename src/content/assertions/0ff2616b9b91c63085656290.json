@@ -1,14 +1,12 @@
 {
   "recipient": {
-    "name": "Ariel Bstillo",
+    "name": "Ariel Bustillo León",
     "identity": "sha256$5c472b6a7e73f99aae9d8d9423ff3ace906898ce2e14f50849998ca2080b0c09",
     "hashed": true,
     "type": "email",
     "salt": "gdgoc-uhu-salt-2026"
   },
-  "badgeId": "winter-cloud-freeze",
-  "role": "Asistente Certificado",
-  "issuedOn": "2026-10-28T19:07:16.693Z",
-  "styleOverride": "nieve"
+  "badgeId": "capture-the-flag-reversing-de-binarios",
+  "role": "Organizador",
+  "issuedOn": "2026-11-21T12:17:02Z"
 }
-

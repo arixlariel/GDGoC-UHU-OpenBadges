@@ -269,7 +269,7 @@ async function main() {
     console.error('❌ Error: Falta el archivo CSV.');
     console.error('\nUso:');
     console.error('  npm run bulk -- asistentes.csv --badge <badgeId> [--role <rol>]');
-    console.error('  node scripts/bulk-issue.mjs archivo.csv --badge workshop-ai-cloud\n');
+    console.error('  node scripts/bulk-issue.mjs archivo.csv --badge capture-the-flag-reversing-de-binarios\n');
     process.exit(1);
   }
 

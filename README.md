@@ -38,13 +38,17 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 
 ```text
 Open Badges/
-├── generador-local.html             <-- Generador visual offline
 ├── public/
 │   ├── .nojekyll                    <-- Permite servir .well-known/ en GitHub Pages
 │   ├── .well-known/
 │   │   └── did.json                 <-- Clave pública oficial Ed25519 (did:web:gdguhu.com)
 │   └── images/
 │       └── badges/                  <-- Aquí se guardan los logo.png de las badges
+├── scripts/
+│   ├── issue-badge.mjs              <-- Asistente automático para emitir certificados individuales
+│   ├── bulk-issue.mjs               <-- Emisión masiva de certificados desde archivo .csv
+│   ├── send-emails.mjs              <-- Envío automático de correos para los certificados
+│   └── generate-ob3-key.mjs         <-- Utilidad de rotación de clave Ed25519 (did:web)
 ├── src/
 │   ├── content/
 │   │   ├── badges/                  <-- Aquí se guardan los badge.json
@@ -59,12 +63,8 @@ Open Badges/
 │   ├── utils/
 │   │   └── openbadges3.ts           <-- Construcción y firma Ed25519 (eddsa-rdfc-2022)
 │   └── config/
-│       └── site.ts                  <-- Datos del emisor o issuer (GDGoC UHU)
-└── scripts/
-    ├── issue-badge.mjs              <-- Asistente automático para emitir certificados individuales
-    ├── bulk-issue.mjs               <-- Emisión masiva de certificados desde archivo .csv
-    ├── send-emails.mjs              <-- Envío automático de correos para los certificados
-    └── generate-ob3-key.mjs         <-- Utilidad de rotación de clave Ed25519 (did:web)
+│       └── site.ts                  <-- Datos del emisor (GDGoC UHU) y organizadores visibles en portada
+└── generador-local.html             <-- Generador visual offline (también desplegado en gdguhu.com/generador-local.html)
 ```
 
 ---
@@ -199,7 +199,7 @@ npm run bulk -- ARCHIVO.csv --badge cumpleanos-feliz --role "Asistencia certific
 
 > Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vista previas en tiempo real y demás
 
-1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre este **[enlace](https://raw.githack.com/arixlariel/GDGoC-UHU-OpenBadges/main/generador-local.html?v=3)**
+1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre su versión siempre actualizada en este **[enlace](https://gdguhu.com/generador-local.html)**
 2. Configura las badges, certificados y correos a generar
 3. Pulsa `Descargar publish.json` para guardar el archivo maestro
 4. Arrastra `publish.json` (o la carpeta `publish` si usas archivos sueltos) directamente a la raíz del repositorio en GitHub y haz el commit (o continua al punto 5)
@@ -232,7 +232,7 @@ Cualquier persona, empresa o universidad puede comprobar la autenticidad e integ
 
 1. Abre la página pública de tu certificado (`https://gdguhu.com/cert/<ID>`)
 2. Pulsa el botón **Añadir a tu cartera**
-3. Copia el enlace de la credencial **Open Badges 3.0** (`https://gdguhu.com/api/badges/v3/<ID>.json`) o  descarga el archivo `.json` firmado
+3. Copia el enlace de la credencial **Open Badges 3.0** (`https://gdguhu.com/api/badges/v3/<ID>.json`) o descarga el archivo `.json` firmado
 4. Accede al **[Validador 1EdTech Global (Open Badges 3.0)](https://vc.1ed.tech/upload?validatorId=OB30Inspector)**
 5. Pega el enlace o sube el `.json` y pulsa **Upload** para verificar su firma criptográfica sin errores
 
@@ -247,5 +247,6 @@ El validador resolverá automáticamente la identidad `did:web:gdguhu.com` (`htt
 El sistema está diseñado respetando escrupulosamente la normativa europea de protección de datos:
 
 - **Correos electrónicos jamás expuestos**: Los emails nunca se guardan en el repositorio ni se muestran en la web, se anonimizan mediante el hash **SHA-256** con salt variable unidireccional e irreversible.
+- **Privacidad de asistentes en portada y buscadores**: En la portada y en `sitemap.xml` solo rotan los certificados del equipo organizador (configurados en `src/config/site.ts`). Los certificados del resto de asistentes se publican con `noindex` y solo son accesibles mediante su enlace o ID único de 24 caracteres hexadecimales.
 - **Falsificación imposible**: Solo los organizadores con permisos en el repositorio pueden publicar certificados, cada credencial Open Badges 3.0 lleva una firma digital **Ed25519** generada con nuestra clave privada protegida en GitHub Secrets (`OB3_PRIVATE_KEY`).
 - **Verificación confiable**: La autenticidad está respaldada por identidad descentralizada **`did:web:gdguhu.com`** (Open Badges 3.0) y verificación *hosted* en `gdguhu.com` (Open Badges 2.0), de modo que cualquier entidad puede verificar su legitimidad incluso si el archivo `.json` se descarga y se comprueba fuera de la web.
