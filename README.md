@@ -1,6 +1,6 @@
 # GDGoC Universidad de Huelva - Open Badges
 
-Bienvenido al manual oficial de gestión y emisión de certificados digitales para nuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en los estándares internacionales **Open Badges 2.0 & 3.0** (*W3C Verifiable Credentials*) de **1EdTech**. Solo los organizadores (con acceso al correo del GDGoC, quien administra el repositorio) pueden administrar las acreditaciones.
+Bienvenido al manual oficial de gestión y emisión de certificados digitales para nuestro equipo organizador. Esta integración permite emitir credenciales digitales verificables basadas en los estándares internacionales **Open Badges 2.0 & 3.0** (*W3C Verifiable Credentials*) de **1EdTech Global**. Solo los organizadores (con acceso al correo del GDGoC, quien controla el repositorio) pueden administrar las acreditaciones.
 
 ---
 
@@ -28,9 +28,9 @@ Bienvenido al manual oficial de gestión y emisión de certificados digitales pa
 - **Web de verificación**: `https://gdguhu.com`
 - **Hosting**: GitHub Pages (desplegado automáticamente con GitHub Actions)
 - **Estándares emitidos en paralelo**:
-  - **Open Badges 3.0 (`W3C Verifiable Credentials v2`)**: cada certificado se compila y firma automáticamente durante el build en `/api/badges/v3/<id>.json` con firma criptográfica **Ed25519** (`DataIntegrityProof` · `eddsa-rdfc-2022`), vinculada a la identidad descentralizada oficial `did:web:gdguhu.com` publicada en `https://gdguhu.com/.well-known/did.json`.
-  - **Open Badges 2.0 (retrocompatibilidad)**: se mantienen intactos los endpoints `/api/badges/assertion/<id>.json`, `/api/badges/class/<badgeId>.json` y `/api/badges/issuer.json` con verificación *hosted* y hash `SHA-256`.
-- **Secreto de firma en GitHub Actions**: la clave privada Ed25519 se almacena exclusivamente en `Settings -> Secrets and variables -> Actions -> OB3_PRIVATE_KEY` (nunca en el repositorio). Si alguna vez fuera necesario rotarla, existe el asistente `node scripts/generate-ob3-key.mjs --write`.
+  - **Open Badges 3.0 (`W3C Verifiable Credentials v2`)**: Cada certificado se compila y firma automáticamente durante el build en `/api/badges/v3/<id>.json` con firma criptográfica **Ed25519** (`DataIntegrityProof` · `eddsa-rdfc-2022`), vinculada a la identidad descentralizada oficial `did:web:gdguhu.com` publicada en `https://gdguhu.com/.well-known/did.json`.
+  - **Open Badges 2.0 (retrocompatibilidad)**: Se mantienen intactos los endpoints `/api/badges/assertion/<id>.json`, `/api/badges/class/<badgeId>.json` y `/api/badges/issuer.json` con verificación *hosted* y hash `SHA-256` + salt.
+- **Secreto de firma en GitHub Actions**: La clave privada Ed25519 se almacena exclusivamente en `Settings -> Secrets and variables -> Actions -> OB3_PRIVATE_KEY` (nunca en el repositorio). Si alguna vez fuera necesario rotarla, existe el asistente `node scripts/generate-ob3-key.mjs --write`.
 
 ---
 
@@ -163,7 +163,7 @@ Crea un `.json` con un nombre aleatorio de 24 caracteres hexadecimales en `src/c
 
 ### --- Método C: Emisión masiva desde `.csv`
 
-> Requiere tener instalado el proyecto. Esta opción está diseñada para emitir por tandas con los `.csv` de Bevy (GDG Community)
+> Requiere tener instalado el proyecto. Diseñada para emitir por tandas con los `.csv` de Bevy (GDG Community)
 
 Detecta automáticamente las columnas `First Name`, `Last Name`, `Email`, `Checkin Date (UTC)` y procesa correctamente los nombres. Abre una terminal, navega a la ruta donde guardes el proyecto y ejecuta:
 
@@ -191,7 +191,7 @@ npm run bulk -- ARCHIVO.csv --badge cumpleanos-feliz --role "Asistencia certific
    - **¿Enviar `gmail` automático con la `URL` del certificado?**
    - **Pega el contenido del `.csv`**: Abre el archivo con cualquier bloc de notas para copiar y pegar todo el texto
 
-***Este método publica automáticamente los certificados (punto 5) y permite mandar correos personalizados en masa***
+***Publica automáticamente los certificados (punto 5) y permite mandar correos personalizados en masa***
 
 ---
 
@@ -224,23 +224,21 @@ Una vez publicado, el certificado del alumno tiene su propia `URL`, única e int
 
 **`https://gdguhu.com/cert/<NOMBRE24CIFRASHEX>`**
 
-El workflow de emisión no cambia: al publicar una badge o una assertion, GitHub Actions genera y firma automáticamente tanto el certificado visual como las credenciales Open Badges 3.0 (`/api/badges/v3/<id>.json`) y 2.0 (`/api/badges/assertion/<id>.json`).
-
 ---
 
-## 7. Cómo verificar un certificado en el Validador Oficial de 1EdTech
+## 7. Cómo verificar un certificado con el Validador Oficial de 1EdTech
 
-Cualquier persona, empresa o universidad puede comprobar la autenticidad e integridad criptográfica de un certificado emitido por GDGoC UHU usando el **Validador Oficial de 1EdTech (Open Badges 3.0)**:
+Cualquier persona, empresa o universidad puede comprobar la autenticidad e integridad criptográfica de un certificado emitido por GDGoC UHU usando el **validador oficial de 1EdTech Global (Open Badges 3.0)**:
 
-1. Abre la página pública del certificado (`https://gdguhu.com/cert/<ID>`).
-2. Pulsa el botón **Añadir a tu cartera**.
-3. Copia la URL de la credencial **Open Badges 3.0** (`https://gdguhu.com/api/badges/v3/<ID>.json`) o pulsa el icono de descarga para guardar el archivo `.json` firmado.
-4. Entra en el **[Validador 1EdTech Global (Open Badges 3.0)](https://vc.1ed.tech/upload?validatorId=OB30Inspector)**.
-5. Pega la URL en el campo **Uri to Resource** y pulsa **Submit** (o selecciona el archivo `.json` descargado y pulsa **Upload**).
+1. Abre la página pública de tu certificado (`https://gdguhu.com/cert/<ID>`)
+2. Pulsa el botón **Añadir a tu cartera**
+3. Copia el enlace de la credencial **Open Badges 3.0** (`https://gdguhu.com/api/badges/v3/<ID>.json`) o  descarga el archivo `.json` firmado
+4. Accede al **[Validador 1EdTech Global (Open Badges 3.0)](https://vc.1ed.tech/upload?validatorId=OB30Inspector)**
+5. Pega el enlace o sube el `.json` y pulsa **Upload** para verificar su firma criptográfica sin errores
 
-El validador resolverá automáticamente nuestra identidad `did:web:gdguhu.com` (`https://gdguhu.com/.well-known/did.json`), comprobará el esquema JSON-LD de Open Badges 3.0 y verificará la firma criptográfica **Ed25519**, devolviendo **`VALID` (0 errores y 0 advertencias)**.
+El validador resolverá automáticamente la identidad `did:web:gdguhu.com` (`https://gdguhu.com/.well-known/did.json`), comprobará el esquema JSON-LD de Open Badges 3.0 y verificará la firma criptográfica **Ed25519**, devolviendo **`VALID` (0 errores y 0 advertencias)**.
 
-> **Nota sobre carteras y validación**: el validador oficial de 1EdTech no almacena una base de datos central de certificados; comprueba en tiempo real que el documento cumple la especificación internacional y que su firma criptográfica corresponde exactamente a la clave pública alojada en `gdguhu.com`.
+> **El validador oficial de 1EdTech Global no almacena una base de datos central de certificados; comprueba en tiempo real que el documento cumple la especificación internacional y que su firma criptográfica corresponde exactamente a la clave pública alojada en `gdguhu.com`
 
 ---
 
@@ -249,5 +247,5 @@ El validador resolverá automáticamente nuestra identidad `did:web:gdguhu.com` 
 El sistema está diseñado respetando escrupulosamente la normativa europea de protección de datos:
 
 - **Correos electrónicos jamás expuestos**: Los emails nunca se guardan en el repositorio ni se muestran en la web, se anonimizan mediante el hash **SHA-256** con salt variable unidireccional e irreversible.
-- **Falsificación imposible**: Solo los organizadores con permisos en el repositorio pueden publicar certificados y cada credencial Open Badges 3.0 lleva una firma digital **Ed25519** generada con nuestra clave privada protegida en GitHub Secrets (`OB3_PRIVATE_KEY`).
+- **Falsificación imposible**: Solo los organizadores con permisos en el repositorio pueden publicar certificados, cada credencial Open Badges 3.0 lleva una firma digital **Ed25519** generada con nuestra clave privada protegida en GitHub Secrets (`OB3_PRIVATE_KEY`).
 - **Verificación confiable**: La autenticidad está respaldada por identidad descentralizada **`did:web:gdguhu.com`** (Open Badges 3.0) y verificación *hosted* en `gdguhu.com` (Open Badges 2.0), de modo que cualquier entidad puede verificar su legitimidad incluso si el archivo `.json` se descarga y se comprueba fuera de la web.
