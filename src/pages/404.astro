@@ -9,7 +9,7 @@ import { getAssetUrl } from '@/config/site';
 >
   <section class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10 flex items-center justify-center">
     <div
-      data-tilt-max="4"
+      data-tilt-max="1.5"
       class="tilt-card theme-card w-full rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
     >
       <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-3xl"></div>
@@ -37,13 +37,14 @@ import { getAssetUrl } from '@/config/site';
       </h1>
 
       <p class="mt-3 text-sm sm:text-base theme-text-secondary max-w-lg mx-auto leading-relaxed">
-        No existe ninguna credencial digital ni página en esta ruta. Si estabas intentando verificar un certificado, comprueba que hayas introducido el ID completo, sin espacios ni errores
+        No existe ninguna credencial digital ni página en esta ruta. Si estabas intentando verificar un certificado, comprueba que hayas introducido el ID completo sin espacios ni errores
       </p>
 
       <!-- Direct Search Box to retry ID verification -->
       <div class="mt-8 max-w-md mx-auto">
         <form
-          onsubmit="event.preventDefault(); const val = document.getElementById('search-404-cert-id').value.trim(); if(val) window.location.href = '/cert/' + encodeURIComponent(val);"
+          id="search-404-cert-form"
+          autocomplete="off"
           class="theme-search-box flex items-center gap-2 p-2 rounded-full transition-all duration-300"
         >
           <svg class="w-5 h-5 theme-text-secondary ml-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,6 +53,8 @@ import { getAssetUrl } from '@/config/site';
           <input
             type="text"
             id="search-404-cert-id"
+            autocomplete="off"
+            aria-label="Introduce el ID del certificado"
             placeholder="Introduce el ID del certificado"
             class="flex-1 bg-transparent text-xs sm:text-sm theme-text-primary placeholder:opacity-60 outline-none px-2 font-mono"
             required
@@ -64,6 +67,32 @@ import { getAssetUrl } from '@/config/site';
           </button>
         </form>
       </div>
+
+      <script is:inline define:vars={{ certBaseUrl: getAssetUrl('/cert/') }}>
+        (function () {
+          const form = document.getElementById('search-404-cert-form');
+          const input = document.getElementById('search-404-cert-id');
+          if (!form || !input) return;
+
+          const clearInput = () => {
+            input.value = '';
+          };
+
+          clearInput();
+          window.addEventListener('pageshow', clearInput);
+          window.addEventListener('pagehide', clearInput);
+
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const val = input.value.trim();
+            clearInput();
+            input.blur();
+            if (val) {
+              window.location.href = certBaseUrl + encodeURIComponent(val);
+            }
+          });
+        })();
+      </script>
 
       <!-- Back to Home Button -->
       <div class="mt-8 flex flex-wrap items-center justify-center gap-3">

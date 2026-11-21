@@ -273,10 +273,16 @@ const defaultSchema = {
          3D PERSPECTIVE TILT CARDS & SPECULAR GLARE
          ========================================================================== */
       .tilt-card {
-        transform-style: preserve-3d;
-        transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+        transform-origin: center center;
+        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
                     box-shadow 0.3s ease,
                     border-color 0.3s ease;
+      }
+      .tilt-card.is-tilting {
+        transition: transform 0.08s ease-out,
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease;
+        will-change: transform;
       }
       .tilt-glare {
         background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.24), transparent 60%);
@@ -1313,7 +1319,7 @@ const defaultSchema = {
         ></div>
         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent shadow-[0_0_20px_#00F0FF]" style="animation: scanlineSweep 6s linear infinite;"></div>
         <span class="absolute top-[18%] left-[7%] font-mono text-xs text-[#00F0FF]/50 font-bold" style="animation: floatSlow 5s ease-in-out infinite;">0xFA92_VERIFIED //⚡</span>
-        <span class="absolute top-[32%] right-[8%] font-mono text-sm text-[#FF007F]/50 font-bold" style="animation: floatReverse 6s ease-in-out infinite;">&lt;OPEN_BADGES_2.0 /&gt;</span>
+        <span class="absolute top-[32%] right-[8%] font-mono text-sm text-[#FF007F]/50 font-bold" style="animation: floatReverse 6s ease-in-out infinite;">&lt;OPEN_BADGES_3.0 /&gt;</span>
         <span class="absolute bottom-[22%] left-[12%] font-mono text-xs text-[#00FF66]/50 font-bold" style="animation: floatReverse 7s ease-in-out infinite;">SHA256::ACTIVE</span>
         <span class="absolute bottom-[28%] right-[12%] font-mono text-xs text-[#00F0FF]/50 font-bold" style="animation: floatSlow 5.5s ease-in-out infinite;">[GDG_UHU::CYBER_NODE]</span>
       </div>
@@ -1509,34 +1515,62 @@ const defaultSchema = {
           const cards = document.querySelectorAll('.tilt-card');
           cards.forEach((card) => {
             const maxTilt = Math.min(Number(card.getAttribute('data-tilt-max') || '2.2'), 2.5);
-            let baseRect = null;
+            let rafId = null;
 
-            card.addEventListener('pointerenter', () => {
-              if (window.innerWidth < 768) return;
+            const resetTilt = () => {
+              if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+              }
+              card.classList.remove('is-tilting');
               card.style.transform = '';
-              baseRect = card.getBoundingClientRect();
-            });
+            };
 
             card.addEventListener('pointermove', (e) => {
-              if (window.innerWidth < 768) return;
-              if (!baseRect || baseRect.width === 0) {
-                baseRect = card.getBoundingClientRect();
+              if (window.innerWidth < 768 || e.pointerType === 'touch') return;
+              const activeEl = document.activeElement;
+              if (
+                activeEl &&
+                card.contains(activeEl) &&
+                (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')
+              ) {
+                resetTilt();
+                return;
               }
-              const x = e.clientX - baseRect.left;
-              const y = e.clientY - baseRect.top;
-              const pctX = Math.max(0, Math.min(1, x / baseRect.width));
-              const pctY = Math.max(0, Math.min(1, y / baseRect.height));
-              const rotateY = (pctX - 0.5) * maxTilt * 2;
-              const rotateX = (0.5 - pctY) * maxTilt * 2;
-              card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.01, 1.01, 1)`;
-              card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
-              card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
+
+              const clientX = e.clientX;
+              const clientY = e.clientY;
+              if (rafId !== null) cancelAnimationFrame(rafId);
+
+              rafId = requestAnimationFrame(() => {
+                rafId = null;
+                const rect = card.getBoundingClientRect();
+                const w = card.offsetWidth || rect.width;
+                const h = card.offsetHeight || rect.height;
+                if (!w || !h) return;
+
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                const pctX = Math.max(0, Math.min(1, (clientX - cx) / w + 0.5));
+                const pctY = Math.max(0, Math.min(1, (clientY - cy) / h + 0.5));
+                const rotateY = (pctX - 0.5) * maxTilt * 2;
+                const rotateX = (0.5 - pctY) * maxTilt * 2;
+
+                card.classList.add('is-tilting');
+                card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.008, 1.008, 1)`;
+                card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
+                card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
+              });
             });
 
-            card.addEventListener('pointerleave', () => {
-              baseRect = null;
-              card.style.transform = '';
+            card.addEventListener('focusin', (e) => {
+              if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+                resetTilt();
+              }
             });
+
+            card.addEventListener('pointerleave', resetTilt);
+            card.addEventListener('pointercancel', resetTilt);
           });
         }
         initTiltCards();
