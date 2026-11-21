@@ -236,7 +236,7 @@ Cualquier persona, empresa o universidad puede comprobar la autenticidad e integ
 2. Pulsa el botón **Añadir a tu cartera**.
 3. Copia la URL de la credencial **Open Badges 3.0** (`https://gdguhu.com/api/badges/v3/<ID>.json`) o pulsa el icono de descarga para guardar el archivo `.json` firmado.
 4. Entra en el **[Validador 1EdTech Global (Open Badges 3.0)](https://vc.1ed.tech/upload?validatorId=OB30Inspector)**.
-5. Pega la URL en el campo **URI to Resource** (o sube el archivo `.json` descargado en el recuadro de subida) y pulsa **Validate**.
+5. Pega la URL en el campo **Uri to Resource** y pulsa **Submit** (o selecciona el archivo `.json` descargado y pulsa **Upload**).
 
 El validador resolverá automáticamente nuestra identidad `did:web:gdguhu.com` (`https://gdguhu.com/.well-known/did.json`), comprobará el esquema JSON-LD de Open Badges 3.0 y verificará la firma criptográfica **Ed25519**, devolviendo **`VALID` (0 errores y 0 advertencias)**.
 
