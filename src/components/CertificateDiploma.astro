@@ -1,5 +1,6 @@
 ---
 import { getFullUrl, getAssetUrl } from '@/config/site';
+import { getVersionedAssetUrl } from '@/utils/assetVersion';
 import { generateQrSvgPath } from '@/utils/qrcode';
 
 interface Props {
@@ -19,7 +20,7 @@ const issueDate = new Date(assertion.data.issuedOn).toLocaleDateString('es-ES', 
 
 const certUrl = getFullUrl(`/cert/${assertionId}`);
 const logoUrl = getAssetUrl('/images/gdgoc-uhu-logo.jpg');
-const badgeImageUrl = getAssetUrl(badge.data.image);
+const badgeImageUrl = getVersionedAssetUrl(badge.data.image);
 const qr = generateQrSvgPath(certUrl);
 const hasEvidence = Boolean(assertion.data.evidence && assertion.data.evidence.trim().length > 0);
 
