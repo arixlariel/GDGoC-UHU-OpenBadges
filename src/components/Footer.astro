@@ -1,18 +1,21 @@
 ---
-import { siteConfig, getAssetUrl, getOpenBadgesPath } from '@/config/site';
+import { siteConfig, getAssetUrl } from '@/config/site';
 
 interface Props {
   section?: 'hub' | 'openbadges';
 }
 
 const { section = 'openbadges' } = Astro.props;
-const footerSubtitle = section === 'hub' ? 'Universidad de Huelva' : 'Open Badges';
 ---
 
 <!-- Dimensiones unificadas 1:1 con GDGoC UHU Cyber Trainer (py-9 / 2.25rem, text-[0.78rem], logo 40x40 rounded-[10px]) -->
 <footer class="theme-footer cv-auto relative z-10 mt-auto border-t theme-border py-9 text-[0.78rem] theme-text-secondary backdrop-blur-xl transition-all duration-500">
   <div class="max-w-[1320px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-5">
-    <div class="flex items-center gap-[0.85rem]">
+    <a
+      href={getAssetUrl('/')}
+      title="Ir a gdguhu.com"
+      class="flex items-center gap-[0.85rem] group transition-opacity hover:opacity-95"
+    >
       <img
         src={getAssetUrl('/images/gdgoc-uhu-logo-sm.webp')}
         alt="GDG on Campus UHU"
@@ -20,20 +23,20 @@ const footerSubtitle = section === 'hub' ? 'Universidad de Huelva' : 'Open Badge
         height="40"
         loading="lazy"
         decoding="async"
-        class="w-10 h-10 rounded-[10px] object-cover border theme-border bg-white shadow-xs"
+        class="w-10 h-10 rounded-[10px] object-cover border theme-border bg-white shadow-xs transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
       />
       <div class="flex flex-col items-start gap-0.5">
         <div class="font-bold text-[0.9rem] theme-text-primary leading-tight">
           GDGoC UHU
         </div>
         <div class="text-[0.76rem] theme-text-secondary leading-tight">
-          {footerSubtitle}
+          Universidad de Huelva
         </div>
       </div>
-    </div>
+    </a>
 
     <div class="flex flex-wrap items-center justify-center gap-4 text-[0.78rem]">
-      {section === 'openbadges' ? (
+      {section === 'openbadges' && (
         <>
           <a
             href="https://openbadges.org"
@@ -45,37 +48,14 @@ const footerSubtitle = section === 'hub' ? 'Universidad de Huelva' : 'Open Badge
           </a>
           <span class="opacity-40">·</span>
           <a
-            href={getAssetUrl('/')}
-            class="theme-link font-semibold transition-all"
-          >
-            gdguhu.com
-          </a>
-          <span class="opacity-40">·</span>
-          <a
             href={getAssetUrl('/cybertrainer/')}
             class="theme-link font-semibold transition-all"
           >
             Cyber Trainer
           </a>
-        </>
-      ) : (
-        <>
-          <a
-            href={getOpenBadgesPath('/')}
-            class="theme-link font-semibold transition-all"
-          >
-            Open Badges
-          </a>
           <span class="opacity-40">·</span>
-          <a
-            href={getAssetUrl('/cybertrainer/')}
-            class="theme-link font-semibold transition-all"
-          >
-            Cyber Trainer
-          </a>
         </>
       )}
-      <span class="opacity-40">·</span>
       <a
         href={siteConfig.communityUrl}
         target="_blank"
