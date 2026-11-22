@@ -1,6 +1,7 @@
 # Build output
 dist/
 .astro/
+.vercel/
 public/images/badges/thumbs/
 
 # Dependencies

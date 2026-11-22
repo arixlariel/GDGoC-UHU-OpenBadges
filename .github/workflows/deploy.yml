@@ -1,4 +1,4 @@
-name: Deploy Astro site to GitHub Pages
+name: Deploy Astro site to Vercel
 
 on:
   push:
@@ -7,17 +7,18 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
-  group: 'pages'
+  group: 'vercel-production'
   cancel-in-progress: false
 
 jobs:
-  build:
-    name: Build Astro Site
+  deploy:
+    name: Build Astro Site & Deploy to Vercel
     runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,40 +37,41 @@ jobs:
         run: |
           node scripts/process-publish.mjs
 
-      - name: Build site
+      - name: Descargar configuración de proyecto Vercel
+        run: npx --yes vercel@latest pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Compilar sitio Astro (OB3 firmado) y Edge Middleware para Vercel
         env:
           SITE_URL: "https://gdguhu.com"
           BASE_PATH: "/"
           OB3_PRIVATE_KEY: ${{ secrets.OB3_PRIVATE_KEY }}
-        run: |
-          node scripts/optimize-badge-thumbs.mjs
-          mkdir -p public/openbadges
-          cp generador-local.html public/openbadges/generador-local.html
-          cp generador-local.html public/generador-local.html
-          npm run build
+        run: npx --yes vercel@latest build --prod --token="${{ secrets.VERCEL_TOKEN }}"
 
-      - name: Verificar salida del portal gdguhu.com y Open Badges 2.0 / 3.0 firmada
+      - name: Verificar salida del portal gdguhu.com, Edge Middleware y Open Badges 3.0 firmada
         run: |
-          test -f dist/index.html
-          test -f dist/openbadges/index.html
-          test -f dist/openbadges/generador-local.html
-          test -f dist/.well-known/did.json
-          test -f dist/.nojekyll
-          test -f dist/api/badges/issuer.json
-          FIRST_CERT=$(ls dist/openbadges/cert/*/index.html | head -n 1)
+          test -f .vercel/output/static/index.html
+          test -f .vercel/output/static/openbadges/index.html
+          test -f .vercel/output/static/openbadges/generador-local.html
+          test -f .vercel/output/static/.well-known/did.json
+          test -f .vercel/output/static/api/badges/issuer.json
+          ls -la .vercel/output/functions/
+          grep -q "middleware" .vercel/output/config.json
+          FIRST_CERT=$(ls .vercel/output/static/openbadges/cert/*/index.html | head -n 1)
           test -n "$FIRST_CERT"
-          FIRST_LEGACY_CERT=$(ls dist/cert/*/index.html | head -n 1)
+          FIRST_LEGACY_CERT=$(ls .vercel/output/static/cert/*/index.html | head -n 1)
           test -n "$FIRST_LEGACY_CERT"
-          FIRST_V3=$(ls dist/api/badges/v3/*.json | head -n 1)
+          FIRST_V3=$(ls .vercel/output/static/api/badges/v3/*.json | head -n 1)
           test -n "$FIRST_V3"
           grep -q '"cryptosuite": "eddsa-rdfc-2022"' "$FIRST_V3"
           grep -q '"proofValue": "z' "$FIRST_V3"
-          echo "OK: Portal gdguhu.com + /openbadges + Credencial Open Badges 3.0 firmada verificados ($FIRST_V3)"
+          echo "OK: Portal gdguhu.com + Edge Middleware + Credencial OB3 firmada verificados ($FIRST_V3)"
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+      - name: Desplegar a producción en Vercel
+        id: vercel_deploy
+        run: |
+          DEPLOY_URL=$(npx --yes vercel@latest deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}")
+          echo "Deployed to: $DEPLOY_URL"
+          echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
 
       - name: Subir cola temporal de emails (si existe)
         if: hashFiles('/tmp/pending-emails.json') != ''
@@ -78,18 +80,6 @@ jobs:
           name: pending-emails-queue
           path: /tmp/pending-emails.json
           retention-days: 1
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
-    name: Deploy to GitHub Pages
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
 
   post-deploy-emails:
     name: Enviar Correos Automáticos y Limpiar publish/
