@@ -1,19 +1,161 @@
 /**
- * Vercel Edge Routing Middleware · GDGoC UHU Cyber Trainer Reverse Proxy
+ * Vercel Edge Routing Middleware · GDGoC UHU
  *
- * Intercepta únicamente `/cybertrainer` y `/cybertrainer/*` (0 invocaciones en
- * `/`, `/openbadges/*`, imágenes o APIs Open Badges estáticas) y hace proxy
- * transparente contra `http://origin-ctf.gdguhu.com` (CTFd en Hetzner) con
- * reescritura segura de rutas, cookies, redirecciones, CSS, HTML y JSON.
+ * Funciones principales:
+ *  1. Reverse Proxy transparente para `/cybertrainer` y `/cybertrainer/*` contra
+ *     `http://origin-ctf.gdguhu.com` (CTFd en Hetzner) con reescritura segura de rutas,
+ *     cookies, redirecciones, CSS, HTML y JSON.
+ *  2. Protección automática de caída/mantenimiento en `/cybertrainer/*`: ante timeout
+ *     (>12s), error de red o 502/503/504 del origen, sirve la página de mantenimiento
+ *     Cyber (HTTP 503) o JSON 503 para llamadas `/api/`.
+ *  3. Modo mantenimiento global/por sección activable en segundos mediante la variable
+ *     de entorno `MAINTENANCE_MODE` en Vercel (`all`, `hub`, `openbadges`, `cybertrainer`,
+ *     o combinados separados por coma), respetando siempre los estilos y candados:
+ *      - `/` → estilo Google fijo con candado (`/mantenimiento/`).
+ *      - `/openbadges/*` → tema guardado del usuario o candado del certificado concreto (`/mantenimiento/openbadges/`).
+ *      - `/cybertrainer/*` → estilo Cyber neón fijo (`/mantenimiento/cybertrainer/`).
+ *
+ * Los assets estáticos (`/_astro/*`, `/images/*`, `/vendor/*`, `/.well-known/*`,
+ * `/api/badges/*`, `/mantenimiento/*`) NO pasan por este middleware (0 invocaciones).
  */
+
+import { next } from '@vercel/functions';
 
 const PREFIX = '/cybertrainer';
 const UPSTREAM_ORIGIN = 'http://origin-ctf.gdguhu.com';
 const UPSTREAM_HOSTS = new Set(['origin-ctf.gdguhu.com', '188.245.96.96']);
+const UPSTREAM_TIMEOUT_MS = 12000;
 
 export const config = {
-  matcher: ['/cybertrainer', '/cybertrainer/:path*'],
+  matcher: [
+    '/',
+    '/openbadges',
+    '/openbadges/:path*',
+    '/cert/:path*',
+    '/cybertrainer',
+    '/cybertrainer/:path*',
+  ],
 };
+
+function parseMaintenanceScopes() {
+  const raw = (process.env.MAINTENANCE_MODE || '').trim().toLowerCase();
+  if (!raw || raw === 'off' || raw === 'false' || raw === '0') {
+    return new Set();
+  }
+  const scopes = new Set(
+    raw
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+  );
+  if (scopes.has('true') || scopes.has('1') || scopes.has('on')) {
+    scopes.add('all');
+  }
+  return scopes;
+}
+
+function hasMaintenanceBypass(request, url) {
+  const key = (process.env.MAINTENANCE_BYPASS_KEY || '').trim();
+  if (!key) return false;
+  if (url.searchParams.get('bypass') === key) return true;
+  const cookie = request.headers.get('cookie') || '';
+  return cookie.split(';').some((part) => part.trim() === `gdgoc_maint_bypass=${key}`);
+}
+
+function inlineCyberMaintenanceHtml() {
+  return (
+    '<!doctype html><html lang="es" data-theme="cyber"><head>' +
+    '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<meta name="robots" content="noindex,nofollow">' +
+    '<title>Mantenimiento · GDGoC UHU Cyber Trainer</title>' +
+    '<style>' +
+    '*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:#05070F;color:#E2F1FF;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}' +
+    '.strip{height:6px;background:linear-gradient(90deg,#00F0FF,#FF007F,#FFE600,#00FF66)}' +
+    'main{flex:1;display:grid;place-items:center;padding:28px 16px}' +
+    '.card{position:relative;max-width:580px;width:100%;border-radius:24px;padding:36px 28px;text-align:center;background:rgba(11,17,36,.92);border:1.5px solid rgba(0,240,255,.4);box-shadow:0 0 42px rgba(0,240,255,.16);overflow:hidden}' +
+    '.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#00F0FF;background:rgba(0,240,255,.12);border:1px solid rgba(0,240,255,.35);margin-bottom:20px}' +
+    '.dot{width:8px;height:8px;border-radius:999px;background:#FFE600;box-shadow:0 0 10px #FFE600}' +
+    'h1{margin:0 0 12px;font-size:clamp(1.5rem,4vw,2rem);color:#F0F9FF}' +
+    'p{margin:0 auto 24px;max-width:460px;line-height:1.6;color:#94A3B8;font-size:.95rem}' +
+    '.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}' +
+    '.btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 22px;border-radius:999px;font-weight:700;font-size:.88rem;text-decoration:none;cursor:pointer;border:1.5px solid rgba(0,240,255,.4);color:#E2F1FF;background:rgba(8,12,28,.9)}' +
+    '.btn-primary{background:linear-gradient(90deg,#00F0FF,#FF007F);color:#05070F;border:none}' +
+    '</style></head><body>' +
+    '<div class="strip"></div><main><div class="card">' +
+    '<div class="pill"><span class="dot"></span><span>Mantenimiento · Cyber Trainer</span></div>' +
+    '<h1>Cyber Trainer en mantenimiento</h1>' +
+    '<p>El servidor de retos CTF se encuentra temporalmente en mantenimiento o reiniciándose. Tu progreso y tus flags están a salvo; vuelve a intentarlo en unos segundos.</p>' +
+    '<div class="actions">' +
+    '<button class="btn btn-primary" onclick="location.reload()">Reintentar ahora</button>' +
+    '<a class="btn" href="https://gdguhu.com/">Ir a gdguhu.com</a>' +
+    '<a class="btn" href="https://gdguhu.com/openbadges/">Ir a Open Badges</a>' +
+    '</div></div></main></body></html>'
+  );
+}
+
+async function renderMaintenanceResponse(url, scope, isApiRequest = false) {
+  if (isApiRequest) {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: 'maintenance',
+        message: 'GDGoC UHU se encuentra temporalmente en mantenimiento. Inténtalo de nuevo en unos minutos.',
+      }),
+      {
+        status: 503,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'Retry-After': '120',
+          'Strict-Transport-Security': 'max-age=31536000',
+          'X-Content-Type-Options': 'nosniff',
+        },
+      }
+    );
+  }
+
+  const staticPath =
+    scope === 'cybertrainer'
+      ? '/mantenimiento/cybertrainer/'
+      : scope === 'openbadges'
+        ? '/mantenimiento/openbadges/'
+        : '/mantenimiento/';
+
+  try {
+    const pageResp = await fetch(`${url.origin}${staticPath}`, {
+      headers: { Accept: 'text/html' },
+    });
+    if (pageResp.ok) {
+      const html = await pageResp.text();
+      return new Response(html, {
+        status: 503,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'Retry-After': '120',
+          'X-Robots-Tag': 'noindex, nofollow',
+          'Strict-Transport-Security': 'max-age=31536000',
+          'X-Content-Type-Options': 'nosniff',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+        },
+      });
+    }
+  } catch {
+    // Fallback inline si el fetch interno falla
+  }
+
+  return new Response(inlineCyberMaintenanceHtml(), {
+    status: 503,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'Retry-After': '120',
+      'X-Robots-Tag': 'noindex, nofollow',
+      'Strict-Transport-Security': 'max-age=31536000',
+      'X-Content-Type-Options': 'nosniff',
+    },
+  });
+}
 
 function shouldPrefixPath(raw) {
   if (!raw || typeof raw !== 'string') return false;
@@ -210,6 +352,33 @@ function rewriteHtml(html, lang, canonical) {
 
 export default async function middleware(request) {
   const url = new URL(request.url);
+  const isCyber = url.pathname === PREFIX || url.pathname.startsWith(PREFIX + '/');
+  const isOpenBadges =
+    url.pathname === '/openbadges' ||
+    url.pathname.startsWith('/openbadges/') ||
+    url.pathname.startsWith('/cert/');
+  const isHub = url.pathname === '/';
+
+  // 1. Modo mantenimiento global o por sección (variable MAINTENANCE_MODE en Vercel)
+  const maintScopes = parseMaintenanceScopes();
+  if (maintScopes.size > 0 && !hasMaintenanceBypass(request, url)) {
+    const allMaint = maintScopes.has('all');
+    if (isCyber && (allMaint || maintScopes.has('cybertrainer'))) {
+      const isApi = url.pathname.startsWith(PREFIX + '/api/');
+      return renderMaintenanceResponse(url, 'cybertrainer', isApi);
+    }
+    if (isOpenBadges && (allMaint || maintScopes.has('openbadges'))) {
+      return renderMaintenanceResponse(url, 'openbadges', false);
+    }
+    if (isHub && (allMaint || maintScopes.has('hub'))) {
+      return renderMaintenanceResponse(url, 'hub', false);
+    }
+  }
+
+  // Las rutas estáticas del hub y Open Badges pasan directamente al CDN
+  if (!isCyber) {
+    return next();
+  }
 
   if (url.pathname === PREFIX && (request.method === 'GET' || request.method === 'HEAD')) {
     return Response.redirect(`https://${url.host}${PREFIX}/${url.search}`, 301);
@@ -218,6 +387,7 @@ export default async function middleware(request) {
   const upstreamPath = url.pathname.startsWith(PREFIX)
     ? url.pathname.slice(PREFIX.length) || '/'
     : url.pathname;
+  const isApiCall = upstreamPath.startsWith('/api/');
 
   const upstreamUrl = new URL(upstreamPath + url.search, UPSTREAM_ORIGIN);
   const nextParam = upstreamUrl.searchParams.get('next');
@@ -251,10 +421,14 @@ export default async function middleware(request) {
     reqHeaders.set('Origin', UPSTREAM_ORIGIN);
   }
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
+
   const init = {
     method: request.method,
     headers: reqHeaders,
     redirect: 'manual',
+    signal: controller.signal,
   };
 
   if (request.method !== 'GET' && request.method !== 'HEAD') {
@@ -268,22 +442,15 @@ export default async function middleware(request) {
   try {
     upstreamResp = await fetch(upstreamUrl.toString(), init);
   } catch {
-    return new Response(
-      `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cyber Trainer · Servicio temporalmente no disponible</title></head>` +
-        `<body style="background:#05070F;color:#E2F1FF;font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;padding:24px;text-align:center">` +
-        `<div style="max-width:520px;border:1px solid rgba(0,240,255,.35);border-radius:20px;padding:32px;background:#0B1124">` +
-        `<h1 style="margin:0 0 12px;font-size:1.5rem;color:#00F0FF">GDGoC UHU Cyber Trainer</h1>` +
-        `<p style="margin:0 0 20px;color:#94A3B8">No se ha podido conectar con el servidor de retos en este momento. Inténtalo de nuevo en unos segundos.</p>` +
-        `<a href="https://gdguhu.com/" style="display:inline-block;padding:10px 22px;border-radius:999px;background:#00F0FF;color:#05070F;font-weight:700;text-decoration:none">Volver a gdguhu.com</a>` +
-        `</div></body></html>`,
-      {
-        status: 502,
-        headers: {
-          'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'no-store',
-        },
-      }
-    );
+    clearTimeout(timeoutId);
+    return renderMaintenanceResponse(url, 'cybertrainer', isApiCall);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+
+  // Intercepción automática si el servidor CTFd origen devuelve 502 / 503 / 504
+  if (upstreamResp.status === 502 || upstreamResp.status === 503 || upstreamResp.status === 504) {
+    return renderMaintenanceResponse(url, 'cybertrainer', isApiCall);
   }
 
   const respHeaders = new Headers(upstreamResp.headers);
@@ -348,7 +515,7 @@ export default async function middleware(request) {
     });
   }
 
-  if (contentType.includes('application/json') && upstreamPath.startsWith('/api/')) {
+  if (contentType.includes('application/json') && isApiCall) {
     const rawJson = await upstreamResp.text();
     respHeaders.delete('content-length');
     respHeaders.delete('content-encoding');

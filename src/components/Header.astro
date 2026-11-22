@@ -3,7 +3,7 @@ import { siteConfig, getAssetUrl, getOpenBadgesPath } from '@/config/site';
 
 interface Props {
   lockedStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
-  section?: 'hub' | 'openbadges';
+  section?: 'hub' | 'openbadges' | 'cybertrainer';
 }
 
 const { lockedStyle, section = 'openbadges' } = Astro.props;
@@ -20,9 +20,21 @@ const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) 
 const lockedTitle =
   section === 'hub'
     ? 'Estilo oficial fijo para la portada de GDGoC UHU'
-    : 'Estilo fijo asignado a este certificado en su emisión';
-const brandHref = section === 'hub' ? getAssetUrl('/') : getOpenBadgesPath('/');
-const brandSubtitle = section === 'hub' ? 'Universidad de Huelva' : 'Open Badges';
+    : section === 'cybertrainer'
+      ? 'Estilo Cyber oficial fijo de GDGoC UHU Cyber Trainer'
+      : 'Estilo fijo asignado a este certificado en su emisión';
+const brandHref =
+  section === 'hub'
+    ? getAssetUrl('/')
+    : section === 'cybertrainer'
+      ? getAssetUrl('/cybertrainer/')
+      : getOpenBadgesPath('/');
+const brandSubtitle =
+  section === 'hub'
+    ? 'Universidad de Huelva'
+    : section === 'cybertrainer'
+      ? 'Cyber Trainer'
+      : 'Open Badges';
 ---
 
 <header class="theme-header sticky top-0 z-40 transition-colors duration-300">

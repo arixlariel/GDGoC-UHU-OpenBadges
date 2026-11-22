@@ -1,5 +1,5 @@
 ---
-import { getAssetUrl, getOpenBadgesUrl } from '@/config/site';
+import { siteConfig, getAssetUrl, getOpenBadgesUrl } from '@/config/site';
 import { getVersionedAssetUrl } from '@/utils/assetVersion';
 import { generateQrSvgPath } from '@/utils/qrcode';
 
@@ -46,10 +46,20 @@ const linkedinUrl = new URL('https://www.linkedin.com/profile/add');
 linkedinUrl.searchParams.set('startTask', 'CERTIFICATION_NAME');
 linkedinUrl.searchParams.set('name', badge.data.name);
 linkedinUrl.searchParams.set('organizationName', 'GDG on Campus Universidad de Huelva');
+if (siteConfig.linkedinOrganizationId) {
+  linkedinUrl.searchParams.set('organizationId', siteConfig.linkedinOrganizationId);
+}
 linkedinUrl.searchParams.set('issueYear', new Date(assertion.data.issuedOn).getFullYear().toString());
 linkedinUrl.searchParams.set('issueMonth', (new Date(assertion.data.issuedOn).getMonth() + 1).toString());
 linkedinUrl.searchParams.set('certUrl', certUrl);
 linkedinUrl.searchParams.set('certId', assertionId);
+
+const liveVerifyConfig = {
+  credentialUrl: getAssetUrl(`/api/badges/v3/${assertionId}.json`),
+  didUrl: getAssetUrl('/.well-known/did.json'),
+  vendorJsonldUrl: getAssetUrl('/vendor/jsonld.min.js'),
+  expectedIdentityHash: assertion.data.recipient?.identity || '',
+};
 ---
 
 <div class="print-container max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
@@ -293,8 +303,96 @@ linkedinUrl.searchParams.set('certId', assertionId);
     </div>
   </div>
 
+  <!-- Verificación Criptográfica Automática en Tiempo Real (W3C Open Badges 3.0 · Ed25519) -->
+  <div
+    id="live-ob3-verify"
+    data-verify-config={JSON.stringify(liveVerifyConfig)}
+    class="no-print mt-5 max-w-2xl mx-auto"
+  >
+    <div class="flex flex-col items-center">
+      <button
+        type="button"
+        id="live-verify-toggle"
+        aria-expanded="false"
+        aria-controls="live-verify-details"
+        class="live-verify-pill inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold transition-all duration-300 cursor-pointer max-w-full"
+        data-state="checking"
+      >
+        <span id="live-verify-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+        <svg id="live-verify-icon" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        <span id="live-verify-headline">Verificando firma criptográfica Ed25519 en tiempo real…</span>
+        <span id="live-verify-time" class="hidden font-mono text-[11px] opacity-80"></span>
+        <span class="inline-flex items-center gap-1 opacity-75 text-[11px] ml-0.5">
+          <span id="live-verify-more-label">Detalles</span>
+          <svg id="live-verify-chevron" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </button>
+
+      <div
+        id="live-verify-details"
+        class="hidden mt-3 w-full rounded-2xl p-4 sm:p-5 text-left text-xs theme-card border theme-border"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b theme-border">
+          <div class="flex items-center gap-2 font-bold text-xs sm:text-sm theme-text-primary">
+            <span id="live-verify-detail-badge" class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            <span id="live-verify-detail-title">Comprobación criptográfica en vivo</span>
+          </div>
+          <button
+            type="button"
+            id="live-verify-rerun"
+            class="theme-pill-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold cursor-pointer"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Volver a verificar</span>
+          </button>
+        </div>
+
+        <dl class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2.5">
+          <div>
+            <dt class="text-[10px] font-bold uppercase tracking-wider theme-text-secondary">Estándar y firma</dt>
+            <dd id="lv-cryptosuite" class="font-mono theme-text-primary mt-0.5 break-all">eddsa-rdfc-2022 (Ed25519 + URDNA2015)</dd>
+          </div>
+          <div>
+            <dt class="text-[10px] font-bold uppercase tracking-wider theme-text-secondary">Motor del navegador</dt>
+            <dd id="lv-engine" class="font-mono theme-text-primary mt-0.5">—</dd>
+          </div>
+          <div>
+            <dt class="text-[10px] font-bold uppercase tracking-wider theme-text-secondary">Emisor verificado (DID)</dt>
+            <dd id="lv-did" class="font-mono theme-text-primary mt-0.5 break-all">—</dd>
+          </div>
+          <div>
+            <dt class="text-[10px] font-bold uppercase tracking-wider theme-text-secondary">Clave pública (did.json)</dt>
+            <dd id="lv-pubkey" class="font-mono theme-text-primary mt-0.5 break-all">—</dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-[10px] font-bold uppercase tracking-wider theme-text-secondary">Huella SHA-256 del documento canonizado</dt>
+            <dd id="lv-hash" class="font-mono theme-text-primary mt-0.5 break-all text-[11px]">—</dd>
+          </div>
+        </dl>
+
+        <div class="mt-3 pt-3 border-t theme-border flex flex-wrap items-center justify-between gap-2 text-[11px] theme-text-secondary">
+          <span id="lv-checked-meta">Ejecutando comprobación local en tu navegador…</span>
+          <a
+            href="https://vc.1ed.tech/upload?validatorId=OB30Inspector"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold theme-accent-text hover:underline whitespace-nowrap"
+          >
+            Auditar en 1EdTech Global ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Barra de Acciones Inferior -->
-  <div class="no-print mt-6 flex flex-wrap items-center justify-center gap-3">
+  <div class="no-print mt-5 flex flex-wrap items-center justify-center gap-3">
     <button
       type="button"
       onclick="window.dispatchEvent(new CustomEvent('open-badge-modal'))"
@@ -350,6 +448,7 @@ linkedinUrl.searchParams.set('certId', assertionId);
     preloadCertificateAssets,
     type CertificatePdfData,
   } from '@/utils/pdfDownload';
+  import { verifyOpenBadge3Live, type LiveVerificationExpected } from '@/utils/verifyOb3Client';
 
   const downloadBtn = document.getElementById('download-pdf-btn') as HTMLButtonElement | null;
   const labelEl = document.getElementById('download-pdf-label');
@@ -389,6 +488,96 @@ linkedinUrl.searchParams.set('certId', assertionId);
       }
     });
   }
+
+  // Verificación criptográfica automática al abrir cada certificado
+  const verifyRoot = document.getElementById('live-ob3-verify');
+  if (verifyRoot) {
+    const rawCfg = verifyRoot.getAttribute('data-verify-config');
+    const toggleBtn = document.getElementById('live-verify-toggle');
+    const detailsEl = document.getElementById('live-verify-details');
+    const chevronEl = document.getElementById('live-verify-chevron');
+    const dotEl = document.getElementById('live-verify-dot');
+    const detailBadgeEl = document.getElementById('live-verify-detail-badge');
+    const headlineEl = document.getElementById('live-verify-headline');
+    const timeEl = document.getElementById('live-verify-time');
+    const detailTitleEl = document.getElementById('live-verify-detail-title');
+    const rerunBtn = document.getElementById('live-verify-rerun') as HTMLButtonElement | null;
+    const cryptoEl = document.getElementById('lv-cryptosuite');
+    const engineEl = document.getElementById('lv-engine');
+    const didEl = document.getElementById('lv-did');
+    const pubkeyEl = document.getElementById('lv-pubkey');
+    const hashEl = document.getElementById('lv-hash');
+    const metaEl = document.getElementById('lv-checked-meta');
+
+    toggleBtn?.addEventListener('click', () => {
+      if (!detailsEl) return;
+      const isHidden = detailsEl.classList.contains('hidden');
+      detailsEl.classList.toggle('hidden', !isHidden);
+      toggleBtn.setAttribute('aria-expanded', String(isHidden));
+      chevronEl?.classList.toggle('rotate-180', isHidden);
+    });
+
+    const runVerification = async () => {
+      if (!rawCfg) return;
+      let cfg: LiveVerificationExpected;
+      try {
+        cfg = JSON.parse(rawCfg);
+      } catch {
+        return;
+      }
+
+      if (rerunBtn) rerunBtn.disabled = true;
+      toggleBtn?.setAttribute('data-state', 'checking');
+      if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0';
+      if (detailBadgeEl) detailBadgeEl.className = 'inline-block w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+      if (headlineEl) headlineEl.textContent = 'Verificando firma criptográfica Ed25519 en tiempo real…';
+      timeEl?.classList.add('hidden');
+
+      const res = await verifyOpenBadge3Live(cfg);
+
+      if (res.status === 'verified' && res.valid) {
+        toggleBtn?.setAttribute('data-state', 'verified');
+        if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-[#34A853] animate-pulse shrink-0';
+        if (detailBadgeEl) detailBadgeEl.className = 'inline-block w-2.5 h-2.5 rounded-full bg-[#34A853]';
+        if (headlineEl) headlineEl.textContent = 'Verificado ahora mismo · Firma Ed25519 auténtica';
+        if (timeEl) {
+          timeEl.textContent = `(${res.checkedAtLocal})`;
+          timeEl.classList.remove('hidden');
+        }
+        if (detailTitleEl) detailTitleEl.textContent = 'Credencial verificada criptográficamente en vivo';
+        if (cryptoEl) cryptoEl.textContent = `${res.cryptosuite} (Ed25519 + URDNA2015)`;
+        if (engineEl) engineEl.textContent = `${res.engine} · ${res.durationMs} ms`;
+        if (didEl) didEl.textContent = res.verificationMethod || res.did;
+        if (pubkeyEl) pubkeyEl.textContent = res.publicKeyMultibase;
+        if (hashEl) hashEl.textContent = res.docHashHex;
+        if (metaEl) {
+          metaEl.textContent = `Comprobado en tu navegador a las ${res.checkedAtLocal} contra /.well-known/did.json`;
+        }
+      } else if (res.status === 'unsigned') {
+        toggleBtn?.setAttribute('data-state', 'unsigned');
+        if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-amber-500 shrink-0';
+        if (detailBadgeEl) detailBadgeEl.className = 'inline-block w-2.5 h-2.5 rounded-full bg-amber-500';
+        if (headlineEl) headlineEl.textContent = 'Credencial sin firma criptográfica en este entorno';
+        if (detailTitleEl) detailTitleEl.textContent = 'Firma no presente en el archivo JSON-LD';
+        if (metaEl) metaEl.textContent = res.reason || 'Entorno sin clave de firma OB3.';
+      } else {
+        toggleBtn?.setAttribute('data-state', 'invalid');
+        if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-[#EA4335] shrink-0';
+        if (detailBadgeEl) detailBadgeEl.className = 'inline-block w-2.5 h-2.5 rounded-full bg-[#EA4335]';
+        if (headlineEl) headlineEl.textContent = 'No se pudo verificar la firma criptográfica';
+        if (detailTitleEl) detailTitleEl.textContent = 'Error en la verificación criptográfica';
+        if (metaEl) metaEl.textContent = res.reason || 'La firma no coincide con la clave pública oficial.';
+      }
+
+      if (rerunBtn) rerunBtn.disabled = false;
+    };
+
+    rerunBtn?.addEventListener('click', () => {
+      runVerification();
+    });
+
+    runVerification();
+  }
 </script>
 
 <style is:global>
@@ -397,6 +586,73 @@ linkedinUrl.searchParams.set('certId', assertionId);
      ========================================================================== */
   .diploma-outer {
     padding: 6px !important;
+  }
+
+  /* Píldora de verificación criptográfica en vivo (adaptada a los 5 temas) */
+  .live-verify-pill {
+    border: 1.5px solid rgba(52, 168, 83, 0.35);
+    background: rgba(230, 244, 234, 0.92);
+    color: #137333;
+    box-shadow: 0 4px 14px rgba(19, 115, 51, 0.08);
+  }
+  .live-verify-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(19, 115, 51, 0.14);
+  }
+  .live-verify-pill[data-state="checking"],
+  .live-verify-pill[data-state="unsigned"] {
+    border-color: rgba(251, 188, 4, 0.5);
+    background: rgba(254, 247, 224, 0.95);
+    color: #9A6700;
+  }
+  .live-verify-pill[data-state="invalid"] {
+    border-color: rgba(234, 67, 53, 0.45);
+    background: rgba(252, 232, 230, 0.95);
+    color: #C5221F;
+  }
+
+  html[data-theme="cyber"] .live-verify-pill {
+    border-color: rgba(0, 255, 102, 0.45);
+    background: rgba(7, 16, 30, 0.88);
+    color: #00FF66;
+    box-shadow: 0 0 22px rgba(0, 255, 102, 0.16);
+  }
+  html[data-theme="cyber"] .live-verify-pill[data-state="checking"],
+  html[data-theme="cyber"] .live-verify-pill[data-state="unsigned"] {
+    border-color: rgba(255, 230, 0, 0.5);
+    color: #FFE600;
+    box-shadow: 0 0 18px rgba(255, 230, 0, 0.14);
+  }
+  html[data-theme="cyber"] .live-verify-pill[data-state="invalid"] {
+    border-color: rgba(255, 0, 127, 0.55);
+    color: #FF4D94;
+    box-shadow: 0 0 18px rgba(255, 0, 127, 0.18);
+  }
+
+  html[data-theme="nieve"] .live-verify-pill {
+    border-color: rgba(125, 211, 252, 0.45);
+    background: rgba(10, 28, 54, 0.86);
+    color: #A7F3D0;
+    box-shadow: 0 8px 24px rgba(2, 132, 199, 0.22);
+  }
+  html[data-theme="nieve"] .live-verify-pill[data-state="checking"],
+  html[data-theme="nieve"] .live-verify-pill[data-state="unsigned"] {
+    color: #FDE68A;
+  }
+  html[data-theme="nieve"] .live-verify-pill[data-state="invalid"] {
+    color: #FCA5A5;
+  }
+
+  html[data-theme="piscina"] .live-verify-pill[data-state="verified"] {
+    border-color: rgba(15, 118, 110, 0.35);
+    background: rgba(255, 255, 255, 0.9);
+    color: #0F766E;
+  }
+
+  html[data-theme="caramelos"] .live-verify-pill[data-state="verified"] {
+    border-color: rgba(216, 27, 96, 0.32);
+    background: rgba(255, 255, 255, 0.92);
+    color: #0F766E;
   }
 
   .footer-lbl-mobile,

@@ -9,7 +9,8 @@ interface Props {
   image?: string;
   theme?: string;
   certStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
-  section?: 'hub' | 'openbadges';
+  certStyleMap?: Record<string, 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos'>;
+  section?: 'hub' | 'openbadges' | 'cybertrainer';
   jsonLdUrl?: string;
   jsonLdV2Url?: string;
   noIndex?: boolean;
@@ -22,6 +23,7 @@ const {
   description = siteConfig.description,
   image = getFullUrl('/images/gdgoc-uhu-logo.jpg'),
   certStyle,
+  certStyleMap,
   section = 'openbadges',
   jsonLdUrl,
   jsonLdV2Url,
@@ -43,7 +45,7 @@ const defaultSchema = {
       alternateName: 'Google Developer Group on Campus UHU',
       url: siteConfig.url,
       logo: getFullUrl('/images/gdgoc-uhu-logo.jpg'),
-      sameAs: [siteConfig.communityUrl, siteConfig.linkedinUrl],
+      sameAs: [siteConfig.communityUrl, siteConfig.linkedinUrl, siteConfig.instagramUrl],
       description: siteConfig.description,
     },
     {
@@ -64,6 +66,7 @@ const defaultSchema = {
   lang="es"
   data-theme={initialTheme}
   data-cert-style={certStyle || ''}
+  data-cert-style-map={certStyleMap ? JSON.stringify(certStyleMap) : undefined}
 >
   <head>
     <meta charset="UTF-8" />
@@ -145,7 +148,24 @@ const defaultSchema = {
       (function () {
         const validThemes = ['google', 'cyber', 'piscina', 'nieve', 'caramelos'];
         const html = document.documentElement;
-        const forcedCertStyle = html.getAttribute('data-cert-style');
+        let forcedCertStyle = html.getAttribute('data-cert-style');
+        if (!forcedCertStyle) {
+          const rawMap = html.getAttribute('data-cert-style-map');
+          if (rawMap) {
+            const match = window.location.pathname.match(/^\/(?:openbadges\/)?cert\/([^/]+)\/?$/i);
+            if (match && match[1]) {
+              try {
+                const map = JSON.parse(rawMap);
+                const mapped = map && map[decodeURIComponent(match[1])];
+                if (mapped && validThemes.includes(mapped)) {
+                  forcedCertStyle = mapped;
+                  html.setAttribute('data-cert-style', mapped);
+                  html.setAttribute('data-dynamic-cert-lock', mapped);
+                }
+              } catch {}
+            }
+          }
+        }
         if (forcedCertStyle && validThemes.includes(forcedCertStyle)) {
           html.setAttribute('data-theme', forcedCertStyle);
         } else {
@@ -1563,6 +1583,24 @@ const defaultSchema = {
         }
 
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'google';
+        const dynamicCertLock = document.documentElement.getAttribute('data-dynamic-cert-lock');
+        if (dynamicCertLock) {
+          const switcher = document.getElementById('theme-switcher-container');
+          if (switcher) {
+            const meta = THEME_META[dynamicCertLock] || THEME_META.google;
+            const lockedPill = document.createElement('div');
+            lockedPill.className =
+              'theme-pill-btn inline-flex items-center justify-center gap-2 h-[42px] px-[1.05rem] rounded-full text-[0.88rem] leading-none font-semibold transition-all duration-300 select-none cursor-default whitespace-nowrap';
+            lockedPill.title = 'Estilo fijo asignado a este certificado en su emisión';
+            lockedPill.innerHTML =
+              '<span class="text-base leading-none">' +
+              meta.icon +
+              '</span><span>' +
+              meta.label +
+              '</span><svg class="w-3.5 h-3.5 opacity-75 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Estilo bloqueado"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>';
+            switcher.replaceWith(lockedPill);
+          }
+        }
         updateThemeUI(currentTheme);
 
         const menuBtn = document.getElementById('theme-menu-button');

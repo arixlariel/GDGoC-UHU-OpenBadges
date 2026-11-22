@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "node scripts/optimize-badge-thumbs.mjs && mkdir -p public/openbadges && cp generador-local.html public/openbadges/generador-local.html && cp generador-local.html public/generador-local.html && npm run build",
+  "buildCommand": "node scripts/optimize-badge-thumbs.mjs && mkdir -p public/openbadges public/vendor && cp generador-local.html public/openbadges/generador-local.html && cp generador-local.html public/generador-local.html && cp node_modules/jsonld/dist/jsonld.min.js public/vendor/jsonld.min.js && npm run build",
   "outputDirectory": "dist",
   "headers": [
     {
@@ -16,6 +16,12 @@
     },
     {
       "source": "/images/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/vendor/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]

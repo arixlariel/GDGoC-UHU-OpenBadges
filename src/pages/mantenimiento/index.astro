@@ -1,0 +1,14 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import MaintenanceCard from '@/components/MaintenanceCard.astro';
+---
+
+<BaseLayout
+  title="Mantenimiento · GDGoC UHU"
+  description="Estamos realizando tareas de mantenimiento en gdguhu.com. Volveremos a estar operativos en unos minutos."
+  certStyle="google"
+  section="hub"
+  noIndex={true}
+>
+  <MaintenanceCard scope="hub" />
+</BaseLayout>

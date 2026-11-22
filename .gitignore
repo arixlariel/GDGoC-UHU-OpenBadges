@@ -3,6 +3,7 @@ dist/
 .astro/
 .vercel/
 public/images/badges/thumbs/
+public/vendor/
 
 # Dependencies
 node_modules/

@@ -3,6 +3,9 @@ name: Deploy Astro site to Vercel
 on:
   push:
     branches: [main]
+  schedule:
+    # Sincronización diaria automática de próximos eventos de Bevy en gdguhu.com (06:00 UTC)
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -52,6 +55,10 @@ jobs:
           test -f .vercel/output/static/index.html
           test -f .vercel/output/static/openbadges/index.html
           test -f .vercel/output/static/openbadges/generador-local.html
+          test -f .vercel/output/static/vendor/jsonld.min.js
+          test -f .vercel/output/static/mantenimiento/index.html
+          test -f .vercel/output/static/mantenimiento/openbadges/index.html
+          test -f .vercel/output/static/mantenimiento/cybertrainer/index.html
           test -f .vercel/output/static/.well-known/did.json
           test -f .vercel/output/static/api/badges/issuer.json
           ls -la .vercel/output/functions/
