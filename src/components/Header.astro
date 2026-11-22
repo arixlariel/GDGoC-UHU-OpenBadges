@@ -147,13 +147,13 @@ const brandSubtitle = section === 'hub' ? 'Universidad de Huelva' : 'Open Badges
         </div>
       )}
 
-      <!-- Comunidad Button (Web oficial del GDGoC UHU en Bevy) -->
+      <!-- Comunidad Button (oculto en móvil < 640px para no cortar el título superior; ya existe en el footer) -->
       <a
         href={siteConfig.communityUrl}
         target="_blank"
         rel="noopener noreferrer"
         title="Web oficial del GDGoC UHU"
-        class="theme-primary-btn inline-flex items-center justify-center gap-1.5 h-[42px] px-[1.05rem] rounded-full text-white transition-all duration-300 text-[0.88rem] leading-none font-semibold whitespace-nowrap"
+        class="theme-primary-btn hidden sm:inline-flex items-center justify-center gap-1.5 h-[42px] px-[1.05rem] rounded-full text-white transition-all duration-300 text-[0.88rem] leading-none font-semibold whitespace-nowrap"
       >
         <span>Comunidad</span>
         <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

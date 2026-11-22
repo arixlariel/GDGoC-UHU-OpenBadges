@@ -196,16 +196,16 @@ const defaultSchema = {
       }
 
       @keyframes floatSlow {
-        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-        50% { transform: translateY(-22px) rotate(6deg) scale(1.06); }
+        0%, 100% { transform: translate3d(0, 0, 0); }
+        50% { transform: translate3d(0, -18px, 0); }
       }
       @keyframes floatReverse {
-        0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-        50% { transform: translateY(20px) translateX(-15px) rotate(-8deg); }
+        0%, 100% { transform: translate3d(0, 0, 0); }
+        50% { transform: translate3d(-14px, 18px, 0); }
       }
       @keyframes spinSlow {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+        from { transform: rotate3d(0, 0, 1, 0deg); }
+        to { transform: rotate3d(0, 0, 1, 360deg); }
       }
       @keyframes scanlineSweep {
         0% { transform: translate3d(0, -10vh, 0); opacity: 0; }
@@ -303,6 +303,11 @@ const defaultSchema = {
       #theme-fx-container {
         contain: strict;
         pointer-events: none;
+        transform: translate3d(0, 0, 0);
+        isolation: isolate;
+      }
+      .theme-card {
+        contain: layout style;
       }
       .fx-layer {
         display: none;
@@ -477,12 +482,15 @@ const defaultSchema = {
          1. THEME: GOOGLE (Clásico Google · Material 3 · 4 Colores Oficiales)
          ========================================================================== */
       html[data-theme="google"] body {
+        background-color: #F8F9FA;
+        color: #202124;
+      }
+      html[data-theme="google"] #theme-fx-container {
         background: radial-gradient(circle at 15% 15%, rgba(66, 133, 244, 0.09), transparent 40%),
                     radial-gradient(circle at 85% 25%, rgba(234, 67, 53, 0.08), transparent 40%),
                     radial-gradient(circle at 75% 85%, rgba(52, 168, 83, 0.09), transparent 40%),
                     radial-gradient(circle at 20% 80%, rgba(251, 188, 4, 0.1), transparent 40%),
                     #F8F9FA;
-        color: #202124;
       }
       html[data-theme="google"] .theme-header {
         background: rgba(255, 255, 255, 0.96);
@@ -564,10 +572,13 @@ const defaultSchema = {
          2. THEME: CYBER (Neon Matrix · Glitch · Laser Scanlines)
          ========================================================================== */
       html[data-theme="cyber"] body {
+        background-color: #05070F;
+        color: #E2F1FF;
+      }
+      html[data-theme="cyber"] #theme-fx-container {
         background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.16), transparent 50%),
                     radial-gradient(circle at 85% 80%, rgba(255, 0, 127, 0.15), transparent 45%),
                     #05070F;
-        color: #E2F1FF;
       }
       html[data-theme="cyber"] .theme-top-strip {
         background: linear-gradient(90deg, #00F0FF, #FF007F, #FFE600, #00FF66, #00F0FF);
@@ -744,8 +755,7 @@ const defaultSchema = {
         color: #003847;
       }
       html[data-theme="piscina"] .theme-card {
-        background: rgba(255, 255, 255, 0.82);
-        backdrop-filter: blur(14px);
+        background: rgba(255, 255, 255, 0.92);
         border: 2px solid rgba(0, 229, 255, 0.65);
         box-shadow: 0 14px 34px rgba(2, 132, 199, 0.22), inset 0 0 24px rgba(165, 243, 252, 0.45);
         transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
@@ -847,8 +857,7 @@ const defaultSchema = {
         box-shadow: 0 15px 45px rgba(2, 132, 199, 0.5);
       }
       html[data-theme="nieve"] .theme-card {
-        background: rgba(14, 38, 68, 0.65);
-        backdrop-filter: blur(18px);
+        background: rgba(14, 38, 68, 0.9);
         border: 1.5px solid rgba(186, 230, 253, 0.5);
         box-shadow: 0 10px 35px rgba(2, 12, 27, 0.45), inset 0 0 28px rgba(255, 255, 255, 0.14);
         transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
@@ -862,8 +871,7 @@ const defaultSchema = {
                     inset 0 0 34px rgba(255, 255, 255, 0.28);
       }
       html[data-theme="nieve"] .theme-search-box {
-        background: rgba(10, 30, 56, 0.85);
-        backdrop-filter: blur(16px);
+        background: rgba(10, 30, 56, 0.94);
         border: 2px solid rgba(186, 230, 253, 0.65);
         box-shadow: 0 0 28px rgba(56, 189, 248, 0.3);
       }
@@ -1579,6 +1587,7 @@ const defaultSchema = {
           let rafId = null;
           let lastX = 0;
           let lastY = 0;
+          let scrollGuardUntil = 0;
 
           const resetCard = (card) => {
             if (!card) return;
@@ -1586,8 +1595,25 @@ const defaultSchema = {
             card.style.transform = '';
           };
 
+          const clearActive = () => {
+            if (rafId !== null) {
+              cancelAnimationFrame(rafId);
+              rafId = null;
+            }
+            if (activeCard) {
+              resetCard(activeCard);
+              activeCard = null;
+            }
+          };
+
+          const onScrollActivity = () => {
+            scrollGuardUntil = performance.now() + 180;
+            if (activeCard || rafId !== null) clearActive();
+          };
+
           const applyTilt = () => {
             rafId = null;
+            if (performance.now() < scrollGuardUntil) return;
             const card = activeCard;
             if (!card || !card.isConnected) return;
             const activeEl = document.activeElement;
@@ -1615,6 +1641,7 @@ const defaultSchema = {
 
           document.addEventListener('pointermove', (e) => {
             if (window.innerWidth < 768 || e.pointerType === 'touch') return;
+            if (performance.now() < scrollGuardUntil) return;
             const card = e.target && e.target.closest ? e.target.closest('.tilt-card') : null;
             if (card !== activeCard) {
               if (activeCard) resetCard(activeCard);
@@ -1626,23 +1653,13 @@ const defaultSchema = {
             if (rafId === null) rafId = requestAnimationFrame(applyTilt);
           }, { passive: true });
 
-          const clearActive = () => {
-            if (rafId !== null) {
-              cancelAnimationFrame(rafId);
-              rafId = null;
-            }
-            if (activeCard) {
-              resetCard(activeCard);
-              activeCard = null;
-            }
-          };
-
           document.addEventListener('pointerleave', clearActive);
           document.addEventListener('focusin', (e) => {
             if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) clearActive();
           });
           window.addEventListener('blur', clearActive);
-          window.addEventListener('scroll', clearActive, { passive: true });
+          window.addEventListener('wheel', onScrollActivity, { passive: true });
+          window.addEventListener('scroll', onScrollActivity, { passive: true });
         }
         initDelegatedTiltEngine();
       })();
