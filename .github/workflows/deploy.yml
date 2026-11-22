@@ -1,23 +1,20 @@
-name: Deploy Astro site to Vercel
+name: Deploy Open Badges to Vercel
 
 on:
   push:
     branches: [main]
-  schedule:
-    # Sincronización automática 2 veces al día de próximos eventos de Bevy en gdguhu.com (00:00 y 15:00 CET)
-    - cron: '0 14,23 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: 'vercel-production'
+  group: 'vercel-openbadges-production'
   cancel-in-progress: false
 
 jobs:
   deploy:
-    name: Build Astro Site & Deploy to Vercel
+    name: Build Open Badges (OB3 + OG) & Deploy to Vercel
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -40,33 +37,29 @@ jobs:
         run: |
           node scripts/process-publish.mjs
 
-      - name: Descargar configuración de proyecto Vercel
+      - name: Descargar configuración de proyecto Vercel (gdguhu-openbadges)
         run: npx --yes vercel@latest pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
 
-      - name: Compilar sitio Astro (OB3 firmado) y Edge Middleware para Vercel
+      - name: Compilar Open Badges (OB3 Ed25519 + tarjetas OG 1200x630) para Vercel
         env:
           SITE_URL: "https://gdguhu.com"
           BASE_PATH: "/"
           OB3_PRIVATE_KEY: ${{ secrets.OB3_PRIVATE_KEY }}
         run: npx --yes vercel@latest build --prod --token="${{ secrets.VERCEL_TOKEN }}"
 
-      - name: Verificar salida del portal gdguhu.com, Edge Middleware y Open Badges 3.0 firmada
+      - name: Verificar salida Open Badges 3.0 firmada, tarjetas OG y assets _astro-ob
         run: |
-          test -f .vercel/output/static/index.html
           test -f .vercel/output/static/openbadges/index.html
           test -f .vercel/output/static/openbadges/generador-local.html
           test -f .vercel/output/static/vendor/jsonld.min.js
-          test -f .vercel/output/static/og/hub.png
           test -f .vercel/output/static/og/openbadges.png
           FIRST_OG=$(ls .vercel/output/static/og/cert/*.png | head -n 1)
           test -n "$FIRST_OG"
-          test -f .vercel/output/static/mantenimiento/index.html
-          test -f .vercel/output/static/mantenimiento/openbadges/index.html
-          test -f .vercel/output/static/mantenimiento/cybertrainer/index.html
           test -f .vercel/output/static/.well-known/did.json
           test -f .vercel/output/static/api/badges/issuer.json
-          ls -la .vercel/output/functions/
-          grep -q "middleware" .vercel/output/config.json
+          test -f .vercel/output/static/api/badges/styles.json
+          test -f .vercel/output/static/api/badges/showcase.json
+          test -d .vercel/output/static/_astro-ob
           FIRST_CERT=$(ls .vercel/output/static/openbadges/cert/*/index.html | head -n 1)
           test -n "$FIRST_CERT"
           FIRST_LEGACY_CERT=$(ls .vercel/output/static/cert/*/index.html | head -n 1)
@@ -75,9 +68,9 @@ jobs:
           test -n "$FIRST_V3"
           grep -q '"cryptosuite": "eddsa-rdfc-2022"' "$FIRST_V3"
           grep -q '"proofValue": "z' "$FIRST_V3"
-          echo "OK: Portal gdguhu.com + Edge Middleware + Credencial OB3 firmada verificados ($FIRST_V3)"
+          echo "OK: Open Badges Multi-Zone + OB3 Ed25519 + OG 1200x630 verificados ($FIRST_V3)"
 
-      - name: Desplegar a producción en Vercel
+      - name: Desplegar Open Badges a producción en Vercel
         id: vercel_deploy
         run: |
           DEPLOY_URL=$(npx --yes vercel@latest deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}")
@@ -93,7 +86,7 @@ jobs:
           retention-days: 1
 
   post-deploy-emails:
-    name: Enviar Correos Automáticos y Limpiar publish/
+    name: Enviar Correos Automáticos (Resend / Gmail) y Limpiar publish/
     needs: deploy
     runs-on: ubuntu-latest
     steps:
@@ -110,6 +103,10 @@ jobs:
 
       - name: Procesar publicaciones, organizar repositorio y enviar correos
         env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: "GDG on Campus Universidad de Huelva <certificados@gdguhu.com>"
+          EMAIL_REPLY_TO: "gdgoc.huelva@gmail.com"
+          EMAIL_BCC: "gdgoc.huelva+enviados@gmail.com"
           GMAIL_USER: ${{ secrets.GMAIL_USER || 'arielbustilloleon@gmail.com' }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           SITE_URL: "https://gdguhu.com"

@@ -25,7 +25,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createTransport } from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,6 +33,10 @@ const badgesDir = path.join(rootDir, 'src', 'content', 'badges');
 const assertionsDir = path.join(rootDir, 'src', 'content', 'assertions');
 
 const siteUrl = process.env.SITE_URL || 'https://gdguhu.com';
+const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
+const resendFrom = (process.env.RESEND_FROM || 'GDG on Campus Universidad de Huelva <certificados@gdguhu.com>').trim();
+const replyToEmail = (process.env.EMAIL_REPLY_TO || 'gdgoc.huelva@gmail.com').trim();
+const bccEmail = (process.env.EMAIL_BCC || 'gdgoc.huelva+enviados@gmail.com').trim();
 const gmailUser = process.env.GMAIL_USER || 'arielbustilloleon@gmail.com';
 const gmailPassword = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
 
@@ -324,12 +327,59 @@ export function buildEmailHTML(
 </html>`;
 }
 
-async function main() {
-  console.log('\n📧 GDGoC UHU — Envío Automatizado de Certificados por Gmail\n');
+async function sendViaResend({ to, subject, text, html, entityRefId }) {
+  const payload = {
+    from: resendFrom,
+    to: [to],
+    reply_to: replyToEmail,
+    subject,
+    text,
+    html,
+    headers: { 'X-Entity-Ref-ID': entityRefId },
+  };
+  if (bccEmail && bccEmail.toLowerCase() !== 'none' && bccEmail.toLowerCase() !== 'off') {
+    payload.bcc = [bccEmail];
+  }
 
-  if (!gmailUser || !gmailPassword) {
-    console.error('⚠️  No se han configurado GMAIL_USER y GMAIL_APP_PASSWORD.');
-    console.error('   Para activar el envío de emails, añade los dos secretos en GitHub Settings > Secrets.\n');
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const errBody = await res.text();
+    const err = new Error(`Resend HTTP ${res.status}: ${errBody}`);
+    err.status = res.status;
+    err.body = errBody;
+    throw err;
+  }
+  return res.json();
+}
+
+async function createGmailTransporter() {
+  if (!gmailUser || !gmailPassword) return null;
+  const { createTransport } = await import('nodemailer');
+  const transporter = createTransport({
+    service: 'gmail',
+    auth: { user: gmailUser, pass: gmailPassword },
+  });
+  await transporter.verify();
+  return transporter;
+}
+
+async function main() {
+  console.log('\n📧 GDGoC UHU — Envío Automatizado de Certificados (Resend + respaldo Gmail)\n');
+
+  const hasResend = Boolean(resendApiKey);
+  const hasGmail = Boolean(gmailUser && gmailPassword);
+
+  if (!hasResend && !hasGmail) {
+    console.error('⚠️  No se ha configurado RESEND_API_KEY ni GMAIL_USER/GMAIL_APP_PASSWORD.');
+    console.error('   Configura al menos uno de los proveedores en GitHub Settings > Secrets.\n');
     process.exit(1);
   }
 
@@ -352,26 +402,18 @@ async function main() {
     process.exit(0);
   }
 
-  console.log(`📫 Conectando a Gmail con la cuenta: ${gmailUser}`);
-  console.log(`📋 Total de emails a enviar: ${recipients.length}\n`);
+  let useResend = hasResend;
+  let gmailTransporter = null;
 
-  const transporter = createTransport({
-    service: 'gmail',
-    auth: {
-      user: gmailUser,
-      pass: gmailPassword,
-    },
-  });
-
-  // Verificar conexión SMTP
-  try {
-    await transporter.verify();
+  if (useResend) {
+    console.log(`🚀 Proveedor principal: Resend (${resendFrom}) · Reply-To: ${replyToEmail}`);
+  } else {
+    console.log(`📫 Conectando a Gmail con la cuenta: ${gmailUser}`);
+    gmailTransporter = await createGmailTransporter();
     console.log('✅ Conexión con Gmail establecida correctamente.\n');
-  } catch (err) {
-    console.error(`❌ Error al autenticar con Gmail: ${err.message}`);
-    console.error('Verifica que GMAIL_APP_PASSWORD sea una contraseña de aplicación válida de 16 caracteres.');
-    process.exit(1);
   }
+
+  console.log(`📋 Total de emails a enviar: ${recipients.length}\n`);
 
   let sent = 0;
   let failed = 0;
@@ -391,42 +433,63 @@ async function main() {
     const subject = safeRecipientName
       ? `Certificado de ${cleanBadgeSubject} — ${safeRecipientName}`
       : `Certificado: ${cleanBadgeSubject}`;
-
-    const mailOptions = {
-      from: `"GDG on Campus Universidad de Huelva" <${gmailUser}>`,
-      to: safeRecipientName ? `"${safeRecipientName}" <${item.email}>` : item.email,
-      replyTo: gmailUser,
-      subject,
-      text: buildEmailText(
-        item.nombre,
-        badge,
-        certUrl,
-        assertionJsonUrl,
-        resolvedRole,
-        item.assertionId || '',
-        resolvedStyle,
-        resolvedEvidence
-      ),
-      html: buildEmailHTML(
-        item.nombre,
-        badge,
-        certUrl,
-        assertionJsonUrl,
-        resolvedRole,
-        item.assertionId || '',
-        resolvedStyle,
-        resolvedEvidence
-      ),
-      headers: {
-        'X-Entity-Ref-ID': `${item.assertionId || 'cert'}-${Date.now()}-${i}`,
-      },
-    };
+    const toFormatted = safeRecipientName ? `"${safeRecipientName}" <${item.email}>` : item.email;
+    const text = buildEmailText(
+      item.nombre,
+      badge,
+      certUrl,
+      assertionJsonUrl,
+      resolvedRole,
+      item.assertionId || '',
+      resolvedStyle,
+      resolvedEvidence
+    );
+    const html = buildEmailHTML(
+      item.nombre,
+      badge,
+      certUrl,
+      assertionJsonUrl,
+      resolvedRole,
+      item.assertionId || '',
+      resolvedStyle,
+      resolvedEvidence
+    );
+    const entityRefId = `${item.assertionId || 'cert'}-${Date.now()}-${i}`;
 
     try {
-      await transporter.sendMail(mailOptions);
-      console.log(`[${i + 1}/${recipients.length}] ✅ Enviado a ${item.nombre} <${item.email}>`);
+      if (useResend) {
+        try {
+          await sendViaResend({ to: toFormatted, subject, text, html, entityRefId });
+          console.log(`[${i + 1}/${recipients.length}] ✅ Enviado vía Resend a ${item.nombre} <${item.email}>`);
+          sent++;
+          await new Promise((resolve) => setTimeout(resolve, 600));
+          continue;
+        } catch (resendErr) {
+          // Si el dominio gdguhu.com aún no está verificado en Resend (HTTP 403), pasar automáticamente a Gmail
+          if (hasGmail && resendErr.status === 403 && /not verified|domain/i.test(String(resendErr.body || ''))) {
+            console.warn(`⚠️  Resend indica dominio aún no verificado; activando respaldo automático vía Gmail (${gmailUser})...`);
+            useResend = false;
+            gmailTransporter = await createGmailTransporter();
+          } else {
+            throw resendErr;
+          }
+        }
+      }
+
+      if (!gmailTransporter) {
+        gmailTransporter = await createGmailTransporter();
+      }
+      await gmailTransporter.sendMail({
+        from: `"GDG on Campus Universidad de Huelva" <${gmailUser}>`,
+        to: toFormatted,
+        replyTo: replyToEmail || gmailUser,
+        subject,
+        text,
+        html,
+        headers: { 'X-Entity-Ref-ID': entityRefId },
+      });
+      console.log(`[${i + 1}/${recipients.length}] ✅ Enviado vía Gmail a ${item.nombre} <${item.email}>`);
       sent++;
-      // Pequeña pausa de 800ms para respetar las tasas de envío de Gmail
       await new Promise((resolve) => setTimeout(resolve, 800));
     } catch (err) {
       console.error(`[${i + 1}/${recipients.length}] ❌ Error enviando a ${item.email}: ${err.message}`);

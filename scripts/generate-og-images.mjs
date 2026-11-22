@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generador automático de tarjetas Open Graph (1200x630 PNG) para:
- *  - Portada oficial gdguhu.com -> public/og/hub.png
+ * Generador automático de tarjetas Open Graph (1200x630 PNG) para GDGoC UHU Open Badges:
  *  - Portal Open Badges -> public/og/openbadges.png
  *  - Cada certificado emitido -> public/og/cert/<id>.png (en el estilo exacto del diploma)
  *
@@ -43,25 +42,29 @@ const THEMES = {
     verifiedText: '#137333',
     badgeBoxBg: '#F8F9FA',
     badgeBoxBorder: '#DADCE0',
+    tagBg: '#F1F3F4',
+    tagText: '#3C4043',
     stripColors: ['#4285F4', '#EA4335', '#FBBC04', '#34A853'],
   },
   cyber: {
     outerBg: 'linear-gradient(135deg, #00F0FF 0%, #FF007F 42%, #FFE600 72%, #00FF66 100%)',
     innerBgColor: '#070B19',
-    innerBgImage: null,
-    frameBorder: 'rgba(0, 240, 255, 0.42)',
+    innerBgImage: 'linear-gradient(155deg, #091026 0%, #060914 60%, #0D142E 100%)',
+    frameBorder: 'rgba(0, 240, 255, 0.45)',
     textPrimary: '#F0F9FF',
-    textSecondary: '#94A3B8',
+    textSecondary: '#A8BBD0',
     accent: '#00F0FF',
     nameColor: '#00F0FF',
-    pillBg: 'rgba(0, 240, 255, 0.14)',
-    pillBorder: 'rgba(0, 240, 255, 0.45)',
+    pillBg: 'rgba(0, 240, 255, 0.16)',
+    pillBorder: 'rgba(0, 240, 255, 0.5)',
     pillText: '#00F0FF',
-    verifiedBg: 'rgba(0, 255, 102, 0.12)',
-    verifiedBorder: 'rgba(0, 255, 102, 0.45)',
+    verifiedBg: 'rgba(0, 255, 102, 0.14)',
+    verifiedBorder: 'rgba(0, 255, 102, 0.5)',
     verifiedText: '#00FF66',
-    badgeBoxBg: 'rgba(12, 20, 44, 0.92)',
-    badgeBoxBorder: 'rgba(0, 240, 255, 0.45)',
+    badgeBoxBg: 'rgba(13, 22, 48, 0.94)',
+    badgeBoxBorder: 'rgba(0, 240, 255, 0.52)',
+    tagBg: 'rgba(255, 0, 127, 0.14)',
+    tagText: '#FF70B8',
     stripColors: ['#00F0FF', '#FF007F', '#FFE600', '#00FF66'],
   },
   piscina: {
@@ -79,8 +82,10 @@ const THEMES = {
     verifiedBg: '#ECFDF5',
     verifiedBorder: '#6EE7B7',
     verifiedText: '#047857',
-    badgeBoxBg: 'rgba(255, 255, 255, 0.92)',
-    badgeBoxBorder: 'rgba(0, 188, 212, 0.5)',
+    badgeBoxBg: 'rgba(255, 255, 255, 0.94)',
+    badgeBoxBorder: 'rgba(0, 188, 212, 0.55)',
+    tagBg: 'rgba(2, 132, 199, 0.1)',
+    tagText: '#0369A1',
     stripColors: ['#00F2FE', '#4FACFE', '#00E5FF', '#0284C7'],
   },
   nieve: {
@@ -92,14 +97,16 @@ const THEMES = {
     textSecondary: '#BAE6FD',
     accent: '#7DD3FC',
     nameColor: '#E0F2FE',
-    pillBg: 'rgba(125, 211, 252, 0.16)',
-    pillBorder: 'rgba(186, 230, 253, 0.45)',
+    pillBg: 'rgba(125, 211, 252, 0.18)',
+    pillBorder: 'rgba(186, 230, 253, 0.48)',
     pillText: '#E0F2FE',
     verifiedBg: 'rgba(167, 243, 208, 0.14)',
     verifiedBorder: 'rgba(110, 231, 183, 0.45)',
     verifiedText: '#A7F3D0',
-    badgeBoxBg: 'rgba(14, 36, 66, 0.88)',
-    badgeBoxBorder: 'rgba(186, 230, 253, 0.48)',
+    badgeBoxBg: 'rgba(14, 36, 66, 0.9)',
+    badgeBoxBorder: 'rgba(186, 230, 253, 0.52)',
+    tagBg: 'rgba(125, 211, 252, 0.15)',
+    tagText: '#BAE6FD',
     stripColors: ['#FFFFFF', '#7DD3FC', '#38BDF8', '#BAE6FD'],
   },
   caramelos: {
@@ -117,8 +124,10 @@ const THEMES = {
     verifiedBg: '#ECFDF5',
     verifiedBorder: '#6EE7B7',
     verifiedText: '#047857',
-    badgeBoxBg: 'rgba(255, 255, 255, 0.94)',
+    badgeBoxBg: 'rgba(255, 255, 255, 0.95)',
     badgeBoxBorder: '#FF69B4',
+    tagBg: 'rgba(255, 20, 147, 0.1)',
+    tagText: '#BE185D',
     stripColors: ['#FF1493', '#FF85C0', '#FFD600', '#FF69B4'],
   },
 };
@@ -136,8 +145,7 @@ function h(type, props, ...children) {
 
 function loadFonts() {
   const fontDir = path.join(rootDir, 'node_modules', '@fontsource', 'plus-jakarta-sans', 'files');
-  const weights = [400, 600, 700, 800];
-  return weights.map((weight) => ({
+  return [400, 600, 700, 800].map((weight) => ({
     name: 'Plus Jakarta Sans',
     data: fs.readFileSync(path.join(fontDir, `plus-jakarta-sans-latin-${weight}-normal.woff`)),
     weight,
@@ -158,7 +166,7 @@ async function loadSharp() {
 }
 
 const dataUriCache = new Map();
-async function imageToDataUri(absPath, maxSize = 260) {
+async function imageToDataUri(absPath, maxSize = 300) {
   const cacheKey = `${absPath}@${maxSize}`;
   if (dataUriCache.has(cacheKey)) return dataUriCache.get(cacheKey);
   if (!fs.existsSync(absPath)) return null;
@@ -171,7 +179,6 @@ async function imageToDataUri(absPath, maxSize = 260) {
       .resize(maxSize, maxSize, { fit: 'inside', withoutEnlargement: true })
       .png({ compressionLevel: 8 })
       .toBuffer();
-    mime = 'image/png';
   } else {
     buf = fs.readFileSync(absPath);
     mime = /\.jpe?g$/i.test(absPath) ? 'image/jpeg' : 'image/png';
@@ -186,11 +193,8 @@ function walkJsonFiles(dir) {
   const results = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      results.push(...walkJsonFiles(full));
-    } else if (entry.isFile() && entry.name.endsWith('.json')) {
-      results.push(full);
-    }
+    if (entry.isDirectory()) results.push(...walkJsonFiles(full));
+    else if (entry.isFile() && entry.name.endsWith('.json')) results.push(full);
   }
   return results;
 }
@@ -207,19 +211,12 @@ function formatDateEs(iso) {
 }
 
 async function renderPng(vnode, fonts, outPath) {
-  const svg = await satori(vnode, {
-    width: OG_WIDTH,
-    height: OG_HEIGHT,
-    fonts,
-  });
-  const resvg = new Resvg(svg, {
-    fitTo: { mode: 'width', value: OG_WIDTH },
-  });
-  const pngBuffer = resvg.render().asPng();
-  fs.writeFileSync(outPath, pngBuffer);
+  const svg = await satori(vnode, { width: OG_WIDTH, height: OG_HEIGHT, fonts });
+  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } });
+  fs.writeFileSync(outPath, resvg.render().asPng());
 }
 
-function buildBrandCard({ title, subtitle, pill, chips, logoUri }) {
+function buildOpenBadgesPortalCard(logoUri) {
   const t = THEMES.google;
   return h(
     'div',
@@ -252,193 +249,137 @@ function buildBrandCard({ title, subtitle, pill, chips, logoUri }) {
         'div',
         {
           style: {
-            width: 1068,
-            height: 514,
+            width: 1084,
+            height: 526,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
           },
         },
-      // Header row
-      h(
-        'div',
-        {
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-          },
-        },
         h(
           'div',
-          { style: { display: 'flex', alignItems: 'center', gap: '14px' } },
+          { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' } },
           h(
             'div',
             {
               style: {
                 display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '8px 18px',
+                padding: '10px 22px',
                 borderRadius: '999px',
                 backgroundColor: t.pillBg,
                 border: `1.5px solid ${t.pillBorder}`,
                 color: t.pillText,
-                fontSize: '18px',
-                fontWeight: 700,
+                fontSize: '20px',
+                fontWeight: 800,
               },
             },
-            pill
+            'Open Badges 2.0 & 3.0'
+          ),
+          h(
+            'div',
+            { style: { display: 'flex', fontSize: '23px', fontWeight: 800, color: t.accent } },
+            'gdguhu.com/openbadges'
           )
         ),
         h(
           'div',
-          {
-            style: {
-              display: 'flex',
-              fontSize: '20px',
-              fontWeight: 700,
-              color: t.textSecondary,
-            },
-          },
-          'gdguhu.com'
-        )
-      ),
-      // Main center row
-      h(
-        'div',
-        {
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            gap: '44px',
-            width: '100%',
-          },
-        },
-        logoUri
-          ? h(
-              'div',
-              {
-                style: {
-                  display: 'flex',
-                  width: '186px',
-                  height: '186px',
-                  borderRadius: '34px',
-                  overflow: 'hidden',
-                  border: `2px solid ${t.frameBorder}`,
-                  backgroundColor: '#FFFFFF',
-                  flexShrink: 0,
+          { style: { display: 'flex', alignItems: 'center', gap: '46px', width: '100%' } },
+          logoUri
+            ? h(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    width: '224px',
+                    height: '224px',
+                    borderRadius: '38px',
+                    overflow: 'hidden',
+                    border: `2px solid ${t.frameBorder}`,
+                    backgroundColor: '#FFFFFF',
+                    flexShrink: 0,
+                  },
                 },
-              },
-              h('img', {
-                src: logoUri,
-                width: 186,
-                height: 186,
-                style: { width: '186px', height: '186px', objectFit: 'cover' },
-              })
-            )
-          : null,
-        h(
-          'div',
-          {
-            style: {
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 1,
-              gap: '12px',
-            },
-          },
+                h('img', { src: logoUri, width: 224, height: 224, style: { width: '224px', height: '224px', objectFit: 'cover' } })
+              )
+            : null,
           h(
             'div',
-            {
-              style: {
-                display: 'flex',
-                fontSize: '60px',
-                fontWeight: 800,
-                color: t.textPrimary,
-                lineHeight: 1.12,
-                letterSpacing: '-0.02em',
-              },
-            },
-            title
-          ),
-          h(
-            'div',
-            {
-              style: {
-                display: 'flex',
-                fontSize: '26px',
-                fontWeight: 600,
-                color: t.textSecondary,
-                lineHeight: 1.38,
-              },
-            },
-            subtitle
-          )
-        )
-      ),
-      // Footer chips
-      h(
-        'div',
-        {
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            borderTop: `2px solid ${t.frameBorder}`,
-            paddingTop: '22px',
-          },
-        },
-        h(
-          'div',
-          { style: { display: 'flex', gap: '12px', alignItems: 'center' } },
-          ...chips.map((label) =>
+            { style: { display: 'flex', flexDirection: 'column', flex: 1, gap: '16px' } },
             h(
               'div',
               {
                 style: {
                   display: 'flex',
-                  padding: '7px 16px',
-                  borderRadius: '999px',
-                  backgroundColor: '#F8F9FA',
-                  border: `1.5px solid ${t.frameBorder}`,
+                  fontSize: '68px',
+                  fontWeight: 800,
                   color: t.textPrimary,
-                  fontSize: '17px',
-                  fontWeight: 700,
+                  lineHeight: 1.08,
+                  letterSpacing: '-0.025em',
                 },
               },
-              label
+              'Certificados Digitales'
+            ),
+            h(
+              'div',
+              { style: { display: 'flex', fontSize: '29px', fontWeight: 600, color: t.textSecondary, lineHeight: 1.35 } },
+              'Acreditaciones oficiales verificables de GDG on Campus Universidad de Huelva'
             )
           )
         ),
         h(
           'div',
-          { style: { display: 'flex', gap: '8px', alignItems: 'center' } },
-          ...t.stripColors.map((col) =>
-            h('div', {
-              style: {
-                width: '14px',
-                height: '14px',
-                borderRadius: '999px',
-                backgroundColor: col,
-              },
-            })
+          {
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              borderTop: `2px solid ${t.frameBorder}`,
+              paddingTop: '22px',
+            },
+          },
+          h(
+            'div',
+            { style: { display: 'flex', gap: '14px', alignItems: 'center' } },
+            ...['Firma Ed25519', 'did:web:gdguhu.com', 'Compatible LinkedIn'].map((label) =>
+              h(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    padding: '9px 18px',
+                    borderRadius: '999px',
+                    backgroundColor: '#F8F9FA',
+                    border: `1.5px solid ${t.frameBorder}`,
+                    color: t.textPrimary,
+                    fontSize: '19px',
+                    fontWeight: 700,
+                  },
+                },
+                label
+              )
+            )
+          ),
+          h(
+            'div',
+            { style: { display: 'flex', gap: '10px', alignItems: 'center' } },
+            ...t.stripColors.map((col) =>
+              h('div', { style: { width: '16px', height: '16px', borderRadius: '999px', backgroundColor: col } })
+            )
           )
         )
-      )
       )
     )
   );
 }
 
-function buildCertificateCard({ recipientName, role, badgeName, issueDate, assertionId, styleKey, logoUri, badgeUri }) {
+function buildCertificateCard({ recipientName, role, badgeName, tags, issueDate, assertionId, styleKey, logoUri, badgeUri }) {
   const t = THEMES[styleKey] || THEMES.google;
   const nameLen = recipientName.length;
-  const nameFontSize = nameLen > 34 ? 38 : nameLen > 26 ? 45 : 52;
+  const nameFontSize = nameLen > 32 ? 44 : nameLen > 24 ? 54 : 62;
   const titleLen = badgeName.length;
-  const titleFontSize = titleLen > 44 ? 26 : 31;
+  const titleFontSize = titleLen > 42 ? 31 : 37;
+  const shownTags = Array.isArray(tags) ? tags.map((x) => String(x).trim()).filter(Boolean).slice(0, 3) : [];
 
   return h(
     'div',
@@ -472,247 +413,193 @@ function buildCertificateCard({ recipientName, role, badgeName, issueDate, asser
         'div',
         {
           style: {
-            width: 1072,
-            height: 520,
+            width: 1088,
+            height: 530,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
           },
         },
-      // Top institutional header
-      h(
-        'div',
-        {
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-          },
-        },
+        // Header institucional ampliado
         h(
           'div',
-          { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-          logoUri
+          { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' } },
+          h(
+            'div',
+            { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
+            logoUri
+              ? h(
+                  'div',
+                  {
+                    style: {
+                      display: 'flex',
+                      width: '68px',
+                      height: '68px',
+                      borderRadius: '16px',
+                      overflow: 'hidden',
+                      border: `2px solid ${t.frameBorder}`,
+                      backgroundColor: '#FFFFFF',
+                    },
+                  },
+                  h('img', { src: logoUri, width: 68, height: 68, style: { width: '68px', height: '68px', objectFit: 'cover' } })
+                )
+              : null,
+            h(
+              'div',
+              { style: { display: 'flex', flexDirection: 'column', gap: '2px' } },
+              h('div', { style: { display: 'flex', fontSize: '26px', fontWeight: 800, color: t.textPrimary } }, 'GDG on Campus'),
+              h('div', { style: { display: 'flex', fontSize: '20px', fontWeight: 700, color: t.accent } }, 'Universidad de Huelva')
+            )
+          ),
+          h(
+            'div',
+            {
+              style: {
+                display: 'flex',
+                alignItems: 'center',
+                padding: '10px 22px',
+                borderRadius: '999px',
+                backgroundColor: t.verifiedBg,
+                border: `1.5px solid ${t.verifiedBorder}`,
+                color: t.verifiedText,
+                fontSize: '18px',
+                fontWeight: 800,
+              },
+            },
+            'Open Badges 3.0 · Ed25519'
+          )
+        ),
+        // Bloque central protagonista (tipografía y medalla ampliadas para llenar el lienzo)
+        h(
+          'div',
+          { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '40px', width: '100%' } },
+          h(
+            'div',
+            { style: { display: 'flex', flexDirection: 'column', flex: 1, gap: '12px' } },
+            h(
+              'div',
+              { style: { display: 'flex', alignItems: 'center', gap: '14px' } },
+              h(
+                'div',
+                {
+                  style: {
+                    display: 'flex',
+                    padding: '7px 18px',
+                    borderRadius: '999px',
+                    backgroundColor: t.pillBg,
+                    border: `1.5px solid ${t.pillBorder}`,
+                    color: t.pillText,
+                    fontSize: '17px',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                  },
+                },
+                role
+              ),
+              issueDate
+                ? h('div', { style: { display: 'flex', fontSize: '20px', fontWeight: 600, color: t.textSecondary } }, issueDate)
+                : null
+            ),
+            h(
+              'div',
+              {
+                style: {
+                  display: 'flex',
+                  fontSize: `${titleFontSize}px`,
+                  fontWeight: 800,
+                  color: t.textPrimary,
+                  lineHeight: 1.14,
+                  marginTop: '2px',
+                },
+              },
+              badgeName
+            ),
+            h(
+              'div',
+              { style: { display: 'flex', fontSize: '21px', fontWeight: 600, color: t.textSecondary, marginTop: '6px' } },
+              'Certificado digital oficial otorgado a'
+            ),
+            h(
+              'div',
+              {
+                style: {
+                  display: 'flex',
+                  fontSize: `${nameFontSize}px`,
+                  fontWeight: 800,
+                  color: t.nameColor,
+                  lineHeight: 1.18,
+                  paddingTop: '2px',
+                  paddingBottom: '4px',
+                },
+              },
+              recipientName
+            ),
+            // Barra de acento + etiquetas de competencia
+            h(
+              'div',
+              { style: { display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px' } },
+              h(
+                'div',
+                { style: { display: 'flex', width: '96px', height: '6px', borderRadius: '999px', overflow: 'hidden' } },
+                ...t.stripColors.map((col) => h('div', { style: { flex: 1, height: '6px', backgroundColor: col } }))
+              ),
+              ...shownTags.map((tag) =>
+                h(
+                  'div',
+                  {
+                    style: {
+                      display: 'flex',
+                      padding: '5px 13px',
+                      borderRadius: '999px',
+                      backgroundColor: t.tagBg,
+                      color: t.tagText,
+                      fontSize: '15px',
+                      fontWeight: 700,
+                    },
+                  },
+                  `#${tag}`
+                )
+              )
+            )
+          ),
+          badgeUri
             ? h(
                 'div',
                 {
                   style: {
                     display: 'flex',
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '14px',
-                    overflow: 'hidden',
-                    border: `2px solid ${t.frameBorder}`,
-                    backgroundColor: '#FFFFFF',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '286px',
+                    height: '286px',
+                    borderRadius: '36px',
+                    backgroundColor: t.badgeBoxBg,
+                    border: `2.5px solid ${t.badgeBoxBorder}`,
+                    padding: '22px',
+                    flexShrink: 0,
                   },
                 },
-                h('img', {
-                  src: logoUri,
-                  width: 60,
-                  height: 60,
-                  style: { width: '60px', height: '60px', objectFit: 'cover' },
-                })
+                h('img', { src: badgeUri, width: 242, height: 242, style: { width: '242px', height: '242px', objectFit: 'contain' } })
               )
-            : null,
-          h(
-            'div',
-            { style: { display: 'flex', flexDirection: 'column', gap: '2px' } },
-            h(
-              'div',
-              { style: { display: 'flex', fontSize: '23px', fontWeight: 800, color: t.textPrimary } },
-              'GDG on Campus'
-            ),
-            h(
-              'div',
-              { style: { display: 'flex', fontSize: '17px', fontWeight: 700, color: t.accent } },
-              'Universidad de Huelva'
-            )
-          )
+            : null
         ),
+        // Pie verificable
         h(
           'div',
           {
             style: {
               display: 'flex',
               alignItems: 'center',
-              padding: '8px 18px',
-              borderRadius: '999px',
-              backgroundColor: t.verifiedBg,
-              border: `1.5px solid ${t.verifiedBorder}`,
-              color: t.verifiedText,
-              fontSize: '16px',
-              fontWeight: 700,
+              justifyContent: 'space-between',
+              width: '100%',
+              borderTop: `2px solid ${t.frameBorder}`,
+              paddingTop: '18px',
             },
           },
-          'Open Badges 3.0 · Ed25519'
+          h('div', { style: { display: 'flex', fontSize: '19px', fontWeight: 700, color: t.textSecondary } }, `Credencial verificable · ID ${assertionId}`),
+          h('div', { style: { display: 'flex', fontSize: '21px', fontWeight: 800, color: t.accent } }, 'gdguhu.com/openbadges')
         )
-      ),
-      // Main content row (Left details + Right badge art)
-      h(
-        'div',
-        {
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '38px',
-            width: '100%',
-          },
-        },
-        h(
-          'div',
-          {
-            style: {
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 1,
-              gap: '10px',
-            },
-          },
-          h(
-            'div',
-            { style: { display: 'flex', alignItems: 'center', gap: '12px' } },
-            h(
-              'div',
-              {
-                style: {
-                  display: 'flex',
-                  padding: '6px 16px',
-                  borderRadius: '999px',
-                  backgroundColor: t.pillBg,
-                  border: `1.5px solid ${t.pillBorder}`,
-                  color: t.pillText,
-                  fontSize: '15px',
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                },
-              },
-              role
-            ),
-            issueDate
-              ? h(
-                  'div',
-                  {
-                    style: {
-                      display: 'flex',
-                      fontSize: '17px',
-                      fontWeight: 600,
-                      color: t.textSecondary,
-                    },
-                  },
-                  issueDate
-                )
-              : null
-          ),
-          h(
-            'div',
-            {
-              style: {
-                display: 'flex',
-                fontSize: `${titleFontSize}px`,
-                fontWeight: 800,
-                color: t.textPrimary,
-                lineHeight: 1.18,
-                marginTop: '4px',
-              },
-            },
-            badgeName
-          ),
-          h(
-            'div',
-            {
-              style: {
-                display: 'flex',
-                fontSize: '18px',
-                fontWeight: 600,
-                color: t.textSecondary,
-                marginTop: '8px',
-              },
-            },
-            'Certificado digital oficial otorgado a'
-          ),
-          h(
-            'div',
-            {
-              style: {
-                display: 'flex',
-                fontSize: `${nameFontSize}px`,
-                fontWeight: 800,
-                color: t.nameColor,
-                lineHeight: 1.24,
-                paddingTop: '4px',
-                paddingBottom: '4px',
-              },
-            },
-            recipientName
-          )
-        ),
-        badgeUri
-          ? h(
-              'div',
-              {
-                style: {
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '236px',
-                  height: '236px',
-                  borderRadius: '32px',
-                  backgroundColor: t.badgeBoxBg,
-                  border: `2px solid ${t.badgeBoxBorder}`,
-                  padding: '22px',
-                  flexShrink: 0,
-                },
-              },
-              h('img', {
-                src: badgeUri,
-                width: 192,
-                height: 192,
-                style: { width: '192px', height: '192px', objectFit: 'contain' },
-              })
-            )
-          : null
-      ),
-      // Bottom verification strip
-      h(
-        'div',
-        {
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            borderTop: `2px solid ${t.frameBorder}`,
-            paddingTop: '18px',
-          },
-        },
-        h(
-          'div',
-          {
-            style: {
-              display: 'flex',
-              fontSize: '17px',
-              fontWeight: 700,
-              color: t.textSecondary,
-            },
-          },
-          `Credencial verificable · ID ${assertionId}`
-        ),
-        h(
-          'div',
-          {
-            style: {
-              display: 'flex',
-              fontSize: '18px',
-              fontWeight: 800,
-              color: t.accent,
-            },
-          },
-          'gdguhu.com/openbadges'
-        )
-      )
       )
     )
   );
@@ -721,43 +608,16 @@ function buildCertificateCard({ recipientName, role, badgeName, issueDate, asser
 async function main() {
   fs.mkdirSync(ogCertDir, { recursive: true });
   const fonts = loadFonts();
-  const logoUri = await imageToDataUri(path.join(publicDir, 'images', 'gdgoc-uhu-logo.jpg'), 240);
+  const logoUri = await imageToDataUri(path.join(publicDir, 'images', 'gdgoc-uhu-logo.jpg'), 280);
 
-  // 1. Hub OG card
-  await renderPng(
-    buildBrandCard({
-      title: 'GDGoC UHU',
-      subtitle: 'Google Developer Group on Campus · Universidad de Huelva',
-      pill: 'Portal Oficial',
-      chips: ['Cyber Trainer', 'Open Badges', 'Eventos y Talleres'],
-      logoUri,
-    }),
-    fonts,
-    path.join(ogDir, 'hub.png')
-  );
+  await renderPng(buildOpenBadgesPortalCard(logoUri), fonts, path.join(ogDir, 'openbadges.png'));
 
-  // 2. Open Badges portal OG card
-  await renderPng(
-    buildBrandCard({
-      title: 'Certificados Digitales',
-      subtitle: 'Acreditaciones oficiales verificables de GDG on Campus Universidad de Huelva',
-      pill: 'Open Badges 2.0 & 3.0',
-      chips: ['Firma Ed25519', 'did:web:gdguhu.com', 'Compatible LinkedIn'],
-      logoUri,
-    }),
-    fonts,
-    path.join(ogDir, 'openbadges.png')
-  );
-
-  // 3. Per-certificate OG cards
   const badgesById = new Map();
   for (const filePath of walkJsonFiles(badgesDir)) {
     const id = path.basename(filePath, '.json');
     try {
       badgesById.set(id, JSON.parse(fs.readFileSync(filePath, 'utf-8')));
-    } catch {
-      // ignore invalid badge json
-    }
+    } catch {}
   }
 
   let certCount = 0;
@@ -775,13 +635,14 @@ async function main() {
 
     const styleKey = assertion.styleOverride || badge.style || 'google';
     const badgeImgRel = String(badge.image || '').replace(/^\/+/, '');
-    const badgeUri = badgeImgRel ? await imageToDataUri(path.join(publicDir, badgeImgRel), 240) : null;
+    const badgeUri = badgeImgRel ? await imageToDataUri(path.join(publicDir, badgeImgRel), 300) : null;
 
     await renderPng(
       buildCertificateCard({
         recipientName: String(assertion.recipient?.name || '').trim(),
         role: String(assertion.role || 'Participante').trim(),
         badgeName: String(badge.name || '').trim(),
+        tags: badge.tags || [],
         issueDate: formatDateEs(assertion.issuedOn),
         assertionId,
         styleKey,
@@ -794,7 +655,7 @@ async function main() {
     certCount += 1;
   }
 
-  console.log(`[og] Generadas tarjetas Open Graph 1200x630: hub.png, openbadges.png y ${certCount} certificados.`);
+  console.log(`[og] Generadas tarjetas Open Graph 1200x630: openbadges.png y ${certCount} certificados.`);
 }
 
 main().catch((err) => {

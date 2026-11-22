@@ -12,6 +12,7 @@ export default defineConfig({
   output: 'static',
   build: {
     format: 'directory', // Genera archivos limpios como /api/badges/issuer.json directamente
-    inlineStylesheets: 'always'
+    inlineStylesheets: 'always',
+    assets: '_astro-ob', // Namespace dedicado para arquitectura Multi-Zone en gdguhu.com
   }
 });

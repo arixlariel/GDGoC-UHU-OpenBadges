@@ -4,60 +4,29 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "redirects": [
-    { "source": "/ig", "destination": "https://www.instagram.com/gdgoc.huelva/", "permanent": false },
-    { "source": "/instagram", "destination": "https://www.instagram.com/gdgoc.huelva/", "permanent": false },
-    { "source": "/linkedin", "destination": "https://www.linkedin.com/company/gdgoc-huelva", "permanent": false },
-    { "source": "/in", "destination": "https://www.linkedin.com/company/gdgoc-huelva", "permanent": false },
-    { "source": "/comunidad", "destination": "https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/", "permanent": false },
-    { "source": "/bevy", "destination": "https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/", "permanent": false },
-    { "source": "/gdg", "destination": "https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/", "permanent": false },
-    { "source": "/ctf", "destination": "/cybertrainer/", "permanent": false },
-    { "source": "/cyber", "destination": "/cybertrainer/", "permanent": false },
-    { "source": "/badges", "destination": "/openbadges/", "permanent": false },
-    { "source": "/certificados", "destination": "/openbadges/", "permanent": false }
+    { "source": "/", "destination": "/openbadges/", "permanent": false }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Strict-Transport-Security",
-          "value": "max-age=31536000"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
-        }
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
       ]
     },
     {
       "source": "/images/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
       "source": "/vendor/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
@@ -68,64 +37,25 @@
       ]
     },
     {
-      "source": "/_astro/(.*)",
+      "source": "/_astro-ob/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/(favicon.*|apple-touch-icon\\.png)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=604800, stale-while-revalidate=86400"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
       "source": "/.well-known/did.json",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/did+json; charset=utf-8"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, stale-while-revalidate=86400"
-        }
+        { "key": "Content-Type", "value": "application/did+json; charset=utf-8" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
       ]
     },
     {
       "source": "/api/badges/(.*)",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/json; charset=utf-8"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=300, stale-while-revalidate=3600"
-        }
-      ]
-    },
-    {
-      "source": "/(sitemap\\.xml|robots\\.txt)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, stale-while-revalidate=86400"
-        }
+        { "key": "Content-Type", "value": "application/json; charset=utf-8" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "public, max-age=300, stale-while-revalidate=3600" }
       ]
     }
   ]
