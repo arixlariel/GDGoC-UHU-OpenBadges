@@ -17,6 +17,10 @@ const STYLE_INFO: Record<string, { icon: string; label: string }> = {
 };
 
 const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) : null;
+const lockedTitle =
+  section === 'hub'
+    ? 'Estilo oficial fijo para la portada de GDGoC UHU'
+    : 'Estilo fijo asignado a este certificado en su emisión';
 const brandHref = section === 'hub' ? getAssetUrl('/') : getOpenBadgesPath('/');
 const brandSubtitle = section === 'hub' ? 'Universidad de Huelva' : 'Open Badges';
 ---
@@ -59,7 +63,7 @@ const brandSubtitle = section === 'hub' ? 'Universidad de Huelva' : 'Open Badges
       {lockedMeta ? (
         <div
           class="theme-pill-btn inline-flex items-center justify-center gap-2 h-[42px] px-[1.05rem] rounded-full text-[0.88rem] leading-none font-semibold transition-all duration-300 select-none cursor-default whitespace-nowrap"
-          title="Estilo fijo asignado a este certificado en su emisión"
+          title={lockedTitle}
         >
           <span class="text-base leading-none">{lockedMeta.icon}</span>
           <span>{lockedMeta.label}</span>
