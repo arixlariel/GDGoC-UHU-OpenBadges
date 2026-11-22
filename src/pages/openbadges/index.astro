@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getAssetUrl, getOpenBadgesPath, isShowcaseAssertion } from '@/config/site';
+import { getAssetUrl, getFullUrl, getOpenBadgesPath, isShowcaseAssertion } from '@/config/site';
 import { getBadgeThumbUrl } from '@/utils/assetVersion';
 
 const badges = await getCollection('badges');
@@ -57,6 +57,9 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
 <BaseLayout
   title="GDGoC UHU Open Badges"
   description="Acreditaciones oficiales en relación a los eventos tecnológicos que organiza el Google Developer Group on Campus de la Universidad de Huelva."
+  image={getFullUrl('/og/openbadges.png')}
+  ogImageWidth={1200}
+  ogImageHeight={630}
   section="openbadges"
   preloadHeroImage={true}
 >

@@ -4,6 +4,7 @@ dist/
 .vercel/
 public/images/badges/thumbs/
 public/vendor/
+public/og/
 
 # Dependencies
 node_modules/

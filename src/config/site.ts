@@ -24,7 +24,7 @@ export const siteConfig = {
   linkedinUrl: 'https://www.linkedin.com/company/gdgoc-huelva',
   // ID numérico oficial de la página de empresa en LinkedIn (linkedin.com/company/<ID>/admin/).
   // Cuando se configure, el botón "Añadir a LinkedIn" mostrará automáticamente el logo de la página.
-  linkedinOrganizationId: '',
+  linkedinOrganizationId: '146739355',
   instagramUrl: 'https://www.instagram.com/gdgoc.huelva/',
 };
 

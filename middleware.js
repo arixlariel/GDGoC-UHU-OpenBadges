@@ -73,8 +73,7 @@ function inlineCyberMaintenanceHtml() {
     '.strip{height:6px;background:linear-gradient(90deg,#00F0FF,#FF007F,#FFE600,#00FF66)}' +
     'main{flex:1;display:grid;place-items:center;padding:28px 16px}' +
     '.card{position:relative;max-width:580px;width:100%;border-radius:24px;padding:36px 28px;text-align:center;background:rgba(11,17,36,.92);border:1.5px solid rgba(0,240,255,.4);box-shadow:0 0 42px rgba(0,240,255,.16);overflow:hidden}' +
-    '.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#00F0FF;background:rgba(0,240,255,.12);border:1px solid rgba(0,240,255,.35);margin-bottom:20px}' +
-    '.dot{width:8px;height:8px;border-radius:999px;background:#FFE600;box-shadow:0 0 10px #FFE600}' +
+    '.code{font-family:ui-monospace,monospace;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#94A3B8;margin-bottom:10px}' +
     'h1{margin:0 0 12px;font-size:clamp(1.5rem,4vw,2rem);color:#F0F9FF}' +
     'p{margin:0 auto 24px;max-width:460px;line-height:1.6;color:#94A3B8;font-size:.95rem}' +
     '.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}' +
@@ -82,13 +81,13 @@ function inlineCyberMaintenanceHtml() {
     '.btn-primary{background:linear-gradient(90deg,#00F0FF,#FF007F);color:#05070F;border:none}' +
     '</style></head><body>' +
     '<div class="strip"></div><main><div class="card">' +
-    '<div class="pill"><span class="dot"></span><span>Mantenimiento · Cyber Trainer</span></div>' +
+    '<div class="code">HTTP 503 · Servicio temporalmente en pausa</div>' +
     '<h1>Cyber Trainer en mantenimiento</h1>' +
-    '<p>El servidor de retos CTF se encuentra temporalmente en mantenimiento o reiniciándose. Tu progreso y tus flags están a salvo; vuelve a intentarlo en unos segundos.</p>' +
+    '<p>El servidor de retos CTF se encuentra temporalmente en mantenimiento o reiniciándose. Tu progreso y tus flags están a salvo; volveremos en unos minutos</p>' +
     '<div class="actions">' +
     '<button class="btn btn-primary" onclick="location.reload()">Reintentar ahora</button>' +
-    '<a class="btn" href="https://gdguhu.com/">Ir a gdguhu.com</a>' +
-    '<a class="btn" href="https://gdguhu.com/openbadges/">Ir a Open Badges</a>' +
+    '<a class="btn" href="https://www.linkedin.com/company/gdgoc-huelva" target="_blank" rel="noopener noreferrer">LinkedIn</a>' +
+    '<a class="btn" href="https://www.instagram.com/gdgoc.huelva/" target="_blank" rel="noopener noreferrer">Instagram</a>' +
     '</div></div></main></body></html>'
   );
 }

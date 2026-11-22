@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    # Sincronización diaria automática de próximos eventos de Bevy en gdguhu.com (06:00 UTC)
-    - cron: '0 6 * * *'
+    # Sincronización automática 2 veces al día de próximos eventos de Bevy en gdguhu.com (00:00 y 15:00 CET)
+    - cron: '0 14,23 * * *'
   workflow_dispatch:
 
 permissions:
@@ -56,6 +56,10 @@ jobs:
           test -f .vercel/output/static/openbadges/index.html
           test -f .vercel/output/static/openbadges/generador-local.html
           test -f .vercel/output/static/vendor/jsonld.min.js
+          test -f .vercel/output/static/og/hub.png
+          test -f .vercel/output/static/og/openbadges.png
+          FIRST_OG=$(ls .vercel/output/static/og/cert/*.png | head -n 1)
+          test -n "$FIRST_OG"
           test -f .vercel/output/static/mantenimiento/index.html
           test -f .vercel/output/static/mantenimiento/openbadges/index.html
           test -f .vercel/output/static/mantenimiento/cybertrainer/index.html

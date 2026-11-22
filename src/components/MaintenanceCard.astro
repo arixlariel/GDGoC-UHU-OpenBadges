@@ -1,5 +1,5 @@
 ---
-import { siteConfig, getAssetUrl, getOpenBadgesPath } from '@/config/site';
+import { siteConfig } from '@/config/site';
 
 interface Props {
   scope: 'hub' | 'openbadges' | 'cybertrainer';
@@ -9,34 +9,19 @@ const { scope } = Astro.props;
 
 const COPY = {
   hub: {
-    pill: 'Mantenimiento programado · gdguhu.com',
     title: 'Estamos mejorando el portal',
     description:
-      'Estamos realizando tareas de mantenimiento y actualización en el portal oficial de GDGoC UHU. Volveremos a estar operativos en unos minutos.',
-    links: [
-      { href: siteConfig.communityUrl, label: 'Comunidad GDGoC UHU ↗', external: true },
-      { href: siteConfig.instagramUrl, label: 'Instagram ↗', external: true },
-    ],
+      'Estamos realizando tareas de mantenimiento y actualización en el portal oficial de GDGoC UHU. Volveremos en unos minutos',
   },
   openbadges: {
-    pill: 'Mantenimiento programado · Open Badges',
     title: 'Open Badges en mantenimiento',
     description:
-      'Estamos actualizando la plataforma de certificados digitales e insignias verificables. Tus credenciales siguen seguras y volverán a estar disponibles en breve.',
-    links: [
-      { href: getAssetUrl('/'), label: 'Ir a gdguhu.com', external: false },
-      { href: getAssetUrl('/cybertrainer/'), label: 'Ir a Cyber Trainer', external: false },
-    ],
+      'Estamos actualizando la plataforma de certificados digitales e insignias verificables. Tus credenciales siguen seguras y volveremos en unos minutos',
   },
   cybertrainer: {
-    pill: 'Mantenimiento · Cyber Trainer',
     title: 'Cyber Trainer en mantenimiento',
     description:
-      'El servidor de retos CTF se encuentra temporalmente en mantenimiento o reiniciándose. Tu progreso y tus flags están a salvo; vuelve a intentarlo en unos segundos.',
-    links: [
-      { href: getAssetUrl('/'), label: 'Ir a gdguhu.com', external: false },
-      { href: getOpenBadgesPath('/'), label: 'Ir a Open Badges', external: false },
-    ],
+      'El servidor de retos CTF se encuentra temporalmente en mantenimiento o reiniciándose. Tu progreso y tus flags están a salvo; volveremos en unos minutos',
   },
 }[scope];
 ---
@@ -47,20 +32,6 @@ const COPY = {
     class="tilt-card theme-card w-full rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
   >
     <div class="tilt-glare absolute inset-0 pointer-events-none z-20 rounded-3xl"></div>
-
-    <!-- Barra superior de 4 colores (se adapta automáticamente a Google / Cyber) -->
-    <div class="theme-card-strip absolute top-0 left-0 right-0 h-1.5 grid grid-cols-4">
-      <div class="bg-[#4285F4]"></div>
-      <div class="bg-[#EA4335]"></div>
-      <div class="bg-[#FBBC04]"></div>
-      <div class="bg-[#34A853]"></div>
-    </div>
-
-    <!-- Píldora de estado -->
-    <div class="theme-badge-pill inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-      <span class="w-2 h-2 rounded-full bg-[#FBBC04] animate-pulse"></span>
-      <span>{COPY.pill}</span>
-    </div>
 
     <!-- Icono central -->
     <div class="mx-auto w-20 h-20 rounded-2xl border theme-border flex items-center justify-center mb-6 shadow-sm maint-icon-box">
@@ -99,7 +70,7 @@ const COPY = {
       {COPY.description}
     </p>
 
-    <!-- Acciones -->
+    <!-- Acciones unificadas en las 3 pantallas de mantenimiento -->
     <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
       <button
         type="button"
@@ -112,16 +83,23 @@ const COPY = {
         <span>Reintentar ahora</span>
       </button>
 
-      {COPY.links.map((item) => (
-        <a
-          href={item.href}
-          target={item.external ? '_blank' : undefined}
-          rel={item.external ? 'noopener noreferrer' : undefined}
-          class="theme-pill-btn inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300"
-        >
-          <span>{item.label}</span>
-        </a>
-      ))}
+      <a
+        href={siteConfig.linkedinUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="theme-pill-btn inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300"
+      >
+        <span>LinkedIn</span>
+      </a>
+
+      <a
+        href={siteConfig.instagramUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="theme-pill-btn inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300"
+      >
+        <span>Instagram</span>
+      </a>
     </div>
   </div>
 </section>

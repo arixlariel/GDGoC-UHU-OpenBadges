@@ -31,6 +31,7 @@ const isPublicShowcase = isShowcaseAssertion(assertion);
 const credentialV3Url = getFullUrl(`/api/badges/v3/${assertionId}.json`);
 const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
 const badgeImageUrl = getFullUrl(badge.data.image);
+const ogCertImageUrl = getFullUrl(`/og/cert/${assertionId}.png`);
 const canonicalCertUrl = getOpenBadgesUrl(`/cert/${assertionId}/`);
 
 const certStyle = (assertion.data.styleOverride || badge.data.style || 'google') as 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
@@ -63,7 +64,9 @@ const certSchema = {
 <BaseLayout
   title={pageTitle}
   description={pageDescription}
-  image={badgeImageUrl}
+  image={ogCertImageUrl}
+  ogImageWidth={1200}
+  ogImageHeight={630}
   certStyle={certStyle}
   section="openbadges"
   jsonLdUrl={credentialV3Url}

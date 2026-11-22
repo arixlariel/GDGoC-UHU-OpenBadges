@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { siteConfig, getAssetUrl, getOpenBadgesPath } from '@/config/site';
+import { siteConfig, getAssetUrl, getFullUrl, getOpenBadgesPath } from '@/config/site';
 import {
   BEVY_UPCOMING_API_URL,
   fetchUpcomingBevyEvents,
@@ -14,6 +14,9 @@ const extraEventsCount = Math.max(0, upcomingEvents.length - 1);
 <BaseLayout
   title="GDGoC UHU"
   description={siteConfig.hubDescription}
+  image={getFullUrl('/og/hub.png')}
+  ogImageWidth={1200}
+  ogImageHeight={630}
   certStyle="google"
   section="hub"
   preloadHeroImage={true}
@@ -287,7 +290,7 @@ const extraEventsCount = Math.max(0, upcomingEvents.length - 1);
         slot.classList.remove('hidden');
       }
 
-      fetch(apiUrl, { headers: { Accept: 'application/json' } })
+      fetch(apiUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' })
         .then(function (r) {
           return r.ok ? r.json() : null;
         })
