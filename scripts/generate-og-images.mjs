@@ -225,10 +225,11 @@ function buildBrandCard({ title, subtitle, pill, chips, logoUri }) {
     'div',
     {
       style: {
-        width: '1200px',
-        height: '630px',
+        width: 1200,
+        height: 630,
         display: 'flex',
-        padding: '14px',
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundImage: t.outerBg,
         fontFamily: 'Plus Jakarta Sans',
       },
@@ -237,17 +238,27 @@ function buildBrandCard({ title, subtitle, pill, chips, logoUri }) {
       'div',
       {
         style: {
-          width: '1172px',
-          height: '602px',
+          width: 1168,
+          height: 598,
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
+          alignItems: 'center',
+          justifyContent: 'center',
           backgroundColor: t.innerBgColor,
-          borderRadius: '26px',
-          padding: '44px 54px',
+          borderRadius: 26,
           border: `2px solid ${t.frameBorder}`,
         },
       },
+      h(
+        'div',
+        {
+          style: {
+            width: 1068,
+            height: 514,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          },
+        },
       // Header row
       h(
         'div',
@@ -417,6 +428,7 @@ function buildBrandCard({ title, subtitle, pill, chips, logoUri }) {
           )
         )
       )
+      )
     )
   );
 }
@@ -432,10 +444,11 @@ function buildCertificateCard({ recipientName, role, badgeName, issueDate, asser
     'div',
     {
       style: {
-        width: '1200px',
-        height: '630px',
+        width: 1200,
+        height: 630,
         display: 'flex',
-        padding: '14px',
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundImage: t.outerBg,
         fontFamily: 'Plus Jakarta Sans',
       },
@@ -444,18 +457,28 @@ function buildCertificateCard({ recipientName, role, badgeName, issueDate, asser
       'div',
       {
         style: {
-          width: '1172px',
-          height: '602px',
+          width: 1168,
+          height: 598,
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
+          alignItems: 'center',
+          justifyContent: 'center',
           backgroundColor: t.innerBgColor,
           ...(t.innerBgImage ? { backgroundImage: t.innerBgImage } : {}),
-          borderRadius: '26px',
-          padding: '36px 48px',
+          borderRadius: 26,
           border: `2px solid ${t.frameBorder}`,
         },
       },
+      h(
+        'div',
+        {
+          style: {
+            width: 1072,
+            height: 520,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          },
+        },
       // Top institutional header
       h(
         'div',
@@ -689,6 +712,7 @@ function buildCertificateCard({ recipientName, role, badgeName, issueDate, asser
           },
           'gdguhu.com/openbadges'
         )
+      )
       )
     )
   );
