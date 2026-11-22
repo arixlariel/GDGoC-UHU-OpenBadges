@@ -1,11 +1,12 @@
 ---
-import { siteConfig, getAssetUrl } from '@/config/site';
+import { siteConfig, getAssetUrl, getOpenBadgesPath } from '@/config/site';
 
 interface Props {
   lockedStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
+  section?: 'hub' | 'openbadges';
 }
 
-const { lockedStyle } = Astro.props;
+const { lockedStyle, section = 'openbadges' } = Astro.props;
 
 const STYLE_INFO: Record<string, { icon: string; label: string }> = {
   google: { icon: '🔵', label: 'Google' },
@@ -16,10 +17,12 @@ const STYLE_INFO: Record<string, { icon: string; label: string }> = {
 };
 
 const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) : null;
+const brandHref = section === 'hub' ? getAssetUrl('/') : getOpenBadgesPath('/');
+const brandSubtitle = section === 'hub' ? 'Universidad de Huelva' : 'Open Badges';
 ---
 
 <header class="theme-header sticky top-0 z-40 backdrop-blur-xl transition-all duration-500">
-  <!-- Top Brand Strip (adapts to active theme) -->
+  <!-- Top Brand Strip (idéntico 6px / h-1.5 que en Cyber Trainer) -->
   <div class="theme-top-strip h-1.5 w-full flex overflow-hidden">
     <div class="h-full flex-1 bg-[#4285F4]"></div>
     <div class="h-full flex-1 bg-[#EA4335]"></div>
@@ -27,25 +30,26 @@ const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) 
     <div class="h-full flex-1 bg-[#34A853]"></div>
   </div>
 
-  <div class="max-w-[1320px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
-    <a href={getAssetUrl('/')} class="flex items-center gap-3 group min-w-0">
-      <!-- Official GDGoC UHU Logo -->
-      <div class="w-11 h-11 rounded-xl overflow-hidden border theme-border shadow-sm shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 bg-white">
+  <!-- Dimensiones unificadas 1:1 con GDGoC UHU Cyber Trainer (max-w-[1320px], py-[0.92rem], logo 48x48, pills 42px) -->
+  <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-[0.92rem] flex items-center justify-between gap-3">
+    <a href={brandHref} class="flex items-center gap-[0.8rem] group min-w-0">
+      <!-- Official GDGoC UHU Logo (48x48, border-radius 13px) -->
+      <div class="w-12 h-12 rounded-[13px] overflow-hidden border theme-border shadow-sm shrink-0 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300 bg-white">
         <img
           src={getAssetUrl('/images/gdgoc-uhu-logo-sm.webp')}
-          alt=""
-          width="44"
-          height="44"
+          alt="GDG on Campus Universidad de Huelva"
+          width="48"
+          height="48"
           decoding="async"
           class="w-full h-full object-cover"
         />
       </div>
       <div class="truncate">
-        <div class="font-bold text-[15px] theme-text-primary leading-tight tracking-tight">
+        <div class="font-bold text-[1.04rem] theme-text-primary leading-[1.2] tracking-[-0.01em] truncate">
           GDGoC UHU
         </div>
-        <div class="text-xs font-medium theme-text-secondary leading-tight truncate">
-          Certificados Digitales
+        <div class="text-[0.8rem] font-medium theme-text-secondary leading-[1.2] truncate">
+          {brandSubtitle}
         </div>
       </div>
     </a>
@@ -54,7 +58,7 @@ const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) 
       <!-- Style / Theme Switcher Dropdown (or Locked Badge on Certificate pages) -->
       {lockedMeta ? (
         <div
-          class="theme-pill-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 select-none cursor-default"
+          class="theme-pill-btn inline-flex items-center justify-center gap-2 h-[42px] px-[1.05rem] rounded-full text-[0.88rem] leading-none font-semibold transition-all duration-300 select-none cursor-default whitespace-nowrap"
           title="Estilo fijo asignado a este certificado en su emisión"
         >
           <span class="text-base leading-none">{lockedMeta.icon}</span>
@@ -80,7 +84,7 @@ const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) 
             type="button"
             id="theme-menu-button"
             aria-expanded="false"
-            class="theme-pill-btn inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer select-none"
+            class="theme-pill-btn inline-flex items-center justify-center gap-2 h-[42px] px-[1.05rem] rounded-full text-[0.88rem] leading-none font-semibold transition-all duration-300 cursor-pointer select-none whitespace-nowrap"
             title="Cambiar estilo visual de la página"
           >
             <span id="current-theme-icon" class="text-base leading-none">🔵</span>
@@ -143,15 +147,16 @@ const lockedMeta = lockedStyle ? (STYLE_INFO[lockedStyle] || STYLE_INFO.google) 
         </div>
       )}
 
-      <!-- Comunidad Button -->
+      <!-- Comunidad Button (Web oficial del GDGoC UHU en Bevy) -->
       <a
         href={siteConfig.communityUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="theme-primary-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-white transition-all duration-300 text-xs sm:text-sm font-semibold"
+        title="Web oficial del GDGoC UHU"
+        class="theme-primary-btn inline-flex items-center justify-center gap-1.5 h-[42px] px-[1.05rem] rounded-full text-white transition-all duration-300 text-[0.88rem] leading-none font-semibold whitespace-nowrap"
       >
         <span>Comunidad</span>
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
         </svg>
       </a>

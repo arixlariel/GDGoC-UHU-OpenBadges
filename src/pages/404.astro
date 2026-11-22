@@ -1,13 +1,14 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getAssetUrl } from '@/config/site';
+import { getAssetUrl, getOpenBadgesPath } from '@/config/site';
 ---
 
 <BaseLayout
-  title="404 · Página no encontrada | GDGoC UHU Open Badges"
-  description="No se ha encontrado el certificado digital o la página solicitada en la plataforma Open Badges de GDG on Campus Universidad de Huelva."
+  title="404 · Página no encontrada | GDGoC UHU"
+  description="No se ha encontrado el certificado digital o la página solicitada en gdguhu.com (GDG on Campus Universidad de Huelva)."
+  section="openbadges"
 >
-  <section class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10 flex items-center justify-center">
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10 flex items-center justify-center flex-1">
     <div
       data-tilt-max="1.5"
       class="tilt-card theme-card w-full rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
@@ -24,7 +25,7 @@ import { getAssetUrl } from '@/config/site';
       <!-- Status Pill -->
       <div class="theme-badge-pill inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
         <span class="w-2 h-2 rounded-full bg-[#EA4335] animate-ping"></span>
-        <span>Error 404 · Credencial no localizada</span>
+        <span>Error 404 · Recurso no localizado</span>
       </div>
 
       <!-- Big 404 Number -->
@@ -68,7 +69,7 @@ import { getAssetUrl } from '@/config/site';
         </form>
       </div>
 
-      <script is:inline define:vars={{ certBaseUrl: getAssetUrl('/cert/') }}>
+      <script is:inline define:vars={{ certBaseUrl: getOpenBadgesPath('/cert/') }}>
         (function () {
           const form = document.getElementById('search-404-cert-form');
           const input = document.getElementById('search-404-cert-id');
@@ -88,19 +89,25 @@ import { getAssetUrl } from '@/config/site';
             clearInput();
             input.blur();
             if (val) {
-              window.location.href = certBaseUrl + encodeURIComponent(val);
+              window.location.href = certBaseUrl + encodeURIComponent(val) + '/';
             }
           });
         })();
       </script>
 
-      <!-- Back to Home Button -->
+      <!-- Navigation Buttons -->
       <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href={getOpenBadgesPath('/')}
+          class="theme-primary-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-white text-xs sm:text-sm font-bold transition-all duration-300"
+        >
+          <span>← Ir a Open Badges</span>
+        </a>
         <a
           href={getAssetUrl('/')}
           class="theme-pill-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300"
         >
-          <span>← Volver a la página principal</span>
+          <span>Ir a gdguhu.com</span>
         </a>
       </div>
     </div>

@@ -122,7 +122,7 @@ async function main() {
     if (duplicateId) {
       console.error(`\n⚠️  Certificado duplicado detectado:`);
       console.error(`   "${name}" (${email}) ya tiene un certificado emitido para "${badgeId}".`);
-      console.error(`   ID existente: ${duplicateId} → https://gdguhu.com/cert/${duplicateId}\n`);
+      console.error(`   ID existente: ${duplicateId} → https://gdguhu.com/openbadges/cert/${duplicateId}/\n`);
       process.exit(1);
     }
 
@@ -160,7 +160,7 @@ async function main() {
     console.log('------------------------------------------------------');
     console.log(`ID de Certificado: ${assertionId}`);
     console.log(`Archivo generado:  src/content/assertions/${assertionId}.json`);
-    console.log(`Ruta Web:          /cert/${assertionId}`);
+    console.log(`Ruta Web:          /openbadges/cert/${assertionId}/`);
     console.log(`API OB 3.0 (VC):   /api/badges/v3/${assertionId}.json`);
     console.log(`API OB 2.0:        /api/badges/assertion/${assertionId}.json`);
     console.log('------------------------------------------------------');

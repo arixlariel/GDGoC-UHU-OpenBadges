@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { getFullUrl, isShowcaseAssertion } from '@/config/site';
+import { getFullUrl, getOpenBadgesUrl, isShowcaseAssertion } from '@/config/site';
 
 export const GET: APIRoute = async () => {
   const assertions = (await getCollection('assertions')).filter((a) => isShowcaseAssertion(a));
@@ -13,13 +13,19 @@ export const GET: APIRoute = async () => {
       changefreq: 'weekly',
       priority: '1.0',
     },
+    {
+      loc: getOpenBadgesUrl('/'),
+      lastmod: today,
+      changefreq: 'weekly',
+      priority: '0.9',
+    },
     ...assertions.map((assertion) => {
       const id = assertion.id.replace(/^.*\/|\.json$/g, '');
       const issuedDate = assertion.data.issuedOn
         ? new Date(assertion.data.issuedOn).toISOString().split('T')[0]
         : today;
       return {
-        loc: getFullUrl(`/cert/${id}`),
+        loc: getOpenBadgesUrl(`/cert/${id}/`),
         lastmod: issuedDate,
         changefreq: 'monthly',
         priority: '0.8',

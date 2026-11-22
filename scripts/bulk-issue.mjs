@@ -322,7 +322,7 @@ async function main() {
   for (const a of attendees) {
     const duplicateId = findDuplicateAssertion(existingAssertions, a.email, a.nombre, a.badgeId);
     if (duplicateId) {
-      console.log(`  ⏭️  Omitido (duplicado): ${a.nombre} ya tiene este certificado → https://gdguhu.com/cert/${duplicateId}`);
+      console.log(`  ⏭️  Omitido (duplicado): ${a.nombre} ya tiene este certificado → https://gdguhu.com/openbadges/cert/${duplicateId}/`);
       skippedDuplicates++;
       continue;
     }
@@ -365,10 +365,10 @@ async function main() {
       assertionId,
       badgeId: a.badgeId,
       role: a.role,
-      url: `https://gdguhu.com/cert/${assertionId}/`,
+      url: `https://gdguhu.com/openbadges/cert/${assertionId}/`,
     });
 
-    console.log(`  ✅ ${a.nombre} → https://gdguhu.com/cert/${assertionId}`);
+    console.log(`  ✅ ${a.nombre} → https://gdguhu.com/openbadges/cert/${assertionId}/`);
     emitted++;
   }
 

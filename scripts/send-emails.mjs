@@ -13,7 +13,7 @@
  *       "email": "aarongarridosilvera@gmail.com",
  *       "assertionId": "69679d9fa12d24f4a673b54b",
  *       "badgeId": "capture-the-flag-reversing-de-binarios",
- *       "url": "https://gdguhu.com/cert/69679d9fa12d24f4a673b54b"
+ *       "url": "https://gdguhu.com/openbadges/cert/69679d9fa12d24f4a673b54b/"
  *     }
  *   ]
  *
@@ -219,7 +219,7 @@ export function buildEmailText(
     '',
     '---',
     'Certificado verificado bajo el estándar internacional Open Badges 2.0 & 3.0 de 1EdTech.',
-    `Alojado oficialmente en ${cleanDomain} (${siteUrl})`,
+    `Alojado oficialmente en ${cleanDomain}/openbadges (${siteUrl}/openbadges/)`,
   ];
 
   return lines.filter((line, idx, arr) => line !== '' || arr[idx - 1] !== '').join('\n');
@@ -313,7 +313,7 @@ export function buildEmailHTML(
       <div style="padding: 20px 30px; background-color: ${t.footerBg}; border-top: 1px solid ${t.headerBorder}; text-align: center;">
         <p style="margin: 0; font-size: 11px; color: ${t.textMuted}; line-height: 1.4;">
           Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0 &amp; 3.0</strong> de 1EdTech.<br>
-          Alojado oficialmente en <a href="${siteUrl}" target="_blank" rel="noopener noreferrer" style="color: ${t.accent}; text-decoration: none; font-weight: 700;">${cleanDomain}</a>
+          Alojado oficialmente en <a href="${siteUrl}/openbadges/" target="_blank" rel="noopener noreferrer" style="color: ${t.accent}; text-decoration: none; font-weight: 700;">${cleanDomain}/openbadges</a>
         </p>
       </div>
 
@@ -383,7 +383,7 @@ async function main() {
     const resolvedStyle = item.style || assertionData?.styleOverride || badge.style || 'google';
     const resolvedEvidence = item.evidence || assertionData?.evidence || '';
     const resolvedRole = item.role || assertionData?.role || 'Asistencia certificada';
-    const rawCertUrl = item.url || `${siteUrl}/cert/${item.assertionId}`;
+    const rawCertUrl = item.url || `${siteUrl}/openbadges/cert/${item.assertionId}/`;
     const certUrl = rawCertUrl.endsWith('/') ? rawCertUrl : `${rawCertUrl}/`;
     const assertionJsonUrl = `${siteUrl}/api/badges/assertion/${item.assertionId}.json`;
     const cleanBadgeSubject = String(badge.name || item.badgeId).replace(/[!¡]+/g, '').trim();

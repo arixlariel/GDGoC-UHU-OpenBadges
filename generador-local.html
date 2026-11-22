@@ -2524,7 +2524,7 @@
       }
 
       // QR Vectorial
-      const certUrl = `https://gdguhu.com/cert/${current.id}/`;
+      const certUrl = `https://gdguhu.com/openbadges/cert/${current.id}/`;
       const qr = getQrsvg(certUrl);
       const qrSvgEl = document.getElementById('dp-qr-svg');
       qrSvgEl.setAttribute('viewBox', `-1 -1 ${qr.size + 2} ${qr.size + 2}`);
@@ -2720,7 +2720,7 @@
       <div style="padding:20px 30px;background-color:${t.footerBg};border-top:1px solid ${t.headerBorder};text-align:center;">
         <p style="margin:0;font-size:11px;color:${t.textMuted};line-height:1.4;">
           Certificado verificado bajo el estándar internacional <strong>Open Badges 2.0 &amp; 3.0</strong> de 1EdTech.<br>
-          Alojado oficialmente en <a href="https://gdguhu.com" target="_blank" rel="noopener noreferrer" style="color:${t.accent};text-decoration:none;font-weight:700;">gdguhu.com</a>
+          Alojado oficialmente en <a href="https://gdguhu.com/openbadges/" target="_blank" rel="noopener noreferrer" style="color:${t.accent};text-decoration:none;font-weight:700;">gdguhu.com/openbadges</a>
         </p>
       </div>
     </div>
@@ -2765,7 +2765,7 @@
             role: obj.role,
             style: obj.styleOverride || 'google',
             evidence: obj.evidence || '',
-            url: `https://gdguhu.com/cert/${r.id}/`,
+            url: `https://gdguhu.com/openbadges/cert/${r.id}/`,
           });
         }
       }

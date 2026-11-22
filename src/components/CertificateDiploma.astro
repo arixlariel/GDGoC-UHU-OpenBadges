@@ -1,5 +1,5 @@
 ---
-import { getFullUrl, getAssetUrl } from '@/config/site';
+import { getAssetUrl, getOpenBadgesUrl } from '@/config/site';
 import { getVersionedAssetUrl } from '@/utils/assetVersion';
 import { generateQrSvgPath } from '@/utils/qrcode';
 
@@ -18,7 +18,7 @@ const issueDate = new Date(assertion.data.issuedOn).toLocaleDateString('es-ES', 
   day: 'numeric',
 });
 
-const certUrl = getFullUrl(`/cert/${assertionId}`);
+const certUrl = getOpenBadgesUrl(`/cert/${assertionId}/`);
 const logoUrl = getAssetUrl('/images/gdgoc-uhu-logo.jpg');
 const badgeImageUrl = getVersionedAssetUrl(badge.data.image);
 const qr = generateQrSvgPath(certUrl);

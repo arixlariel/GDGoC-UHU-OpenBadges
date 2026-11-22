@@ -13,9 +13,13 @@ const basePath = process.env.BASE_PATH || '';
 export const siteConfig = {
   url: siteUrl.replace(/\/$/, ''),
   base: basePath,
+  hubName: 'GDGoC UHU',
+  hubDescription: 'Portal oficial de Google Developer Group on Campus Universidad de Huelva (UHU): Open Badges y Cyber Trainer.',
   name: 'GDGoC UHU Open Badges',
   shortName: 'GDGoC UHU Open Badges',
   description: 'Plataforma oficial de certificados digitales e insignias Open Badges de GDG on Campus Universidad de Huelva.',
+  openBadgesPath: '/openbadges',
+  cyberTrainerPath: '/cybertrainer',
   communityUrl: 'https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/',
   linkedinUrl: 'https://www.linkedin.com/company/gdgoc-huelva',
   instagramUrl: 'https://www.instagram.com/gdgoc.huelva/',
@@ -35,6 +39,16 @@ export function getAssetUrl(path: string): string {
     : '';
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${base}${cleanPath}`;
+}
+
+export function getOpenBadgesPath(subpath = '/'): string {
+  const clean = !subpath || subpath === '/' ? '/' : (subpath.startsWith('/') ? subpath : `/${subpath}`);
+  return getAssetUrl(`${siteConfig.openBadgesPath}${clean}`);
+}
+
+export function getOpenBadgesUrl(subpath = '/'): string {
+  const clean = !subpath || subpath === '/' ? '/' : (subpath.startsWith('/') ? subpath : `/${subpath}`);
+  return getFullUrl(`${siteConfig.openBadgesPath}${clean}`);
 }
 
 export const issuerConfig: IssuerConfig = {

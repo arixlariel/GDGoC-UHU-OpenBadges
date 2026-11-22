@@ -9,6 +9,7 @@ interface Props {
   image?: string;
   theme?: string;
   certStyle?: 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
+  section?: 'hub' | 'openbadges';
   jsonLdUrl?: string;
   jsonLdV2Url?: string;
   noIndex?: boolean;
@@ -21,6 +22,7 @@ const {
   description = siteConfig.description,
   image = getFullUrl('/images/gdgoc-uhu-logo.jpg'),
   certStyle,
+  section = 'openbadges',
   jsonLdUrl,
   jsonLdV2Url,
   noIndex = false,
@@ -171,6 +173,21 @@ const defaultSchema = {
         font-family: 'Google Sans', 'Plus Jakarta Sans', 'Google Sans Fallback', system-ui, -apple-system, sans-serif;
         overflow-x: hidden;
         transition: background 0.5s ease, color 0.4s ease;
+      }
+
+      /* Ocultar barras de scroll visibles igual que en Cyber Trainer para evitar saltos de ancho */
+      html,
+      body,
+      * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar,
+      *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
       }
 
       .cv-auto {
@@ -1447,11 +1464,11 @@ const defaultSchema = {
 
     </div>
 
-    <Header lockedStyle={certStyle} />
-    <main class="flex-1 relative z-10">
+    <Header lockedStyle={certStyle} section={section} />
+    <main class="flex-1 relative z-10 flex flex-col">
       <slot />
     </main>
-    <Footer />
+    <Footer section={section} />
 
     <!-- Global Theme Switcher Interactive Script -->
     <script is:inline>

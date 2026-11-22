@@ -173,7 +173,7 @@ function processSingleJsonFile(filePath) {
         collectedEmails.push({
           ...mail,
           assertionId: finalId,
-          url: `https://gdguhu.com/cert/${finalId}/`,
+          url: `https://gdguhu.com/openbadges/cert/${finalId}/`,
         });
       }
       console.log(`📧 Cola de ${parsed.pendingEmails.length} correos extraída de ${baseName}`);

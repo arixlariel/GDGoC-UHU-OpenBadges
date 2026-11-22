@@ -1,0 +1,87 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CertificateDiploma from '@/components/CertificateDiploma.astro';
+import BadgeModal from '@/components/BadgeModal.astro';
+import { getFullUrl, getOpenBadgesUrl, isShowcaseAssertion } from '@/config/site';
+
+export async function getStaticPaths() {
+  const assertions = await getCollection('assertions');
+  return assertions.map((assertion) => ({
+    params: { id: assertion.id.replace(/^.*\/|\.json$/g, '') },
+    props: { assertion },
+  }));
+}
+
+const { assertion } = Astro.props;
+const assertionId = Astro.params.id as string;
+
+// Fetch badge (supports both root badges/ and badges/publish/)
+const allBadges = await getCollection('badges');
+const badgeEntry =
+  (await getEntry('badges', assertion.data.badgeId)) ||
+  allBadges.find((b) => b.id.replace(/^.*\/|\.json$/g, '') === assertion.data.badgeId);
+
+if (!badgeEntry) {
+  throw new Error(`Badge no encontrado: ${assertion.data.badgeId}`);
+}
+
+const badge = badgeEntry;
+const isPublicShowcase = isShowcaseAssertion(assertion);
+const credentialV3Url = getFullUrl(`/api/badges/v3/${assertionId}.json`);
+const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
+const badgeImageUrl = getFullUrl(badge.data.image);
+const canonicalCertUrl = getOpenBadgesUrl(`/cert/${assertionId}/`);
+
+const certStyle = (assertion.data.styleOverride || badge.data.style || 'google') as 'google' | 'cyber' | 'piscina' | 'nieve' | 'caramelos';
+
+const pageTitle = `${badge.data.name} - ${assertion.data.recipient.name} | GDGoC UHU Open Badges`;
+const pageDescription = `Certificado digital oficial: ${badge.data.name} otorgado a ${assertion.data.recipient.name} por GDG on Campus Universidad de Huelva.`;
+
+const certSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOccupationalCredential',
+  '@id': canonicalCertUrl,
+  name: `${badge.data.name} - ${assertion.data.recipient.name}`,
+  description: badge.data.description,
+  credentialCategory: assertion.data.role,
+  dateCreated: assertion.data.issuedOn,
+  url: canonicalCertUrl,
+  image: badgeImageUrl,
+  recognizedBy: {
+    '@type': 'EducationalOrganization',
+    name: 'GDG on Campus Universidad de Huelva',
+    url: 'https://gdguhu.com',
+  },
+  about: {
+    '@type': 'Person',
+    name: assertion.data.recipient.name,
+  },
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  image={badgeImageUrl}
+  certStyle={certStyle}
+  section="openbadges"
+  jsonLdUrl={credentialV3Url}
+  jsonLdV2Url={assertionJsonUrl}
+  noIndex={!isPublicShowcase}
+  schemaData={certSchema}
+>
+  <CertificateDiploma
+    assertion={assertion}
+    badge={badge}
+    assertionId={assertionId}
+    initialStyle={certStyle}
+  />
+
+  <!-- Modal interactivo Web Component (Añadir a tu cartera) -->
+  <BadgeModal
+    assertionUrl={credentialV3Url}
+    assertionId={assertionId}
+    badgeName={badge.data.name}
+  />
+</BaseLayout>
