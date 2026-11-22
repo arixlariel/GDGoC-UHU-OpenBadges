@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/optimize-badge-thumbs.mjs && mkdir -p public/openbadges public/vendor && cp generador-local.html public/openbadges/generador-local.html && cp generador-local.html public/generador-local.html && cp node_modules/jsonld/dist/jsonld.min.js public/vendor/jsonld.min.js && astro build",
     "preview": "astro preview",
     "issue": "node scripts/issue-badge.mjs",
     "bulk": "node scripts/bulk-issue.mjs"
