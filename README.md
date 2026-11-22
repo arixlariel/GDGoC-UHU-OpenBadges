@@ -1,12 +1,12 @@
-# GDGoC Universidad de Huelva — Portal Web & Open Badges (`gdguhu.com`)
+# GDGoC Universidad de Huelva — Open Badges (`gdguhu.com/openbadges`)
 
-Bienvenido al repositorio oficial del portal web de **Google Developer Group on Campus Huelva University (GDGoC UHU)** y del sistema de emisión y verificación de certificados digitales basados en los estándares internacionales **Open Badges 2.0 & 3.0** (*W3C Verifiable Credentials*) de **1EdTech Global**. Solo los organizadores con acceso al repositorio pueden administrar las acreditaciones y el portal.
+Bienvenido al repositorio oficial del sistema de emisión, firma criptográfica y verificación de certificados digitales de **Google Developer Group on Campus Huelva University (GDGoC UHU)**, basados en los estándares internacionales **Open Badges 2.0 & 3.0** (*W3C Verifiable Credentials v2*) de **1EdTech Global**. Solo los organizadores con acceso al repositorio pueden administrar las insignias y emitir acreditaciones.
 
 ---
 
 ## Índice
 
-1. [Este repositorio aloja toda la web base de `gdguhu.com`](#1-este-repositorio-aloja-toda-la-web-base-de-gdguhucom)
+1. [Integración Multi-Zone dentro de `gdguhu.com`](#1-integración-multi-zone-dentro-de-gdguhucom)
 2. [Arquitectura del Sistema](#2-arquitectura-del-sistema)
 3. [Estructura de Archivos](#3-estructura-de-archivos)
 4. [Cómo crear una nueva badge (`BadgeClass`)](#4-cómo-crear-una-nueva-badge-badgeclass)
@@ -18,36 +18,47 @@ Bienvenido al repositorio oficial del portal web de **Google Developer Group on 
    - [Método E: Generador visual local (`generador-local.html`)](#----método-e-generador-visual-local-generador-localhtml)
 6. [Cómo publicar los certificados (`git push`)](#6-cómo-publicar-los-certificados-git-push)
 7. [Cómo compartir los certificados con los miembros](#7-cómo-compartir-los-certificados-con-los-miembros)
-8. [Cómo verificar un certificado en el Validador Oficial de 1EdTech](#8-cómo-verificar-un-certificado-en-el-validador-oficial-de-1edtech)
+8. [Cómo verificar un certificado (en tiempo real y en 1EdTech Global)](#8-cómo-verificar-un-certificado-en-tiempo-real-y-en-1edtech-global)
 9. [Privacidad y Protección de Datos (RGPD/LOPD)](#9-privacidad-y-protección-de-datos-rgpdlopd)
 
 ---
 
-## 1. Este repositorio aloja toda la web base de `gdguhu.com`
+## 1. Integración Multi-Zone dentro de `gdguhu.com`
 
-Aunque nació como el sistema de certificados **Open Badges**, **este repositorio (`GDGoC-UHU-OpenBadges`) aloja y despliega realmente el sitio web completo base de [`https://gdguhu.com`](https://gdguhu.com)** a través de GitHub Pages + Cloudflare:
+Este repositorio (`GDGoC-UHU-OpenBadges`) despliega de forma independiente el servicio dedicado de certificados en Vercel (`gdguhu-openbadges`) y queda montado de manera transparente bajo [`https://gdguhu.com`](https://gdguhu.com) a través del portal principal **[`GDGoC-UHU-Web`](https://github.com/arixlariel/GDGoC-UHU-Web)**:
 
-| Ruta oficial | Servicio | Cómo se sirve |
+| Ruta oficial en `gdguhu.com` | Servicio | Cómo se sirve |
 | :--- | :--- | :--- |
-| **`https://gdguhu.com/`** | **Landing principal de GDGoC UHU** (hub con accesos directos a Open Badges y Cyber Trainer) | Generado en este repositorio (`src/pages/index.astro`) vía GitHub Pages |
-| **`https://gdguhu.com/openbadges/`** | **Portal oficial de Open Badges** (buscador, vitrina y verificación) | Generado en este repositorio (`src/pages/openbadges/index.astro`) vía GitHub Pages |
-| **`https://gdguhu.com/openbadges/cert/<ID>/`** | **Diploma público verificable** (PDF A4, LinkedIn, QR, OB 3.0) | Generado en este repositorio (`src/pages/openbadges/cert/[id].astro`) |
-| **`https://gdguhu.com/cert/<ID>/`** | **Compatibilidad heredada** para enlaces y códigos QR emitidos antes de la migración | Redirección automática a `/openbadges/cert/<ID>/` (`src/pages/cert/[id].astro`) |
-| **`https://gdguhu.com/.well-known/did.json`** y **`/api/badges/**`** | **Identidad `did:web:gdguhu.com` y JSON-LD firmados OB 3.0 / OB 2.0** | Generados en la raíz por este repositorio para mantener 100% válidas todas las firmas ya emitidas |
-| **`https://gdguhu.com/cybertrainer/`** | **GDGoC UHU Cyber Trainer** (plataforma CTFd) | Proxy inverso HTTPS en Cloudflare Workers apuntando al servidor CTFd (tema mantenido en [`GDGoC-UHU-CTFd`](https://github.com/arixlariel/GDGoC-UHU-CTFd)) |
+| **`https://gdguhu.com/openbadges/`** | **Portal oficial de Open Badges** (buscador, vitrina y verificación) | Generado en este repositorio (`src/pages/openbadges/index.astro`) y servido vía Multi-Zone |
+| **`https://gdguhu.com/openbadges/cert/<ID>/`** | **Diploma público verificable** (verificación Ed25519 en vivo, PDF A4, LinkedIn, QR, OB 3.0) | Generado en este repositorio (`src/pages/openbadges/cert/[id].astro`) |
+| **`https://gdguhu.com/cert/<ID>/`** | **Compatibilidad heredada** para enlaces y códigos QR emitidos anteriormente | Redirección automática a `/openbadges/cert/<ID>/` (`src/pages/cert/[id].astro`) |
+| **`https://gdguhu.com/.well-known/did.json`** y **`/api/badges/**`** | **Identidad `did:web:gdguhu.com` y JSON-LD firmados OB 3.0 / OB 2.0** | Generados en este repositorio para mantener 100% válidas todas las firmas emitidas |
+| **`https://gdguhu.com/og/openbadges.png`** y **`/og/cert/<ID>.png`** | **Tarjetas Open Graph `1200×630`** en el estilo de cada diploma | Generadas automáticamente en cada build (`scripts/generate-og-images.mjs`) |
+| **`https://gdguhu.com/openbadges/generador-local.html`** | **Generador visual online/offline** de badges, certificados y `publish.json` | Publicado automáticamente en cada build desde `generador-local.html` |
+
+> La portada general de `gdguhu.com`, los eventos de Bevy, los enlaces cortos, las páginas de mantenimiento y el proxy de Cyber Trainer viven en **[`GDGoC-UHU-Web`](https://github.com/arixlariel/GDGoC-UHU-Web)**; el tema de Cyber Trainer vive en **[`GDGoC-UHU-CTFd`](https://github.com/arixlariel/GDGoC-UHU-CTFd)**.
 
 ---
 
 ## 2. Arquitectura del Sistema
 
-- **Dominio, DNS, HTTPS y Edge Routing**: Cloudflare (`gdguhu.com` con proxy naranja + SSL Full + Worker en `/cybertrainer/*`)
-- **Portal principal**: `https://gdguhu.com`
+- **Hosting y Multi-Zone**: **Vercel** (proyecto dedicado `gdguhu-openbadges`, assets aislados en `/_astro-ob/*` para cero colisiones con el portal principal y despliegue automático vía GitHub Actions en cada `push` a `main`).
 - **Web de verificación Open Badges**: `https://gdguhu.com/openbadges/`
-- **Hosting estático**: GitHub Pages (compilado y desplegado automáticamente con GitHub Actions en cada `push` a `main`)
 - **Estándares emitidos en paralelo**:
   - **Open Badges 3.0 (`W3C Verifiable Credentials v2`)**: Cada certificado se compila y firma automáticamente durante el build en `/api/badges/v3/<id>.json` con firma criptográfica **Ed25519** (`DataIntegrityProof` · `eddsa-rdfc-2022`), vinculada a la identidad descentralizada oficial `did:web:gdguhu.com` publicada en `https://gdguhu.com/.well-known/did.json`.
+  - **Verificación criptográfica en tiempo real en navegador**: Al abrir cualquier certificado online, `src/utils/verifyOb3Client.ts` descarga en vivo `/.well-known/did.json` y `/api/badges/v3/<id>.json`, canoniza con `URDNA2015` y verifica matemáticamente la firma Ed25519 en el propio navegador (`WebCrypto Ed25519` con respaldo puro RFC 8032).
   - **Open Badges 2.0 (retrocompatibilidad)**: Se mantienen intactos los endpoints `/api/badges/assertion/<id>.json`, `/api/badges/class/<badgeId>.json` y `/api/badges/issuer.json` con verificación *hosted* y hash `SHA-256` + salt.
-- **Secreto de firma en GitHub Actions**: La clave privada Ed25519 se almacena exclusivamente en `Settings -> Secrets and variables -> Actions -> OB3_PRIVATE_KEY` (nunca en el repositorio). Si alguna vez fuera necesario rotarla, existe el asistente `node scripts/generate-ob3-key.mjs --write`.
+- **LinkedIn y Open Graph (`1200×630`)**:
+  - El botón **Añadir a LinkedIn** incluye el `organizationId` oficial de GDGoC UHU (`146739355`) para mostrar el logotipo de la organización en el perfil del alumno.
+  - En cada build se generan tarjetas Open Graph `1200×630` PNG optimizadas (< 120 KB) para el portal y cada certificado individual usando **Satori**, **Resvg** y **Sharp**.
+- **Envío automático de correos (`Resend` + respaldo Gmail)**:
+  - Los correos se emiten automáticamente tras el despliegue mediante **Resend** desde `GDG on Campus Universidad de Huelva <certificados@gdguhu.com>` (dominio `gdguhu.com` verificado con DKIM, SPF y DMARC en Cloudflare DNS), con `Reply-To: gdgoc.huelva@gmail.com` y copia oculta `BCC: gdgoc.huelva+enviados@gmail.com`.
+  - Cualquier respuesta enviada a `certificados@gdguhu.com` se reenvía automáticamente a `gdgoc.huelva@gmail.com` mediante **Cloudflare Email Routing**.
+  - Si alguna vez `RESEND_API_KEY` no estuviera disponible, `scripts/send-emails.mjs` cuenta con respaldo automático vía Gmail SMTP (`GMAIL_USER` / `GMAIL_APP_PASSWORD`).
+- **Secretos en GitHub Actions (`Settings -> Secrets and variables -> Actions`)**:
+  - `OB3_PRIVATE_KEY`: clave privada Ed25519 para firmar credenciales Open Badges 3.0 (nunca en el repositorio; rotación con `node scripts/generate-ob3-key.mjs --write`).
+  - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`: despliegue del proyecto `gdguhu-openbadges`.
+  - `RESEND_API_KEY` *(y `GMAIL_USER` / `GMAIL_APP_PASSWORD` como respaldo)*: envío automatizado de certificados.
 
 ---
 
@@ -55,17 +66,23 @@ Aunque nació como el sistema de certificados **Open Badges**, **este repositori
 
 ```text
 Open Badges/
+├── .github/
+│   └── workflows/
+│       ├── deploy.yml                   <-- Build OB3/OG, deploy a Vercel y envío de emails Resend
+│       └── issue-certificates.yml       <-- Emisión masiva desde CSV en GitHub Actions
 ├── public/
-│   ├── .nojekyll                        <-- Permite servir .well-known/ en GitHub Pages
 │   ├── .well-known/
 │   │   └── did.json                     <-- Clave pública oficial Ed25519 (did:web:gdguhu.com)
+│   ├── robots.txt                       <-- Bloquea indexación directa del dominio interno *.vercel.app
 │   └── images/
-│       └── badges/                      <-- Aquí se guardan los logo.png de las badges
+│       └── badges/                      <-- Aquí se guardan los logo.png de las badges (512×512)
 ├── scripts/
 │   ├── issue-badge.mjs                  <-- Asistente automático para emitir certificados individuales
 │   ├── bulk-issue.mjs                   <-- Emisión masiva de certificados desde archivo .csv
-│   ├── send-emails.mjs                  <-- Envío automático de correos para los certificados
+│   ├── send-emails.mjs                  <-- Envío automático vía Resend (certificados@gdguhu.com) + Gmail
 │   ├── process-publish.mjs              <-- Procesa publish.json y limpia archivos temporales en CI
+│   ├── optimize-badge-thumbs.mjs        <-- Genera miniaturas WebP 128×128 para la vitrina
+│   ├── generate-og-images.mjs           <-- Genera /og/openbadges.png y /og/cert/<id>.png (1200×630)
 │   └── generate-ob3-key.mjs             <-- Utilidad de rotación de clave Ed25519 (did:web)
 ├── src/
 │   ├── content/
@@ -74,7 +91,7 @@ Open Badges/
 │   │   └── assertions/                  <-- Aquí se guardan los certificados
 │   │       └── publish/                 <-- Carpeta temporal para subir nuevos certificados
 │   ├── pages/
-│   │   ├── index.astro                  <-- Landing principal del dominio (https://gdguhu.com/)
+│   │   ├── 404.astro                    <-- Página 404 para certificados no encontrados
 │   │   ├── openbadges/
 │   │   │   ├── index.astro              <-- Portal principal Open Badges (/openbadges/)
 │   │   │   └── cert/[id].astro          <-- Página oficial del diploma (/openbadges/cert/<id>/)
@@ -83,12 +100,18 @@ Open Badges/
 │   │       ├── v3/[id].json.ts          <-- Generador y firmador automático Open Badges 3.0
 │   │       ├── assertion/[id].json.ts   <-- Endpoint Open Badges 2.0 (Assertion)
 │   │       ├── class/[id].json.ts       <-- Endpoint Open Badges 2.0 (BadgeClass)
-│   │       └── issuer.json.ts           <-- Endpoint Open Badges 2.0 (Issuer)
+│   │       ├── issuer.json.ts           <-- Endpoint Open Badges 2.0 (Issuer)
+│   │       ├── styles.json.ts           <-- Mapa de estilos bloqueados para mantenimiento Multi-Zone
+│   │       └── showcase.json.ts         <-- Lista de certificados públicos para sitemap.xml global
 │   ├── utils/
-│   │   └── openbadges3.ts               <-- Construcción y firma Ed25519 (eddsa-rdfc-2022)
+│   │   ├── openbadges3.ts               <-- Construcción y firma Ed25519 (eddsa-rdfc-2022)
+│   │   ├── verifyOb3Client.ts           <-- Verificación criptográfica Ed25519 en tiempo real en cliente
+│   │   └── pdfDownload.ts               <-- Exportación directa del diploma en PDF A4 horizontal
 │   └── config/
-│       └── site.ts                      <-- Configuración del portal, rutas y organizadores en vitrina
-└── generador-local.html                 <-- Generador visual offline (desplegado en gdguhu.com/openbadges/generador-local.html)
+│       └── site.ts                      <-- Configuración del portal, LinkedIn orgId y vitrina
+├── astro.config.mjs                     <-- Configuración Astro Multi-Zone (`assets: '_astro-ob'`)
+├── vercel.json                          <-- Cabeceras CORS, caché y redirección raíz -> /openbadges/
+└── generador-local.html                 <-- Generador visual offline (gdguhu.com/openbadges/generador-local.html)
 ```
 
 ---
@@ -197,7 +220,7 @@ npm run bulk -- ARCHIVO.csv --badge cumpleanos-feliz --role "Asistencia certific
 ```
 
 - Si añades `--only-checked-in`, solo se emitirán certificados a quienes tengan asistencia registrada
-- Usando este método se mandarán correos automáticos a la hora de publicar los certificados (punto 6)
+- Usando este método se mandarán correos automáticos desde `certificados@gdguhu.com` a la hora de publicar los certificados (punto 6)
 
 ---
 
@@ -211,21 +234,23 @@ npm run bulk -- ARCHIVO.csv --badge cumpleanos-feliz --role "Asistencia certific
    - **ID de la badge** (nombre `.json` en `src/content/badges/`, ej: `cumpleanos-feliz`)
    - **Rol o reconocimiento** (`Asistencia certificada`, `1er Premio - Mejor Proyecto`, `Ponente`, ...)
    - **¿Solo emitir a check-ins?**
-   - **¿Enviar `gmail` automático con la `URL` del certificado?**
+   - **¿Enviar correo automático con la `URL` del certificado?**
    - **Pega el contenido del `.csv`**: Abre el archivo con cualquier bloc de notas para copiar y pegar todo el texto
 
-***Publica automáticamente los certificados (punto 6) y permite mandar correos personalizados en masa***
+***Publica automáticamente los certificados (punto 6) y envía correos personalizados en masa desde `certificados@gdguhu.com`***
 
 ---
 
 ### --- Método E: Generador visual local (`generador-local.html`)
 
-> Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vista previas en tiempo real y demás
+> Funciona en **Chrome, Brave, Opera, Mozilla Firefox y Safari**. Permite tanto crear nuevas badges como emitir certificados individuales o en masa arrastrando el `.csv`. Incluye vistas previas en tiempo real del diploma, del correo HTML y del archivo `.json`
 
 1. Descarga el archivo `generador-local.html` situado en la carpeta raíz del proyecto o abre su versión siempre actualizada en este **[enlace](https://gdguhu.com/openbadges/generador-local.html)**
 2. Configura las badges, certificados y correos a generar
 3. Pulsa `Descargar publish.json` para guardar el archivo maestro
-4. Arrastra `publish.json` (o la carpeta `publish` si usas archivos sueltos) directamente a la raíz del repositorio en GitHub y haz el commit (o continúa al punto 6)
+4. Arrastra `publish.json` directamente a la raíz del repositorio en GitHub y haz el commit (o continúa al punto 6)
+
+> Al subir `publish.json`, el pipeline clasifica automáticamente cada archivo en `src/content/badges/` y `src/content/assertions/`, borra `publish.json`, publica y firma los certificados en Vercel y envía automáticamente el correo oficial desde `certificados@gdguhu.com` con el diseño exacto de la vista previa (en 1–2 minutos). Si subes únicamente un `.json` de assertion suelto sin `publish.json`, se colocará y publicará en la web automáticamente pero no se enviará correo porque el archivo individual no contiene emails en texto plano.
 
 ---
 
@@ -247,16 +272,20 @@ Una vez publicado, el certificado del alumno tiene su propia `URL`, única e int
 
 **`https://gdguhu.com/openbadges/cert/<NOMBRE24CIFRASHEX>/`**
 
-*(Los enlaces anteriores con el formato `https://gdguhu.com/cert/<ID>/` siguen funcionando y redirigen automáticamente a la nueva ruta definitiva.)*
+*(Los enlaces anteriores con el formato `https://gdguhu.com/cert/<ID>/` siguen funcionando y redirigen automáticamente a la nueva ruta definitiva. Al compartir el enlace en LinkedIn o redes compatibles se muestra automáticamente su tarjeta Open Graph `1200×630` personalizada.)*
 
 ---
 
-## 8. Cómo verificar un certificado en el Validador Oficial de 1EdTech
+## 8. Cómo verificar un certificado (en tiempo real y en 1EdTech Global)
 
-Cualquier persona, empresa o universidad puede comprobar la autenticidad e integridad criptográfica de un certificado emitido por GDGoC UHU usando el **validador oficial de 1EdTech Global (Open Badges 3.0)**:
+### --- Verificación automática en tiempo real en la web
+Cada vez que cualquier persona abre un certificado online en `https://gdguhu.com/openbadges/cert/<ID>/`, el navegador descarga en vivo `/.well-known/did.json` y `/api/badges/v3/<ID>.json`, canoniza el documento con `URDNA2015` y verifica matemáticamente la firma **Ed25519** mostrando la píldora **«Verificado en tiempo real · Firma Ed25519 auténtica»**. Pulsando **Detalles** se puede consultar el DID emisor, la clave pública, la huella SHA-256 real del documento y repetir la verificación al instante.
+
+### --- Verificación externa en el Validador Oficial de 1EdTech Global
+Cualquier persona, empresa o universidad puede comprobar además la autenticidad de forma independiente usando el **validador oficial de 1EdTech Global (Open Badges 3.0)**:
 
 1. Abre la página pública de tu certificado (`https://gdguhu.com/openbadges/cert/<ID>/`)
-2. Pulsa el botón **Añadir a tu cartera**
+2. Pulsa el botón **Añadir a tu cartera** (o **Verificar en 1EdTech Global ↗** dentro de *Detalles*)
 3. Copia el enlace de la credencial **Open Badges 3.0** (`https://gdguhu.com/api/badges/v3/<ID>.json`) o descarga el archivo `.json` firmado
 4. Accede al **[Validador 1EdTech Global (Open Badges 3.0)](https://vc.1ed.tech/upload?validatorId=OB30Inspector)**
 5. Pega el enlace o sube el `.json` y pulsa **Upload** para verificar su firma criptográfica sin errores

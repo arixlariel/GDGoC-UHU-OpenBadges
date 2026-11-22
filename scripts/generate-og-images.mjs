@@ -213,7 +213,15 @@ function formatDateEs(iso) {
 async function renderPng(vnode, fonts, outPath) {
   const svg = await satori(vnode, { width: OG_WIDTH, height: OG_HEIGHT, fonts });
   const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } });
-  fs.writeFileSync(outPath, resvg.render().asPng());
+  let pngBuffer = resvg.render().asPng();
+  const sharp = await loadSharp();
+  if (sharp) {
+    // Compresión PNG-8 con paleta de alta fidelidad (< 120 KB) para compatibilidad instantánea con WhatsApp (< 300 KB) y LinkedIn
+    pngBuffer = await sharp(pngBuffer)
+      .png({ palette: true, quality: 92, compressionLevel: 9, effort: 9 })
+      .toBuffer();
+  }
+  fs.writeFileSync(outPath, pngBuffer);
 }
 
 function buildOpenBadgesPortalCard(logoUri) {
