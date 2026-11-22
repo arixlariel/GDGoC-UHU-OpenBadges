@@ -225,8 +225,8 @@ function buildBrandCard({ title, subtitle, pill, chips, logoUri }) {
     'div',
     {
       style: {
-        width: '100%',
-        height: '100%',
+        width: '1200px',
+        height: '630px',
         display: 'flex',
         padding: '14px',
         backgroundImage: t.outerBg,
@@ -237,14 +237,14 @@ function buildBrandCard({ title, subtitle, pill, chips, logoUri }) {
       'div',
       {
         style: {
-          width: '100%',
-          height: '100%',
+          width: '1172px',
+          height: '602px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           backgroundColor: t.innerBgColor,
           borderRadius: '26px',
-          padding: '48px 56px',
+          padding: '44px 54px',
           border: `2px solid ${t.frameBorder}`,
         },
       },
@@ -432,8 +432,8 @@ function buildCertificateCard({ recipientName, role, badgeName, issueDate, asser
     'div',
     {
       style: {
-        width: '100%',
-        height: '100%',
+        width: '1200px',
+        height: '630px',
         display: 'flex',
         padding: '14px',
         backgroundImage: t.outerBg,
@@ -444,15 +444,15 @@ function buildCertificateCard({ recipientName, role, badgeName, issueDate, asser
       'div',
       {
         style: {
-          width: '100%',
-          height: '100%',
+          width: '1172px',
+          height: '602px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           backgroundColor: t.innerBgColor,
           ...(t.innerBgImage ? { backgroundImage: t.innerBgImage } : {}),
           borderRadius: '26px',
-          padding: '38px 48px',
+          padding: '36px 48px',
           border: `2px solid ${t.frameBorder}`,
         },
       },
