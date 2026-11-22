@@ -55,10 +55,14 @@ Este repositorio (`GDGoC-UHU-OpenBadges`) despliega de forma independiente el se
   - Los correos se emiten automáticamente tras el despliegue mediante **Resend** desde `GDG on Campus Universidad de Huelva <certificados@gdguhu.com>` (dominio `gdguhu.com` verificado con DKIM, SPF y DMARC en Cloudflare DNS), con `Reply-To: gdgoc.huelva@gmail.com` y copia oculta `BCC: gdgoc.huelva+enviados@gmail.com`.
   - Cualquier respuesta enviada a `certificados@gdguhu.com` se reenvía automáticamente a `gdgoc.huelva@gmail.com` mediante **Cloudflare Email Routing**.
   - Si alguna vez `RESEND_API_KEY` no estuviera disponible, `scripts/send-emails.mjs` cuenta con respaldo automático vía Gmail SMTP (`GMAIL_USER` / `GMAIL_APP_PASSWORD`).
+- **Copia de seguridad automática en Firebase (`Cloud Firestore`)**:
+  - Tras cada despliegue en producción (y tras emitir certificados desde GitHub Actions), `scripts/sync-firebase-backup.mjs` sincroniza automáticamente e incrementalmente las **badges** (`badges`), las **assertions** (`assertions`, siempre con el correo cifrado `SHA-256`) y las **imágenes originales** (`badge_assets`) en la base de datos **`content`** del proyecto Firebase `gdgoc-uhu-openbadges` (`europe-southwest1`), registrando el estado global en `sync_meta/latest`.
+  - **Protección frente a borrados accidentales**: si un `push` erróneo eliminara archivos del repositorio, Firestore **nunca los borra** — los conserva intactos marcando `_meta.inGit = false`, y pueden recuperarse por completo con `npm run backup:firebase -- --key <credencial.json> --restore --include-archived`.
 - **Secretos en GitHub Actions (`Settings -> Secrets and variables -> Actions`)**:
   - `OB3_PRIVATE_KEY`: clave privada Ed25519 para firmar credenciales Open Badges 3.0 (nunca en el repositorio; rotación con `node scripts/generate-ob3-key.mjs --write`).
   - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`: despliegue del proyecto `gdguhu-openbadges`.
   - `RESEND_API_KEY` *(y `GMAIL_USER` / `GMAIL_APP_PASSWORD` como respaldo)*: envío automatizado de certificados.
+  - `FIREBASE_SERVICE_ACCOUNT`: cuenta de servicio de Firebase para mantener sincronizada la copia de seguridad en Cloud Firestore (`badges`, `assertions` e imágenes).
 
 ---
 
@@ -68,8 +72,8 @@ Este repositorio (`GDGoC-UHU-OpenBadges`) despliega de forma independiente el se
 Open Badges/
 ├── .github/
 │   └── workflows/
-│       ├── deploy.yml                   <-- Build OB3/OG, deploy a Vercel y envío de emails Resend
-│       └── issue-certificates.yml       <-- Emisión masiva desde CSV en GitHub Actions
+│       ├── deploy.yml                   <-- Build OB3/OG, deploy a Vercel, emails Resend y backup Firebase
+│       └── issue-certificates.yml       <-- Emisión masiva desde CSV en GitHub Actions y backup Firebase
 ├── public/
 │   ├── .well-known/
 │   │   └── did.json                     <-- Clave pública oficial Ed25519 (did:web:gdguhu.com)
@@ -83,7 +87,8 @@ Open Badges/
 │   ├── process-publish.mjs              <-- Procesa publish.json y limpia archivos temporales en CI
 │   ├── optimize-badge-thumbs.mjs        <-- Genera miniaturas WebP 128×128 para la vitrina
 │   ├── generate-og-images.mjs           <-- Genera /og/openbadges.png y /og/cert/<id>.png (1200×630)
-│   └── generate-ob3-key.mjs             <-- Utilidad de rotación de clave Ed25519 (did:web)
+│   ├── generate-ob3-key.mjs             <-- Utilidad de rotación de clave Ed25519 (did:web)
+│   └── sync-firebase-backup.mjs         <-- Copia de seguridad incremental y restauración en Firebase Firestore
 ├── src/
 │   ├── content/
 │   │   ├── badges/                      <-- Aquí se guardan los badge.json

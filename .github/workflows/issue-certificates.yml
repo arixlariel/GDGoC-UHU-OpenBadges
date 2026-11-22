@@ -93,3 +93,16 @@ jobs:
             echo "No se generó lista de certificados para enviar correos."
           fi
 
+      - name: Sincronizar copia de seguridad en Firebase Firestore
+        continue-on-error: true
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_DATABASE_ID: "content"
+          SITE_URL: "https://gdguhu.com"
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "⚠️ FIREBASE_SERVICE_ACCOUNT no configurado; omitiendo backup en Firestore."
+            exit 0
+          fi
+          node scripts/sync-firebase-backup.mjs
+

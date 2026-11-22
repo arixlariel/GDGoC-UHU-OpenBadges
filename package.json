@@ -11,7 +11,8 @@
     "build": "node scripts/optimize-badge-thumbs.mjs && node scripts/generate-og-images.mjs && mkdir -p public/openbadges public/vendor && cp generador-local.html public/openbadges/generador-local.html && cp generador-local.html public/generador-local.html && cp node_modules/jsonld/dist/jsonld.min.js public/vendor/jsonld.min.js && astro build",
     "preview": "astro preview",
     "issue": "node scripts/issue-badge.mjs",
-    "bulk": "node scripts/bulk-issue.mjs"
+    "bulk": "node scripts/bulk-issue.mjs",
+    "backup:firebase": "node scripts/sync-firebase-backup.mjs"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.5",

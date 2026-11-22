@@ -128,3 +128,33 @@ jobs:
             node scripts/send-emails.mjs /tmp/pending-emails.json
             rm -f /tmp/pending-emails.json
           fi
+
+  firebase-backup:
+    name: Copia de seguridad automática en Firebase Firestore
+    needs: [deploy, post-deploy-emails]
+    if: always() && needs.deploy.result == 'success'
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout última versión de main (incluyendo publish organizados)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sincronizar badges, assertions e imágenes con Firebase Firestore
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_DATABASE_ID: "content"
+          SITE_URL: "https://gdguhu.com"
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "⚠️ FIREBASE_SERVICE_ACCOUNT no configurado; omitiendo backup en Firestore."
+            exit 0
+          fi
+          node scripts/sync-firebase-backup.mjs
