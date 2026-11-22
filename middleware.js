@@ -25,10 +25,19 @@ const PREFIX = '/cybertrainer';
 const UPSTREAM_ORIGIN = 'http://origin-ctf.gdguhu.com';
 const UPSTREAM_HOSTS = new Set(['origin-ctf.gdguhu.com', '188.245.96.96']);
 const UPSTREAM_TIMEOUT_MS = 12000;
+const BEVY_COMMUNITY_URL = 'https://gdg.community.dev/gdg-on-campus-huelva-university-huelva-spain/';
+const BEVY_UPCOMING_API_URL =
+  'https://gdg.community.dev/api/event_slim/for_chapter/3520/' +
+  '?page_size=4&status=Live&include_cohosted_events=true&visible_on_parent_chapter_only=true' +
+  '&order=start_date&fields=title,start_date,end_date,url&page=1';
 
 export const config = {
   matcher: [
     '/',
+    '/evento',
+    '/evento/',
+    '/eventos',
+    '/eventos/',
     '/openbadges',
     '/openbadges/:path*',
     '/cert/:path*',
@@ -36,6 +45,48 @@ export const config = {
     '/cybertrainer/:path*',
   ],
 };
+
+async function redirectToNextBevyEvent() {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 4000);
+  let targetUrl = BEVY_COMMUNITY_URL;
+
+  try {
+    const res = await fetch(BEVY_UPCOMING_API_URL, {
+      headers: { Accept: 'application/json' },
+      signal: controller.signal,
+    });
+    if (res.ok) {
+      const payload = await res.json();
+      const results = Array.isArray(payload?.results) ? payload.results : [];
+      const now = Date.now();
+      const upcoming = results
+        .filter((ev) => {
+          if (!ev || !ev.url) return false;
+          const endTs = Date.parse(ev.end_date || ev.start_date || '');
+          return !Number.isNaN(endTs) && endTs > now;
+        })
+        .sort((a, b) => Date.parse(a.start_date || '') - Date.parse(b.start_date || ''));
+      if (upcoming[0]?.url) {
+        targetUrl = String(upcoming[0].url).trim();
+      }
+    }
+  } catch {
+    // Fallback automático a la página oficial de la comunidad en Bevy
+  } finally {
+    clearTimeout(timer);
+  }
+
+  return new Response(null, {
+    status: 307,
+    headers: {
+      Location: targetUrl,
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex, nofollow',
+      'Strict-Transport-Security': 'max-age=31536000',
+    },
+  });
+}
 
 function parseMaintenanceScopes() {
   const raw = (process.env.MAINTENANCE_MODE || '').trim().toLowerCase();
@@ -351,6 +402,13 @@ function rewriteHtml(html, lang, canonical) {
 
 export default async function middleware(request) {
   const url = new URL(request.url);
+  const cleanPath = url.pathname.replace(/\/+$/, '') || '/';
+
+  // Redirección inteligente /evento y /eventos -> próximo evento activo en Bevy (o comunidad si no hay ninguno)
+  if (cleanPath === '/evento' || cleanPath === '/eventos') {
+    return redirectToNextBevyEvent();
+  }
+
   const isCyber = url.pathname === PREFIX || url.pathname.startsWith(PREFIX + '/');
   const isOpenBadges =
     url.pathname === '/openbadges' ||
