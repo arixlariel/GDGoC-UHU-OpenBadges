@@ -42,6 +42,7 @@ jobs:
           BASE_PATH: "/"
           OB3_PRIVATE_KEY: ${{ secrets.OB3_PRIVATE_KEY }}
         run: |
+          node scripts/optimize-badge-thumbs.mjs
           mkdir -p public/openbadges
           cp generador-local.html public/openbadges/generador-local.html
           cp generador-local.html public/generador-local.html

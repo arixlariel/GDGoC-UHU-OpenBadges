@@ -4,7 +4,7 @@ import { siteConfig, getAssetUrl, getOpenBadgesPath } from '@/config/site';
 ---
 
 <BaseLayout
-  title="GDGoC UHU · Google Developer Group on Campus Universidad de Huelva"
+  title="GDGoC UHU"
   description={siteConfig.hubDescription}
   section="hub"
   preloadHeroImage={true}
@@ -32,13 +32,13 @@ import { siteConfig, getAssetUrl, getOpenBadgesPath } from '@/config/site';
             />
           </div>
 
-          <!-- Etiqueta institucional discreta -->
+          <!-- Etiqueta institucional discreta (4 puntos consistentes en toda la web) -->
           <div class="theme-badge-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-4">
-            <span class="flex gap-1">
-              <span class="w-2 h-2 rounded-full bg-[#4285F4]"></span>
-              <span class="w-2 h-2 rounded-full bg-[#EA4335]"></span>
-              <span class="w-2 h-2 rounded-full bg-[#FBBC04]"></span>
-              <span class="w-2 h-2 rounded-full bg-[#34A853]"></span>
+            <span class="flex gap-1" aria-hidden="true">
+              <span class="theme-dot theme-dot-1"></span>
+              <span class="theme-dot theme-dot-2"></span>
+              <span class="theme-dot theme-dot-3"></span>
+              <span class="theme-dot theme-dot-4"></span>
             </span>
             <span>Google Developer Group on Campus</span>
           </div>

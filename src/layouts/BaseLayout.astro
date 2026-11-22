@@ -208,15 +208,43 @@ const defaultSchema = {
         to { transform: rotate(360deg); }
       }
       @keyframes scanlineSweep {
-        0% { transform: translateY(-10vh); opacity: 0; }
-        20% { opacity: 0.75; }
-        80% { opacity: 0.75; }
-        100% { transform: translateY(110vh); opacity: 0; }
+        0% { transform: translate3d(0, -10vh, 0); opacity: 0; }
+        20% { opacity: 0.65; }
+        80% { opacity: 0.65; }
+        100% { transform: translate3d(0, 110vh, 0); opacity: 0; }
       }
       @keyframes cyberGridMove {
-        0% { transform: translateY(0); }
-        100% { transform: translateY(60px); }
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(0, 60px, 0); }
       }
+      @keyframes gdgDotPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.45; transform: scale(0.85); }
+      }
+
+      /* 4 puntos de color consistentes en todas las píldoras de la web (Google 4 colores / Cyber 4 colores neón) */
+      .theme-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        display: inline-block;
+        animation: gdgDotPulse 2s ease-in-out infinite;
+      }
+      .theme-dot-1 { background: #4285F4; }
+      .theme-dot-2 { background: #EA4335; animation-delay: 0.25s; }
+      .theme-dot-3 { background: #FBBC04; animation-delay: 0.5s; }
+      .theme-dot-4 { background: #34A853; animation-delay: 0.75s; }
+
+      html[data-theme="cyber"] .theme-dot-1 { background: #00F0FF; box-shadow: 0 0 8px #00F0FF; }
+      html[data-theme="cyber"] .theme-dot-2 { background: #FF007F; box-shadow: 0 0 8px #FF007F; }
+      html[data-theme="cyber"] .theme-dot-3 { background: #FFE600; box-shadow: 0 0 8px #FFE600; }
+      html[data-theme="cyber"] .theme-dot-4 { background: #00FF66; box-shadow: 0 0 8px #00FF66; }
+
+      html[data-theme="cyber"] .theme-card-strip {
+        display: block !important;
+        background: linear-gradient(90deg, #00F0FF, #FF007F, #FFE600, #00FF66) !important;
+      }
+      html[data-theme="cyber"] .theme-card-strip > div { display: none; }
       @keyframes candyBounce {
         0%, 100% { transform: translateY(0) rotate(-6deg) scale(1); }
         50% { transform: translateY(-28px) rotate(10deg) scale(1.14); }
@@ -318,6 +346,7 @@ const defaultSchema = {
         .theme-accent-text,
         .theme-top-strip,
         .theme-primary-btn,
+        .theme-dot,
         .animate-pulse,
         .animate-ping {
           animation: none !important;
@@ -456,12 +485,12 @@ const defaultSchema = {
         color: #202124;
       }
       html[data-theme="google"] .theme-header {
-        background: rgba(255, 255, 255, 0.88);
+        background: rgba(255, 255, 255, 0.96);
         border-bottom: 1px solid #DADCE0;
         box-shadow: 0 4px 20px rgba(32, 33, 36, 0.05);
       }
       html[data-theme="google"] .theme-footer {
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.96);
       }
       html[data-theme="google"] .theme-border { border-color: #DADCE0; }
       html[data-theme="google"] .theme-text-primary { color: #202124; }
@@ -473,7 +502,7 @@ const defaultSchema = {
         -webkit-text-fill-color: transparent;
       }
       html[data-theme="google"] .theme-hero-section {
-        background: rgba(255, 255, 255, 0.75);
+        background: rgba(255, 255, 255, 0.88);
         border-bottom: 1px solid #DADCE0;
       }
       html[data-theme="google"] .theme-badge-pill {
@@ -546,12 +575,16 @@ const defaultSchema = {
       }
       html[data-theme="cyber"] .theme-top-strip > div { display: none; }
       html[data-theme="cyber"] .theme-header {
-        background: rgba(6, 9, 20, 0.85);
+        background: rgba(6, 9, 20, 0.96);
         border-bottom: 1px solid rgba(0, 240, 255, 0.35);
         box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
       }
       html[data-theme="cyber"] .theme-footer {
-        background: rgba(6, 9, 20, 0.9);
+        background: rgba(6, 9, 20, 0.96);
+      }
+      html[data-theme="cyber"] .theme-footer-brand:hover img {
+        border-color: #FF007F;
+        box-shadow: 0 0 16px rgba(255, 0, 127, 0.45);
       }
       html[data-theme="cyber"] .theme-border { border-color: rgba(0, 240, 255, 0.3); }
       html[data-theme="cyber"] .theme-text-primary {
@@ -568,7 +601,7 @@ const defaultSchema = {
         filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.4));
       }
       html[data-theme="cyber"] .theme-hero-section {
-        background: rgba(8, 12, 26, 0.65);
+        background: rgba(8, 12, 26, 0.86);
         border-bottom: 1px solid rgba(0, 240, 255, 0.3);
       }
       html[data-theme="cyber"] .theme-badge-pill {
@@ -636,11 +669,13 @@ const defaultSchema = {
          3. THEME: PISCINA (Agua Turquesa · Muchas Olas y Burbujas · Súper Refrescante)
          ========================================================================== */
       html[data-theme="piscina"] body {
+        background-color: #22D3EE;
+        color: #003140;
+      }
+      html[data-theme="piscina"] #theme-fx-container {
         background: radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.55), transparent 35%),
                     radial-gradient(circle at 80% 40%, rgba(0, 229, 255, 0.45), transparent 40%),
                     linear-gradient(180deg, #CCFBF1 0%, #67E8F9 35%, #22D3EE 70%, #0284C7 100%);
-        background-attachment: fixed;
-        color: #003140;
       }
       html[data-theme="piscina"] .theme-top-strip {
         height: 7px;
@@ -738,10 +773,12 @@ const defaultSchema = {
          4. THEME: NIEVE (Frío Polar · Ventisca · Granizo · Hielo Escarchado)
          ========================================================================== */
       html[data-theme="nieve"] body {
+        background-color: #0A1E38;
+        color: #F0F9FF;
+      }
+      html[data-theme="nieve"] #theme-fx-container {
         background: radial-gradient(circle at 50% 0%, rgba(186, 230, 253, 0.22), transparent 55%),
                     linear-gradient(180deg, #040D1A 0%, #0A1E38 40%, #103156 75%, #1B4978 100%);
-        background-attachment: fixed;
-        color: #F0F9FF;
       }
       html[data-theme="nieve"] .theme-top-strip {
         height: 6px;
@@ -846,17 +883,13 @@ const defaultSchema = {
       html[data-theme="caramelos"] body {
         font-family: 'Fredoka', 'Google Sans', sans-serif;
         background-color: #FFD1E8;
+        color: #7A0045;
+      }
+      html[data-theme="caramelos"] #theme-fx-container {
+        background-color: #FFD1E8;
         background-image: radial-gradient(circle at 20% 20%, rgba(255, 105, 180, 0.25), transparent 40%),
                           radial-gradient(circle at 80% 70%, rgba(255, 20, 147, 0.2), transparent 40%),
                           linear-gradient(135deg, #FFD1E8 0%, #FFC2E2 30%, #FFE4F2 60%, #FFB8DE 100%);
-        background-attachment: fixed;
-        background-size: cover;
-        color: #7A0045;
-      }
-      @media (max-width: 768px) {
-        html[data-theme="caramelos"] body {
-          background-attachment: scroll !important;
-        }
       }
       html[data-theme="caramelos"] .theme-top-strip {
         height: 9px;
@@ -1344,10 +1377,10 @@ const defaultSchema = {
       <!-- 2. CYBER FX: Perspective Neon Grid, Laser Scanline & Floating Matrix Tokens -->
       <div class="fx-layer fx-cyber absolute inset-0">
         <div
-          class="absolute -top-[60px] inset-x-0 bottom-0 opacity-25"
-          style="background-image: linear-gradient(rgba(0, 240, 255, 0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 127, 0.18) 1px, transparent 1px); background-size: 60px 60px; animation: cyberGridMove 3s linear infinite;"
+          class="absolute -top-[60px] inset-x-0 bottom-0 opacity-20"
+          style="background-image: linear-gradient(rgba(0, 240, 255, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 127, 0.16) 1px, transparent 1px); background-size: 60px 60px; will-change: transform; animation: cyberGridMove 7s linear infinite;"
         ></div>
-        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent shadow-[0_0_20px_#00F0FF]" style="animation: scanlineSweep 6s linear infinite;"></div>
+        <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(180deg, transparent, rgba(0, 240, 255, 0.55), transparent); will-change: transform, opacity; animation: scanlineSweep 9s linear infinite;"></div>
         <span class="absolute top-[18%] left-[7%] font-mono text-xs text-[#00F0FF]/50 font-bold" style="animation: floatSlow 5s ease-in-out infinite;">0xFA92_VERIFIED //⚡</span>
         <span class="absolute top-[32%] right-[8%] font-mono text-sm text-[#FF007F]/50 font-bold" style="animation: floatReverse 6s ease-in-out infinite;">&lt;OPEN_BADGES_3.0 /&gt;</span>
         <span class="absolute bottom-[22%] left-[12%] font-mono text-xs text-[#00FF66]/50 font-bold" style="animation: floatReverse 7s ease-in-out infinite;">SHA256::ACTIVE</span>
@@ -1540,70 +1573,78 @@ const defaultSchema = {
           chevron?.classList.remove('rotate-180');
         });
 
-        function initTiltCards() {
+        function initDelegatedTiltEngine() {
           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-          const cards = document.querySelectorAll('.tilt-card');
-          cards.forEach((card) => {
+          let activeCard = null;
+          let rafId = null;
+          let lastX = 0;
+          let lastY = 0;
+
+          const resetCard = (card) => {
+            if (!card) return;
+            card.classList.remove('is-tilting');
+            card.style.transform = '';
+          };
+
+          const applyTilt = () => {
+            rafId = null;
+            const card = activeCard;
+            if (!card || !card.isConnected) return;
+            const activeEl = document.activeElement;
+            if (activeEl && card.contains(activeEl) && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) {
+              resetCard(card);
+              activeCard = null;
+              return;
+            }
+            const rect = card.getBoundingClientRect();
+            const w = card.offsetWidth || rect.width;
+            const h = card.offsetHeight || rect.height;
+            if (!w || !h) return;
+
             const maxTilt = Math.min(Number(card.getAttribute('data-tilt-max') || '2.2'), 2.5);
-            let rafId = null;
+            const pctX = Math.max(0, Math.min(1, (lastX - (rect.left + rect.width / 2)) / w + 0.5));
+            const pctY = Math.max(0, Math.min(1, (lastY - (rect.top + rect.height / 2)) / h + 0.5));
+            const rotateY = (pctX - 0.5) * maxTilt * 2;
+            const rotateX = (0.5 - pctY) * maxTilt * 2;
 
-            const resetTilt = () => {
-              if (rafId !== null) {
-                cancelAnimationFrame(rafId);
-                rafId = null;
-              }
-              card.classList.remove('is-tilting');
-              card.style.transform = '';
-            };
+            card.classList.add('is-tilting');
+            card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.008, 1.008, 1)`;
+            card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
+            card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
+          };
 
-            card.addEventListener('pointermove', (e) => {
-              if (window.innerWidth < 768 || e.pointerType === 'touch') return;
-              const activeEl = document.activeElement;
-              if (
-                activeEl &&
-                card.contains(activeEl) &&
-                (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')
-              ) {
-                resetTilt();
-                return;
-              }
+          document.addEventListener('pointermove', (e) => {
+            if (window.innerWidth < 768 || e.pointerType === 'touch') return;
+            const card = e.target && e.target.closest ? e.target.closest('.tilt-card') : null;
+            if (card !== activeCard) {
+              if (activeCard) resetCard(activeCard);
+              activeCard = card;
+            }
+            if (!activeCard) return;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            if (rafId === null) rafId = requestAnimationFrame(applyTilt);
+          }, { passive: true });
 
-              const clientX = e.clientX;
-              const clientY = e.clientY;
-              if (rafId !== null) cancelAnimationFrame(rafId);
+          const clearActive = () => {
+            if (rafId !== null) {
+              cancelAnimationFrame(rafId);
+              rafId = null;
+            }
+            if (activeCard) {
+              resetCard(activeCard);
+              activeCard = null;
+            }
+          };
 
-              rafId = requestAnimationFrame(() => {
-                rafId = null;
-                const rect = card.getBoundingClientRect();
-                const w = card.offsetWidth || rect.width;
-                const h = card.offsetHeight || rect.height;
-                if (!w || !h) return;
-
-                const cx = rect.left + rect.width / 2;
-                const cy = rect.top + rect.height / 2;
-                const pctX = Math.max(0, Math.min(1, (clientX - cx) / w + 0.5));
-                const pctY = Math.max(0, Math.min(1, (clientY - cy) / h + 0.5));
-                const rotateY = (pctX - 0.5) * maxTilt * 2;
-                const rotateX = (0.5 - pctY) * maxTilt * 2;
-
-                card.classList.add('is-tilting');
-                card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.008, 1.008, 1)`;
-                card.style.setProperty('--glare-x', `${(pctX * 100).toFixed(1)}%`);
-                card.style.setProperty('--glare-y', `${(pctY * 100).toFixed(1)}%`);
-              });
-            });
-
-            card.addEventListener('focusin', (e) => {
-              if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-                resetTilt();
-              }
-            });
-
-            card.addEventListener('pointerleave', resetTilt);
-            card.addEventListener('pointercancel', resetTilt);
+          document.addEventListener('pointerleave', clearActive);
+          document.addEventListener('focusin', (e) => {
+            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) clearActive();
           });
+          window.addEventListener('blur', clearActive);
+          window.addEventListener('scroll', clearActive, { passive: true });
         }
-        initTiltCards();
+        initDelegatedTiltEngine();
       })();
     </script>
   </body>

@@ -31,3 +31,21 @@ export function getVersionedAssetUrl(assetPath: string): string {
   const sep = baseUrl.includes('?') ? '&' : '?';
   return `${baseUrl}${sep}v=${shortHash}`;
 }
+
+/**
+ * Devuelve la miniatura WebP 128x128 optimizada (si fue generada antes del build)
+ * para las tarjetas 64x64 de /openbadges/, manteniendo los PNG originales intactos
+ * para Open Badges 2.0/3.0, diplomas y PDFs.
+ */
+export function getBadgeThumbUrl(assetPath: string): string {
+  const cleanRel = assetPath.split('?')[0].replace(/^\/+/, '');
+  const match = cleanRel.match(/^images\/badges\/([^/]+)\.(png|jpe?g)$/i);
+  if (match) {
+    const thumbRel = `images/badges/thumbs/${match[1]}.webp`;
+    const thumbFull = path.resolve(process.cwd(), 'public', thumbRel);
+    if (fs.existsSync(thumbFull)) {
+      return getVersionedAssetUrl(`/${thumbRel}`);
+    }
+  }
+  return getVersionedAssetUrl(assetPath);
+}

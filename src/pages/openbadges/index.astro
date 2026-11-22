@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getAssetUrl, getOpenBadgesPath, isShowcaseAssertion } from '@/config/site';
-import { getVersionedAssetUrl } from '@/utils/assetVersion';
+import { getBadgeThumbUrl } from '@/utils/assetVersion';
 
 const badges = await getCollection('badges');
 const assertions = await getCollection('assertions');
@@ -61,17 +61,17 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
   preloadHeroImage={true}
 >
   <!-- Hero Section -->
-  <section class="theme-hero-section relative overflow-hidden pt-10 pb-16 sm:pt-16 sm:pb-20 backdrop-blur-md transition-all duration-500">
+  <section class="theme-hero-section relative overflow-hidden pt-10 pb-16 sm:pt-16 sm:pb-20 transition-colors duration-300">
     <div class="max-w-[1320px] mx-auto px-4 sm:px-6 relative z-10">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
         <!-- Left Column: Title, Copy & Verification Search -->
         <div class="lg:col-span-7 text-center lg:text-left">
-          <div class="theme-badge-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-5 transition-all duration-300">
-            <span class="flex gap-1">
-              <span class="w-2 h-2 rounded-full bg-[#4285F4] animate-pulse"></span>
-              <span class="w-2 h-2 rounded-full bg-[#EA4335] animate-pulse" style="animation-delay: 0.2s"></span>
-              <span class="w-2 h-2 rounded-full bg-[#FBBC04] animate-pulse" style="animation-delay: 0.4s"></span>
-              <span class="w-2 h-2 rounded-full bg-[#34A853] animate-pulse" style="animation-delay: 0.6s"></span>
+          <div class="theme-badge-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-5 transition-colors duration-300">
+            <span class="flex gap-1" aria-hidden="true">
+              <span class="theme-dot theme-dot-1"></span>
+              <span class="theme-dot theme-dot-2"></span>
+              <span class="theme-dot theme-dot-3"></span>
+              <span class="theme-dot theme-dot-4"></span>
             </span>
             <span>Open Badges 2.0 &amp; 3.0</span>
           </div>
@@ -227,7 +227,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
               </div>
             )}
             {styleKey === 'cyber' && (
-              <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#00F0FF] via-[#FF007F] to-[#00FF66]"></div>
+              <div class="absolute top-0 left-0 right-0 h-1.5" style="background: linear-gradient(90deg, #00F0FF, #FF007F, #FFE600, #00FF66);"></div>
             )}
             {styleKey === 'piscina' && (
               <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#00F2FE] via-[#00E5FF] to-[#0284C7]"></div>
@@ -243,11 +243,11 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
               <div class="w-16 h-16 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
                 {badge && (
                   <img
-                    src={getVersionedAssetUrl(badge.data.image)}
+                    src={getBadgeThumbUrl(badge.data.image)}
                     alt={badge.data.name}
                     width="64"
                     height="64"
-                    loading="eager"
+                    loading={index < 6 ? 'eager' : 'lazy'}
                     decoding="async"
                     class="w-full h-full object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]"
                   />
@@ -301,11 +301,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
           if (index < maxVisible) {
             card.style.display = '';
             const img = card.querySelector('img');
-            if (img) {
-              img.loading = 'eager';
-              const src = img.getAttribute('src');
-              if (src) img.src = src;
-            }
+            if (img) img.loading = 'eager';
             grid.appendChild(card);
           } else {
             card.style.display = 'none';
@@ -316,7 +312,7 @@ const styleMeta: Record<string, { label: string; icon: string; pillClass: string
   </section>
 
   <!-- Características del Sistema -->
-  <section class="theme-hero-section cv-auto border-t theme-border py-14 relative z-10 backdrop-blur-md">
+  <section class="theme-hero-section cv-auto border-t theme-border py-14 relative z-10">
     <div class="max-w-[1320px] mx-auto px-4 sm:px-6">
       <div class="text-center max-w-2xl mx-auto mb-10">
         <h2 class="font-display text-2xl sm:text-3xl font-bold theme-text-primary">

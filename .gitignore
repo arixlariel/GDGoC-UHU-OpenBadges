@@ -1,6 +1,7 @@
 # Build output
 dist/
 .astro/
+public/images/badges/thumbs/
 
 # Dependencies
 node_modules/
