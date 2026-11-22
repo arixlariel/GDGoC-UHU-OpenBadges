@@ -169,9 +169,13 @@ const defaultSchema = {
         line-gap-override: 0%;
       }
 
+      html,
+      body {
+        overflow-x: clip;
+      }
+
       body {
         font-family: 'Google Sans', 'Plus Jakarta Sans', 'Google Sans Fallback', system-ui, -apple-system, sans-serif;
-        overflow-x: hidden;
         transition: background 0.5s ease, color 0.4s ease;
       }
 
@@ -188,11 +192,6 @@ const defaultSchema = {
         display: none !important;
         width: 0 !important;
         height: 0 !important;
-      }
-
-      .cv-auto {
-        content-visibility: auto;
-        contain-intrinsic-size: auto 480px;
       }
 
       @keyframes floatSlow {
@@ -298,13 +297,17 @@ const defaultSchema = {
       }
 
       /* ==========================================================================
-         BACKGROUND FX CONTAINER ISOLATION (Step 1: No wildcard GPU layer promotion)
+         BACKGROUND FX CONTAINER ISOLATION (altura fija 100lvh sin saltos ni parpadeos al rebotar scroll)
          ========================================================================== */
       #theme-fx-container {
-        contain: strict;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        height: 100lvh;
+        contain: layout style paint;
         pointer-events: none;
-        transform: translate3d(0, 0, 0);
-        isolation: isolate;
       }
       .theme-card {
         contain: layout style;
@@ -481,6 +484,9 @@ const defaultSchema = {
       /* ==========================================================================
          1. THEME: GOOGLE (Clásico Google · Material 3 · 4 Colores Oficiales)
          ========================================================================== */
+      html[data-theme="google"] {
+        background-color: #F8F9FA;
+      }
       html[data-theme="google"] body {
         background-color: #F8F9FA;
         color: #202124;
@@ -571,6 +577,9 @@ const defaultSchema = {
       /* ==========================================================================
          2. THEME: CYBER (Neon Matrix · Glitch · Laser Scanlines)
          ========================================================================== */
+      html[data-theme="cyber"] {
+        background-color: #05070F;
+      }
       html[data-theme="cyber"] body {
         background-color: #05070F;
         color: #E2F1FF;
@@ -679,6 +688,9 @@ const defaultSchema = {
       /* ==========================================================================
          3. THEME: PISCINA (Agua Turquesa · Muchas Olas y Burbujas · Súper Refrescante)
          ========================================================================== */
+      html[data-theme="piscina"] {
+        background-color: #0284C7;
+      }
       html[data-theme="piscina"] body {
         background-color: #22D3EE;
         color: #003140;
@@ -782,6 +794,9 @@ const defaultSchema = {
       /* ==========================================================================
          4. THEME: NIEVE (Frío Polar · Ventisca · Granizo · Hielo Escarchado)
          ========================================================================== */
+      html[data-theme="nieve"] {
+        background-color: #1B4978;
+      }
       html[data-theme="nieve"] body {
         background-color: #0A1E38;
         color: #F0F9FF;
@@ -1102,7 +1117,6 @@ const defaultSchema = {
         *, *::before, *::after {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
-          color-adjust: exact !important;
           box-shadow: none !important;
           text-shadow: none !important;
           filter: none !important;
@@ -1364,7 +1378,7 @@ const defaultSchema = {
     <!-- ========================================================================
          ANIMATED MOVING BACKGROUND FX FOR EACH OF THE 5 STYLES
          ======================================================================== -->
-    <div id="theme-fx-container" class="fixed inset-0 pointer-events-none overflow-hidden z-0 no-print">
+    <div id="theme-fx-container" class="pointer-events-none overflow-hidden z-0 no-print">
 
       <!-- 1. GOOGLE FX: Floating Google 4-Color Orbs & Geometric Rings -->
       <div class="fx-layer fx-google absolute inset-0">
