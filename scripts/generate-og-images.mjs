@@ -608,7 +608,7 @@ function buildCertificateCard({ recipientName, role, badgeName, tags, issueDate,
 async function main() {
   fs.mkdirSync(ogCertDir, { recursive: true });
   const fonts = loadFonts();
-  const logoUri = await imageToDataUri(path.join(publicDir, 'images', 'gdgoc-uhu-logo.jpg'), 280);
+  const logoUri = await imageToDataUri(path.join(publicDir, 'images', 'gdgoc-uhu-logo.jpg'), 512);
 
   await renderPng(buildOpenBadgesPortalCard(logoUri), fonts, path.join(ogDir, 'openbadges.png'));
 
@@ -635,7 +635,7 @@ async function main() {
 
     const styleKey = assertion.styleOverride || badge.style || 'google';
     const badgeImgRel = String(badge.image || '').replace(/^\/+/, '');
-    const badgeUri = badgeImgRel ? await imageToDataUri(path.join(publicDir, badgeImgRel), 300) : null;
+    const badgeUri = badgeImgRel ? await imageToDataUri(path.join(publicDir, badgeImgRel), 512) : null;
 
     await renderPng(
       buildCertificateCard({

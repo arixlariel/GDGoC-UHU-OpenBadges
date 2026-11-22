@@ -224,7 +224,7 @@ for (const dir of candidateDirs) {
 }
 
 // También comprobar si se subió publish.json (o publish (1).json, etc.) o un certificado/badge directamente en la raíz, en badges/ o en assertions/
-const ignoredRootJson = new Set(['package.json', 'package-lock.json', 'tsconfig.json']);
+const ignoredRootJson = new Set(['package.json', 'package-lock.json', 'tsconfig.json', 'vercel.json']);
 for (const entry of fs.readdirSync(rootDir)) {
   if (entry.endsWith('.json') && !ignoredRootJson.has(entry)) {
     processSingleJsonFile(path.join(rootDir, entry));
