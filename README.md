@@ -25,7 +25,7 @@ Bienvenido al repositorio oficial del sistema de emisión, firma criptográfica 
 
 ## 1. Integración Multi-Zone dentro de `gdguhu.com`
 
-Este repositorio (`GDGoC-UHU-OpenBadges`) despliega de forma independiente el servicio dedicado de certificados en Vercel (`gdguhu-openbadges`) y queda montado de manera transparente bajo [`https://gdguhu.com`](https://gdguhu.com) a través del portal principal **[`GDGoC-UHU-Web`](https://github.com/arixlariel/GDGoC-UHU-Web)**:
+Este repositorio (`GDGoC-UHU-OpenBadges`) despliega de forma independiente el servicio dedicado de certificados en Vercel (`gdgoc-uhu-openbadges`) y queda montado de manera transparente bajo [`https://gdguhu.com`](https://gdguhu.com) a través del portal principal **[`GDGoC-UHU-Web`](https://github.com/arixlariel/GDGoC-UHU-Web)**:
 
 | Ruta oficial en `gdguhu.com` | Servicio | Cómo se sirve |
 | :--- | :--- | :--- |
@@ -42,7 +42,7 @@ Este repositorio (`GDGoC-UHU-OpenBadges`) despliega de forma independiente el se
 
 ## 2. Arquitectura del Sistema
 
-- **Hosting y Multi-Zone**: **Vercel** (proyecto dedicado `gdguhu-openbadges`, assets aislados en `/_astro-ob/*` para cero colisiones con el portal principal y despliegue automático vía GitHub Actions en cada `push` a `main`).
+- **Hosting y Multi-Zone**: **Vercel** (proyecto dedicado `gdgoc-uhu-openbadges`, assets aislados en `/_astro-ob/*` para cero colisiones con el portal principal y despliegue automático vía GitHub Actions en cada `push` a `main`).
 - **Web de verificación Open Badges**: `https://gdguhu.com/openbadges/`
 - **Estándares emitidos en paralelo**:
   - **Open Badges 3.0 (`W3C Verifiable Credentials v2`)**: Cada certificado se compila y firma automáticamente durante el build en `/api/badges/v3/<id>.json` con firma criptográfica **Ed25519** (`DataIntegrityProof` · `eddsa-rdfc-2022`), vinculada a la identidad descentralizada oficial `did:web:gdguhu.com` publicada en `https://gdguhu.com/.well-known/did.json`.
@@ -60,7 +60,7 @@ Este repositorio (`GDGoC-UHU-OpenBadges`) despliega de forma independiente el se
   - **Protección frente a borrados accidentales**: si un `push` erróneo eliminara archivos del repositorio, Firestore **nunca los borra** — los conserva intactos marcando `_meta.inGit = false`, y pueden recuperarse por completo con `npm run backup:firebase -- --key <credencial.json> --restore --include-archived`.
 - **Secretos en GitHub Actions (`Settings -> Secrets and variables -> Actions`)**:
   - `OB3_PRIVATE_KEY`: clave privada Ed25519 para firmar credenciales Open Badges 3.0 (nunca en el repositorio; rotación con `node scripts/generate-ob3-key.mjs --write`).
-  - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`: despliegue del proyecto `gdguhu-openbadges`.
+  - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`: despliegue del proyecto `gdgoc-uhu-openbadges`.
   - `RESEND_API_KEY` *(y `GMAIL_USER` / `GMAIL_APP_PASSWORD` como respaldo)*: envío automatizado de certificados.
   - `FIREBASE_SERVICE_ACCOUNT`: cuenta de servicio de Firebase para mantener sincronizada la copia de seguridad en Cloud Firestore (`badges`, `assertions` e imágenes).
 

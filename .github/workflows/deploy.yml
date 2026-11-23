@@ -37,7 +37,7 @@ jobs:
         run: |
           node scripts/process-publish.mjs
 
-      - name: Descargar configuración de proyecto Vercel (gdguhu-openbadges)
+      - name: Descargar configuración de proyecto Vercel (gdgoc-uhu-openbadges)
         run: npx --yes vercel@latest pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
 
       - name: Compilar Open Badges (OB3 Ed25519 + tarjetas OG 1200x630) para Vercel
