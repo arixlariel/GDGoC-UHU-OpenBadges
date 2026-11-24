@@ -17,7 +17,7 @@ on:
         type: boolean
         default: false
       send_emails:
-        description: '¿Enviar email automático por Gmail a cada alumno con su enlace personal?'
+        description: '¿Enviar email automático desde certificados@gdguhu.com a cada alumno?'
         required: false
         type: boolean
         default: true
@@ -29,10 +29,17 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: 'vercel-openbadges-production'
+  cancel-in-progress: false
+
 jobs:
   issue-and-notify:
-    name: Procesar CSV, Generar Certificados y Enviar Emails
+    name: Procesar CSV, Desplegar en Vercel, Enviar Emails y Backup Firebase
     runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Descargar repositorio
         uses: actions/checkout@v4
@@ -44,8 +51,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Instalar dependencias
-        run: npm install nodemailer
+      - name: Instalar dependencias del proyecto
+        run: npm install
 
       - name: Guardar CSV temporal en memoria efímera y generar aserciones
         env:
@@ -64,29 +71,64 @@ jobs:
           node scripts/bulk-issue.mjs /tmp/asistentes.csv --badge "$BADGE_ID" --role "$ROLE" $CHECK_FLAG --output-list /tmp/issued-list.json
           rm -f /tmp/asistentes.csv
 
-      - name: Guardar en Git y publicar en la web
+      - name: Guardar nuevos certificados en Git (main)
+        id: git_commit
         run: |
           git config --global user.name "GDGoC UHU Bot"
           git config --global user.email "gdgoc.huelva@gmail.com"
           git add src/content/assertions/
           if git diff --staged --quiet; then
             echo "No hay nuevos certificados para añadir (quizás ya estaban generados)."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "feat(cert): emitir certificados para ${{ inputs.badge_id }} via GitHub Actions"
+            git commit -m "feat(cert): emitir certificados para ${{ inputs.badge_id }} via GitHub Actions [skip ci]"
+            git pull --rebase origin main
             git push origin main
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Esperar 45s a que el despliegue de Astro en GitHub Pages termine
-        run: sleep 45
+      - name: Descargar configuración de proyecto Vercel (gdgoc-uhu-openbadges)
+        if: steps.git_commit.outputs.has_changes == 'true'
+        run: npx --yes vercel@latest pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
 
-      - name: Enviar emails a los alumnos desde la cuenta oficial de Gmail
-        if: ${{ inputs.send_emails }}
+      - name: Compilar Open Badges (OB3 Ed25519 + tarjetas OG 1200x630) para Vercel
+        if: steps.git_commit.outputs.has_changes == 'true'
         env:
+          SITE_URL: "https://gdguhu.com"
+          BASE_PATH: "/"
+          OB3_PRIVATE_KEY: ${{ secrets.OB3_PRIVATE_KEY }}
+        run: npx --yes vercel@latest build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Verificar salida Open Badges 3.0 firmada y tarjetas OG
+        if: steps.git_commit.outputs.has_changes == 'true'
+        run: |
+          test -f .vercel/output/static/openbadges/index.html
+          test -f .vercel/output/static/.well-known/did.json
+          FIRST_V3=$(ls .vercel/output/static/api/badges/v3/*.json | head -n 1)
+          test -n "$FIRST_V3"
+          grep -q '"cryptosuite": "eddsa-rdfc-2022"' "$FIRST_V3"
+          grep -q '"proofValue": "z' "$FIRST_V3"
+          echo "OK: Open Badges OB3 Ed25519 verificado ($FIRST_V3)"
+
+      - name: Desplegar Open Badges a producción en Vercel
+        if: steps.git_commit.outputs.has_changes == 'true'
+        run: |
+          DEPLOY_URL=$(npx --yes vercel@latest deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}")
+          echo "Deployed to: $DEPLOY_URL"
+
+      - name: Enviar emails a los alumnos (Resend certificados@gdguhu.com / respaldo Gmail)
+        if: inputs.send_emails && steps.git_commit.outputs.has_changes == 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: "GDG on Campus Universidad de Huelva <certificados@gdguhu.com>"
+          EMAIL_REPLY_TO: "gdgoc.huelva@gmail.com"
+          EMAIL_BCC: "gdgoc.huelva+enviados@gmail.com"
           GMAIL_USER: ${{ secrets.GMAIL_USER || 'arielbustilloleon@gmail.com' }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           SITE_URL: "https://gdguhu.com"
         run: |
-          if [ -f /tmp/issued-list.json ]; then
+          if [ -s /tmp/issued-list.json ]; then
+            npm install --no-save nodemailer
             node scripts/send-emails.mjs /tmp/issued-list.json
             rm -f /tmp/issued-list.json
           else
@@ -94,6 +136,7 @@ jobs:
           fi
 
       - name: Sincronizar copia de seguridad en Firebase Firestore
+        if: always() && steps.git_commit.outputs.has_changes == 'true'
         continue-on-error: true
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
@@ -105,4 +148,3 @@ jobs:
             exit 0
           fi
           node scripts/sync-firebase-backup.mjs
-
