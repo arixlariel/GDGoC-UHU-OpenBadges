@@ -130,6 +130,14 @@ const defaultSchema = {
     <!-- Schema.org Structured Data (JSON-LD) -->
     <script type="application/ld+json" set:html={JSON.stringify(schemaData || defaultSchema)} />
 
+    <!-- Vercel Web Analytics & Speed Insights (sin cookies, RGPD-friendly) -->
+    <script is:inline>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+    </script>
+    <script is:inline defer src="/_vercel/insights/script.js"></script>
+    <script is:inline defer src="/_vercel/speed-insights/script.js"></script>
+
     <!-- Open Badges 3.0 & 2.0 Discovery Links (interno para validadores) -->
     {jsonLdUrl && (
       <link rel="alternate" type="application/ld+json" href={jsonLdUrl} title="Open Badges 3.0 Verifiable Credential" />
