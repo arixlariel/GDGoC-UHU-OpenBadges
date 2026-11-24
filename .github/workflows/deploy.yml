@@ -59,6 +59,10 @@ jobs:
           test -f .vercel/output/static/api/badges/issuer.json
           test -f .vercel/output/static/api/badges/styles.json
           test -f .vercel/output/static/api/badges/showcase.json
+          test -f .vercel/output/static/api/badges/status/revocations.json
+          grep -q '"BitstringStatusListCredential"' .vercel/output/static/api/badges/status/revocations.json
+          grep -q '"cryptosuite": "eddsa-rdfc-2022"' .vercel/output/static/api/badges/status/revocations.json
+          grep -q '"proofValue": "z' .vercel/output/static/api/badges/status/revocations.json
           test -d .vercel/output/static/_astro-ob
           FIRST_CERT=$(ls .vercel/output/static/openbadges/cert/*/index.html | head -n 1)
           test -n "$FIRST_CERT"
@@ -66,9 +70,10 @@ jobs:
           test -n "$FIRST_LEGACY_CERT"
           FIRST_V3=$(ls .vercel/output/static/api/badges/v3/*.json | head -n 1)
           test -n "$FIRST_V3"
+          grep -q '"BitstringStatusListEntry"' "$FIRST_V3"
           grep -q '"cryptosuite": "eddsa-rdfc-2022"' "$FIRST_V3"
           grep -q '"proofValue": "z' "$FIRST_V3"
-          echo "OK: Open Badges Multi-Zone + OB3 Ed25519 + OG 1200x630 verificados ($FIRST_V3)"
+          echo "OK: Open Badges Multi-Zone + OB3 Ed25519 + W3C BitstringStatusList + OG 1200x630 verificados ($FIRST_V3)"
 
       - name: Desplegar Open Badges a producción en Vercel
         id: vercel_deploy

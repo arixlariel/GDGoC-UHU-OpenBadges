@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import zlib from 'node:zlib';
 import jsonldModule from 'jsonld';
 import { issuerConfig, siteConfig, getFullUrl } from '@/config/site';
 import credentialsV2Context from './ob3-contexts/credentials-v2.json';
@@ -8,6 +9,9 @@ const jsonld = (jsonldModule as any)?.default ?? jsonldModule;
 
 export const OB3_ISSUER_DID = 'did:web:gdguhu.com';
 export const OB3_VERIFICATION_METHOD = `${OB3_ISSUER_DID}#key-1`;
+export const OB3_REVOCATION_LIST_PATH = '/api/badges/status/revocations.json';
+// W3C Bitstring Status List v1.0 exige mínimo 131.072 bits (16 KiB sin comprimir, ~60 B en GZIP)
+export const OB3_BITSTRING_SIZE = 131072;
 export const OB3_CONTEXTS = [
   'https://www.w3.org/ns/credentials/v2',
   'https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json',
@@ -98,6 +102,61 @@ export interface OpenBadge3Input {
   };
 }
 
+export function getRevocationStatusIndex(assertionId: string): number {
+  const cleanId = assertionId.replace(/^.*\/|\.json$/g, '').trim().toLowerCase();
+  const digest = crypto
+    .createHash('sha256')
+    .update(`gdgoc-uhu-ob3-revocation-v1:${cleanId}`, 'utf8')
+    .digest();
+  // 17 bits deterministas en [0, 131071], pseudoaleatorio según recomendación de privacidad W3C
+  return ((digest[0] << 16) | (digest[1] << 8) | digest[2]) & (OB3_BITSTRING_SIZE - 1);
+}
+
+export function buildCredentialStatusEntry(assertionId: string): Record<string, string> {
+  const index = getRevocationStatusIndex(assertionId);
+  const statusListUrl = getFullUrl(OB3_REVOCATION_LIST_PATH);
+  return {
+    id: `${statusListUrl}#${index}`,
+    type: 'BitstringStatusListEntry',
+    statusPurpose: 'revocation',
+    statusListIndex: String(index),
+    statusListCredential: statusListUrl,
+  };
+}
+
+export function buildRevocationListCredential(
+  revokedIds: string[],
+  validFrom?: string,
+): Record<string, unknown> {
+  const statusListUrl = getFullUrl(OB3_REVOCATION_LIST_PATH);
+  const bitstring = Buffer.alloc(OB3_BITSTRING_SIZE / 8);
+
+  for (const id of revokedIds) {
+    const idx = getRevocationStatusIndex(id);
+    const byteIndex = Math.floor(idx / 8);
+    // Orden big-endian (bit más significativo primero) según W3C Bitstring Status List v1.0
+    const bitPos = 7 - (idx % 8);
+    bitstring[byteIndex] |= 1 << bitPos;
+  }
+
+  const compressed = zlib.gzipSync(bitstring, { level: 9 });
+  const encodedList = `u${compressed.toString('base64url')}`;
+
+  return {
+    '@context': ['https://www.w3.org/ns/credentials/v2'],
+    id: statusListUrl,
+    type: ['VerifiableCredential', 'BitstringStatusListCredential'],
+    issuer: OB3_ISSUER_DID,
+    validFrom: normalizeIsoUtc(validFrom || new Date().toISOString()),
+    credentialSubject: {
+      id: `${statusListUrl}#list`,
+      type: 'BitstringStatusList',
+      statusPurpose: 'revocation',
+      encodedList,
+    },
+  };
+}
+
 export function buildOpenBadge3Credential({
   assertionId,
   assertion,
@@ -175,6 +234,7 @@ export function buildOpenBadge3Credential({
     },
     validFrom,
     credentialSubject,
+    credentialStatus: buildCredentialStatusEntry(assertionId),
   };
 
   if (assertion.data.expires && assertion.data.expires.trim().length > 0) {

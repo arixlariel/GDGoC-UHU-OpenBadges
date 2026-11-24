@@ -41,6 +41,9 @@ const assertionsCollection = defineCollection({
     evidence: z.string().optional(),
     styleOverride: styleEnum.optional(),
     showcase: z.boolean().optional(),
+    revoked: z.boolean().optional(),
+    revokedAt: z.string().optional(),
+    revocationReason: z.string().optional(),
   }),
 });
 

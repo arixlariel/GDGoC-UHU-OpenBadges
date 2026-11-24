@@ -3,10 +3,14 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getAssetUrl, getFullUrl, getOpenBadgesPath, isShowcaseAssertion } from '@/config/site';
 import { getBadgeThumbUrl } from '@/utils/assetVersion';
+import { isAssertionRevoked } from '@/utils/revocations';
 
 const badges = await getCollection('badges');
 const assertions = await getCollection('assertions');
-const showcaseAssertions = assertions.filter((a) => isShowcaseAssertion(a));
+const showcaseAssertions = assertions.filter((a) => {
+  const id = a.id.replace(/^.*\/|\.json$/g, '');
+  return isShowcaseAssertion(a) && !isAssertionRevoked(id, a.data);
+});
 
 const styleOrder: Record<string, number> = {
   google: 1,

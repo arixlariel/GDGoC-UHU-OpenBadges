@@ -45,8 +45,9 @@ Este repositorio (`GDGoC-UHU-OpenBadges`) despliega de forma independiente el se
 - **Hosting y Multi-Zone**: **Vercel** (proyecto dedicado `gdgoc-uhu-openbadges`, assets aislados en `/_astro-ob/*` para cero colisiones con el portal principal y despliegue automático vía GitHub Actions en cada `push` a `main`).
 - **Web de verificación Open Badges**: `https://gdguhu.com/openbadges/`
 - **Estándares emitidos en paralelo**:
-  - **Open Badges 3.0 (`W3C Verifiable Credentials v2`)**: Cada certificado se compila y firma automáticamente durante el build en `/api/badges/v3/<id>.json` con firma criptográfica **Ed25519** (`DataIntegrityProof` · `eddsa-rdfc-2022`), vinculada a la identidad descentralizada oficial `did:web:gdguhu.com` publicada en `https://gdguhu.com/.well-known/did.json`.
-  - **Verificación criptográfica en tiempo real en navegador**: Al abrir cualquier certificado online, `src/utils/verifyOb3Client.ts` descarga en vivo `/.well-known/did.json` y `/api/badges/v3/<id>.json`, canoniza con `URDNA2015` y verifica matemáticamente la firma Ed25519 en el propio navegador (`WebCrypto Ed25519` con respaldo puro RFC 8032).
+  - **Open Badges 3.0 (`W3C Verifiable Credentials v2` + `BitstringStatusList`)**: Cada certificado se compila y firma automáticamente durante el build en `/api/badges/v3/<id>.json` con firma criptográfica **Ed25519** (`DataIntegrityProof` · `eddsa-rdfc-2022`), vinculada a `did:web:gdguhu.com` (`/.well-known/did.json`) y a la lista oficial firmada de revocaciones W3C (`/api/badges/status/revocations.json`).
+  - **Revocación formal sin exponer datos**: si alguna vez se necesita anular un diploma emitido por error (incluso si ya fue descargado en `.json`), basta añadir su ID de 24 caracteres en `src/config/revoked.json` y hacer `push`; tanto la verificación en vivo como el validador externo de 1EdTech Global lo marcarán automáticamente como revocado.
+  - **Verificación criptográfica en tiempo real en navegador**: Al abrir cualquier certificado online, `src/utils/verifyOb3Client.ts` descarga en vivo `/.well-known/did.json`, `/api/badges/v3/<id>.json` y `/api/badges/status/revocations.json`, verifica matemáticamente ambas firmas Ed25519 (`WebCrypto Ed25519` con respaldo puro RFC 8032) y comprueba el bit de revocación W3C en el propio navegador.
   - **Open Badges 2.0 (retrocompatibilidad)**: Se mantienen intactos los endpoints `/api/badges/assertion/<id>.json`, `/api/badges/class/<badgeId>.json` y `/api/badges/issuer.json` con verificación *hosted* y hash `SHA-256` + salt.
 - **LinkedIn y Open Graph (`1200×630`)**:
   - El botón **Añadir a LinkedIn** incluye el `organizationId` oficial de GDGoC UHU (`146739355`) para mostrar el logotipo de la organización en el perfil del alumno.
@@ -103,6 +104,7 @@ Open Badges/
 │   │   ├── cert/[id].astro              <-- Redirección retrocompatible (/cert/<id>/ -> /openbadges/cert/<id>/)
 │   │   └── api/badges/
 │   │       ├── v3/[id].json.ts          <-- Generador y firmador automático Open Badges 3.0
+│   │       ├── status/revocations.json.ts <-- Lista oficial firmada de revocaciones W3C BitstringStatusList
 │   │       ├── assertion/[id].json.ts   <-- Endpoint Open Badges 2.0 (Assertion)
 │   │       ├── class/[id].json.ts       <-- Endpoint Open Badges 2.0 (BadgeClass)
 │   │       ├── issuer.json.ts           <-- Endpoint Open Badges 2.0 (Issuer)
@@ -113,7 +115,8 @@ Open Badges/
 │   │   ├── verifyOb3Client.ts           <-- Verificación criptográfica Ed25519 en tiempo real en cliente
 │   │   └── pdfDownload.ts               <-- Exportación directa del diploma en PDF A4 horizontal
 │   └── config/
-│       └── site.ts                      <-- Configuración del portal, LinkedIn orgId y vitrina
+│       ├── site.ts                      <-- Configuración del portal, LinkedIn orgId y vitrina
+│       └── revoked.json                 <-- IDs de certificados revocados oficialmente (W3C BitstringStatusList)
 ├── astro.config.mjs                     <-- Configuración Astro Multi-Zone (`assets: '_astro-ob'`)
 ├── vercel.json                          <-- Cabeceras CORS, caché y redirección raíz -> /openbadges/
 └── generador-local.html                 <-- Generador visual offline (gdguhu.com/openbadges/generador-local.html)

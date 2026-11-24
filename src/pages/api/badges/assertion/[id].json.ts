@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { getFullUrl } from '@/config/site';
+import { getAssertionRevocation } from '@/utils/revocations';
 
 export async function getStaticPaths() {
   const assertions = await getCollection('assertions');
@@ -39,6 +40,13 @@ export const GET: APIRoute = async ({ props }) => {
     assertionPayload.evidence = assertion.data.evidence.startsWith('http')
       ? assertion.data.evidence
       : getFullUrl(assertion.data.evidence);
+  }
+
+  const revocation = getAssertionRevocation(assertionId, assertion.data);
+  if (revocation) {
+    assertionPayload.revoked = true;
+    assertionPayload.revocationReason =
+      revocation.reason || 'Revocado oficialmente por GDG on Campus Universidad de Huelva';
   }
 
   return new Response(JSON.stringify(assertionPayload, null, 2), {

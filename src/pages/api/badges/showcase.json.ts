@@ -1,9 +1,13 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { getOpenBadgesUrl, isShowcaseAssertion } from '@/config/site';
+import { isAssertionRevoked } from '@/utils/revocations';
 
 export const GET: APIRoute = async () => {
-  const assertions = (await getCollection('assertions')).filter((a) => isShowcaseAssertion(a));
+  const assertions = (await getCollection('assertions')).filter((a) => {
+    const id = a.id.replace(/^.*\/|\.json$/g, '');
+    return isShowcaseAssertion(a) && !isAssertionRevoked(id, a.data);
+  });
   const today = new Date().toISOString().split('T')[0];
 
   const items = assertions.map((a) => {

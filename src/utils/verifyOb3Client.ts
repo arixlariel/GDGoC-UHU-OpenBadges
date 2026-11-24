@@ -22,7 +22,7 @@ export interface LiveVerificationExpected {
 }
 
 export interface LiveVerificationResult {
-  status: 'verified' | 'unsigned' | 'invalid' | 'error';
+  status: 'verified' | 'revoked' | 'unsigned' | 'invalid' | 'error';
   valid: boolean;
   checkedAtIso: string;
   checkedAtLocal: string;
@@ -35,6 +35,9 @@ export interface LiveVerificationResult {
   proofCreated: string;
   docHashHex: string;
   credentialUrl: string;
+  revocationStatus?: 'active' | 'revoked' | 'unchecked';
+  statusListIndex?: string;
+  statusListUrl?: string;
   reason?: string;
 }
 
@@ -82,6 +85,40 @@ function decodeMultibaseZ(multibase: string): Uint8Array {
     throw new Error('Codificación multibase esperada con prefijo "z" (base58btc)');
   }
   return base58btcDecode(multibase.slice(1));
+}
+
+function decodeMultibaseU(multibase: string): Uint8Array {
+  if (!multibase || !multibase.startsWith('u')) {
+    throw new Error('Codificación multibase esperada con prefijo "u" (base64url)');
+  }
+  const b64url = multibase.slice(1);
+  const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (b64url.length % 4)) % 4);
+  const binary = atob(b64);
+  const out = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    out[i] = binary.charCodeAt(i);
+  }
+  return out;
+}
+
+async function gunzipBytes(compressed: Uint8Array): Promise<Uint8Array | null> {
+  if (typeof DecompressionStream === 'undefined') return null;
+  const ds = new DecompressionStream('gzip');
+  const stream = new Blob([compressed as BlobPart]).stream().pipeThrough(ds);
+  const buf = await new Response(stream).arrayBuffer();
+  return new Uint8Array(buf);
+}
+
+function resolveSameOriginStatusUrl(statusListCredentialUrl: string): string {
+  try {
+    const parsed = new URL(statusListCredentialUrl);
+    if (parsed.pathname.startsWith('/api/badges/')) {
+      return parsed.pathname + parsed.search;
+    }
+  } catch {
+    // usar URL tal cual
+  }
+  return statusListCredentialUrl;
 }
 
 function toHex(bytes: Uint8Array): string {
@@ -463,6 +500,134 @@ export async function verifyOpenBadge3Live(
       });
     }
 
+    // Comprobar estado en lista oficial W3C BitstringStatusList (revocación en vivo)
+    let revocationStatus: 'active' | 'revoked' | 'unchecked' = 'unchecked';
+    let statusListIndex: string | undefined;
+    let statusListUrl: string | undefined;
+    const rawStatus = Array.isArray(credential?.credentialStatus)
+      ? credential.credentialStatus.find((s: any) => s?.type === 'BitstringStatusListEntry')
+      : credential?.credentialStatus;
+
+    if (
+      rawStatus &&
+      rawStatus.type === 'BitstringStatusListEntry' &&
+      rawStatus.statusPurpose === 'revocation' &&
+      typeof rawStatus.statusListCredential === 'string' &&
+      rawStatus.statusListIndex !== undefined
+    ) {
+      statusListIndex = String(rawStatus.statusListIndex);
+      statusListUrl = String(rawStatus.statusListCredential);
+      const idx = Number.parseInt(statusListIndex, 10);
+
+      if (Number.isInteger(idx) && idx >= 0) {
+        const fetchUrl = resolveSameOriginStatusUrl(statusListUrl);
+        const listResp = await fetch(fetchUrl, { cache: 'no-cache' });
+        if (!listResp.ok) {
+          return baseFail('error', `No se pudo consultar la lista de revocación W3C (HTTP ${listResp.status}).`, {
+            engine,
+            did: String(didDoc.id),
+            verificationMethod: vmId,
+            publicKeyMultibase: vm.publicKeyMultibase,
+            cryptosuite: String(proof.cryptosuite),
+            proofCreated: String(proof.created || ''),
+            docHashHex,
+            revocationStatus: 'unchecked',
+            statusListIndex,
+            statusListUrl,
+          });
+        }
+
+        const statusDoc = await listResp.json();
+        const statusIssuer = typeof statusDoc?.issuer === 'string' ? statusDoc.issuer : statusDoc?.issuer?.id;
+        if (statusIssuer !== didDoc?.id) {
+          return baseFail('invalid', 'El emisor de la lista de revocación W3C no coincide con did.json.', {
+            engine,
+            did: String(didDoc.id),
+            verificationMethod: vmId,
+            publicKeyMultibase: vm.publicKeyMultibase,
+            cryptosuite: String(proof.cryptosuite),
+            proofCreated: String(proof.created || ''),
+            docHashHex,
+            statusListIndex,
+            statusListUrl,
+          });
+        }
+
+        // Verificar también la firma Ed25519 de la propia lista de revocación
+        const sProof = statusDoc?.proof;
+        if (sProof?.proofValue && sProof.type === 'DataIntegrityProof' && sProof.cryptosuite === 'eddsa-rdfc-2022') {
+          const sVm = methods.find((m: any) => m && m.id === String(sProof.verificationMethod || ''));
+          if (!sVm || typeof sVm.publicKeyMultibase !== 'string') {
+            return baseFail('invalid', 'Clave de verificación inválida en la lista de revocación W3C.');
+          }
+          const sRawKey = decodeMultibaseZ(sVm.publicKeyMultibase);
+          const sPub32 = sRawKey.slice(2);
+          const sSig64 = decodeMultibaseZ(String(sProof.proofValue));
+          const unsignedStatusDoc = { ...statusDoc };
+          delete unsignedStatusDoc.proof;
+          const sProofConfig = {
+            '@context': statusDoc['@context'],
+            type: sProof.type,
+            cryptosuite: sProof.cryptosuite,
+            created: sProof.created,
+            verificationMethod: sProof.verificationMethod,
+            proofPurpose: sProof.proofPurpose,
+          };
+          const [sCanonProof, sCanonDoc] = await Promise.all([
+            jsonld.canonize(sProofConfig, {
+              algorithm: 'URDNA2015',
+              format: 'application/n-quads',
+              documentLoader: localDocumentLoader,
+            }),
+            jsonld.canonize(unsignedStatusDoc, {
+              algorithm: 'URDNA2015',
+              format: 'application/n-quads',
+              documentLoader: localDocumentLoader,
+            }),
+          ]);
+          const [sProofHash, sDocHash] = await Promise.all([
+            sha256Bytes(encoder.encode(String(sCanonProof))),
+            sha256Bytes(encoder.encode(String(sCanonDoc))),
+          ]);
+          const sRes = await verifyEd25519(sPub32, sSig64, concatBytes(sProofHash, sDocHash));
+          if (!sRes.valid) {
+            return baseFail('invalid', 'La firma Ed25519 de la lista de revocación W3C no es válida.');
+          }
+        }
+
+        const encodedList = statusDoc?.credentialSubject?.encodedList;
+        if (typeof encodedList === 'string' && encodedList.startsWith('u')) {
+          const gzipBytes = decodeMultibaseU(encodedList);
+          const bitBytes = await gunzipBytes(gzipBytes);
+          if (bitBytes) {
+            const byteIndex = Math.floor(idx / 8);
+            const bitPos = 7 - (idx % 8);
+            const isRevoked = byteIndex < bitBytes.length && ((bitBytes[byteIndex] >> bitPos) & 1) === 1;
+            revocationStatus = isRevoked ? 'revoked' : 'active';
+
+            if (isRevoked) {
+              return baseFail(
+                'revoked',
+                `Este certificado ha sido revocado oficialmente (W3C BitstringStatusList índice #${statusListIndex}).`,
+                {
+                  engine,
+                  did: String(didDoc.id),
+                  verificationMethod: vmId,
+                  publicKeyMultibase: vm.publicKeyMultibase,
+                  cryptosuite: String(proof.cryptosuite),
+                  proofCreated: String(proof.created || ''),
+                  docHashHex,
+                  revocationStatus: 'revoked',
+                  statusListIndex,
+                  statusListUrl,
+                },
+              );
+            }
+          }
+        }
+      }
+    }
+
     return {
       status: 'verified',
       valid: true,
@@ -477,6 +642,9 @@ export async function verifyOpenBadge3Live(
       proofCreated: String(proof.created || ''),
       docHashHex,
       credentialUrl: opts.credentialUrl,
+      revocationStatus,
+      statusListIndex,
+      statusListUrl,
     };
   } catch (err: any) {
     return baseFail('error', err?.message || 'Error inesperado durante la verificación.');

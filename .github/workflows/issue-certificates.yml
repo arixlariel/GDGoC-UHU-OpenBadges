@@ -104,11 +104,14 @@ jobs:
         run: |
           test -f .vercel/output/static/openbadges/index.html
           test -f .vercel/output/static/.well-known/did.json
+          test -f .vercel/output/static/api/badges/status/revocations.json
+          grep -q '"BitstringStatusListCredential"' .vercel/output/static/api/badges/status/revocations.json
           FIRST_V3=$(ls .vercel/output/static/api/badges/v3/*.json | head -n 1)
           test -n "$FIRST_V3"
+          grep -q '"BitstringStatusListEntry"' "$FIRST_V3"
           grep -q '"cryptosuite": "eddsa-rdfc-2022"' "$FIRST_V3"
           grep -q '"proofValue": "z' "$FIRST_V3"
-          echo "OK: Open Badges OB3 Ed25519 verificado ($FIRST_V3)"
+          echo "OK: Open Badges OB3 Ed25519 + W3C BitstringStatusList verificado ($FIRST_V3)"
 
       - name: Desplegar Open Badges a producción en Vercel
         if: steps.git_commit.outputs.has_changes == 'true'

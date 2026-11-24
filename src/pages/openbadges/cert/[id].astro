@@ -4,6 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import CertificateDiploma from '@/components/CertificateDiploma.astro';
 import BadgeModal from '@/components/BadgeModal.astro';
 import { getFullUrl, getOpenBadgesUrl, isShowcaseAssertion } from '@/config/site';
+import { getAssertionRevocation } from '@/utils/revocations';
 
 export async function getStaticPaths() {
   const assertions = await getCollection('assertions');
@@ -27,7 +28,8 @@ if (!badgeEntry) {
 }
 
 const badge = badgeEntry;
-const isPublicShowcase = isShowcaseAssertion(assertion);
+const revocation = getAssertionRevocation(assertionId, assertion.data);
+const isPublicShowcase = isShowcaseAssertion(assertion) && !revocation;
 const credentialV3Url = getFullUrl(`/api/badges/v3/${assertionId}.json`);
 const assertionJsonUrl = getFullUrl(`/api/badges/assertion/${assertionId}.json`);
 const badgeImageUrl = getFullUrl(badge.data.image);
@@ -79,6 +81,7 @@ const certSchema = {
     badge={badge}
     assertionId={assertionId}
     initialStyle={certStyle}
+    revocation={revocation}
   />
 
   <!-- Modal interactivo Web Component (Añadir a tu cartera) -->
